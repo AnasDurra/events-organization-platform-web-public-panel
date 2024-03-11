@@ -14,7 +14,7 @@ const theme = {
   },
   components: {
     Layout: {
-      headerBg: '#2B3467',
+      headerBg: '#00474f',
     },
   },
 };
