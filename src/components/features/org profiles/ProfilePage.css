@@ -15,6 +15,14 @@
 }
 @media (max-width: 768px) {
   .cover-row {
-    height: 20vh;
+    height: 18vh;
   }
+}
+
+.bnt-hero {
+  margin-top: 1em;
+  display: flex;
+  align-items: center;
+  padding-left: 0;
+  text-wrap: wrap;
 }

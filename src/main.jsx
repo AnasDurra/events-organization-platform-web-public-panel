@@ -10,7 +10,7 @@ import { router } from './router/index.jsx';
 
 const theme = {
   token: {
-    colorPrimary: '#2B34b7',
+    colorPrimary: '#00474f',
   },
   components: {
     Layout: {
