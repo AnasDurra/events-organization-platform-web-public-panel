@@ -1,38 +1,65 @@
-import React from "react";
-import { PlusOutlined } from "@ant-design/icons";
+import {
+    LoadingOutlined,
+    PlusOutlined,
+    UploadOutlined,
+} from "@ant-design/icons";
 import {
     Button,
     Card,
-    DatePicker,
     Form,
     Image,
     Input,
     Space,
+    Spin,
     Typography,
-    Upload,
 } from "antd";
-import TextArea from "antd/es/input/TextArea";
 import Password from "antd/es/input/Password";
-import Paragraph from "antd/es/skeleton/Paragraph";
+import Link from "antd/es/typography/Link";
+import { message } from "antd";
 
 import image1 from "../components/Attendees Profiles/assets/Hybrid-illu.png";
-import "./styles.css";
-import Link from "antd/es/typography/Link";
+import "../components/Attendees Profiles/styles/styles.css";
+import { useLoginMutation } from "../api/services/auth";
+import { useState } from "react";
 
-const LoginPage = () => {
+export default function RegisterAttendee() {
+    const [loginMutation, { isLoading, isError, error }] = useLoginMutation();
+
+    const [imageFile, setImageFile] = useState(null);
+    const [imageSrc, setImageSrc] = useState("");
+
+    const onFinish = async (values) => {
+        const data = {
+            username: values.username,
+            password: values.password,
+        };
+        console.log(data);
+
+        const formData = new FormData();
+
+        Object.keys(data).forEach((key) => {
+            formData.append(key, data[key]);
+        });
+
+        loginMutation(formData)
+            .unwrap()
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                message.error(error.data.message);
+            });
+    };
     return (
         <div
             style={{
-                // backgroundColor: "wheat",
-                minHeight: "100%",
                 display: "flex",
                 justifyContent: "center",
-                // alignItems: "flex-start",
             }}
         >
             <Card>
                 <Space
-                    // size={0}
                     direction="horizontal"
                     style={{
                         display: "flex",
@@ -42,131 +69,155 @@ const LoginPage = () => {
                 >
                     <div className="registerImage">
                         <Image
-                            width={370}
-                            height={1009}
+                            width={350}
+                            height={1014}
                             src={image1}
                             preview={false}
                         />
                     </div>
                     <div>
-                        <div>
-                            <Typography.Title>
-                                Welcome to Evento
-                            </Typography.Title>
-                            <Typography.Paragraph
-                                style={{ marginBottom: "2em" }}
-                            >
-                                Join us for Evento ! Register today for
-                                exclusive offers and a seamless event
-                                experience. <br></br>
-                                Already have a Evento Account?{" "}
-                                <Link
-                                    href="login"
-                                    style={{
-                                        color: "blue",
-                                        fontWeight: "bold",
-                                    }}
-                                >
-                                    Sign In
-                                </Link>
-                            </Typography.Paragraph>
-                        </div>
-                        <Card>
-                            <Form layout="vertical" style={{ maxWidth: 550 }}>
-                                <Form.Item label="First Name">
-                                    <Input />
-                                </Form.Item>
-                                <Form.Item label="Last Name">
-                                    <Input />
-                                </Form.Item>
-                                <Form.Item label="Birth Date">
-                                    <DatePicker
-                                        style={{
-                                            width: "30%",
-                                        }}
-                                    />
-                                </Form.Item>
-                                <Form.Item
-                                    label="Profile Picture"
-                                    valuePropName="fileList"
-                                >
-                                    <Upload
-                                        action="/upload.do"
-                                        listType="picture-card"
-                                        maxCount={1}
+                        <Card style={{ height: "950px" }}>
+                            <Spin spinning={isLoading}>
+                                <div>
+                                    <Typography.Title
+                                        style={{ marginTop: "0px" }}
+                                        level={2}
                                     >
-                                        <button
+                                        Welcome Back !
+                                    </Typography.Title>
+                                    <Typography.Paragraph
+                                        style={{
+                                            marginBottom: "2em",
+                                            fontSize: "13px",
+                                        }}
+                                    >
+                                        New to Evento?{" "}
+                                        <Link
+                                            href="register"
                                             style={{
-                                                border: 0,
-                                                background: "none",
+                                                color: "blue",
+                                                fontWeight: "bold",
+                                                fontSize: "13px",
                                             }}
-                                            type="button"
                                         >
-                                            <PlusOutlined />
-                                            <div
+                                            Sign Up
+                                        </Link>
+                                    </Typography.Paragraph>
+                                </div>
+                                <Form
+                                    onFinish={onFinish}
+                                    autoComplete="off"
+                                    layout="vertical"
+                                    style={{ maxWidth: 550 }}
+                                    className="my-custom-form"
+                                >
+                                    <Form.Item
+                                        label="Username"
+                                        name="username"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please enter your Username",
+                                            },
+                                            {
+                                                min: 2,
+                                                message:
+                                                    "Username must be at least 3 characters",
+                                            },
+                                            {
+                                                max: 50,
+                                                message:
+                                                    "Username cannot exceed 12 characters",
+                                            },
+                                        ]}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        label="Password"
+                                        name="password"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message:
+                                                    "Please enter your password",
+                                            },
+                                            {
+                                                min: 8,
+                                                message:
+                                                    "Password must be at least 8 characters",
+                                            },
+                                            {
+                                                max: 20,
+                                                message:
+                                                    "Password cannot exceed 20 characters",
+                                            },
+                                            {
+                                                pattern:
+                                                    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                                                message:
+                                                    "Password must contain at least one letter and one number",
+                                            },
+                                        ]}
+                                    >
+                                        <Password type="Password" />
+                                    </Form.Item>
+                                    <Form.Item style={{ marginTop: "3em" }}>
+                                        <Typography.Paragraph
+                                            style={{
+                                                fontSize: "11px",
+                                                color: "gray",
+                                            }}
+                                        >
+                                            By continuing past this page, you
+                                            agree to the{" "}
+                                            <Link
+                                                href="terms-of-use"
                                                 style={{
-                                                    marginTop: 8,
+                                                    fontSize: "12px",
+                                                    color: "blue",
+                                                    fontWeight: "bolder",
                                                 }}
                                             >
-                                                Upload
-                                            </div>
-                                        </button>
-                                    </Upload>
-                                </Form.Item>
-                                <Form.Item label="Email">
-                                    <Input />
-                                </Form.Item>
-
-                                <Form.Item label="Password">
-                                    <Password type="Password" />
-                                </Form.Item>
-                                <Form.Item>
-                                    <Typography.Paragraph>
-                                        By continuing past this page, you agree
-                                        to the{" "}
-                                        <Link
-                                            href="terms-of-use"
-                                            style={{
-                                                color: "blue",
-                                                fontWeight: "bold",
-                                            }}
-                                        >
-                                            Terms of Use
-                                        </Link>{" "}
-                                        and understand that information will be
-                                        used as described in our{" "}
-                                        <Link
-                                            href="privacy-policy"
-                                            style={{
-                                                color: "blue",
-                                                fontWeight: "bold",
-                                            }}
-                                        >
-                                            Privacy Policy
-                                        </Link>
-                                        .
-                                    </Typography.Paragraph>
-                                </Form.Item>
-                                <Form.Item
-                                    style={{
-                                        display: "flex",
-                                        justifyContent: "flex-end",
-                                    }}
-                                >
-                                    <Button
-                                        type="primary"
-                                        style={{ width: "100%" }}
+                                                Terms of Use
+                                            </Link>{" "}
+                                            and understand that information will
+                                            be used as described in our{" "}
+                                            <Link
+                                                href="privacy-policy"
+                                                style={{
+                                                    fontSize: "12px",
+                                                    color: "blue",
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                Privacy Policy
+                                            </Link>
+                                            .
+                                        </Typography.Paragraph>
+                                    </Form.Item>
+                                    <Form.Item
+                                        style={{
+                                            display: "flex",
+                                            justifyContent: "flex-end",
+                                        }}
                                     >
-                                        Sign Up
-                                    </Button>
-                                </Form.Item>
-                            </Form>
+                                        <Button
+                                            htmlType="submit"
+                                            type="primary"
+                                            style={{ width: "100%" }}
+                                        >
+                                            Sign Up
+                                        </Button>
+                                    </Form.Item>
+                                </Form>
+                            </Spin>
                         </Card>
                     </div>
                 </Space>
             </Card>
         </div>
     );
-};
-
-export default LoginPage;
+}
