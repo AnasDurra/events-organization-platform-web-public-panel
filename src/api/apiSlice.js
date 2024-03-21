@@ -3,12 +3,12 @@ import { URL } from './constants';
 
 export const apiSlice = createApi({
   reducerPath: 'api',
+
   baseQuery: fetchBaseQuery({
     credentials: 'same-origin',
     baseUrl: URL,
   }),
-  tagTypes: [],
+  tagTypes: ['one-org'],
+
   endpoints: () => ({}),
 });
-
-

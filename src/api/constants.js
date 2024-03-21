@@ -1,1 +1,1 @@
-export const URL = 'http://localhost:8000/';
+export const URL = 'https://eop-api.onrender.com/api';
