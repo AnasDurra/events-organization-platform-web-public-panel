@@ -21,6 +21,7 @@ import image1 from "../components/Attendees Profiles/assets/Hybrid-illu.png";
 import "../components/Attendees Profiles/styles/styles.css";
 import { useLoginMutation } from "../api/services/auth";
 import { useState } from "react";
+import FormWelcomeTitle from "../components/Form/FormWelcomeTitle";
 
 export default function RegisterAttendee() {
     const [loginMutation, { isLoading, isError, error }] = useLoginMutation();
@@ -69,41 +70,39 @@ export default function RegisterAttendee() {
                 >
                     <div className="registerImage">
                         <Image
-                            width={350}
-                            height={1014}
+                            width={320}
+                            height={800}
                             src={image1}
                             preview={false}
                         />
                     </div>
                     <div>
-                        <Card style={{ height: "950px" }}>
+                        <Card
+                            style={{
+                                minHeight: "750px",
+                                width: "100%",
+                                maxWidth: "430px",
+                            }}
+                        >
                             <Spin spinning={isLoading}>
-                                <div>
-                                    <Typography.Title
-                                        style={{ marginTop: "0px" }}
-                                        level={2}
-                                    >
-                                        Welcome Back !
-                                    </Typography.Title>
-                                    <Typography.Paragraph
-                                        style={{
-                                            marginBottom: "2em",
-                                            fontSize: "13px",
-                                        }}
-                                    >
-                                        New to Evento?{" "}
-                                        <Link
-                                            href="register"
-                                            style={{
-                                                color: "blue",
-                                                fontWeight: "bold",
-                                                fontSize: "13px",
-                                            }}
-                                        >
-                                            Sign Up
-                                        </Link>
-                                    </Typography.Paragraph>
-                                </div>
+                                <FormWelcomeTitle
+                                    title={"Welcome Back !"}
+                                    paragraph={
+                                        <>
+                                            New to Evento?{" "}
+                                            <Link
+                                                href="register"
+                                                style={{
+                                                    color: "blue",
+                                                    fontWeight: "bold",
+                                                    fontSize: "13px",
+                                                }}
+                                            >
+                                                Sign Up
+                                            </Link>
+                                        </>
+                                    }
+                                />
                                 <Form
                                     onFinish={onFinish}
                                     autoComplete="off"
@@ -164,7 +163,7 @@ export default function RegisterAttendee() {
                                     >
                                         <Password type="Password" />
                                     </Form.Item>
-                                    <Form.Item style={{ marginTop: "3em" }}>
+                                    <Form.Item style={{ marginTop: "2em" }}>
                                         <Typography.Paragraph
                                             style={{
                                                 fontSize: "11px",

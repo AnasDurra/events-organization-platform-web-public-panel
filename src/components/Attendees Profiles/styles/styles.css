@@ -6,8 +6,8 @@
     }
     
     .my-custom-form .ant-form-item-label label {
-      font-size: 13px; /* Adjust the font size as needed */
+      font-size: 13px; 
     }
     .my-custom-form .ant-form-item {
-  margin-bottom: 16px; /* Adjust the margin-bottom to increase or decrease space between form items */
+  margin-bottom: 16px; 
 }
