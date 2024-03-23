@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { useListsQuery } from "../../api/services/lists";
 import TextArea from "antd/es/input/TextArea";
 
-const AdditionalInfoRegistrationForm = ({ queryMutation, form }) => {
-    const [imageFile, setImageFile] = useState(null);
-    const [imageSrc, setImageSrc] = useState("");
-
+const AdditionalInfoRegistrationForm = ({
+    form,
+    setImageFile,
+    imageSrc,
+    setImageSrc,
+}) => {
     const { data, error, isLoading } = useListsQuery();
 
     function getFileUrl(file, callback) {
@@ -20,6 +22,8 @@ const AdditionalInfoRegistrationForm = ({ queryMutation, form }) => {
 
         setImageFile(file);
         reader.readAsDataURL(file);
+
+        console.log(imageSrc);
     }
 
     const handleFileChange = (file) => {
@@ -44,46 +48,12 @@ const AdditionalInfoRegistrationForm = ({ queryMutation, form }) => {
         imgWindow?.document.write(image.outerHTML);
     };
 
-    const onFinish = async (values) => {
-        const data = {
-            first_name: values.first_name,
-            last_name: values.last_name,
-            email: values.email,
-            username: values.username,
-            password: values.password,
-            birth_date: `${(values.birth_date.$M + 1)
-                .toString()
-                .padStart(2, "0")}-${values.birth_date.$D
-                .toString()
-                .padStart(2, "0")}-${values.birth_date.$y}`,
-            profile_img: imageFile?.file.originFileObj ?? null,
-        };
+    useEffect(() => {
         console.log(data);
-
-        const formData = new FormData();
-
-        Object.keys(data).forEach((key) => {
-            formData.append(key, data[key]);
-        });
-
-        queryMutation(formData)
-            .unwrap()
-            .then((res) => {
-                console.log(res);
-                if (res.statusCode === 200) {
-                    message.success("Registered Successfully !");
-                }
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                message.error(error.data.result.message);
-            });
-    };
-
+    }, [data]);
     return (
         <Form
             form={form}
-            onFinish={onFinish}
             autoComplete="off"
             layout="vertical"
             style={{ maxWidth: 550 }}

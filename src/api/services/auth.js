@@ -1,4 +1,6 @@
 import { apiSlice } from '../../../src/api/apiSlice';
+import Cookies from 'js-cookie';
+
 
 export const auth = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -8,15 +10,15 @@ export const auth = apiSlice.injectEndpoints({
         method: 'POST',
         body: credentials,
       }),
-      // transformResponse: (responseData) => {
-      //   Cookies.set('accessToken', responseData?.accessToken, {
-      //     expires: 12,
-      //   });
-      //   Cookies.set('refreshToken', responseData?.accessToken, {
-      //     expires: 12,
-      //   });
-      //   return responseData;
-      // },
+      transformResponse: (responseData) => {
+        Cookies.set('accessToken', responseData?.accessToken, {
+          expires: 12,
+        });
+        Cookies.set('refreshToken', responseData?.accessToken, {
+          expires: 12,
+        });
+        return responseData;
+      },
     }),
 
     login: builder.mutation({
@@ -25,29 +27,31 @@ export const auth = apiSlice.injectEndpoints({
         method: 'POST',
         body: credentials,
       }),
-      // transformResponse: (responseData) => {
-      //   Cookies.set('accessToken', responseData?.accessToken, {
-      //     expires: 12,
-      //   });
-      //   Cookies.set('refreshToken', responseData?.accessToken, {
-      //     expires: 12,
-      //   });
-      //   return responseData;
-      // },
+      transformResponse: (responseData) => {
+        console.log("i am in transform rresponse");
+        Cookies.set('accessToken', responseData?.result?.access_token, {
+          expires: 12,
+        });
+        Cookies.set('refreshToken', responseData?.result?.refresh_token, {
+          expires: 12,
+        });
+        return responseData;
+      },
     }),
 
-    logout: builder.mutation({
-      query: () => ({
-        url: 'auth/logout',
-        method: 'POST',
-      }),
-    }),
+    // logout: builder.mutation({
+    //   query: () => ({
+    //     url: 'auth/logout',
+    //     method: 'POST',
+    //   }),
+    // }),
 
     refresh: builder.query({
       query: (refresh_token) => ({
-        url: 'auth/refresh',
-        method: 'POST',
-        body: refresh_token,
+        url: 'attendee/refresh-token',
+        method: 'GET',
+        headers:{ Authorization:`Bearer ${refresh_token}`},
+        // body: refresh_token,
       }),
     }),
   }),

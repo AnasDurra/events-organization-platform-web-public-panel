@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     AntDesignOutlined,
     CheckOutlined,
@@ -32,7 +32,9 @@ import {
     Grid,
     Image,
     Menu,
+    Modal,
     Row,
+    Skeleton,
     Space,
     Statistic,
     Tooltip,
@@ -42,23 +44,8 @@ const { Meta } = Card;
 
 import image1 from "./assets/event_management.png";
 import { isLargerThanLG } from "../../utils/antd.utils";
-
-const getBase64 = (img, callback) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => callback(reader.result));
-    reader.readAsDataURL(img);
-};
-const beforeUpload = (file) => {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-    if (!isJpgOrPng) {
-        message.error("You can only upload JPG/PNG file!");
-    }
-    const isLt2M = file.size / 1024 / 1024 < 2;
-    if (!isLt2M) {
-        message.error("Image must smaller than 2MB!");
-    }
-    return isJpgOrPng && isLt2M;
-};
+import { useViewMyProfileQuery } from "../../api/services/attendeeProfile";
+import UpdateProfileModal from "../Modals/UpdateProfileModal";
 
 const ShowAttendeProfile = () => {
     const screens = Grid.useBreakpoint();
@@ -66,44 +53,37 @@ const ShowAttendeProfile = () => {
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState();
 
-    const handleChange = (info) => {
-        if (info.file.status === "uploading") {
-            setLoading(true);
-            return;
-        }
-        if (info.file.status === "done") {
-            // Get this url from response in real world.
-            getBase64(info.file.originFileObj, (url) => {
-                setLoading(false);
-                setImageUrl(url);
-            });
-        }
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const showModal = () => {
+        setIsUpdateModalOpen(true);
     };
-    const uploadButton = (
-        <button
-            style={{
-                border: 0,
-                background: "none",
-            }}
-            type="button"
-        >
-            {loading ? <LoadingOutlined /> : <PlusOutlined />}
-            <div
-                style={{
-                    marginTop: 8,
-                }}
-            >
-                Upload
-            </div>
-        </button>
-    );
+    const handleOk = () => {
+        setIsUpdateModalOpen(false);
+    };
+    const handleCancel = () => {
+        setIsUpdateModalOpen(false);
+    };
+
+    const { data, error, isLoading } = useViewMyProfileQuery();
+
+    useEffect(() => {
+        console.log(data);
+    }, [data]);
     return (
         <div style={{ display: "flex", justifyContent: "center" }}>
             <Card
                 style={{
                     width: isLargerThanLG(screens) ? "80%" : "100%",
                 }}
-                cover={<Image height={250} alt="example" src={image1} />}
+                cover={
+                    <Image
+                        height={250}
+                        alt="example"
+                        src={
+                            data?.cover_img ?? "https://picsum.photos/1000/300"
+                        }
+                    />
+                }
                 actions={[
                     <SettingOutlined key="setting" />,
                     <EditOutlined key="edit" />,
@@ -113,16 +93,36 @@ const ShowAttendeProfile = () => {
                 <div
                     style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                    <Meta
-                        avatar={
-                            <Avatar
-                                size={50}
-                                src="https://api.dicebear.com/7.x/miniavs/svg?seed=8"
-                            />
-                        }
-                        title="Anas Durra"
-                        description="Member since feb 23,2024 * Damascus, Syria"
-                    />
+                    <Skeleton
+                        loading={isLoading}
+                        active
+                        avatar
+                        paragraph={{
+                            rows: 1,
+                            width: "90%",
+                        }}
+                    >
+                        <Meta
+                            avatar={
+                                <Avatar
+                                    size={50}
+                                    src={
+                                        data?.result.profile_img ??
+                                        "https://api.dicebear.com/7.x/miniavs/svg?seed=8"
+                                    }
+                                />
+                            }
+                            title={data ? data.result.full_name : ""}
+                            description={
+                                data
+                                    ? `Member since ${formatDate(
+                                          data.result.join_date
+                                      )} * ${data.result.address}, Syria`
+                                    : ""
+                            }
+                        />
+                    </Skeleton>
+
                     <Space size={14}>
                         <div>
                             <Space.Compact block>
@@ -130,7 +130,12 @@ const ShowAttendeProfile = () => {
                                     <Button icon={<SettingOutlined />} />
                                 </Tooltip>
                                 <Tooltip title="Edit">
-                                    <Button icon={<EditOutlined />} />
+                                    <Button
+                                        icon={<EditOutlined />}
+                                        onClick={() =>
+                                            setIsUpdateModalOpen(true)
+                                        }
+                                    />
                                 </Tooltip>
 
                                 <Dropdown
@@ -183,25 +188,97 @@ const ShowAttendeProfile = () => {
                                         justifyContent: "space-between",
                                     }}
                                 >
-                                    <Typography.Text>
-                                        Software Engineer
-                                    </Typography.Text>
-                                    <Space size={10}>
-                                        <WhatsAppOutlined />
-                                        <LinkedinOutlined />
-                                        <FacebookOutlined />
-                                        <TwitterOutlined />
-                                    </Space>
+                                    <Skeleton
+                                        loading={isLoading}
+                                        active
+                                        paragraph={{
+                                            rows: 0,
+                                            width: "50%",
+                                        }}
+                                    >
+                                        <Typography.Text>
+                                            {data?.result.job ??
+                                                "Does Not Work"}
+                                        </Typography.Text>
+                                        <Space size={10}>
+                                            {data?.result.contacts?.map(
+                                                (contact) => (
+                                                    <Tooltip
+                                                        title={
+                                                            contact.contact_name
+                                                        }
+                                                        key={contact.id}
+                                                    >
+                                                        <a
+                                                            href={getContactLink(
+                                                                contact.contact_name
+                                                            )}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                        >
+                                                            {contact.contact_name ===
+                                                                "WhatsApp" && (
+                                                                <WhatsAppOutlined
+                                                                    style={{
+                                                                        fontSize:
+                                                                            "24px",
+                                                                        color: "#25D366",
+                                                                    }}
+                                                                />
+                                                            )}
+                                                            {contact.contact_name ===
+                                                                "Linkedin" && (
+                                                                <LinkedinOutlined
+                                                                    style={{
+                                                                        fontSize:
+                                                                            "24px",
+                                                                        color: "#0077B5",
+                                                                    }}
+                                                                />
+                                                            )}
+                                                            {contact.contact_name ===
+                                                                "Facebook" && (
+                                                                <FacebookOutlined
+                                                                    style={{
+                                                                        fontSize:
+                                                                            "24px",
+                                                                        color: "#3b5998",
+                                                                    }}
+                                                                />
+                                                            )}
+                                                            {contact.contact_name ===
+                                                                "Twitter" && (
+                                                                <TwitterOutlined
+                                                                    style={{
+                                                                        fontSize:
+                                                                            "24px",
+                                                                        color: "#1DA1F2",
+                                                                    }}
+                                                                />
+                                                            )}
+                                                        </a>
+                                                    </Tooltip>
+                                                )
+                                            )}
+                                        </Space>
+                                    </Skeleton>
                                 </div>
                             }
                         >
-                            <Typography.Text strong>Bio</Typography.Text>
-                            <Typography.Paragraph>
-                                Display & share text in a large font directly
-                                from your browser. Read phone numbers,
-                                passwords, IP addresses, etc from across the
-                                room.
-                            </Typography.Paragraph>
+                            <Skeleton
+                                loading={isLoading}
+                                active
+                                avatar
+                                paragraph={{
+                                    rows: 1,
+                                    width: "100%",
+                                }}
+                            >
+                                <Typography.Text strong>Bio</Typography.Text>
+                                <Typography.Paragraph>
+                                    {data ? data.result.bio : ""}
+                                </Typography.Paragraph>
+                            </Skeleton>
                         </Card>
                     </Col>
                     <Col
@@ -354,6 +431,15 @@ const ShowAttendeProfile = () => {
                     </Col>
                 </Row>
             </Card>
+            <Modal
+                title="Basic Modal"
+                open={isUpdateModalOpen}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                width={700}
+            >
+                <UpdateProfileModal data={data} />
+            </Modal>
         </div>
     );
 };
@@ -376,4 +462,31 @@ const badges = [
     },
 ];
 
+// Function to format the date
+function formatDate(dateString) {
+    if (dateString) {
+        const dateParts = dateString.split("-");
+        const date = new Date(
+            `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`
+        );
+        const options = { month: "long", day: "numeric", year: "numeric" };
+        return date.toLocaleDateString("en-US", options);
+    }
+    return "";
+}
 export default ShowAttendeProfile;
+
+function getContactLink(contactName) {
+    switch (contactName) {
+        case "WhatsApp":
+            return "https://wa.me/";
+        case "Linkedin":
+            return "https://linkedin.com/";
+        case "Facebook":
+            return "https://facebook.com/";
+        case "Twitter":
+            return "https://twitter.com/";
+        default:
+            return "#";
+    }
+}

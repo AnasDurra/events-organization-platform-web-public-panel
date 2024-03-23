@@ -1,5 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { apiSlice } from './api/apiSlice';
+import authMiddleware from './api/store middlewares/auth-middleware';
+import apiError from './api/store middlewares/api-error';
 
 export const store = configureStore({
   reducer: {
@@ -7,5 +9,6 @@ export const store = configureStore({
   },
 
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+        getDefaultMiddleware().concat(apiSlice.middleware).concat(authMiddleware).concat(apiError),
 });
+

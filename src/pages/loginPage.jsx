@@ -26,9 +26,6 @@ import FormWelcomeTitle from "../components/Form/FormWelcomeTitle";
 export default function RegisterAttendee() {
     const [loginMutation, { isLoading, isError, error }] = useLoginMutation();
 
-    const [imageFile, setImageFile] = useState(null);
-    const [imageSrc, setImageSrc] = useState("");
-
     const onFinish = async (values) => {
         const data = {
             username: values.username,
@@ -36,13 +33,7 @@ export default function RegisterAttendee() {
         };
         console.log(data);
 
-        const formData = new FormData();
-
-        Object.keys(data).forEach((key) => {
-            formData.append(key, data[key]);
-        });
-
-        loginMutation(formData)
+        loginMutation(data)
             .unwrap()
             .then((res) => {
                 console.log(res);
@@ -153,12 +144,12 @@ export default function RegisterAttendee() {
                                                 message:
                                                     "Password cannot exceed 20 characters",
                                             },
-                                            {
-                                                pattern:
-                                                    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                                                message:
-                                                    "Password must contain at least one letter and one number",
-                                            },
+                                            // {
+                                            //     pattern:
+                                            //         /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                                            //     message:
+                                            //         "Password must contain at least one letter and one number",
+                                            // },
                                         ]}
                                     >
                                         <Password type="Password" />
@@ -208,7 +199,7 @@ export default function RegisterAttendee() {
                                             type="primary"
                                             style={{ width: "100%" }}
                                         >
-                                            Sign Up
+                                            Login
                                         </Button>
                                     </Form.Item>
                                 </Form>
