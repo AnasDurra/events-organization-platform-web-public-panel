@@ -69,42 +69,29 @@ export default function RegisterAttendee() {
         }
         // Case Form2
         else {
-            setData({ ...data, ...form2.getFieldsValue() });
+            setData({ ...data, ...form2.getFieldValue() });
             next();
         }
     };
 
     const onFinish = () => {
         // Case Form3
-        const form3Data = form3.getFieldValue();
-
-        form3Data["contacts"] = [];
+        const form3Data = { ...form3.getFieldValue() };
+        // console.log(form3Data);
+        const contacts = [];
         Object.keys(form3Data).forEach((key) => {
-            if (key === "facebook") {
-                form3Data["contacts"].push([1, form3Data[key]]);
-            } else if (key === "twitter") {
-                form3Data["contacts"].push([2, form3Data[key]]);
-            } else if (key === "instagram") {
-                form3Data["contacts"].push([3, form3Data[key]]);
-            } else if (key === "linkedin") {
-                form3Data["contacts"].push([4, form3Data[key]]);
-            }
+            contacts.push([key, form3Data[key]]);
         });
+        form3Data["contacts"] = contacts;
 
-        const finalData = { ...data, ...form3.getFieldValue() };
+        const finalData = { ...data, ...form3Data };
         const dataToSend = {
             first_name: finalData.first_name,
             last_name: finalData.last_name,
             email: finalData.email,
             username: finalData.username,
             password: finalData.password,
-            birth_date: finalData.birth_date
-                ? `${finalData.birth_date.$D.toString().padStart(2, "0")}-${(
-                      finalData.birth_date.$M + 1
-                  )
-                      .toString()
-                      .padStart(2, "0")}-${finalData.birth_date.$y}`
-                : null,
+            birth_date: finalData.birth_date.format("DD-MM-YYYY"),
 
             phone_number: finalData.phone_number ?? null,
             bio: finalData.bio ?? null,
@@ -115,15 +102,17 @@ export default function RegisterAttendee() {
             cover_img: finalData.cover_img?.originFileObj ?? null,
             contacts: finalData.contacts ?? null,
         };
+        // console.log(dataToSend);
 
         for (const key in dataToSend) {
-            if (dataToSend[key] === null) {
+            if (dataToSend[key] == null) {
                 delete dataToSend[key];
             }
         }
 
         const formData = new FormData();
         Object.keys(dataToSend).forEach((key) => {
+            // console.log(key);
             if (key === "contacts") {
                 dataToSend.contacts.forEach((contact, index) => {
                     const [contact_id, contact_link] = contact;

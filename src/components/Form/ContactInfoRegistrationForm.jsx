@@ -15,21 +15,22 @@ const ContactInfoRegistrationForm = ({ form }) => {
             style={{ maxWidth: 550 }}
             className="my-custom-form"
         >
-            <Form.Item name="facebook" label="Facebook Profile">
-                <Input placeholder="Facebook Profile URL" />
-            </Form.Item>
-
-            <Form.Item name="twitter" label="Twitter Profile">
-                <Input placeholder="Twitter Profile URL" />
-            </Form.Item>
-
-            <Form.Item name="instagram" label="Instagram Profile">
-                <Input placeholder="Instagram Profile URL" />
-            </Form.Item>
-
-            <Form.Item name="linkedin" label="LinkedIn Profile">
-                <Input placeholder="LinkedIn Profile URL" />
-            </Form.Item>
+            {data?.result.contacts?.map((contact) => (
+                <Form.Item
+                    key={contact.value}
+                    name={contact.value}
+                    label={contact.label}
+                >
+                    <Input
+                        placeholder={
+                            contact.label === "Email" ||
+                            contact.label === "Phone Number"
+                                ? contact.label
+                                : `${contact.label} Profile URL`
+                        }
+                    />
+                </Form.Item>
+            ))}
         </Form>
     );
 };

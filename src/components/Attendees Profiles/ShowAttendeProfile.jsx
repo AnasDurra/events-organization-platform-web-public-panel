@@ -42,29 +42,28 @@ import {
 } from "antd";
 const { Meta } = Card;
 
-import image1 from "./assets/event_management.png";
 import { isLargerThanLG } from "../../utils/antd.utils";
 import { useViewMyProfileQuery } from "../../api/services/attendeeProfile";
 import UpdateProfileModal from "../Modals/UpdateProfileModal";
 
 const ShowAttendeProfile = () => {
     const screens = Grid.useBreakpoint();
+    const { data, isLoading, refetch } = useViewMyProfileQuery();
 
-    const [loading, setLoading] = useState(false);
-    const [imageUrl, setImageUrl] = useState();
+    // const [loading, setLoading] = useState(false);
+    // const [imageUrl, setImageUrl] = useState();
 
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const showModal = () => {
         setIsUpdateModalOpen(true);
     };
     const handleOk = () => {
+        refetch();
         setIsUpdateModalOpen(false);
     };
     const handleCancel = () => {
         setIsUpdateModalOpen(false);
     };
-
-    const { data, error, isLoading } = useViewMyProfileQuery();
 
     useEffect(() => {
         console.log(data);
@@ -105,69 +104,84 @@ const ShowAttendeProfile = () => {
                         <Meta
                             avatar={
                                 <Avatar
-                                    size={50}
+                                    size={100}
+                                    icon={<UserOutlined />}
                                     src={
-                                        data?.result.profile_img ??
                                         "https://api.dicebear.com/7.x/miniavs/svg?seed=8"
                                     }
+                                    style={{
+                                        textAlign: "center",
+                                        marginBottom: "10px",
+                                        border: "3px solid white",
+                                        borderRadius: "50%",
+                                        marginTop: "-70px",
+                                    }}
                                 />
                             }
-                            title={data ? data.result.full_name : ""}
+                            title={
+                                <Typography.Title
+                                    style={{
+                                        marginTop: "0px",
+                                        marginBottom: "0px",
+                                    }}
+                                    level={3}
+                                >
+                                    {data?.result?.full_name
+                                        ? data.result?.full_name
+                                        : ""}
+                                </Typography.Title>
+                            }
                             description={
                                 data
                                     ? `Member since ${formatDate(
-                                          data.result.join_date
-                                      )} * ${data.result.address}, Syria`
+                                          data?.result.join_date
+                                      )} * ${data?.result.address?.label}`
                                     : ""
                             }
                         />
                     </Skeleton>
 
-                    <Space size={14}>
-                        <div>
-                            <Space.Compact block>
-                                <Tooltip title="Settings">
-                                    <Button icon={<SettingOutlined />} />
-                                </Tooltip>
-                                <Tooltip title="Edit">
-                                    <Button
-                                        icon={<EditOutlined />}
-                                        onClick={() =>
-                                            setIsUpdateModalOpen(true)
-                                        }
-                                    />
-                                </Tooltip>
+                    <Row>
+                        {/* <Space.Compact block> */}
+                        {/* <Tooltip title="Settings">
+                                        <Button icon={<SettingOutlined />} />
+                                    </Tooltip> */}
+                        <Tooltip title="Edit">
+                            <Button
+                                icon={<EditOutlined />}
+                                onClick={() => setIsUpdateModalOpen(true)}
+                            />
+                        </Tooltip>
 
-                                <Dropdown
-                                    placement="bottomRight"
-                                    overlay={
-                                        <Menu
-                                            items={[
-                                                {
-                                                    key: "1",
-                                                    label: "Report",
-                                                    icon: <WarningOutlined />,
-                                                },
-                                                {
-                                                    key: "2",
-                                                    label: "Mail",
-                                                    icon: <MailOutlined />,
-                                                },
-                                                {
-                                                    key: "3",
-                                                    label: "Mobile",
-                                                    icon: <MobileOutlined />,
-                                                },
-                                            ]}
-                                        />
-                                    }
-                                    trigger={["click"]}
-                                >
-                                    <Button icon={<EllipsisOutlined />} />
-                                </Dropdown>
-                            </Space.Compact>
-                        </div>
-                    </Space>
+                        <Dropdown
+                            placement="bottomRight"
+                            overlay={
+                                <Menu
+                                    items={[
+                                        {
+                                            key: "1",
+                                            label: "Report",
+                                            icon: <WarningOutlined />,
+                                        },
+                                        {
+                                            key: "2",
+                                            label: "Mail",
+                                            icon: <MailOutlined />,
+                                        },
+                                        {
+                                            key: "3",
+                                            label: "Mobile",
+                                            icon: <MobileOutlined />,
+                                        },
+                                    ]}
+                                />
+                            }
+                            trigger={["click"]}
+                        >
+                            <Button icon={<EllipsisOutlined />} />
+                        </Dropdown>
+                        {/* </Space.Compact> */}
+                    </Row>
                 </div>
 
                 <Row
@@ -197,7 +211,7 @@ const ShowAttendeProfile = () => {
                                         }}
                                     >
                                         <Typography.Text>
-                                            {data?.result.job ??
+                                            {data?.result.job?.label ??
                                                 "Does Not Work"}
                                         </Typography.Text>
                                         <Space size={10}>
@@ -436,9 +450,14 @@ const ShowAttendeProfile = () => {
                 open={isUpdateModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
-                width={700}
+                width={750}
+                footer={null}
             >
-                <UpdateProfileModal data={data} />
+                <UpdateProfileModal
+                    data={data}
+                    modalOk={handleOk}
+                    modalCancel={handleCancel}
+                />
             </Modal>
         </div>
     );

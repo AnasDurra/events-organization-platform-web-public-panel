@@ -17,17 +17,16 @@ export const attendeeProfile = apiSlice.injectEndpoints({
       //   return responseData;
       // },
     }),
+
+    updateMyProfile: builder.mutation({
+      query: (credentials) => ({
+        url: 'attendee/update-profile',
+        method: 'POST',
+        body: credentials,
+      }),
+    }),
   }),
 });
 
-// export const getLoggedInUser = () => {
-//   const token = Cookies.get('accessToken');
-//   const decodedToken = jwtDecode(token);
 
-//   return {
-//     username: decodedToken.username,
-//     full_name: decodedToken.full_name
-//   };
-// };
-
-export const {useViewMyProfileQuery} = attendeeProfile;
+export const {useViewMyProfileQuery,useUpdateMyProfileMutation} = attendeeProfile;
