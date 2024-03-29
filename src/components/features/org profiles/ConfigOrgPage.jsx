@@ -9,6 +9,7 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 import {
+  Avatar,
   Button,
   Checkbox,
   Col,
@@ -26,7 +27,7 @@ import {
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import Title from 'antd/es/typography/Title';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaLocationDot } from 'react-icons/fa6';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
@@ -37,6 +38,8 @@ import {
   useRemoveOrgAddressMutation,
 } from './orgSlice';
 import { CiLocationOff } from 'react-icons/ci';
+import ModalNewMember from './modal-new member';
+import ModalEditMember from './modal-edit member';
 
 const list = [
   {
@@ -70,17 +73,20 @@ const props = {
 
 export default function ConfigOrgPage() {
   const navigate = useNavigate();
+  let { orgId } = useParams();
+
+  const [isNewMemberModalOpen, setIsNewMemberModalOpen] = useState();
+  const [isEditMemberModalOpen, setIsEditMemberModalOpen] = useState();
 
   const [basicForm] = Form.useForm();
   const [addressForm] = Form.useForm();
 
   const cityValue = Form.useWatch('city', addressForm);
 
-  let { orgId } = useParams();
   const {
     data: { result: org } = { result: {} },
     isLoading,
-    isSuccess,
+    isSuccess: isGetOrgSuccess,
   } = useGetOrgQuery(orgId);
   const {
     data: { result: addresses } = { result: [] },
@@ -90,18 +96,18 @@ export default function ConfigOrgPage() {
     configureOrg,
     { isLoading: isConfigLoading, isSuccess: isConfigSuccess },
   ] = useConfigureOrgMutation();
-  const [removeOrgAddress] = useRemoveOrgAddressMutation();
   const [addOrgAddress] = useAddOrgAddressMutation();
+  const [removeOrgAddress] = useRemoveOrgAddressMutation();
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isGetOrgSuccess) {
       basicForm.setFieldsValue({
         name: org?.name,
         bio: org?.bio,
         description: org?.description,
       });
     }
-  }, [isSuccess]);
+  }, [isGetOrgSuccess]);
 
   useEffect(() => {
     addressForm.resetFields(['state']);
@@ -301,6 +307,7 @@ export default function ConfigOrgPage() {
                 span={5}
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
+                xl={{ span: 5 }}
               >
                 <Form.Item
                   label='city'
@@ -332,6 +339,7 @@ export default function ConfigOrgPage() {
                 span={5}
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
+                xl={{ span: 5 }}
               >
                 <Form.Item
                   label='state'
@@ -358,6 +366,7 @@ export default function ConfigOrgPage() {
                 span={5}
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
+                xl={{ span: 5 }}
               >
                 <Form.Item
                   labelCol={{ span: 24 }}
@@ -497,6 +506,79 @@ export default function ConfigOrgPage() {
         </>
       ),
     },
+    {
+      key: '4',
+      label: 'members',
+      children: (
+        <>
+          <Row>
+            <Col span={16}>
+              <List
+                footer={
+                  <Row justify={'end'}>
+                    <Col>
+                      <Button
+                        style={{ margin: '0' }}
+                        type='primary'
+                      >
+                        new member
+                      </Button>
+                    </Col>
+                  </Row>
+                }
+                itemLayout='horizontal'
+                dataSource={data}
+                renderItem={(item) => (
+                  <List.Item
+                    actions={[
+                      <a
+                        key='list-edit'
+                        style={{ color: 'darkblue' }}
+                      >
+                        edit
+                      </a>,
+                      <a
+                        key='list-activate'
+                        style={{ color: 'darkblue' }}
+                      >
+                        activate
+                      </a>,
+                      <a
+                        key='list-remove'
+                        style={{ color: 'red' }}
+                      >
+                        remove
+                      </a>,
+                    ]}
+                  >
+                    <Skeleton
+                      avatar
+                      title={false}
+                      loading={item.loading}
+                      active
+                    >
+                      <List.Item.Meta
+                        avatar={
+                          <Avatar
+                            size={'large'}
+                            src={item.picture.large}
+                          />
+                        }
+                        title={<a href='https://ant.design'>{item.name}</a>}
+                        description={item.desc}
+                      />
+                    </Skeleton>
+                  </List.Item>
+                )}
+              />
+            </Col>
+          </Row>
+
+          <ModalNewMember isOpen={false} />
+          <ModalEditMember isOpen={true} />
+        </>
+      ),
+    },
   ];
 
   return (
@@ -534,3 +616,36 @@ export default function ConfigOrgPage() {
     </>
   );
 }
+
+const data = [
+  {
+    gender: 'male',
+    name: 'abo abdo',
+    desc: 'abo_abdo',
+    picture: {
+      large: 'https://randomuser.me/api/portraits/men/6.jpg',
+      medium: 'https://randomuser.me/api/portraits/med/men/6.jpg',
+      thumbnail: 'https://randomuser.me/api/portraits/thumb/men/6.jpg',
+    },
+  },
+  {
+    gender: 'male',
+    name: 'abo abdo',
+    desc: 'abo_abdo',
+    picture: {
+      large: 'https://randomuser.me/api/portraits/men/6.jpg',
+      medium: 'https://randomuser.me/api/portraits/med/men/6.jpg',
+      thumbnail: 'https://randomuser.me/api/portraits/thumb/men/6.jpg',
+    },
+  },
+  {
+    gender: 'male',
+    name: 'abo abdo',
+    desc: 'abo_abdo',
+    picture: {
+      large: 'https://randomuser.me/api/portraits/men/6.jpg',
+      medium: 'https://randomuser.me/api/portraits/med/men/6.jpg',
+      thumbnail: 'https://randomuser.me/api/portraits/thumb/men/6.jpg',
+    },
+  },
+];

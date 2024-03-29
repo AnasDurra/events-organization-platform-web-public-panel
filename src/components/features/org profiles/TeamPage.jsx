@@ -14,7 +14,7 @@ export default function TeamPage() {
               <Row justify={'space-between'}>
                 <Col>
                   <Title
-                    level={3}
+                    level={4}
                     style={{ margin: '0' }}
                   >
                     Team Members
@@ -30,7 +30,6 @@ export default function TeamPage() {
                 </Col>
               </Row>
             }
-            className='demo-loadmore-list'
             itemLayout='horizontal'
             dataSource={data}
             renderItem={(item) => (
@@ -78,8 +77,9 @@ export default function TeamPage() {
           />
         </Col>
       </Row>
+
       <ModalNewMember isOpen={false} />
-      <ModalEditMember isOpen={true} />
+      <ModalEditMember isOpen={false} />
     </>
   );
 }
