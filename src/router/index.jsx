@@ -4,6 +4,7 @@ import ErrorPage from "../pages/error-page";
 import RegisterAttendee from "../components/Attendees Profiles/RegisterAttendee";
 import ShowAttendeProfile from "../components/Attendees Profiles/ShowAttendeProfile";
 import LoginPage from "../pages/loginPage";
+import CreateEvent from "../components/Manage Events (org)/CreateEvent";
 
 export const router = createBrowserRouter([
     {
@@ -22,6 +23,15 @@ export const router = createBrowserRouter([
             {
                 path: "/attende-profile",
                 element: <ShowAttendeProfile />,
+            },
+            {
+                path: "/event",
+                children: [
+                    {
+                        path: "create",
+                        element: <CreateEvent />,
+                    },
+                ],
             },
         ],
     },
