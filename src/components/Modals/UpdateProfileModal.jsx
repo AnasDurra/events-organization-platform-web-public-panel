@@ -42,12 +42,15 @@ import { useListsQuery } from "../../api/services/lists";
 import { useUpdateMyProfileMutation } from "../../api/services/attendeeProfile";
 
 import moment from "moment";
+// import dayjs from "dayjs";
+
 import { useForm } from "antd/es/form/Form";
 const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
     const [updateMyProfileMutation, { isLoading }] =
         useUpdateMyProfileMutation();
     const { data: listsData, isLoading: listsIsLoading } = useListsQuery();
 
+    const [form] = useForm();
     const [contactForm] = useForm();
 
     const [avatarImageFile, setAvatarImageFile] = useState(null);
@@ -101,8 +104,8 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
         const dataToSend = {
             job_id: values.job_id,
             address_id: values.address_id,
-            bio: values.bio,
-            birth_date: values.birth_date.format("DD-MM-YYYY"),
+            bio: values.bio ?? null,
+            birth_date: values.birth_date?.format("DD-MM-YYYY") ?? null,
 
             contacts: values.contacts ?? null,
         };
@@ -129,7 +132,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
         console.log(listsData);
     }, [listsData]);
     return (
-        <Spin spinning={isLoading}>
+        <Spin spinning={isLoading || listsIsLoading}>
             <Card style={{ width: "100%" }}>
                 <div>
                     <Row
@@ -175,15 +178,13 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                         borderRadius: "15px",
                                     }}
                                     src={data?.cover_img ?? coverImageSrc}
+                                    // alt="Cover Image"
                                     preview={false}
                                 />
                                 <div
                                     style={{
                                         display: "flex",
                                         justifyContent: "flex-end",
-                                        //   backgroundColor: "gray",
-                                        // marginBottom: "-40px",
-                                        // paddingTop: "35px",
                                     }}
                                 >
                                     <CameraOutlined
@@ -349,6 +350,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                 </Space>
                                 <Form
                                     onFinish={onFinish}
+                                    form={form}
                                     autoComplete="off"
                                     layout="vertical"
                                     style={{
@@ -379,9 +381,8 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                         }
                                     >
                                         <DatePicker
-                                            style={{
-                                                width: "100%",
-                                            }}
+                                            format={"DD-MM-YYYY"}
+                                            style={{ width: "100%" }}
                                         />
                                     </Form.Item>
 
@@ -430,17 +431,22 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                             {listsData?.result.contacts?.map(
                                                 (contact) => (
                                                     <Form.Item
-                                                        key={contact.value}
+                                                        key={contact.label}
                                                         name={contact.value}
                                                         label={contact.label}
                                                         initialValue={
                                                             data?.result.contacts?.find(
                                                                 (userContact) =>
-                                                                    userContact.id ===
-                                                                    contact.value
+                                                                    userContact.contact_name ===
+                                                                    contact.label
                                                             )?.contact_link ||
                                                             null
                                                         }
+                                                        normalize={(value) => {
+                                                            return value === ""
+                                                                ? null
+                                                                : value;
+                                                        }}
                                                     >
                                                         <Input
                                                             placeholder={
@@ -466,7 +472,11 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                             }}
                                         >
                                             <Button
-                                                onClick={modalCancel}
+                                                onClick={() => {
+                                                    form.resetFields();
+                                                    contactForm.resetFields();
+                                                    modalCancel();
+                                                }}
                                                 type="default"
                                             >
                                                 Cancel

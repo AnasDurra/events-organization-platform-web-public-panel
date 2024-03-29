@@ -91,7 +91,7 @@ export default function RegisterAttendee() {
             email: finalData.email,
             username: finalData.username,
             password: finalData.password,
-            birth_date: finalData.birth_date.format("DD-MM-YYYY"),
+            birth_date: finalData.birth_date?.format("DD-MM-YYYY"),
 
             phone_number: finalData.phone_number ?? null,
             bio: finalData.bio ?? null,

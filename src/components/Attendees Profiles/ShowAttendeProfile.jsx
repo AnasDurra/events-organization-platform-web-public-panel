@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
     AntDesignOutlined,
     CheckOutlined,
@@ -13,6 +13,7 @@ import {
     LoadingOutlined,
     MailOutlined,
     MobileOutlined,
+    PhoneOutlined,
     PlusOutlined,
     SettingOutlined,
     ShareAltOutlined,
@@ -72,7 +73,7 @@ const ShowAttendeProfile = () => {
         <div style={{ display: "flex", justifyContent: "center" }}>
             <Card
                 style={{
-                    width: isLargerThanLG(screens) ? "80%" : "100%",
+                    width: "100%",
                 }}
                 cover={
                     <Image
@@ -83,11 +84,11 @@ const ShowAttendeProfile = () => {
                         }
                     />
                 }
-                actions={[
-                    <SettingOutlined key="setting" />,
-                    <EditOutlined key="edit" />,
-                    <EllipsisOutlined key="ellipsis" />,
-                ]}
+                // actions={[
+                //     <SettingOutlined key="setting" />,
+                //     <EditOutlined key="edit" />,
+                //     <EllipsisOutlined key="ellipsis" />,
+                // ]}
             >
                 <div
                     style={{ display: "flex", justifyContent: "space-between" }}
@@ -141,12 +142,12 @@ const ShowAttendeProfile = () => {
                         />
                     </Skeleton>
 
-                    <Row>
+                    <Row style={{ marginLeft: "10px" }}>
                         {/* <Space.Compact block> */}
                         {/* <Tooltip title="Settings">
                                         <Button icon={<SettingOutlined />} />
                                     </Tooltip> */}
-                        <Tooltip title="Edit">
+                        <Tooltip title="Edit Your Profile">
                             <Button
                                 icon={<EditOutlined />}
                                 onClick={() => setIsUpdateModalOpen(true)}
@@ -193,13 +194,14 @@ const ShowAttendeProfile = () => {
                         width: "100%",
                     }}
                 >
-                    <Col span={isLargerThanLG(screens) ? 14 : 24}>
+                    <Col xs={24} sm={24} md={14}>
                         <Card
                             title={
                                 <div
                                     style={{
                                         display: "flex",
                                         justifyContent: "space-between",
+                                        alignItems: "center",
                                     }}
                                 >
                                     <Skeleton
@@ -214,7 +216,15 @@ const ShowAttendeProfile = () => {
                                             {data?.result.job?.label ??
                                                 "Does Not Work"}
                                         </Typography.Text>
-                                        <Space size={10}>
+                                        <Space
+                                            wrap
+                                            size={10}
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                margin: "15px 0px 15px 15px",
+                                            }}
+                                        >
                                             {data?.result.contacts?.map(
                                                 (contact) => (
                                                     <Tooltip
@@ -241,7 +251,7 @@ const ShowAttendeProfile = () => {
                                                                 />
                                                             )}
                                                             {contact.contact_name ===
-                                                                "Linkedin" && (
+                                                                "LinkedIn" && (
                                                                 <LinkedinOutlined
                                                                     style={{
                                                                         fontSize:
@@ -270,6 +280,33 @@ const ShowAttendeProfile = () => {
                                                                     }}
                                                                 />
                                                             )}
+                                                            {contact.contact_name ===
+                                                                "Email" && (
+                                                                <MailOutlined
+                                                                    style={{
+                                                                        fontSize:
+                                                                            "24px",
+                                                                        color: "black",
+                                                                    }}
+                                                                />
+                                                            )}
+                                                            {contact.contact_name ===
+                                                                "Phone Number" && (
+                                                                <a
+                                                                    href={`tel:${contact.value}`}
+                                                                    onClick={() =>
+                                                                        (window.location.href = `tel:${contact.value}`)
+                                                                    }
+                                                                >
+                                                                    <PhoneOutlined
+                                                                        style={{
+                                                                            fontSize:
+                                                                                "24px",
+                                                                            // color: "black",
+                                                                        }}
+                                                                    />
+                                                                </a>
+                                                            )}
                                                         </a>
                                                     </Tooltip>
                                                 )
@@ -295,10 +332,7 @@ const ShowAttendeProfile = () => {
                             </Skeleton>
                         </Card>
                     </Col>
-                    <Col
-                        style={{ minWidth: 300 }}
-                        span={isLargerThanLG(screens) ? 6 : 12}
-                    >
+                    <Col xs={24} sm={24} md={10}>
                         <Card
                             style={{ paddingBottom: "0px", margin: "0px" }}
                             hoverable
@@ -446,7 +480,7 @@ const ShowAttendeProfile = () => {
                 </Row>
             </Card>
             <Modal
-                title="Basic Modal"
+                title="Edit Profile"
                 open={isUpdateModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
