@@ -37,7 +37,7 @@ import TextArea from "antd/es/input/TextArea";
 import ImgCrop from "antd-img-crop";
 
 import { useEffect, useState } from "react";
-import { useListsQuery } from "../../api/services/lists";
+import { useConfigurationListsQuery } from "../../api/services/lists";
 
 import { useUpdateMyProfileMutation } from "../../api/services/attendeeProfile";
 
@@ -48,7 +48,8 @@ import { useForm } from "antd/es/form/Form";
 const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
     const [updateMyProfileMutation, { isLoading }] =
         useUpdateMyProfileMutation();
-    const { data: listsData, isLoading: listsIsLoading } = useListsQuery();
+    const { data: listsData, isLoading: listsIsLoading } =
+        useConfigurationListsQuery();
 
     const [form] = useForm();
     const [contactForm] = useForm();

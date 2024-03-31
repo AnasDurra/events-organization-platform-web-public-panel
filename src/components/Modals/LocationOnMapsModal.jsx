@@ -5,9 +5,9 @@ import {
     Map,
     Marker,
 } from "@vis.gl/react-google-maps";
-import { Button, Col, Input, Modal, Row, message } from "antd";
+import { Button, Col, Input, Modal, Row, Space, message } from "antd";
 
-const DefaultLocation = { lat: 33.5138, lng: 36.2765 };
+const DefaultLocation = { lat: 33.792773, lng: 36.145962 };
 
 const LocationOnMapsModal = ({
     isLocationOnMapModalOpen,
@@ -54,10 +54,38 @@ const LocationOnMapsModal = ({
         <Modal
             title="Select Event Location"
             open={isLocationOnMapModalOpen}
-            okText={"Save Location"}
-            onOk={handleOk}
             onCancel={handleCancel}
             width={1000}
+            footer={
+                <div>
+                    <footer
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                        }}
+                    >
+                        <Button
+                            key="extra"
+                            type="dashed"
+                            onClick={handleResetLocation}
+                            // style={{
+                            //     backgroundColor: "lightgray",
+                            //     color: "black",
+                            // }}
+                        >
+                            Reset Location
+                        </Button>
+                        <Space size={10}>
+                            <Button key="cancel" onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                            <Button key="ok" type="primary" onClick={handleOk}>
+                                Save Location
+                            </Button>
+                        </Space>
+                    </footer>
+                </div>
+            }
         >
             <Row gutter={16} align="middle" style={{ marginBottom: "16px" }}>
                 <Col span={6}>
@@ -75,17 +103,11 @@ const LocationOnMapsModal = ({
                     />
                 </Col>
             </Row>
-            <Row gutter={16} align="middle" style={{ marginBottom: "16px" }}>
-                <Col span={6}>
-                    <Button onClick={handleResetLocation}>
-                        Reset Location
-                    </Button>
-                </Col>
-            </Row>
+
             <APIProvider apiKey={"AIzaSyBKs-O-rGymgEBAn5PKn413rFC_O8jn_aE"}>
-                <div style={{ height: "50vh", width: "100%" }}>
+                <div style={{ height: "59vh", width: "100%" }}>
                     <Map
-                        defaultCenter={DefaultLocation}
+                        defaultCenter={tempPosition ?? DefaultLocation}
                         zoom={zoom}
                         onZoomChanged={handleChangeZoom}
                         onClick={handleMapClick}

@@ -1,11 +1,11 @@
 import { Upload, message, Form, Image, Select, DatePicker, Input } from "antd";
 import ImgCrop from "antd-img-crop";
 import { useEffect, useState } from "react";
-import { useListsQuery } from "../../api/services/lists";
+import { useConfigurationListsQuery } from "../../api/services/lists";
 import TextArea from "antd/es/input/TextArea";
 
 const ContactInfoRegistrationForm = ({ form }) => {
-    const { data, error, isLoading } = useListsQuery();
+    const { data, error, isLoading } = useConfigurationListsQuery();
 
     return (
         <Form
