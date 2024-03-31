@@ -1,5 +1,5 @@
 // import Cookies from 'js-cookie';
-import { errorMessage } from '../../components/messages/messages.api'; 
+import { errorMessage } from '../../utils/messages.api.jsx';
 import { router } from '../../router/index.jsx';
 
 const apiError = (store) => (next) => async (action) => {

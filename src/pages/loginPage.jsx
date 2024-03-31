@@ -17,11 +17,11 @@ import Password from "antd/es/input/Password";
 import Link from "antd/es/typography/Link";
 import { message } from "antd";
 
-import image1 from "../components/Attendees Profiles/assets/Hybrid-illu.png";
-import "../components/Attendees Profiles/styles/styles.css";
+import image1 from "../features/Attendees Profiles/assets/Hybrid-illu.png";
+import "../features/Attendees Profiles/styles/styles.css";
 import { useLoginMutation } from "../api/services/auth";
 import { useState } from "react";
-import FormWelcomeTitle from "../components/Form/FormWelcomeTitle";
+import FormWelcomeTitle from "../features/Form/FormWelcomeTitle";
 
 export default function RegisterAttendee() {
     const [loginMutation, { isLoading, isError, error }] = useLoginMutation();

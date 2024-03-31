@@ -1,24 +1,14 @@
 import { useEffect, useState } from "react";
 import {
-    AntDesignOutlined,
     CheckOutlined,
-    CommentOutlined,
-    DownloadOutlined,
     EditOutlined,
     EllipsisOutlined,
     FacebookOutlined,
-    HeartOutlined,
-    LikeOutlined,
     LinkedinOutlined,
-    LoadingOutlined,
     MailOutlined,
     MobileOutlined,
     PhoneOutlined,
-    PlusOutlined,
-    SettingOutlined,
-    ShareAltOutlined,
     StarFilled,
-    StarOutlined,
     TwitterOutlined,
     UserOutlined,
     WarningOutlined,
@@ -45,7 +35,7 @@ const { Meta } = Card;
 
 import { isLargerThanLG } from "../../utils/antd.utils";
 import { useViewMyProfileQuery } from "../../api/services/attendeeProfile";
-import UpdateProfileModal from "../Modals/UpdateProfileModal";
+import UpdateProfileModal from "./UpdateProfileModal";
 
 const ShowAttendeProfile = () => {
     const screens = Grid.useBreakpoint();
@@ -73,7 +63,7 @@ const ShowAttendeProfile = () => {
         <div style={{ display: "flex", justifyContent: "center" }}>
             <Card
                 style={{
-                    width: "100%",
+                    width: "90%",
                 }}
                 cover={
                     <Image
@@ -196,6 +186,12 @@ const ShowAttendeProfile = () => {
                 >
                     <Col xs={24} sm={24} md={14}>
                         <Card
+                            style={{
+                                height: "100%",
+                                padding: "10px",
+                                borderRadius: "8px",
+                                boxShadow: "0 3px 18px rgba(0, 0, 0, 0.1)",
+                            }}
                             title={
                                 <div
                                     style={{
@@ -334,8 +330,14 @@ const ShowAttendeProfile = () => {
                     </Col>
                     <Col xs={24} sm={24} md={10}>
                         <Card
-                            style={{ paddingBottom: "0px", margin: "0px" }}
-                            hoverable
+                            style={{
+                                height: "100%",
+                                padding: "10px",
+                                borderRadius: "8px",
+                                boxShadow: "0 3px 18px rgba(0, 0, 0, 0.1)",
+                                paddingBottom: "0px",
+                                margin: "0px",
+                            }}
                             size="small"
                             type="inner"
                         >

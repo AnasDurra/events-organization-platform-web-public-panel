@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import { auth } from '../services/auth';
-import { errorMessage } from '../../components/messages/messages.api.jsx';
+import { errorMessage } from '../../utils/messages.api.jsx';
 import { router } from '../../router/index.jsx';
 
 const authMiddleware = (store) => (next) => async (action) => {

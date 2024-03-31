@@ -36,7 +36,7 @@ import {
 import Meta from "antd/es/card/Meta";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
-import LocationOnMapsModal from "../Modals/LocationOnMapsModal";
+import LocationOnMapsModal from "./LocationOnMapsModal";
 import { useEventCreationListsQuery } from "../../api/services/lists";
 
 import ShowMap from "./ShowMap";
