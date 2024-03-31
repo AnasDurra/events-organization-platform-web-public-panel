@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import ErrorPage from "../pages/error-page";
-import RegisterAttendee from "../pages/loginPage";
+import RegisterAttendee from "../features/Attendees Profiles/RegisterAttendee";
 import ShowAttendeProfile from "../features/Attendees Profiles/ShowAttendeProfile";
 import LoginPage from "../pages/loginPage";
 import CreateEvent from "../features/Manage Events (org)/CreateEvent";
