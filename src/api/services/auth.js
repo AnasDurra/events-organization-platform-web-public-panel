@@ -28,7 +28,7 @@ export const auth = apiSlice.injectEndpoints({
         body: credentials,
       }),
       transformResponse: (responseData) => {
-        console.log("i am in transform rresponse");
+       console.log(responseData?.result?.accessToken);
         Cookies.set('accessToken', responseData?.result?.access_token, {
           expires: 12,
         });

@@ -5,6 +5,7 @@ import RegisterAttendee from "../components/Attendees Profiles/RegisterAttendee"
 import ShowAttendeProfile from "../components/Attendees Profiles/ShowAttendeProfile";
 import LoginPage from "../pages/loginPage";
 import CreateEvent from "../components/Manage Events (org)/CreateEvent";
+import ShowEvent from "../components/Manage Events (org)/ShowEvent";
 
 export const router = createBrowserRouter([
     {
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
                     {
                         path: "create",
                         element: <CreateEvent />,
+                    },
+                    {
+                        path: "show/:id",
+                        element: <ShowEvent />,
                     },
                 ],
             },

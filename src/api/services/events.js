@@ -12,18 +12,16 @@ export const events = apiSlice.injectEndpoints({
       }),
     }),
 
+    show: builder.query({
+      query: () => ({
+        url: 'event/show/25',
+        method: 'GET',
+      }),
+    }),
+
     
   }),
 });
 
-// export const getLoggedInUser = () => {
-//   const token = Cookies.get('accessToken');
-//   const decodedToken = jwtDecode(token);
 
-//   return {
-//     username: decodedToken.username,
-//     full_name: decodedToken.full_name
-//   };
-// };
-
-export const {useCreateMutation } = events;
+export const {useCreateMutation,useShowQuery } = events;
