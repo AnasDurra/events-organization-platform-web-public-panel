@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 
 export const apiSlice = createApi({
   reducerPath: 'api',
+
   baseQuery: fetchBaseQuery({
     credentials: 'same-origin',
     baseUrl: URL,
@@ -15,8 +16,7 @@ export const apiSlice = createApi({
       return headers;
     },
   }),
-  tagTypes: [],
+  tagTypes: ['one-org'],
+
   endpoints: () => ({}),
 });
-
-
