@@ -1,25 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-    APIProvider,
-    InfoWindow,
-    Map,
-    Marker,
-} from "@vis.gl/react-google-maps";
-import { Button, Col, Input, Modal, Row, Space, message } from "antd";
+import React, { useEffect, useRef, useState } from 'react';
+import { APIProvider, InfoWindow, Map, Marker } from '@vis.gl/react-google-maps';
+import { Button, Col, Input, Modal, Row, Space, message } from 'antd';
 
 const DefaultLocation = { lat: 33.792773, lng: 36.145962 };
 
-const LocationOnMapsModal = ({
-    isLocationOnMapModalOpen,
-    setIsLocationOnMapModalOpen,
-    position,
-    setPosition,
-}) => {
+const LocationOnMapsModal = ({ isLocationOnMapModalOpen, setIsLocationOnMapModalOpen, position, setPosition }) => {
     const [zoom, setZoom] = useState(9);
     const [tempPosition, setTempPosition] = useState(position);
 
     const handleOk = () => {
-        message.success("Location Add Successfully .. ");
+        message.success('Location Add Successfully .. ');
         setIsLocationOnMapModalOpen(false);
         setPosition(tempPosition ?? DefaultLocation);
     };
@@ -52,7 +42,7 @@ const LocationOnMapsModal = ({
     }, [position]);
     return (
         <Modal
-            title="Select Event Location"
+            title='Select Event Location'
             open={isLocationOnMapModalOpen}
             onCancel={handleCancel}
             width={1000}
@@ -60,13 +50,13 @@ const LocationOnMapsModal = ({
                 <div>
                     <footer
                         style={{
-                            display: "flex",
-                            justifyContent: "space-between",
+                            display: 'flex',
+                            justifyContent: 'space-between',
                         }}
                     >
                         <Button
-                            key="extra"
-                            type="dashed"
+                            key='extra'
+                            type='dashed'
                             onClick={handleResetLocation}
                             // style={{
                             //     backgroundColor: "lightgray",
@@ -76,10 +66,17 @@ const LocationOnMapsModal = ({
                             Reset Location
                         </Button>
                         <Space size={10}>
-                            <Button key="cancel" onClick={handleCancel}>
+                            <Button
+                                key='cancel'
+                                onClick={handleCancel}
+                            >
                                 Cancel
                             </Button>
-                            <Button key="ok" type="primary" onClick={handleOk}>
+                            <Button
+                                key='ok'
+                                type='primary'
+                                onClick={handleOk}
+                            >
                                 Save Location
                             </Button>
                         </Space>
@@ -87,7 +84,11 @@ const LocationOnMapsModal = ({
                 </div>
             }
         >
-            <Row gutter={16} align="middle" style={{ marginBottom: "16px" }}>
+            <Row
+                gutter={16}
+                align='middle'
+                style={{ marginBottom: '16px' }}
+            >
                 <Col span={6}>
                     <label>Latitute:</label>
                     <Input
@@ -104,8 +105,8 @@ const LocationOnMapsModal = ({
                 </Col>
             </Row>
 
-            <APIProvider apiKey={"AIzaSyBKs-O-rGymgEBAn5PKn413rFC_O8jn_aE"}>
-                <div style={{ height: "59vh", width: "100%" }}>
+            <APIProvider apiKey={'AIzaSyBKs-O-rGymgEBAn5PKn413rFC_O8jn_aE'}>
+                <div style={{ height: '59vh', width: '100%' }}>
                     <Map
                         defaultCenter={tempPosition ?? DefaultLocation}
                         zoom={zoom}

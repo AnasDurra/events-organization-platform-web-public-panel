@@ -1,31 +1,22 @@
-import {
-    Button,
-    Card,
-    Form,
-    Image,
-    Space,
-    Spin,
-    Steps,
-    Typography,
-} from "antd";
+import { Button, Card, Form, Image, Space, Spin, Steps, Typography } from 'antd';
 
-import Link from "antd/es/typography/Link";
-import { message } from "antd";
+import Link from 'antd/es/typography/Link';
+import { message } from 'antd';
 
-import image1 from "./assets/Hybrid-illu.png";
-import "./styles/styles.css";
-import { useSignupMutation } from "../../api/services/auth";
-import BasicInfoRegistrationForm from "../Form/BasicInfoRegistrationForm";
-import AdditionalInfoRegistrationForm from "../Form/AdditionalInfoRegistrationForm";
-import ContactInfoRegistrationForm from "../Form/ContactInfoRegistrationForm";
-import FormWelcomeTitle from "../Form/FormWelcomeTitle";
-import { useEffect, useState } from "react";
+import image1 from './assets/Hybrid-illu.png';
+import './styles/styles.css';
+import { useSignupMutation } from '../../api/services/auth';
+import BasicInfoRegistrationForm from '../Form/BasicInfoRegistrationForm';
+import AdditionalInfoRegistrationForm from '../Form/AdditionalInfoRegistrationForm';
+import ContactInfoRegistrationForm from '../Form/ContactInfoRegistrationForm';
+import FormWelcomeTitle from '../Form/FormWelcomeTitle';
+import { useEffect, useState } from 'react';
 
 export default function RegisterAttendee() {
     const [signupMutation, { isLoading }] = useSignupMutation();
 
     const [imageFile, setImageFile] = useState(null);
-    const [imageSrc, setImageSrc] = useState("");
+    const [imageSrc, setImageSrc] = useState('');
     const [data, setData] = useState(null);
 
     const [form1] = Form.useForm();
@@ -34,11 +25,11 @@ export default function RegisterAttendee() {
 
     const steps = [
         {
-            title: "Basic",
+            title: 'Basic',
             content: <BasicInfoRegistrationForm form={form1} />,
         },
         {
-            title: "Additional",
+            title: 'Additional',
             content: (
                 <AdditionalInfoRegistrationForm
                     form={form2}
@@ -49,7 +40,7 @@ export default function RegisterAttendee() {
             ),
         },
         {
-            title: "Contact",
+            title: 'Contact',
             content: <ContactInfoRegistrationForm form={form3} />,
         },
     ];
@@ -64,7 +55,7 @@ export default function RegisterAttendee() {
                     next();
                 })
                 .catch((errorInfo) => {
-                    console.error("Validation failed:", errorInfo);
+                    console.error('Validation failed:', errorInfo);
                 });
         }
         // Case Form2
@@ -82,7 +73,7 @@ export default function RegisterAttendee() {
         Object.keys(form3Data).forEach((key) => {
             contacts.push([key, form3Data[key]]);
         });
-        form3Data["contacts"] = contacts;
+        form3Data['contacts'] = contacts;
 
         const finalData = { ...data, ...form3Data };
         const dataToSend = {
@@ -91,7 +82,7 @@ export default function RegisterAttendee() {
             email: finalData.email,
             username: finalData.username,
             password: finalData.password,
-            birth_date: finalData.birth_date?.format("DD-MM-YYYY"),
+            birth_date: finalData.birth_date?.format('DD-MM-YYYY'),
 
             phone_number: finalData.phone_number ?? null,
             bio: finalData.bio ?? null,
@@ -113,17 +104,11 @@ export default function RegisterAttendee() {
         const formData = new FormData();
         Object.keys(dataToSend).forEach((key) => {
             // console.log(key);
-            if (key === "contacts") {
+            if (key === 'contacts') {
                 dataToSend.contacts.forEach((contact, index) => {
                     const [contact_id, contact_link] = contact;
-                    formData.append(
-                        `contacts[${index}][contact_id]`,
-                        contact_id
-                    );
-                    formData.append(
-                        `contacts[${index}][contact_link]`,
-                        contact_link
-                    );
+                    formData.append(`contacts[${index}][contact_id]`, contact_id);
+                    formData.append(`contacts[${index}][contact_link]`, contact_link);
                 });
             } else {
                 formData.append(key, dataToSend[key]);
@@ -138,11 +123,11 @@ export default function RegisterAttendee() {
             .then((res) => {
                 console.log(res);
                 if (res.statusCode === 200) {
-                    message.success("Registered Successfully !");
+                    message.success('Registered Successfully !');
                 }
             })
             .catch((error) => {
-                console.error("Error:", error);
+                console.error('Error:', error);
                 error.data.result.response.message.forEach((value) => {
                     message.error(value);
                 });
@@ -166,20 +151,20 @@ export default function RegisterAttendee() {
     return (
         <div
             style={{
-                display: "flex",
-                justifyContent: "center",
+                display: 'flex',
+                justifyContent: 'center',
             }}
         >
             <Card>
                 <Space
-                    direction="horizontal"
+                    direction='horizontal'
                     style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "flex-start",
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
                     }}
                 >
-                    <div className="registerImage">
+                    <div className='registerImage'>
                         <Image
                             width={320}
                             height={800}
@@ -190,27 +175,26 @@ export default function RegisterAttendee() {
                     <div>
                         <Card
                             style={{
-                                height: "750px",
-                                width: "100%",
-                                maxWidth: "430px",
-                                overflow: "auto",
+                                height: '750px',
+                                width: '100%',
+                                maxWidth: '430px',
+                                overflow: 'auto',
                             }}
                         >
                             <Spin spinning={isLoading}>
                                 <FormWelcomeTitle
-                                    title={"Join us for Evento!"}
+                                    title={'Join us for Evento!'}
                                     paragraph={
                                         <>
-                                            Register today for exclusive offers
-                                            and a seamless event experience.{" "}
+                                            Register today for exclusive offers and a seamless event experience.{' '}
                                             <br></br>
-                                            Already have an Evento Account?{" "}
+                                            Already have an Evento Account?{' '}
                                             <Link
-                                                href="login"
+                                                href='login'
                                                 style={{
-                                                    color: "blue",
-                                                    fontWeight: "bold",
-                                                    fontSize: "13px",
+                                                    color: 'blue',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '13px',
                                                 }}
                                             >
                                                 Sign In
@@ -220,26 +204,24 @@ export default function RegisterAttendee() {
                                 />
 
                                 <Steps
-                                    size="small"
+                                    size='small'
                                     current={current}
                                     items={items}
                                 />
 
-                                <div style={contentStyle}>
-                                    {steps[current].content}
-                                </div>
+                                <div style={contentStyle}>{steps[current].content}</div>
 
                                 <div
                                     style={{
-                                        display: "flex",
-                                        justifyContent: "flex-end",
+                                        display: 'flex',
+                                        justifyContent: 'flex-end',
                                         marginTop: 24,
                                     }}
                                 >
                                     {current > 0 && (
                                         <Button
                                             style={{
-                                                margin: "0 8px",
+                                                margin: '0 8px',
                                             }}
                                             onClick={() => prev()}
                                         >
@@ -248,7 +230,7 @@ export default function RegisterAttendee() {
                                     )}
                                     {current < steps.length - 1 && (
                                         <Button
-                                            type="primary"
+                                            type='primary'
                                             onClick={() => handleFormSubmit()}
                                         >
                                             Next
@@ -256,7 +238,7 @@ export default function RegisterAttendee() {
                                     )}
                                     {current === steps.length - 1 && (
                                         <Button
-                                            type="primary"
+                                            type='primary'
                                             onClick={onFinish}
                                         >
                                             Done

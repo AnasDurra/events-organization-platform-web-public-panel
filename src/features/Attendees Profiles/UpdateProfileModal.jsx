@@ -11,7 +11,7 @@ import {
     UserOutlined,
     WarningOutlined,
     WhatsAppOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 import {
     Avatar,
     Button,
@@ -31,33 +31,31 @@ import {
     Typography,
     Upload,
     message,
-} from "antd";
-import Input from "antd/es/input/Input";
-import TextArea from "antd/es/input/TextArea";
-import ImgCrop from "antd-img-crop";
+} from 'antd';
+import Input from 'antd/es/input/Input';
+import TextArea from 'antd/es/input/TextArea';
+import ImgCrop from 'antd-img-crop';
 
-import { useEffect, useState } from "react";
-import { useConfigurationListsQuery } from "../../api/services/lists";
+import { useEffect, useState } from 'react';
+import { useConfigurationListsQuery } from '../../api/services/lists';
 
-import { useUpdateMyProfileMutation } from "../../api/services/attendeeProfile";
+import { useUpdateMyProfileMutation } from '../../api/services/attendeeProfile';
 
-import moment from "moment";
+import moment from 'moment';
 // import dayjs from "dayjs";
 
-import { useForm } from "antd/es/form/Form";
+import { useForm } from 'antd/es/form/Form';
 const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
-    const [updateMyProfileMutation, { isLoading }] =
-        useUpdateMyProfileMutation();
-    const { data: listsData, isLoading: listsIsLoading } =
-        useConfigurationListsQuery();
+    const [updateMyProfileMutation, { isLoading }] = useUpdateMyProfileMutation();
+    const { data: listsData, isLoading: listsIsLoading } = useConfigurationListsQuery();
 
     const [form] = useForm();
     const [contactForm] = useForm();
 
     const [avatarImageFile, setAvatarImageFile] = useState(null);
-    const [avatarImageSrc, setAvatarImageSrc] = useState("");
+    const [avatarImageSrc, setAvatarImageSrc] = useState('');
     const [coverImageFile, setCoverImageFile] = useState(null);
-    const [coverImageSrc, setCoverImageSrc] = useState("");
+    const [coverImageSrc, setCoverImageSrc] = useState('');
 
     function getFileUrl(file, type, callback) {
         const reader = new FileReader();
@@ -67,9 +65,9 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
             callback(url);
         };
 
-        if (type === "avatar") {
+        if (type === 'avatar') {
             setAvatarImageFile(file);
-        } else if (type === "cover") {
+        } else if (type === 'cover') {
             setCoverImageFile(file);
         }
         reader.readAsDataURL(file);
@@ -77,9 +75,9 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
 
     const handleFileChange = (file, type) => {
         getFileUrl(file, type, (url) => {
-            if (type === "avatar") {
+            if (type === 'avatar') {
                 setAvatarImageSrc(url);
-            } else if (type === "cover") {
+            } else if (type === 'cover') {
                 setCoverImageSrc(url);
             }
         });
@@ -100,13 +98,13 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                 contact_link: contactsFormValues[key],
             });
         });
-        values["contacts"] = contacts;
+        values['contacts'] = contacts;
 
         const dataToSend = {
             job_id: values.job_id,
             address_id: values.address_id,
             bio: values.bio ?? null,
-            birth_date: values.birth_date?.format("DD-MM-YYYY") ?? null,
+            birth_date: values.birth_date?.format('DD-MM-YYYY') ?? null,
 
             contacts: values.contacts ?? null,
         };
@@ -118,12 +116,12 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
             .then((res) => {
                 console.log(res);
                 if (res.statusCode === 200) {
-                    message.success("Updated Successfully !");
+                    message.success('Updated Successfully !');
                     modalOk();
                 }
             })
             .catch((error) => {
-                console.error("Error:", error);
+                console.error('Error:', error);
                 error.data.result.response.message.forEach((value) => {
                     message.error(value);
                 });
@@ -134,49 +132,52 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
     }, [listsData]);
     return (
         <Spin spinning={isLoading || listsIsLoading}>
-            <Card style={{ width: "100%" }}>
+            <Card style={{ width: '100%' }}>
                 <div>
                     <Row
                         style={{
-                            display: "flex",
-                            justifyContent: "space-evenly",
-                            maxHeight: "40em",
-                            overflow: "auto",
+                            display: 'flex',
+                            justifyContent: 'space-evenly',
+                            maxHeight: '40em',
+                            overflow: 'auto',
                         }}
                         gutter={10}
                     >
-                        <Col xs={24} sm={24}>
+                        <Col
+                            xs={24}
+                            sm={24}
+                        >
                             <Popover
                                 content={
                                     <ImgCrop
                                         aspect={3 / 1}
                                         onModalOk={(file) => {
-                                            handleFileChange(file, "cover");
+                                            handleFileChange(file, 'cover');
                                         }}
                                         rotationSlider
                                     >
                                         <Upload
-                                            name="cover"
+                                            name='cover'
                                             maxCount={1}
                                             showUploadList={false}
                                             onChange={(file) => {
-                                                handleFileChange(file, "cover");
+                                                handleFileChange(file, 'cover');
                                             }}
                                         >
-                                            <Button type="text">
+                                            <Button type='text'>
                                                 <UploadOutlined /> Change Cover
                                             </Button>
                                         </Upload>
                                     </ImgCrop>
                                 }
-                                trigger="click"
-                                placement="bottomRight"
+                                trigger='click'
+                                placement='bottomRight'
                             >
                                 <Image
                                     style={{
-                                        minHeight: "150px",
+                                        minHeight: '150px',
                                         // maxHeight: "150px",
-                                        borderRadius: "15px",
+                                        borderRadius: '15px',
                                     }}
                                     src={data?.cover_img ?? coverImageSrc}
                                     // alt="Cover Image"
@@ -184,63 +185,59 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                 />
                                 <div
                                     style={{
-                                        display: "flex",
-                                        justifyContent: "flex-end",
+                                        display: 'flex',
+                                        justifyContent: 'flex-end',
                                     }}
                                 >
                                     <CameraOutlined
                                         style={{
-                                            fontSize: "18px",
-                                            color: "#00000",
-                                            backgroundColor: "#E6E6E6",
-                                            borderRadius: "50%",
-                                            padding: "3px",
+                                            fontSize: '18px',
+                                            color: '#00000',
+                                            backgroundColor: '#E6E6E6',
+                                            borderRadius: '50%',
+                                            padding: '3px',
                                         }}
                                     />
                                 </div>
                             </Popover>
                         </Col>
 
-                        <Col xs={24} sm={6}>
+                        <Col
+                            xs={24}
+                            sm={6}
+                        >
                             <div
                                 style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    marginTop: "-70px",
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    marginTop: '-70px',
                                 }}
                             >
                                 <Popover
                                     content={
                                         <ImgCrop
                                             onModalOk={(file) => {
-                                                handleFileChange(
-                                                    file,
-                                                    "avatar"
-                                                );
+                                                handleFileChange(file, 'avatar');
                                             }}
                                             rotationSlider
                                         >
                                             <Upload
-                                                name="avatar"
+                                                name='avatar'
                                                 maxCount={1}
                                                 showUploadList={false}
                                                 onChange={(file) => {
-                                                    handleFileChange(
-                                                        file,
-                                                        "avatar"
-                                                    );
+                                                    handleFileChange(file, 'avatar');
                                                 }}
                                             >
-                                                <Button type="text">
-                                                    <UploadOutlined /> Change
-                                                    Avatar
+                                                <Button type='text'>
+                                                    <UploadOutlined /> Change Avatar
                                                 </Button>
                                             </Upload>
                                         </ImgCrop>
                                     }
-                                    trigger="click"
-                                    placement="bottom"
+                                    trigger='click'
+                                    placement='bottom'
                                 >
                                     <Space>
                                         <Avatar
@@ -251,29 +248,29 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                                     ? avatarImageSrc
                                                     : data?.result.profile_img
                                                     ? data?.result.profile_img
-                                                    : "https://api.dicebear.com/7.x/miniavs/svg?seed=8"
+                                                    : 'https://api.dicebear.com/7.x/miniavs/svg?seed=8'
                                             }
                                             style={{
-                                                textAlign: "center",
-                                                marginBottom: "10px",
-                                                border: "3px solid white",
-                                                borderRadius: "50%",
+                                                textAlign: 'center',
+                                                marginBottom: '10px',
+                                                border: '3px solid white',
+                                                borderRadius: '50%',
                                             }}
                                         />
                                         <div
                                             style={{
-                                                marginBottom: "-40px",
-                                                paddingTop: "35px",
+                                                marginBottom: '-40px',
+                                                paddingTop: '35px',
                                             }}
                                         >
                                             <CameraOutlined
                                                 style={{
-                                                    fontSize: "18px",
-                                                    color: "#00000",
-                                                    marginLeft: "-27px",
-                                                    backgroundColor: "#E6E6E6",
-                                                    borderRadius: "50%",
-                                                    padding: "3px",
+                                                    fontSize: '18px',
+                                                    color: '#00000',
+                                                    marginLeft: '-27px',
+                                                    backgroundColor: '#E6E6E6',
+                                                    borderRadius: '50%',
+                                                    padding: '3px',
                                                 }}
                                             />
                                         </div>
@@ -281,19 +278,22 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                 </Popover>
                             </div>
                         </Col>
-                        <Col xs={24} sm={18}>
+                        <Col
+                            xs={24}
+                            sm={18}
+                        >
                             <div
                                 style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    width: "100%",
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    width: '100%',
                                 }}
                             >
                                 <Typography.Title
-                                    style={{ marginTop: "0px" }}
+                                    style={{ marginTop: '0px' }}
                                     level={3}
                                 >
-                                    {data?.result.full_name ?? ""}
+                                    {data?.result.full_name ?? ''}
                                 </Typography.Title>
 
                                 <Space size={10}>
@@ -303,45 +303,39 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                             key={contact.id}
                                         >
                                             <a
-                                                href={getContactLink(
-                                                    contact.contact_name
-                                                )}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
+                                                href={getContactLink(contact.contact_name)}
+                                                target='_blank'
+                                                rel='noopener noreferrer'
                                             >
-                                                {contact.contact_name ===
-                                                    "WhatsApp" && (
+                                                {contact.contact_name === 'WhatsApp' && (
                                                     <WhatsAppOutlined
                                                         style={{
-                                                            fontSize: "24px",
-                                                            color: "#25D366",
+                                                            fontSize: '24px',
+                                                            color: '#25D366',
                                                         }}
                                                     />
                                                 )}
-                                                {contact.contact_name ===
-                                                    "Linkedin" && (
+                                                {contact.contact_name === 'Linkedin' && (
                                                     <LinkedinOutlined
                                                         style={{
-                                                            fontSize: "24px",
-                                                            color: "#0077B5",
+                                                            fontSize: '24px',
+                                                            color: '#0077B5',
                                                         }}
                                                     />
                                                 )}
-                                                {contact.contact_name ===
-                                                    "Facebook" && (
+                                                {contact.contact_name === 'Facebook' && (
                                                     <FacebookOutlined
                                                         style={{
-                                                            fontSize: "24px",
-                                                            color: "#3b5998",
+                                                            fontSize: '24px',
+                                                            color: '#3b5998',
                                                         }}
                                                     />
                                                 )}
-                                                {contact.contact_name ===
-                                                    "Twitter" && (
+                                                {contact.contact_name === 'Twitter' && (
                                                     <TwitterOutlined
                                                         style={{
-                                                            fontSize: "24px",
-                                                            color: "#1DA1F2",
+                                                            fontSize: '24px',
+                                                            color: '#1DA1F2',
                                                         }}
                                                     />
                                                 )}
@@ -352,124 +346,106 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                 <Form
                                     onFinish={onFinish}
                                     form={form}
-                                    autoComplete="off"
-                                    layout="vertical"
+                                    autoComplete='off'
+                                    layout='vertical'
                                     style={{
-                                        marginTop: "1em",
+                                        marginTop: '1em',
                                     }}
-                                    className="my-custom-form"
+                                    className='my-custom-form'
                                 >
                                     <Form.Item
-                                        initialValue={data?.result.bio ?? ""}
-                                        label="Bio"
-                                        name="bio"
+                                        initialValue={data?.result.bio ?? ''}
+                                        label='Bio'
+                                        name='bio'
                                     >
                                         <TextArea
-                                            placeholder="Tell us about yourself..."
+                                            placeholder='Tell us about yourself...'
                                             allowClear
                                         />
                                     </Form.Item>
                                     <Form.Item
-                                        label="Birth Date"
-                                        name="birth_date"
+                                        label='Birth Date'
+                                        name='birth_date'
                                         initialValue={
                                             data?.result.birth_date
-                                                ? moment(
-                                                      data?.result.birth_date,
-                                                      "DD-MM-YYYY"
-                                                  )
+                                                ? moment(data?.result.birth_date, 'DD-MM-YYYY')
                                                 : null
                                         }
                                     >
                                         <DatePicker
-                                            format={"DD-MM-YYYY"}
-                                            style={{ width: "100%" }}
+                                            format={'DD-MM-YYYY'}
+                                            style={{ width: '100%' }}
                                         />
                                     </Form.Item>
 
                                     <Form.Item
-                                        label="Job"
-                                        name="job_id"
-                                        initialValue={
-                                            data?.result.job?.value ?? null
-                                        }
+                                        label='Job'
+                                        name='job_id'
+                                        initialValue={data?.result.job?.value ?? null}
                                     >
                                         <Select
                                             loading={listsIsLoading}
                                             showSearch
-                                            placeholder="Select your job"
+                                            placeholder='Select your job'
                                             options={listsData?.result.jobs}
                                         />
                                     </Form.Item>
 
                                     <Form.Item
-                                        label="Address"
-                                        name="address_id"
-                                        initialValue={
-                                            data?.result.job?.value ?? null
-                                        }
+                                        label='Address'
+                                        name='address_id'
+                                        initialValue={data?.result.job?.value ?? null}
                                     >
                                         <Select
                                             loading={listsIsLoading}
                                             showSearch
-                                            placeholder="Select your address"
-                                            options={
-                                                listsData?.result.addresses
-                                            }
+                                            placeholder='Select your address'
+                                            options={listsData?.result.addresses}
                                         />
                                     </Form.Item>
 
                                     <Form
                                         form={contactForm}
-                                        autoComplete="off"
-                                        layout="vertical"
+                                        autoComplete='off'
+                                        layout='vertical'
                                         style={{
-                                            marginTop: "1em",
+                                            marginTop: '1em',
                                         }}
-                                        className="my-custom-form"
+                                        className='my-custom-form'
                                     >
                                         <Form.Item>
-                                            {listsData?.result.contacts?.map(
-                                                (contact) => (
-                                                    <Form.Item
-                                                        key={contact.label}
-                                                        name={contact.value}
-                                                        label={contact.label}
-                                                        initialValue={
-                                                            data?.result.contacts?.find(
-                                                                (userContact) =>
-                                                                    userContact.contact_name ===
-                                                                    contact.label
-                                                            )?.contact_link ||
-                                                            null
+                                            {listsData?.result.contacts?.map((contact) => (
+                                                <Form.Item
+                                                    key={contact.label}
+                                                    name={contact.value}
+                                                    label={contact.label}
+                                                    initialValue={
+                                                        data?.result.contacts?.find(
+                                                            (userContact) => userContact.contact_name === contact.label
+                                                        )?.contact_link || null
+                                                    }
+                                                    normalize={(value) => {
+                                                        return value === '' ? null : value;
+                                                    }}
+                                                >
+                                                    <Input
+                                                        placeholder={
+                                                            contact.label === 'Email' ||
+                                                            contact.label === 'Phone Number'
+                                                                ? contact.label
+                                                                : `${contact.label} Profile URL`
                                                         }
-                                                        normalize={(value) => {
-                                                            return value === ""
-                                                                ? null
-                                                                : value;
-                                                        }}
-                                                    >
-                                                        <Input
-                                                            placeholder={
-                                                                contact.label ===
-                                                                    "Email" ||
-                                                                contact.label ===
-                                                                    "Phone Number"
-                                                                    ? contact.label
-                                                                    : `${contact.label} Profile URL`
-                                                            }
-                                                        />
-                                                    </Form.Item>
-                                                )
-                                            )}
+                                                    />
+                                                </Form.Item>
+                                            ))}
                                         </Form.Item>
                                     </Form>
 
                                     <Form.Item>
                                         <Space
                                             style={{
-                                                display: "flex",
-                                                justifyContent: "flex-end",
+                                                display: 'flex',
+                                                justifyContent: 'flex-end',
                                             }}
                                         >
                                             <Button
@@ -478,14 +454,14 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                                     contactForm.resetFields();
                                                     modalCancel();
                                                 }}
-                                                type="default"
+                                                type='default'
                                             >
                                                 Cancel
                                             </Button>
                                             <Button
                                                 loading={isLoading}
-                                                type="primary"
-                                                htmlType="submit"
+                                                type='primary'
+                                                htmlType='submit'
                                             >
                                                 Submit
                                             </Button>
@@ -505,15 +481,15 @@ export default UpdateProfileModal;
 
 function getContactLink(contactName) {
     switch (contactName) {
-        case "WhatsApp":
-            return "https://wa.me/";
-        case "Linkedin":
-            return "https://linkedin.com/";
-        case "Facebook":
-            return "https://facebook.com/";
-        case "Twitter":
-            return "https://twitter.com/";
+        case 'WhatsApp':
+            return 'https://wa.me/';
+        case 'Linkedin':
+            return 'https://linkedin.com/';
+        case 'Facebook':
+            return 'https://facebook.com/';
+        case 'Twitter':
+            return 'https://twitter.com/';
         default:
-            return "#";
+            return '#';
     }
 }
