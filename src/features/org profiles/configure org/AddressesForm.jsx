@@ -41,11 +41,7 @@ export default function AddressesForm({
             {org?.addresses?.map((addr) => (
               <div
                 key={addr.id}
-                style={{
-                  width: '100%',
-                  color: 'darkblue',
-                  alignItems: 'center',
-                }}
+                className='w-full flex items-center py-2 text-green-900'
               >
                 <Button
                   type='text'

@@ -14,18 +14,18 @@ import ShowEvent from '../features/Manage Events (org)/ShowEvent';
 
 export const router = createBrowserRouter([
   {
+    path: '/login',
+    element: <LoginPage />,
+  },
+  {
+    path: '/register',
+    element: <RegisterAttendee />,
+  },
+  {
     path: '/',
     element: <AppLayout />,
     errorElement: <ErrorPage />,
     children: [
-      {
-        path: '/login',
-        element: <LoginPage />,
-      },
-      {
-        path: '/register',
-        element: <RegisterAttendee />,
-      },
       {
         path: '/attende-profile',
         element: <ShowAttendeProfile />,
