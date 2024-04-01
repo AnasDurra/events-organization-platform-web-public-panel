@@ -20,7 +20,11 @@ import UpdateEventTagsModal from "./UpdateEventTagsModal";
 import UpdateEventAgeGroupModal from "./UpdateEventAgeGroupModal";
 const { RangePicker } = DatePicker;
 
-const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
+const UpdateEventModal = ({
+    isUpdateModalOpen,
+    setIsUpdateModalOpen,
+    eventData,
+}) => {
     const [formData, setFormData] = useState({
         address_notes: "in the old street(updated)",
         registration_start_date: "2024-04-01 12:25:00",
@@ -114,7 +118,7 @@ const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
                             <EditOutlined
                                 style={{ marginRight: "8px", color: "#1890ff" }}
                             />{" "}
-                            <strong>Title:</strong> {"hello world"}
+                            <strong>Title:</strong> {eventData?.result?.title}
                         </Paragraph>
                         <Paragraph
                             style={{ marginBottom: "12px", color: "#666" }}
@@ -122,7 +126,8 @@ const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
                             <InfoCircleOutlined
                                 style={{ marginRight: "8px", color: "#1890ff" }}
                             />{" "}
-                            <strong>Description:</strong> {"hello world"}
+                            <strong>Description:</strong>{" "}
+                            {eventData?.result?.description}
                         </Paragraph>
                         <Paragraph
                             style={{ marginBottom: "12px", color: "#666" }}
@@ -130,7 +135,8 @@ const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
                             <SettingOutlined
                                 style={{ marginRight: "8px", color: "#1890ff" }}
                             />{" "}
-                            <strong>Event Type:</strong> {"hello world"}
+                            <strong>Event Type:</strong>{" "}
+                            {eventData?.result?.event_type}
                         </Paragraph>
 
                         <Paragraph
@@ -141,13 +147,28 @@ const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
                             />{" "}
                             <strong>Location:</strong>{" "}
                             {
-                                <div style={{ margin: "25px 10px" }}>
-                                    <ShowMap
-                                        position={{
-                                            lat: 33.792773,
-                                            lng: 36.145962,
-                                        }}
-                                    />
+                                <div style={{ margin: "15px 10px" }}>
+                                    {eventData?.result?.location?.latitude && (
+                                        <ShowMap
+                                            position={{
+                                                lat: eventData?.result?.location
+                                                    ?.latitude
+                                                    ? parseFloat(
+                                                          eventData.result
+                                                              .location.latitude
+                                                      )
+                                                    : 0,
+                                                lng: eventData?.result?.location
+                                                    ?.longitude
+                                                    ? parseFloat(
+                                                          eventData.result
+                                                              .location
+                                                              .longitude
+                                                      )
+                                                    : 0,
+                                            }}
+                                        />
+                                    )}
                                 </div>
                             }
                         </Paragraph>
@@ -157,7 +178,9 @@ const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
                             <EnvironmentOutlined
                                 style={{ marginRight: "8px", color: "#1890ff" }}
                             />{" "}
-                            <strong>Address Notes</strong> {"hello world"}
+                            <strong>Address Notes</strong>{" "}
+                            {eventData?.result?.address_notes ??
+                                "No additional notes"}
                         </Paragraph>
                         <Paragraph
                             style={{ marginBottom: "12px", color: "#666" }}
@@ -165,7 +188,8 @@ const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
                             <CalendarOutlined
                                 style={{ marginRight: "8px", color: "#1890ff" }}
                             />{" "}
-                            <strong>Start Date & Time:</strong> {"hello world"}
+                            <strong>Start Date & Time:</strong>{" "}
+                            {eventData?.result?.registration_start_date}
                         </Paragraph>
                         <Paragraph
                             style={{ marginBottom: "12px", color: "#666" }}
@@ -173,7 +197,8 @@ const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
                             <CalendarOutlined
                                 style={{ marginRight: "8px", color: "#1890ff" }}
                             />{" "}
-                            <strong>End Date & Time:</strong> {"hello world"}
+                            <strong>End Date & Time:</strong>
+                            {eventData?.result?.registration_end_date}
                         </Paragraph>
 
                         <Paragraph
@@ -182,7 +207,8 @@ const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
                             <TeamOutlined
                                 style={{ marginRight: "8px", color: "#1890ff" }}
                             />{" "}
-                            <strong>Capacity:</strong> {"hello world"}
+                            <strong>Capacity:</strong>{" "}
+                            {eventData?.result?.capacity}
                         </Paragraph>
                     </div>
                 </div>
@@ -231,18 +257,13 @@ const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
                             <Space wrap>
                                 <Typography.Text strong></Typography.Text>
                                 <div>
-                                    <Tag style={{ fontSize: "15px" }}>
-                                        Tag 1
-                                    </Tag>
-                                    <Tag style={{ fontSize: "15px" }}>
-                                        Tag 2
-                                    </Tag>
-                                    <Tag style={{ fontSize: "15px" }}>
-                                        Tag 3
-                                    </Tag>
-                                    <Tag style={{ fontSize: "15px" }}>
-                                        Tag 4
-                                    </Tag>
+                                    {eventData?.result?.tags.length === 0
+                                        ? "No Tags for this event"
+                                        : eventData?.result?.tags.map((tag) => {
+                                              <Tag style={{ fontSize: "15px" }}>
+                                                  {tag?.tag?.label}
+                                              </Tag>;
+                                          })}
                                 </div>
                             </Space>
                         }
@@ -293,18 +314,21 @@ const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
                             <Space wrap>
                                 <Typography.Text strong></Typography.Text>
                                 <div>
-                                    <Tag style={{ fontSize: "15px" }}>
-                                        Age Group 1
-                                    </Tag>
-                                    <Tag style={{ fontSize: "15px" }}>
-                                        Age Group 2
-                                    </Tag>
-                                    <Tag style={{ fontSize: "15px" }}>
-                                        Age Group 3
-                                    </Tag>
-                                    <Tag style={{ fontSize: "15px" }}>
-                                        Age Group 4
-                                    </Tag>
+                                    {eventData?.result?.age_groups.length === 0
+                                        ? "No Age Groups for this event"
+                                        : eventData?.result?.age_groups.map(
+                                              (age_group) => {
+                                                  <Tag
+                                                      style={{
+                                                          fontSize: "15px",
+                                                      }}
+                                                  >
+                                                      {
+                                                          age_group?.age_group_name
+                                                      }
+                                                  </Tag>;
+                                              }
+                                          )}
                                 </div>
                             </Space>
                         }
@@ -319,6 +343,7 @@ const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
                     setIsUpdateEventDetailsModalOpen={
                         setIsUpdateEventDetailsModalOpen
                     }
+                    eventData={eventData}
                 />
             )}
             {isUpdateEventTagsModalOpen && (
@@ -327,6 +352,7 @@ const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
                     setIsUpdateEventTagsModalOpen={
                         setIsUpdateEventTagsModalOpen
                     }
+                    eventData={eventData}
                 />
             )}
 
@@ -338,6 +364,7 @@ const UpdateEventModal = ({ isUpdateModalOpen, setIsUpdateModalOpen }) => {
                     setIsUpdateEventAgeGroupModalOpen={
                         setIsUpdateEventAgeGroupModalOpen
                     }
+                    eventData={eventData}
                 />
             )}
         </div>

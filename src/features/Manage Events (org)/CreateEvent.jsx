@@ -61,7 +61,7 @@ const CreateEvent = () => {
 
     const [days, setDays] = useState([
         {
-            value: null,
+            day_date: null,
             slots: [{ start_time: null, end_time: null, label: null }],
         },
     ]);
@@ -93,7 +93,7 @@ const CreateEvent = () => {
         }
     };
     const addDay = () => {
-        setDays((prevDays) => [...prevDays, { value: null, slots: [null] }]);
+        setDays((prevDays) => [...prevDays, { day_date: null, slots: [null] }]);
         console.log(days);
     };
     const removeDay = (dayIndex) => {
@@ -108,7 +108,7 @@ const CreateEvent = () => {
         let newValues = [];
         const slotLabel = days[dayIndex]?.slots[slotIndex]?.label ?? null;
         if (value) {
-            const dayDate = days[dayIndex].value;
+            const dayDate = days[dayIndex].day_date;
             const [day, month, year] = dayDate
                 ? dayDate.split("-").map(Number)
                 : [null, null, null];
@@ -137,7 +137,7 @@ const CreateEvent = () => {
     const handleDateChange = (date, dateString, dayIndex) => {
         setDays((prevDays) => {
             const newDays = [...prevDays];
-            newDays[dayIndex].value = dateString;
+            newDays[dayIndex].day_date = dateString;
             return newDays;
         });
     };
@@ -206,7 +206,6 @@ const CreateEvent = () => {
                     },
                 };
             }
-            console.log("data", data);
 
             const dataToSend = {
                 title: data?.title,
@@ -236,6 +235,11 @@ const CreateEvent = () => {
                 attachments: data?.attachments?.fileList,
                 location: data?.location,
             };
+            for (const key in dataToSend) {
+                if (dataToSend[key] == null) {
+                    delete dataToSend[key];
+                }
+            }
 
             console.log(dataToSend);
             createMutation(dataToSend)
@@ -676,12 +680,12 @@ const CreateEvent = () => {
                                                             }}
                                                             value={
                                                                 days[dayIndex]
-                                                                    .value
+                                                                    .day_date
                                                                     ? dayjs(
                                                                           days[
                                                                               dayIndex
                                                                           ]
-                                                                              .value,
+                                                                              .day_date,
                                                                           "DD-MM-YYYY"
                                                                       )
                                                                     : null
@@ -750,7 +754,8 @@ const CreateEvent = () => {
                                                                     defaultOpen={
                                                                         days[
                                                                             dayIndex
-                                                                        ]?.value
+                                                                        ]
+                                                                            ?.day_date
                                                                     }
                                                                 >
                                                                     <Form.Item
@@ -770,7 +775,7 @@ const CreateEvent = () => {
                                                                                 !days[
                                                                                     dayIndex
                                                                                 ]
-                                                                                    ?.value
+                                                                                    ?.day_date
                                                                             }
                                                                             style={{
                                                                                 border: "none",
@@ -812,7 +817,7 @@ const CreateEvent = () => {
                                                                             !days[
                                                                                 dayIndex
                                                                             ]
-                                                                                ?.value
+                                                                                ?.day_date
                                                                         }
                                                                         order={
                                                                             false

@@ -13,6 +13,7 @@ const { Title, Paragraph } = Typography;
 const UpdateEventTagsModal = ({
     isUpdateEventTagsModalOpen,
     setIsUpdateEventTagsModalOpen,
+    eventData,
 }) => {
     const {
         data: lists,
@@ -26,6 +27,13 @@ const UpdateEventTagsModal = ({
     const handleCancel = () => {
         setIsUpdateEventTagsModalOpen(false);
     };
+    const initialFormValues = {
+        tags: eventData?.result?.tags.map((tagData) => ({
+            value: tagData.tag.value,
+            label: tagData.tag.label,
+        })),
+    };
+
     return (
         <div>
             <Modal
@@ -44,12 +52,7 @@ const UpdateEventTagsModal = ({
                 okText={"Update Tags"}
             >
                 <div>
-                    <Form
-                        layout="vertical"
-                        // initialValues={formData}
-                        // onValuesChange={handleFormChange}
-                        // onFinish={handleFormSubmit}
-                    >
+                    <Form layout="vertical" initialValues={initialFormValues}>
                         <Title level={3}>Event Tags</Title>
                         <Form.Item
                             label="Tags"

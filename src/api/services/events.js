@@ -14,10 +14,10 @@ export const events = apiSlice.injectEndpoints({
 
     show: builder.query({
       query: () => ({
-        url: 'event/show/25',
+        url: 'event/show/13',
         method: 'GET',
       }),
-    }),
+    }), 
 
     
   }),

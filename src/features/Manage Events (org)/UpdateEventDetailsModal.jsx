@@ -5,7 +5,7 @@ import {
     SettingOutlined,
     TeamOutlined,
 } from "@ant-design/icons";
-import { Divider, Modal, Space, Tooltip, message } from "antd";
+import { Divider, Modal, Select, Space, Tooltip, message } from "antd";
 import { Typography, Form, Input, DatePicker, InputNumber, Button } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import { useState } from "react";
@@ -13,14 +13,16 @@ import ShowMap from "./ShowMap";
 import LocationOnMapsModal from "./LocationOnMapsModal";
 const { Title, Paragraph } = Typography;
 
+import moment from "moment";
+import dayjs from "dayjs";
+import { useForm } from "antd/es/form/Form";
 const UpdateEventDetailsModal = ({
     isUpdateEventDetailsModalOpen,
     setIsUpdateEventDetailsModalOpen,
+    eventData,
 }) => {
-    const handleEventDetailsOk = () => {
-        // refetch();
-        setIsUpdateEventDetailsModalOpen(false);
-    };
+    const [form] = useForm();
+
     const handleEventDetailsCancel = () => {
         setIsUpdateEventDetailsModalOpen(false);
     };
@@ -28,7 +30,61 @@ const UpdateEventDetailsModal = ({
     const [isLocationOnMapModalOpen, setIsLocationOnMapModalOpen] =
         useState(null);
     // For Select Location on Maps
-    const [position, setPosition] = useState(null);
+    const [position, setPosition] = useState({
+        lat: eventData?.result?.location?.latitude
+            ? parseFloat(eventData.result.location.latitude)
+            : null,
+        lng: eventData?.result?.location?.longitude
+            ? parseFloat(eventData.result.location.longitude)
+            : null,
+    });
+
+    const initialFormValues = {
+        address_notes: eventData?.result?.address_notes,
+        registration_start_date: dayjs(
+            eventData?.result?.registration_start_date,
+            "YYYY-MM-DD HH:mm:ss"
+        ),
+        registration_end_date: dayjs(
+            eventData?.result?.registration_end_date,
+            "YYYY-MM-DD HH:mm:ss"
+        ),
+
+        capacity: eventData?.result?.capacity,
+        description: eventData?.result?.description,
+        event_type: eventData?.result?.event_type,
+        title: eventData?.result?.title,
+        lat: eventData?.result?.location?.latitude
+            ? eventData.result.location.latitude
+            : null,
+        lng: eventData?.result?.location?.longitude
+            ? eventData.result.location.longitude
+            : null,
+    };
+
+    const handleEventDetailsOk = () => {
+        form.validateFields()
+            .then((values) => {
+                form.submit();
+                if (position) {
+                    values = {
+                        ...values, //
+                        location: {
+                            latitude: position?.lat,
+                            longitude: position?.lng,
+                        },
+                    };
+                }
+                console.log("Form values:", values);
+
+                // refetch();
+            })
+            .catch((error) => {
+                console.error("Validation error:", error);
+            });
+
+        // setIsUpdateEventDetailsModalOpen(false);
+    };
     return (
         <div>
             <Modal
@@ -49,32 +105,67 @@ const UpdateEventDetailsModal = ({
                 <div>
                     <Form
                         layout="vertical"
-                        // initialValues={formData}
-                        // onValuesChange={handleFormChange}
-                        // onFinish={handleFormSubmit}
+                        initialValues={initialFormValues}
+                        form={form}
                     >
                         <Title level={3}>Event Information</Title>
-                        <Form.Item label="Title" name="title">
+                        <Form.Item
+                            label="Title"
+                            name="title"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter event Title",
+                                },
+                            ]}
+                        >
                             <Input
                                 prefix={<EditOutlined />}
                                 placeholder="Event Title"
                             />
                         </Form.Item>
-                        <Form.Item label="Description" name="description">
+                        <Form.Item
+                            label="Description"
+                            name="description"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter event Description ",
+                                },
+                            ]}
+                        >
                             <Input.TextArea
                                 prefix={<InfoCircleOutlined />}
                                 placeholder="Event Description"
                             />
                         </Form.Item>
-                        <Form.Item label="Event Type" name="event_type">
-                            <Input
-                                prefix={<SettingOutlined />}
-                                placeholder="Event Type"
+                        <Form.Item
+                            label="Event Type (Online - Onsite)"
+                            name="event_type"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: "Please enter event Type ",
+                                },
+                            ]}
+                        >
+                            <Select
+                                allowClear
+                                options={[
+                                    {
+                                        value: "online",
+                                        label: "Online",
+                                    },
+                                    {
+                                        value: "onsite",
+                                        label: "Onsite",
+                                    },
+                                ]}
                             />
                         </Form.Item>
 
                         <Title level={3}>Location</Title>
-                        <Form.Item label="Location on Maps" name="location">
+                        <Form.Item label="Location on Maps">
                             <Space
                                 style={{ width: "100%" }}
                                 direction="vertical"
@@ -149,14 +240,28 @@ const UpdateEventDetailsModal = ({
                         <Form.Item
                             label="Start Date & Time"
                             name="registration_start_date"
+                            rules={[
+                                {
+                                    required: true,
+                                    message:
+                                        "Please enter event Registration Start Date & Time ",
+                                },
+                            ]}
                         >
-                            <DatePicker showTime />
+                            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                         </Form.Item>
                         <Form.Item
                             label="End Date & Time"
                             name="registration_end_date"
+                            rules={[
+                                {
+                                    required: true,
+                                    message:
+                                        "Please enter event Registration End Date & Time ",
+                                },
+                            ]}
                         >
-                            <DatePicker showTime />
+                            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                         </Form.Item>
                         <Form.Item label="Capacity" name="capacity">
                             <InputNumber
