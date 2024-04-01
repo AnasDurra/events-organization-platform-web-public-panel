@@ -40,7 +40,7 @@ import {
   useRemoveCoverPicMutation,
   useRemoveProfilePicMutation,
 } from './orgSlice';
-import { URL } from '../../../api/constants';
+import { URL } from '../../api/constants';
 const { Text } = Typography;
 
 const contactOrder = [
@@ -129,7 +129,6 @@ export default function ProfilePage() {
             />
           </Col>
         </Row>
-
         <Row justify={'start'}>
           <Col
             style={{ height: '100%' }}

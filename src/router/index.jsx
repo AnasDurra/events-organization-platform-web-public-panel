@@ -1,19 +1,31 @@
 import { createBrowserRouter } from 'react-router-dom';
-import App from '../App';
+import AppLayout from '../AppLayout';
+import ConfigOrgPage from '../features/org profiles/ConfigOrgPage';
+import ProfilePage from '../features/org profiles/ProfilePage';
+import TeamPage from '../features/org profiles/TeamPage';
+import EditFormPage from '../features/dynamic forms/EditFormPage';
+import FormLayout from '../features/dynamic forms/FormLayout';
 import ErrorPage from '../pages/error-page';
-import ProfilePage from '../components/features/org profiles/ProfilePage';
-import TeamPage from '../components/features/org profiles/TeamPage';
-import ConfigOrgPage from '../components/features/org profiles/ConfigOrgPage';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <AppLayout />,
     errorElement: <ErrorPage />,
     children: [
       { path: '/org/:orgId', element: <ProfilePage /> },
       { path: '/org/:orgId/config', element: <ConfigOrgPage /> },
       { path: '/members', element: <TeamPage /> },
+    ],
+  },
+  {
+    path: '/form',
+    element: <FormLayout />,
+    children: [
+      {
+        path: 'edit',
+        element: <EditFormPage />,
+      },
     ],
   },
 ]);
