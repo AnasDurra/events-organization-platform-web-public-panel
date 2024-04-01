@@ -2,13 +2,16 @@ import {
     Button,
     Card,
     Col,
+    Descriptions,
     Divider,
     Image,
     List,
+    Modal,
     Row,
     Space,
     Table,
     Tag,
+    Tooltip,
     Typography,
     Upload,
     message,
@@ -16,6 +19,7 @@ import {
 import {
     ArrowRightOutlined,
     CalendarOutlined,
+    EditOutlined,
     EnvironmentOutlined,
     FileImageOutlined,
     ScheduleFilled,
@@ -28,12 +32,14 @@ import { useParams } from "react-router-dom";
 import ShowMap from "./ShowMap";
 
 import { useShowQuery } from "../../api/services/events";
+import UpdateEventModal from "./UpdateEventModal";
 
 const ShowEvent = () => {
+    const { id } = useParams();
+
     const { data: event, error, isLoading: eventIsLoading } = useShowQuery();
 
-    const [coverImage, setCoverImage] = useState(null);
-    const { id } = useParams();
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
     const dataSource = [
         {
@@ -62,11 +68,6 @@ const ShowEvent = () => {
         },
     ];
 
-    const handleCoverImageUpload = (coverImage) => {
-        console.log(coverImage);
-        setCoverImage(coverImage);
-    };
-
     const handleRegisterClicked = () => {
         message.success("registered successfully");
     };
@@ -83,81 +84,77 @@ const ShowEvent = () => {
                 bodyStyle={{ padding: "20px 20px 20px 20px" }}
                 cover={
                     <>
-                        {coverImage ? (
-                            <Image
-                                height={250}
-                                src="https://picsum.photos/1000/300"
-                            />
-                        ) : (
-                            <Upload.Dragger
-                                maxCount={1}
-                                name="cover"
-                                showUploadList={false}
-                                beforeUpload={() => false}
-                                onChange={handleCoverImageUpload}
-                                height={250}
-                            >
-                                <p className="ant-upload-drag-icon">
-                                    <FileImageOutlined />
-                                </p>
-                                <p className="ant-upload-text">
-                                    Click or drag photo to this area to upload
-                                    cover picture
-                                </p>
-                            </Upload.Dragger>
-                        )}
+                        <Image
+                            height={250}
+                            src="https://picsum.photos/1000/300"
+                        />
                     </>
                 }
             >
                 <Row gutter={[50, 30]}>
-                    <Col xs={24} sm={15}>
-                        <Space size={0} direction="vertical">
-                            <Space>
-                                <Typography.Title level={4}>
-                                    Event Name
-                                </Typography.Title>
-                                <Typography.Title level={5} disabled>
-                                    (on-site)
-                                </Typography.Title>
-                            </Space>
-                            <Typography.Title
-                                level={5}
-                                disabled
-                                style={{ marginTop: "0px" }}
-                            >
-                                15 days ago
-                            </Typography.Title>
-                        </Space>
-                    </Col>
-                    <Col xs={24} sm={9}>
+                    <Col span={24}>
                         <div
                             style={{
                                 display: "flex",
-                                justifyContent: "flex-start",
+                                justifyContent: "space-between",
                             }}
                         >
-                            <Button
-                                size="large"
-                                onClick={handleRegisterClicked}
-                                style={{
-                                    width: "100%",
-                                    height: "7vh",
-                                    border: "2px solid #000000",
-                                    backgroundColor: "#8B0000",
-                                    borderColor: "#8B0000",
-                                    color: "white",
-                                    borderRadius: "4px",
-                                    padding: "0px 20px",
-
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                }}
-                            >
-                                Register Now
-                            </Button>
+                            <Space size={0} direction="vertical">
+                                <Space>
+                                    <Typography.Title
+                                        style={{ marginTop: "10px" }}
+                                        level={4}
+                                    >
+                                        Event Name
+                                    </Typography.Title>
+                                    <Typography.Title
+                                        style={{ marginTop: "10px" }}
+                                        level={5}
+                                        disabled
+                                    >
+                                        (on-site)
+                                    </Typography.Title>
+                                </Space>
+                                <Space>
+                                    <Typography.Text
+                                        level={5}
+                                        disabled
+                                        style={{ marginTop: "0px" }}
+                                    >
+                                        15 days ago
+                                    </Typography.Text>
+                                    <Typography.Text
+                                        level={5}
+                                        underline
+                                        style={{ marginTop: "0px" }}
+                                    >
+                                        by{" "}
+                                        <a href="@organizer120">
+                                            @organizer120
+                                        </a>
+                                    </Typography.Text>
+                                </Space>
+                            </Space>
+                            <Tooltip title="Edit Event">
+                                <Button
+                                    icon={<EditOutlined />}
+                                    onClick={() => setIsUpdateModalOpen(true)}
+                                />
+                            </Tooltip>
                         </div>
                     </Col>
-                    <Col span={24}>
+                    {/* <Col span={4}>
+                        <div
+                            style={{
+                                display: "flex",
+                                justifyContent: "flex-end",
+                            }}
+                        >
+                            w
+                        </div>
+                    </Col> */}
+
+                    <Col xs={24} md={12}>
                         <Table
                             style={{
                                 height: "100%",
@@ -170,6 +167,41 @@ const ShowEvent = () => {
                             bordered
                             pagination={false}
                         />
+                    </Col>
+                    <Col xs={24} md={12}>
+                        <Descriptions
+                            bordered
+                            column={1}
+                            style={{
+                                width: "100%",
+                            }}
+                        >
+                            <Descriptions.Item label="Registration Start Date">
+                                {"2024-04-01 12:25:00"}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Registration End Date">
+                                {"2024-04-10 12:30:00"}
+                            </Descriptions.Item>
+                        </Descriptions>
+                        <Button
+                            size="large"
+                            onClick={handleRegisterClicked}
+                            style={{
+                                width: "100%",
+                                height: "6vh",
+                                border: "2px solid #000000",
+                                backgroundColor: "#8B0000",
+                                borderColor: "#8B0000",
+                                color: "white",
+                                borderRadius: "4px",
+                                padding: "0px 20px",
+
+                                fontSize: "16px",
+                                fontWeight: "bold",
+                            }}
+                        >
+                            Register Now
+                        </Button>
                     </Col>
 
                     <Col span={24}>
@@ -295,6 +327,14 @@ const ShowEvent = () => {
                                                     lng: 36.145962,
                                                 }}
                                             />
+                                            <Typography.Text>
+                                                <strong>Event Address: </strong>
+                                                {"123 Main St, City, Country"}
+                                            </Typography.Text>
+                                            <Typography.Text>
+                                                <strong>Address Note:</strong>{" "}
+                                                {"Near the park"}
+                                            </Typography.Text>
                                         </Space>
                                     </Card>
                                 </Col>
@@ -390,6 +430,12 @@ const ShowEvent = () => {
                     </Col>
                 </Row>
             </Card>
+            {isUpdateModalOpen && (
+                <UpdateEventModal
+                    isUpdateModalOpen={isUpdateModalOpen}
+                    setIsUpdateModalOpen={setIsUpdateModalOpen}
+                />
+            )}
         </div>
     );
 };
