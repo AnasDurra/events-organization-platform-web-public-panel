@@ -1,13 +1,12 @@
+@media screen and (max-width: 865px) {
+    .registerImage {
+        display: none;
+    }
+}
 
-    @media screen and (max-width: 865px) {
-      .registerImage {
-        display: none; 
-      }
-    }
-    
-    .my-custom-form .ant-form-item-label label {
-      font-size: 13px; 
-    }
-    .my-custom-form .ant-form-item {
-  margin-bottom: 16px; 
+.my-custom-form .ant-form-item-label label {
+    font-size: 13px;
+}
+.my-custom-form .ant-form-item {
+    margin-bottom: 16px;
 }

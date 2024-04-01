@@ -13,49 +13,49 @@ import CreateEvent from '../features/Manage Events (org)/CreateEvent';
 import ShowEvent from '../features/Manage Events (org)/ShowEvent';
 
 export const router = createBrowserRouter([
-  {
-    path: '/login',
-    element: <LoginPage />,
-  },
-  {
-    path: '/register',
-    element: <RegisterAttendee />,
-  },
-  {
-    path: '/',
-    element: <AppLayout />,
-    errorElement: <ErrorPage />,
-    children: [
-      {
-        path: '/attende-profile',
-        element: <ShowAttendeProfile />,
-      },
-      {
-        path: '/event',
+    {
+        path: '/login',
+        element: <LoginPage />,
+    },
+    {
+        path: '/register',
+        element: <RegisterAttendee />,
+    },
+    {
+        path: '/',
+        element: <AppLayout />,
+        errorElement: <ErrorPage />,
         children: [
-          {
-            path: 'create',
-            element: <CreateEvent />,
-          },
-          {
-            path: 'show/:id',
-            element: <ShowEvent />,
-          },
+            {
+                path: '/attende-profile',
+                element: <ShowAttendeProfile />,
+            },
+            {
+                path: '/event',
+                children: [
+                    {
+                        path: 'create',
+                        element: <CreateEvent />,
+                    },
+                    {
+                        path: 'show/:id',
+                        element: <ShowEvent />,
+                    },
+                ],
+            },
+            { path: '/org/:orgId', element: <ProfilePage /> },
+            { path: '/org/:orgId/config', element: <ConfigOrgPage /> },
+            { path: '/members', element: <TeamPage /> },
         ],
-      },
-      { path: '/org/:orgId', element: <ProfilePage /> },
-      { path: '/org/:orgId/config', element: <ConfigOrgPage /> },
-      { path: '/members', element: <TeamPage /> },
-    ],
-  },
-  {
-    path: '/form',
-    element: <FormLayout />,
-    children: [
-      {
-        path: 'edit',
-        element: <EditFormPage />,
-      },
-    ],
-  },
+    },
+    {
+        path: '/form',
+        element: <FormLayout />,
+        children: [
+            {
+                path: 'edit',
+                element: <EditFormPage />,
+            },
+        ],
+    },
 ]);

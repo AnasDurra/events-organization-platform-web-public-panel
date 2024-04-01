@@ -1,24 +1,22 @@
 import { apiSlice } from '../apiSlice';
 
 export const lists = apiSlice.injectEndpoints({
-  endpoints: (builder) => ({
-    configurationLists: builder.query({
-      query: () => ({
-        url: 'attendee/lists',
-        method: 'GET',
-      }),
-    }),
+    endpoints: (builder) => ({
+        configurationLists: builder.query({
+            query: () => ({
+                url: 'attendee/lists',
+                method: 'GET',
+            }),
+        }),
 
-    eventCreationLists: builder.query({
-      query: () => ({
-        url: 'event/lists',
-        method: 'GET',
-      }),
+        eventCreationLists: builder.query({
+            query: () => ({
+                url: 'event/lists',
+                method: 'GET',
+            }),
+        }),
     }),
-
-    
-  }),
-}); 
+});
 
 // export const getLoggedInUser = () => {
 //   const token = Cookies.get('accessToken');
@@ -30,4 +28,4 @@ export const lists = apiSlice.injectEndpoints({
 //   };
 // };
 
-export const { useConfigurationListsQuery,useEventCreationListsQuery } = lists;
+export const { useConfigurationListsQuery, useEventCreationListsQuery } = lists;

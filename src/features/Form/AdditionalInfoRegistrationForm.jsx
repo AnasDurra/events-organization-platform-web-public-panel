@@ -1,15 +1,10 @@
-import { Upload, message, Form, Image, Select, DatePicker } from "antd";
-import ImgCrop from "antd-img-crop";
-import { useEffect, useState } from "react";
-import { useConfigurationListsQuery } from "../../api/services/lists";
-import TextArea from "antd/es/input/TextArea";
+import { Upload, message, Form, Image, Select, DatePicker } from 'antd';
+import ImgCrop from 'antd-img-crop';
+import { useEffect, useState } from 'react';
+import { useConfigurationListsQuery } from '../../api/services/lists';
+import TextArea from 'antd/es/input/TextArea';
 
-const AdditionalInfoRegistrationForm = ({
-    form,
-    setImageFile,
-    imageSrc,
-    setImageSrc,
-}) => {
+const AdditionalInfoRegistrationForm = ({ form, setImageFile, imageSrc, setImageSrc }) => {
     const { data, error, isLoading } = useConfigurationListsQuery();
 
     function getFileUrl(file, callback) {
@@ -54,15 +49,18 @@ const AdditionalInfoRegistrationForm = ({
     return (
         <Form
             form={form}
-            autoComplete="off"
-            layout="vertical"
+            autoComplete='off'
+            layout='vertical'
             style={{ maxWidth: 550 }}
-            className="my-custom-form"
+            className='my-custom-form'
         >
-            <Form.Item label="Profile Picture" name="profile_img">
+            <Form.Item
+                label='Profile Picture'
+                name='profile_img'
+            >
                 <div
                     style={{
-                        display: "flex",
+                        display: 'flex',
                     }}
                 >
                     {imageSrc && (
@@ -77,16 +75,19 @@ const AdditionalInfoRegistrationForm = ({
                         <Image
                             src={imageSrc}
                             style={{
-                                marginRight: "0.5em",
+                                marginRight: '0.5em',
                                 width: 100,
-                                borderRadius: "50%",
-                                border: "1px solid #000",
+                                borderRadius: '50%',
+                                border: '1px solid #000',
                             }}
                         />
                     )}
-                    <ImgCrop onModalOk={handleFileChange} rotationSlider>
+                    <ImgCrop
+                        onModalOk={handleFileChange}
+                        rotationSlider
+                    >
                         <Upload
-                            listType="picture-circle"
+                            listType='picture-circle'
                             showUploadList={false}
                             maxCount={1}
                             // beforeUpload={(file) => {
@@ -107,49 +108,61 @@ const AdditionalInfoRegistrationForm = ({
                             // }}
                             onChange={handleFileChange}
                         >
-                            {imageSrc ? "+Change Picture" : "+Upload"}
+                            {imageSrc ? '+Change Picture' : '+Upload'}
                         </Upload>
                     </ImgCrop>
                 </div>
             </Form.Item>
 
             <Form.Item
-                label="Birth Date"
-                name="birth_date"
+                label='Birth Date'
+                name='birth_date'
                 rules={[
                     {
                         required: true,
-                        message: "Please select your birth date",
+                        message: 'Please select your birth date',
                     },
                 ]}
             >
                 <DatePicker
                     style={{
-                        width: "100%",
+                        width: '100%',
                     }}
                 />
             </Form.Item>
 
-            <Form.Item label="Job" name="job">
+            <Form.Item
+                label='Job'
+                name='job'
+            >
                 <Select
                     loading={isLoading}
                     showSearch
-                    placeholder="Select your job"
+                    placeholder='Select your job'
                     options={data?.result.jobs}
                 />
             </Form.Item>
 
-            <Form.Item label="Address" name="address">
+            <Form.Item
+                label='Address'
+                name='address'
+            >
                 <Select
                     loading={isLoading}
                     showSearch
-                    placeholder="Select your address"
+                    placeholder='Select your address'
                     options={data?.result.addresses}
                 />
             </Form.Item>
 
-            <Form.Item label="Bio" name="bio">
-                <TextArea placeholder="Tell us about yourself..." allowClear />
+            <Form.Item
+                label='Bio'
+                name='bio'
+            >
+                <TextArea
+                    placeholder='Tell us about yourself...'
+                    allowClear
+                />
             </Form.Item>
         </Form>
     );

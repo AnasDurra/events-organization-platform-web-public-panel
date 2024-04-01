@@ -15,7 +15,7 @@ import {
     Typography,
     Upload,
     message,
-} from "antd";
+} from 'antd';
 import {
     ArrowRightOutlined,
     CalendarOutlined,
@@ -26,13 +26,13 @@ import {
     ScheduleOutlined,
     TagsOutlined,
     UserOutlined,
-} from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import ShowMap from "./ShowMap";
+} from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import ShowMap from './ShowMap';
 
-import { useShowQuery } from "../../api/services/events";
-import UpdateEventModal from "./UpdateEventModal";
+import { useShowQuery } from '../../api/services/events';
+import UpdateEventModal from './UpdateEventModal';
 
 const ShowEvent = () => {
     const { id } = useParams();
@@ -43,8 +43,8 @@ const ShowEvent = () => {
 
     const dataSource = [
         {
-            key: "1",
-            name: "General Admission",
+            key: '1',
+            name: 'General Admission',
             price: 100,
             qty: 10,
         },
@@ -52,24 +52,24 @@ const ShowEvent = () => {
 
     const columns = [
         {
-            title: "Available Tickets",
-            dataIndex: "name",
-            key: "name",
+            title: 'Available Tickets',
+            dataIndex: 'name',
+            key: 'name',
         },
         {
-            title: "Price",
-            dataIndex: "price",
-            key: "price",
+            title: 'Price',
+            dataIndex: 'price',
+            key: 'price',
         },
         {
-            title: "Qty*",
-            dataIndex: "qty",
-            key: "qty",
+            title: 'Qty*',
+            dataIndex: 'qty',
+            key: 'qty',
         },
     ];
 
     const handleRegisterClicked = () => {
-        message.success("registered successfully");
+        message.success('registered successfully');
     };
     useEffect(() => {
         console.log(event);
@@ -78,15 +78,15 @@ const ShowEvent = () => {
     return (
         <div
             //   style={{ padding: "0px 40px 40px 40px" }}
-            style={{ display: "flex", justifyContent: "center" }}
+            style={{ display: 'flex', justifyContent: 'center' }}
         >
             <Card
-                bodyStyle={{ padding: "20px 20px 20px 20px" }}
+                bodyStyle={{ padding: '20px 20px 20px 20px' }}
                 cover={
                     <>
                         <Image
                             height={250}
-                            src="https://picsum.photos/1000/300"
+                            src='https://picsum.photos/1000/300'
                         />
                     </>
                 }
@@ -95,20 +95,23 @@ const ShowEvent = () => {
                     <Col span={24}>
                         <div
                             style={{
-                                display: "flex",
-                                justifyContent: "space-between",
+                                display: 'flex',
+                                justifyContent: 'space-between',
                             }}
                         >
-                            <Space size={0} direction="vertical">
+                            <Space
+                                size={0}
+                                direction='vertical'
+                            >
                                 <Space>
                                     <Typography.Title
-                                        style={{ marginTop: "10px" }}
+                                        style={{ marginTop: '10px' }}
                                         level={4}
                                     >
                                         Event Name
                                     </Typography.Title>
                                     <Typography.Title
-                                        style={{ marginTop: "10px" }}
+                                        style={{ marginTop: '10px' }}
                                         level={5}
                                         disabled
                                     >
@@ -119,23 +122,20 @@ const ShowEvent = () => {
                                     <Typography.Text
                                         level={5}
                                         disabled
-                                        style={{ marginTop: "0px" }}
+                                        style={{ marginTop: '0px' }}
                                     >
                                         15 days ago
                                     </Typography.Text>
                                     <Typography.Text
                                         level={5}
                                         underline
-                                        style={{ marginTop: "0px" }}
+                                        style={{ marginTop: '0px' }}
                                     >
-                                        by{" "}
-                                        <a href="@organizer120">
-                                            @organizer120
-                                        </a>
+                                        by <a href='@organizer120'>@organizer120</a>
                                     </Typography.Text>
                                 </Space>
                             </Space>
-                            <Tooltip title="Edit Event">
+                            <Tooltip title='Edit Event'>
                                 <Button
                                     icon={<EditOutlined />}
                                     onClick={() => setIsUpdateModalOpen(true)}
@@ -154,13 +154,16 @@ const ShowEvent = () => {
                         </div>
                     </Col> */}
 
-                    <Col xs={24} md={12}>
+                    <Col
+                        xs={24}
+                        md={12}
+                    >
                         <Table
                             style={{
-                                height: "100%",
-                                padding: "10px",
-                                borderRadius: "8px",
-                                boxShadow: "0 1px 5px rgba(0, 0, 0, 0.1)",
+                                height: '100%',
+                                padding: '10px',
+                                borderRadius: '8px',
+                                boxShadow: '0 1px 5px rgba(0, 0, 0, 0.1)',
                             }}
                             dataSource={dataSource}
                             columns={columns}
@@ -168,36 +171,37 @@ const ShowEvent = () => {
                             pagination={false}
                         />
                     </Col>
-                    <Col xs={24} md={12}>
+                    <Col
+                        xs={24}
+                        md={12}
+                    >
                         <Descriptions
                             bordered
                             column={1}
                             style={{
-                                width: "100%",
+                                width: '100%',
                             }}
                         >
-                            <Descriptions.Item label="Registration Start Date">
-                                {"2024-04-01 12:25:00"}
+                            <Descriptions.Item label='Registration Start Date'>
+                                {'2024-04-01 12:25:00'}
                             </Descriptions.Item>
-                            <Descriptions.Item label="Registration End Date">
-                                {"2024-04-10 12:30:00"}
-                            </Descriptions.Item>
+                            <Descriptions.Item label='Registration End Date'>{'2024-04-10 12:30:00'}</Descriptions.Item>
                         </Descriptions>
                         <Button
-                            size="large"
+                            size='large'
                             onClick={handleRegisterClicked}
                             style={{
-                                width: "100%",
-                                height: "6vh",
-                                border: "2px solid #000000",
-                                backgroundColor: "#8B0000",
-                                borderColor: "#8B0000",
-                                color: "white",
-                                borderRadius: "4px",
-                                padding: "0px 20px",
+                                width: '100%',
+                                height: '6vh',
+                                border: '2px solid #000000',
+                                backgroundColor: '#8B0000',
+                                borderColor: '#8B0000',
+                                color: 'white',
+                                borderRadius: '4px',
+                                padding: '0px 20px',
 
-                                fontSize: "16px",
-                                fontWeight: "bold",
+                                fontSize: '16px',
+                                fontWeight: 'bold',
                             }}
                         >
                             Register Now
@@ -207,7 +211,7 @@ const ShowEvent = () => {
                     <Col span={24}>
                         <Divider />
                         <Typography.Title
-                            style={{ margin: "0px" }}
+                            style={{ margin: '0px' }}
                             level={3}
                             strong
                         >
@@ -217,24 +221,22 @@ const ShowEvent = () => {
                     <Col span={24}>
                         <Card
                             style={{
-                                height: "100%",
-                                padding: "10px",
-                                borderRadius: "8px",
-                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                                height: '100%',
+                                padding: '10px',
+                                borderRadius: '8px',
+                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                             }}
                         >
-                            <Space direction="vertical" wrap>
+                            <Space
+                                direction='vertical'
+                                wrap
+                            >
                                 <Typography.Text>
-                                    The meaning of DESCRIPTION is an act of
-                                    describing; specifically : discourse
-                                    intended to give a mental image of something
-                                    experienced. The meaning of DESCRIPTION is
-                                    an act of describing; specifically :
-                                    discourse intended to give a mental image of
-                                    something experienced. The meaning of
-                                    DESCRIPTION is an act of describing;
-                                    specifically : discourse intended to give a
-                                    mental image of something experienced.
+                                    The meaning of DESCRIPTION is an act of describing; specifically : discourse
+                                    intended to give a mental image of something experienced. The meaning of DESCRIPTION
+                                    is an act of describing; specifically : discourse intended to give a mental image of
+                                    something experienced. The meaning of DESCRIPTION is an act of describing;
+                                    specifically : discourse intended to give a mental image of something experienced.
                                 </Typography.Text>
                             </Space>
                         </Card>
@@ -243,51 +245,58 @@ const ShowEvent = () => {
                     <Col span={24}>
                         <Divider />
                         <Typography.Title
-                            style={{ margin: "0px" }}
+                            style={{ margin: '0px' }}
                             level={3}
                             strong
                         >
                             Event Detials
                         </Typography.Title>
                     </Col>
-                    <Col xs={24} lg={12}>
+                    <Col
+                        xs={24}
+                        lg={12}
+                    >
                         <div
                             style={{
-                                display: "flex",
-                                height: "100%",
-                                width: "100%",
+                                display: 'flex',
+                                height: '100%',
+                                width: '100%',
                             }}
                         >
-                            <Row style={{ flex: 1 }} gutter={[20, 10]}>
+                            <Row
+                                style={{ flex: 1 }}
+                                gutter={[20, 10]}
+                            >
                                 <Col span={24}>
                                     <Card
-                                        type="inner"
+                                        type='inner'
                                         style={{
-                                            width: "100%",
-                                            height: "100%",
-                                            padding: "10px",
-                                            borderRadius: "8px",
-                                            boxShadow:
-                                                "0 4px 8px rgba(0, 0, 0, 0.1)",
+                                            width: '100%',
+                                            height: '100%',
+                                            padding: '10px',
+                                            borderRadius: '8px',
+                                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                         }}
                                     >
-                                        <Space direction="vertical" size={30}>
+                                        <Space
+                                            direction='vertical'
+                                            size={30}
+                                        >
                                             <Space wrap>
                                                 <TagsOutlined />
-                                                <Typography.Text strong>
-                                                    Event Tags:
-                                                </Typography.Text>
+                                                <Typography.Text strong>Event Tags:</Typography.Text>
                                                 <div>
                                                     <Tag>Tag 1</Tag>
                                                     <Tag>Tag 2</Tag>
                                                 </div>
                                             </Space>
 
-                                            <Space wrap Space>
+                                            <Space
+                                                wrap
+                                                Space
+                                            >
                                                 <UserOutlined />
-                                                <Typography.Text strong>
-                                                    Event Target Age Group:
-                                                </Typography.Text>
+                                                <Typography.Text strong>Event Target Age Group:</Typography.Text>
                                                 <div>
                                                     <Tag>Age Group 1</Tag>
                                                     <Tag>Age Group 2</Tag>
@@ -298,29 +307,24 @@ const ShowEvent = () => {
                                 </Col>
                                 <Col span={24}>
                                     <Card
-                                        type="inner"
+                                        type='inner'
                                         style={{
-                                            height: "100%",
-                                            padding: "10px",
-                                            borderRadius: "8px",
-                                            boxShadow:
-                                                "0 4px 8px rgba(0, 0, 0, 0.1)",
+                                            height: '100%',
+                                            padding: '10px',
+                                            borderRadius: '8px',
+                                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                         }}
                                     >
                                         <Space
-                                            style={{ width: "100%" }}
-                                            direction="vertical"
+                                            style={{ width: '100%' }}
+                                            direction='vertical'
                                             size={10}
                                         >
                                             <Space>
                                                 <EnvironmentOutlined />
-                                                <Typography.Text strong>
-                                                    Event Address:
-                                                </Typography.Text>
+                                                <Typography.Text strong>Event Address:</Typography.Text>
                                             </Space>
-                                            <Divider
-                                                style={{ margin: "10px 0px" }}
-                                            />
+                                            <Divider style={{ margin: '10px 0px' }} />
                                             <ShowMap
                                                 position={{
                                                     lat: 33.792773,
@@ -329,11 +333,10 @@ const ShowEvent = () => {
                                             />
                                             <Typography.Text>
                                                 <strong>Event Address: </strong>
-                                                {"123 Main St, City, Country"}
+                                                {'123 Main St, City, Country'}
                                             </Typography.Text>
                                             <Typography.Text>
-                                                <strong>Address Note:</strong>{" "}
-                                                {"Near the park"}
+                                                <strong>Address Note:</strong> {'Near the park'}
                                             </Typography.Text>
                                         </Space>
                                     </Card>
@@ -341,19 +344,22 @@ const ShowEvent = () => {
                             </Row>
                         </div>
                     </Col>
-                    <Col xs={24} lg={12}>
+                    <Col
+                        xs={24}
+                        lg={12}
+                    >
                         <Card
-                            type="inner"
+                            type='inner'
                             style={{
-                                height: "100%",
-                                padding: "10px",
-                                borderRadius: "8px",
-                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                                height: '100%',
+                                padding: '10px',
+                                borderRadius: '8px',
+                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                             }}
                         >
                             <Space
-                                direction="vertical"
-                                style={{ width: "100%" }}
+                                direction='vertical'
+                                style={{ width: '100%' }}
                                 size={20}
                             >
                                 <Space>
@@ -361,19 +367,19 @@ const ShowEvent = () => {
                                     <Typography.Text
                                         strong
                                         style={{
-                                            fontWeight: "bold",
-                                            fontSize: "18px",
+                                            fontWeight: 'bold',
+                                            fontSize: '18px',
                                         }}
                                     >
                                         Event Schedule:
                                     </Typography.Text>
                                 </Space>
-                                <Divider style={{ margin: "0px" }} />
+                                <Divider style={{ margin: '0px' }} />
                                 {fakeData.map((dateObj, index) => (
                                     <Space
-                                        direction="vertical"
+                                        direction='vertical'
                                         style={{
-                                            width: "100%",
+                                            width: '100%',
                                         }}
                                         size={20}
                                         key={index}
@@ -383,8 +389,8 @@ const ShowEvent = () => {
                                             <Typography.Text
                                                 strong
                                                 style={{
-                                                    fontWeight: "bold",
-                                                    fontSize: "16px",
+                                                    fontWeight: 'bold',
+                                                    fontSize: '16px',
                                                 }}
                                             >
                                                 {dateObj.date}
@@ -396,29 +402,22 @@ const ShowEvent = () => {
                                             renderItem={(timestamp, i) => (
                                                 <List.Item
                                                     style={{
-                                                        display: "flex",
-                                                        justifyContent:
-                                                            "space-between",
-                                                        alignItems: "center",
+                                                        display: 'flex',
+                                                        justifyContent: 'space-between',
+                                                        alignItems: 'center',
                                                     }}
                                                 >
                                                     <div>
-                                                        <Typography.Text>
-                                                            {
-                                                                timestamp.startTime
-                                                            }
-                                                        </Typography.Text>
+                                                        <Typography.Text>{timestamp.startTime}</Typography.Text>
                                                     </div>
 
                                                     <ArrowRightOutlined
                                                         style={{
-                                                            margin: "0em 1em",
+                                                            margin: '0em 1em',
                                                         }}
                                                     />
                                                     <div>
-                                                        <Typography.Text>
-                                                            {timestamp.endTime}
-                                                        </Typography.Text>
+                                                        <Typography.Text>{timestamp.endTime}</Typography.Text>
                                                     </div>
                                                 </List.Item>
                                             )}
@@ -443,28 +442,28 @@ const ShowEvent = () => {
 export default ShowEvent;
 const fakeData = [
     {
-        date: "2024-04-01",
+        date: '2024-04-01',
         timestamps: [
             {
-                startTime: "2024-04-01 10:00:00",
-                endTime: "2024-04-01 12:00:00",
+                startTime: '2024-04-01 10:00:00',
+                endTime: '2024-04-01 12:00:00',
             },
             {
-                startTime: "2024-04-01 14:00:00",
-                endTime: "2024-04-01 16:00:00",
+                startTime: '2024-04-01 14:00:00',
+                endTime: '2024-04-01 16:00:00',
             },
         ],
     },
     {
-        date: "2024-04-02",
+        date: '2024-04-02',
         timestamps: [
             {
-                startTime: "2024-04-02 09:00:00",
-                endTime: "2024-04-02 11:00:00",
+                startTime: '2024-04-02 09:00:00',
+                endTime: '2024-04-02 11:00:00',
             },
             {
-                startTime: "2024-04-02 15:00:00",
-                endTime: "2024-04-02 17:00:00",
+                startTime: '2024-04-02 15:00:00',
+                endTime: '2024-04-02 17:00:00',
             },
         ],
     },

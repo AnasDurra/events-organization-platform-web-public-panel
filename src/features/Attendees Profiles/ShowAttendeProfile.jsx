@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
     CheckOutlined,
     EditOutlined,
@@ -13,7 +13,7 @@ import {
     UserOutlined,
     WarningOutlined,
     WhatsAppOutlined,
-} from "@ant-design/icons";
+} from '@ant-design/icons';
 import {
     Avatar,
     Button,
@@ -30,12 +30,12 @@ import {
     Statistic,
     Tooltip,
     Typography,
-} from "antd";
+} from 'antd';
 const { Meta } = Card;
 
-import { isLargerThanLG } from "../../utils/antd.utils";
-import { useViewMyProfileQuery } from "../../api/services/attendeeProfile";
-import UpdateProfileModal from "./UpdateProfileModal";
+import { isLargerThanLG } from '../../utils/antd.utils';
+import { useViewMyProfileQuery } from '../../api/services/attendeeProfile';
+import UpdateProfileModal from './UpdateProfileModal';
 
 const ShowAttendeProfile = () => {
     const screens = Grid.useBreakpoint();
@@ -60,18 +60,16 @@ const ShowAttendeProfile = () => {
         console.log(data);
     }, [data]);
     return (
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Card
                 style={{
-                    width: "90%",
+                    width: '90%',
                 }}
                 cover={
                     <Image
                         height={250}
-                        alt="example"
-                        src={
-                            data?.cover_img ?? "https://picsum.photos/1000/300"
-                        }
+                        alt='example'
+                        src={data?.cover_img ?? 'https://picsum.photos/1000/300'}
                     />
                 }
                 // actions={[
@@ -80,16 +78,14 @@ const ShowAttendeProfile = () => {
                 //     <EllipsisOutlined key="ellipsis" />,
                 // ]}
             >
-                <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                >
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Skeleton
                         loading={isLoading}
                         active
                         avatar
                         paragraph={{
                             rows: 1,
-                            width: "90%",
+                            width: '90%',
                         }}
                     >
                         <Meta
@@ -97,47 +93,43 @@ const ShowAttendeProfile = () => {
                                 <Avatar
                                     size={100}
                                     icon={<UserOutlined />}
-                                    src={
-                                        "https://api.dicebear.com/7.x/miniavs/svg?seed=8"
-                                    }
+                                    src={'https://api.dicebear.com/7.x/miniavs/svg?seed=8'}
                                     style={{
-                                        textAlign: "center",
-                                        marginBottom: "10px",
-                                        border: "3px solid white",
-                                        borderRadius: "50%",
-                                        marginTop: "-70px",
+                                        textAlign: 'center',
+                                        marginBottom: '10px',
+                                        border: '3px solid white',
+                                        borderRadius: '50%',
+                                        marginTop: '-70px',
                                     }}
                                 />
                             }
                             title={
                                 <Typography.Title
                                     style={{
-                                        marginTop: "0px",
-                                        marginBottom: "0px",
+                                        marginTop: '0px',
+                                        marginBottom: '0px',
                                     }}
                                     level={3}
                                 >
-                                    {data?.result?.full_name
-                                        ? data.result?.full_name
-                                        : ""}
+                                    {data?.result?.full_name ? data.result?.full_name : ''}
                                 </Typography.Title>
                             }
                             description={
                                 data
-                                    ? `Member since ${formatDate(
-                                          data?.result.join_date
-                                      )} * ${data?.result.address?.label}`
-                                    : ""
+                                    ? `Member since ${formatDate(data?.result.join_date)} * ${
+                                          data?.result.address?.label
+                                      }`
+                                    : ''
                             }
                         />
                     </Skeleton>
 
-                    <Row style={{ marginLeft: "10px" }}>
+                    <Row style={{ marginLeft: '10px' }}>
                         {/* <Space.Compact block> */}
                         {/* <Tooltip title="Settings">
                                         <Button icon={<SettingOutlined />} />
                                     </Tooltip> */}
-                        <Tooltip title="Edit Your Profile">
+                        <Tooltip title='Edit Your Profile'>
                             <Button
                                 icon={<EditOutlined />}
                                 onClick={() => setIsUpdateModalOpen(true)}
@@ -145,29 +137,29 @@ const ShowAttendeProfile = () => {
                         </Tooltip>
 
                         <Dropdown
-                            placement="bottomRight"
+                            placement='bottomRight'
                             overlay={
                                 <Menu
                                     items={[
                                         {
-                                            key: "1",
-                                            label: "Report",
+                                            key: '1',
+                                            label: 'Report',
                                             icon: <WarningOutlined />,
                                         },
                                         {
-                                            key: "2",
-                                            label: "Mail",
+                                            key: '2',
+                                            label: 'Mail',
                                             icon: <MailOutlined />,
                                         },
                                         {
-                                            key: "3",
-                                            label: "Mobile",
+                                            key: '3',
+                                            label: 'Mobile',
                                             icon: <MobileOutlined />,
                                         },
                                     ]}
                                 />
                             }
-                            trigger={["click"]}
+                            trigger={['click']}
                         >
                             <Button icon={<EllipsisOutlined />} />
                         </Dropdown>
@@ -178,26 +170,30 @@ const ShowAttendeProfile = () => {
                 <Row
                     gutter={[16, 12]}
                     style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        marginTop: "1.5em",
-                        width: "100%",
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '1.5em',
+                        width: '100%',
                     }}
                 >
-                    <Col xs={24} sm={24} md={14}>
+                    <Col
+                        xs={24}
+                        sm={24}
+                        md={14}
+                    >
                         <Card
                             style={{
-                                height: "100%",
-                                padding: "10px",
-                                borderRadius: "8px",
-                                boxShadow: "0 3px 18px rgba(0, 0, 0, 0.1)",
+                                height: '100%',
+                                padding: '10px',
+                                borderRadius: '8px',
+                                boxShadow: '0 3px 18px rgba(0, 0, 0, 0.1)',
                             }}
                             title={
                                 <div
                                     style={{
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
                                     }}
                                 >
                                     <Skeleton
@@ -205,108 +201,87 @@ const ShowAttendeProfile = () => {
                                         active
                                         paragraph={{
                                             rows: 0,
-                                            width: "50%",
+                                            width: '50%',
                                         }}
                                     >
-                                        <Typography.Text>
-                                            {data?.result.job?.label ??
-                                                "Does Not Work"}
-                                        </Typography.Text>
+                                        <Typography.Text>{data?.result.job?.label ?? 'Does Not Work'}</Typography.Text>
                                         <Space
                                             wrap
                                             size={10}
                                             style={{
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                margin: "15px 0px 15px 15px",
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                margin: '15px 0px 15px 15px',
                                             }}
                                         >
-                                            {data?.result.contacts?.map(
-                                                (contact) => (
-                                                    <Tooltip
-                                                        title={
-                                                            contact.contact_name
-                                                        }
-                                                        key={contact.id}
+                                            {data?.result.contacts?.map((contact) => (
+                                                <Tooltip
+                                                    title={contact.contact_name}
+                                                    key={contact.id}
+                                                >
+                                                    <a
+                                                        href={getContactLink(contact.contact_name)}
+                                                        target='_blank'
+                                                        rel='noopener noreferrer'
                                                     >
-                                                        <a
-                                                            href={getContactLink(
-                                                                contact.contact_name
-                                                            )}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                        >
-                                                            {contact.contact_name ===
-                                                                "WhatsApp" && (
-                                                                <WhatsAppOutlined
+                                                        {contact.contact_name === 'WhatsApp' && (
+                                                            <WhatsAppOutlined
+                                                                style={{
+                                                                    fontSize: '24px',
+                                                                    color: '#25D366',
+                                                                }}
+                                                            />
+                                                        )}
+                                                        {contact.contact_name === 'LinkedIn' && (
+                                                            <LinkedinOutlined
+                                                                style={{
+                                                                    fontSize: '24px',
+                                                                    color: '#0077B5',
+                                                                }}
+                                                            />
+                                                        )}
+                                                        {contact.contact_name === 'Facebook' && (
+                                                            <FacebookOutlined
+                                                                style={{
+                                                                    fontSize: '24px',
+                                                                    color: '#3b5998',
+                                                                }}
+                                                            />
+                                                        )}
+                                                        {contact.contact_name === 'Twitter' && (
+                                                            <TwitterOutlined
+                                                                style={{
+                                                                    fontSize: '24px',
+                                                                    color: '#1DA1F2',
+                                                                }}
+                                                            />
+                                                        )}
+                                                        {contact.contact_name === 'Email' && (
+                                                            <MailOutlined
+                                                                style={{
+                                                                    fontSize: '24px',
+                                                                    color: 'black',
+                                                                }}
+                                                            />
+                                                        )}
+                                                        {contact.contact_name === 'Phone Number' && (
+                                                            <a
+                                                                href={`tel:${contact.value}`}
+                                                                onClick={() =>
+                                                                    (window.location.href = `tel:${contact.value}`)
+                                                                }
+                                                            >
+                                                                <PhoneOutlined
                                                                     style={{
-                                                                        fontSize:
-                                                                            "24px",
-                                                                        color: "#25D366",
+                                                                        fontSize: '24px',
+                                                                        // color: "black",
                                                                     }}
                                                                 />
-                                                            )}
-                                                            {contact.contact_name ===
-                                                                "LinkedIn" && (
-                                                                <LinkedinOutlined
-                                                                    style={{
-                                                                        fontSize:
-                                                                            "24px",
-                                                                        color: "#0077B5",
-                                                                    }}
-                                                                />
-                                                            )}
-                                                            {contact.contact_name ===
-                                                                "Facebook" && (
-                                                                <FacebookOutlined
-                                                                    style={{
-                                                                        fontSize:
-                                                                            "24px",
-                                                                        color: "#3b5998",
-                                                                    }}
-                                                                />
-                                                            )}
-                                                            {contact.contact_name ===
-                                                                "Twitter" && (
-                                                                <TwitterOutlined
-                                                                    style={{
-                                                                        fontSize:
-                                                                            "24px",
-                                                                        color: "#1DA1F2",
-                                                                    }}
-                                                                />
-                                                            )}
-                                                            {contact.contact_name ===
-                                                                "Email" && (
-                                                                <MailOutlined
-                                                                    style={{
-                                                                        fontSize:
-                                                                            "24px",
-                                                                        color: "black",
-                                                                    }}
-                                                                />
-                                                            )}
-                                                            {contact.contact_name ===
-                                                                "Phone Number" && (
-                                                                <a
-                                                                    href={`tel:${contact.value}`}
-                                                                    onClick={() =>
-                                                                        (window.location.href = `tel:${contact.value}`)
-                                                                    }
-                                                                >
-                                                                    <PhoneOutlined
-                                                                        style={{
-                                                                            fontSize:
-                                                                                "24px",
-                                                                            // color: "black",
-                                                                        }}
-                                                                    />
-                                                                </a>
-                                                            )}
-                                                        </a>
-                                                    </Tooltip>
-                                                )
-                                            )}
+                                                            </a>
+                                                        )}
+                                                    </a>
+                                                </Tooltip>
+                                            ))}
                                         </Space>
                                     </Skeleton>
                                 </div>
@@ -318,34 +293,36 @@ const ShowAttendeProfile = () => {
                                 avatar
                                 paragraph={{
                                     rows: 1,
-                                    width: "100%",
+                                    width: '100%',
                                 }}
                             >
                                 <Typography.Text strong>Bio</Typography.Text>
-                                <Typography.Paragraph>
-                                    {data ? data.result.bio : ""}
-                                </Typography.Paragraph>
+                                <Typography.Paragraph>{data ? data.result.bio : ''}</Typography.Paragraph>
                             </Skeleton>
                         </Card>
                     </Col>
-                    <Col xs={24} sm={24} md={10}>
+                    <Col
+                        xs={24}
+                        sm={24}
+                        md={10}
+                    >
                         <Card
                             style={{
-                                height: "100%",
-                                padding: "10px",
-                                borderRadius: "8px",
-                                boxShadow: "0 3px 18px rgba(0, 0, 0, 0.1)",
-                                paddingBottom: "0px",
-                                margin: "0px",
+                                height: '100%',
+                                padding: '10px',
+                                borderRadius: '8px',
+                                boxShadow: '0 3px 18px rgba(0, 0, 0, 0.1)',
+                                paddingBottom: '0px',
+                                margin: '0px',
                             }}
-                            size="small"
-                            type="inner"
+                            size='small'
+                            type='inner'
                         >
-                            <div style={{ textAlign: "center" }}>
+                            <div style={{ textAlign: 'center' }}>
                                 <div>
                                     <Row gutter={20}>
                                         <Col
-                                            style={{ padding: "0px" }}
+                                            style={{ padding: '0px' }}
                                             span={12}
                                         >
                                             <Statistic
@@ -363,14 +340,14 @@ const ShowAttendeProfile = () => {
                                                 prefix={
                                                     <UserOutlined
                                                         style={{
-                                                            fontSize: "20px",
+                                                            fontSize: '20px',
                                                         }}
                                                     />
                                                 }
                                             />
                                         </Col>
                                         <Col
-                                            style={{ padding: "0px" }}
+                                            style={{ padding: '0px' }}
                                             span={12}
                                         >
                                             <Statistic
@@ -384,34 +361,27 @@ const ShowAttendeProfile = () => {
                                                         <h3>Badges</h3>
                                                     </div>
                                                 }
-                                                value={" "}
+                                                value={' '}
                                                 prefix={
                                                     <Avatar.Group>
                                                         {badges.map((badge) => (
                                                             <Tooltip
-                                                                title={
-                                                                    badge.name
-                                                                }
+                                                                title={badge.name}
                                                                 key={badge.id}
                                                             >
                                                                 <Avatar
                                                                     size={35}
                                                                     style={{
-                                                                        backgroundColor:
-                                                                            badge.bgcolor,
-                                                                        marginRight:
-                                                                            "3.5px",
+                                                                        backgroundColor: badge.bgcolor,
+                                                                        marginRight: '3.5px',
                                                                     }}
                                                                 >
                                                                     <span
                                                                         style={{
-                                                                            marginRight:
-                                                                                "5px",
+                                                                            marginRight: '5px',
                                                                         }}
                                                                     >
-                                                                        {
-                                                                            badge.name
-                                                                        }
+                                                                        {badge.name}
                                                                     </span>
                                                                 </Avatar>
                                                             </Tooltip>
@@ -424,7 +394,7 @@ const ShowAttendeProfile = () => {
 
                                     <Row gutter={20}>
                                         <Col
-                                            style={{ padding: "0px" }}
+                                            style={{ padding: '0px' }}
                                             span={12}
                                         >
                                             <Statistic
@@ -442,7 +412,7 @@ const ShowAttendeProfile = () => {
                                                 prefix={
                                                     <CheckOutlined
                                                         style={{
-                                                            fontSize: "20px",
+                                                            fontSize: '20px',
                                                         }}
                                                     />
                                                 }
@@ -450,7 +420,7 @@ const ShowAttendeProfile = () => {
                                         </Col>
 
                                         <Col
-                                            style={{ padding: "0px" }}
+                                            style={{ padding: '0px' }}
                                             span={12}
                                         >
                                             <Statistic
@@ -468,7 +438,7 @@ const ShowAttendeProfile = () => {
                                                 prefix={
                                                     <StarFilled
                                                         style={{
-                                                            color: "#FFD700",
+                                                            color: '#FFD700',
                                                         }}
                                                     />
                                                 }
@@ -482,7 +452,7 @@ const ShowAttendeProfile = () => {
                 </Row>
             </Card>
             <Modal
-                title="Edit Profile"
+                title='Edit Profile'
                 open={isUpdateModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -502,46 +472,44 @@ const ShowAttendeProfile = () => {
 const badges = [
     {
         id: 1,
-        name: "badge 1",
-        bgcolor: "#3F51B5",
+        name: 'badge 1',
+        bgcolor: '#3F51B5',
     },
     {
         id: 2,
-        name: "badge 2",
-        bgcolor: "#FFC107",
+        name: 'badge 2',
+        bgcolor: '#FFC107',
     },
     {
         id: 3,
-        name: "badge 3",
-        bgcolor: "#4CAF50",
+        name: 'badge 3',
+        bgcolor: '#4CAF50',
     },
 ];
 
 // Function to format the date
 function formatDate(dateString) {
     if (dateString) {
-        const dateParts = dateString.split("-");
-        const date = new Date(
-            `${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`
-        );
-        const options = { month: "long", day: "numeric", year: "numeric" };
-        return date.toLocaleDateString("en-US", options);
+        const dateParts = dateString.split('-');
+        const date = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
+        const options = { month: 'long', day: 'numeric', year: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
     }
-    return "";
+    return '';
 }
 export default ShowAttendeProfile;
 
 function getContactLink(contactName) {
     switch (contactName) {
-        case "WhatsApp":
-            return "https://wa.me/";
-        case "Linkedin":
-            return "https://linkedin.com/";
-        case "Facebook":
-            return "https://facebook.com/";
-        case "Twitter":
-            return "https://twitter.com/";
+        case 'WhatsApp':
+            return 'https://wa.me/';
+        case 'Linkedin':
+            return 'https://linkedin.com/';
+        case 'Facebook':
+            return 'https://facebook.com/';
+        case 'Twitter':
+            return 'https://twitter.com/';
         default:
-            return "#";
+            return '#';
     }
 }

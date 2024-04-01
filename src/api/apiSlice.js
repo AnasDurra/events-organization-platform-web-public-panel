@@ -3,20 +3,20 @@ import { URL } from './constants';
 import Cookies from 'js-cookie';
 
 export const apiSlice = createApi({
-  reducerPath: 'api',
+    reducerPath: 'api',
 
-  baseQuery: fetchBaseQuery({
-    credentials: 'same-origin',
-    baseUrl: URL,
-    prepareHeaders: (headers) => {
-      const token = Cookies.get('accessToken');
-      if (token) {
-        headers.set('authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
-  tagTypes: ['one-org'],
+    baseQuery: fetchBaseQuery({
+        credentials: 'same-origin',
+        baseUrl: URL,
+        prepareHeaders: (headers) => {
+            const token = Cookies.get('accessToken');
+            if (token) {
+                headers.set('authorization', `Bearer ${token}`);
+            }
+            return headers;
+        },
+    }),
+    tagTypes: ['one-org'],
 
-  endpoints: () => ({}),
+    endpoints: () => ({}),
 });

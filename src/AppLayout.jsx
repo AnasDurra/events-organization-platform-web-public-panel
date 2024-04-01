@@ -8,41 +8,39 @@ import { isLargerThanLG } from './utils/antd.utils';
 import Sider from './components/Sider';
 
 export default function AppLayout() {
-  const screens = Grid.useBreakpoint();
+    const screens = Grid.useBreakpoint();
 
-  const [isLargerThanLGScreen, setIsLargerThanLGScreen] = useState(
-    isLargerThanLG(screens)
-  );
-  const [isSiderOpen, setIsSiderOpen] = useState(true);
+    const [isLargerThanLGScreen, setIsLargerThanLGScreen] = useState(isLargerThanLG(screens));
+    const [isSiderOpen, setIsSiderOpen] = useState(true);
 
-  useEffect(() => {
-    setIsSiderOpen(isLargerThanLGScreen);
-  }, [isLargerThanLGScreen]);
+    useEffect(() => {
+        setIsSiderOpen(isLargerThanLGScreen);
+    }, [isLargerThanLGScreen]);
 
-  useEffect(() => {
-    setIsLargerThanLGScreen(isLargerThanLG(screens));
-  }, [screens]);
+    useEffect(() => {
+        setIsLargerThanLGScreen(isLargerThanLG(screens));
+    }, [screens]);
 
-  return (
-    <Layout>
-      <Header
-        onTriggerSiderIconClicked={() => {
-          setIsSiderOpen(!isSiderOpen);
-        }}
-      />
-      <Layout>
-        <Sider isSiderOpen={isSiderOpen} />
-        <Content style={contentStyle}>
-          <Outlet />
-        </Content>
-      </Layout>
-      <Footer />
-    </Layout>
-  );
+    return (
+        <Layout>
+            <Header
+                onTriggerSiderIconClicked={() => {
+                    setIsSiderOpen(!isSiderOpen);
+                }}
+            />
+            <Layout>
+                <Sider isSiderOpen={isSiderOpen} />
+                <Content style={contentStyle}>
+                    <Outlet />
+                </Content>
+            </Layout>
+            <Footer />
+        </Layout>
+    );
 }
 
 const contentStyle = {
-  padding: '1% 5%',
-  backgroundColor: '#fdfdfd',
-  minHeight: '82vh',
+    padding: '1% 5%',
+    backgroundColor: '#fdfdfd',
+    minHeight: '82vh',
 };
