@@ -27,4 +27,3 @@ const ShowMap = ({ position }) => {
 };
 
 export default ShowMap;
-export default ShowMap;
