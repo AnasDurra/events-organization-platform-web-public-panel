@@ -2,6 +2,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import {
   Button,
   Col,
+  DatePicker,
   Form,
   Input,
   Modal,
@@ -13,26 +14,31 @@ import {
 import TextArea from 'antd/es/input/TextArea';
 import Title from 'antd/es/typography/Title';
 import React from 'react';
+import { useNewEmployeeMutation } from '../employeeSlice';
+import moment from 'moment';
 
-export default function ModalEditMember({ isOpen, onOk, onCancel }) {
+export default function ModalNewMember({ isOpen, onOk, onCancel, orgId }) {
+  const [createNewEmployee] = useNewEmployeeMutation();
+  const [form] = Form.useForm();
   return (
     <Modal
       open={isOpen}
-      title='edit member'
+      title='Add new member'
       onOk={onOk}
       onCancel={onCancel}
-      footer={[
+      width={'60vw'}
+      footer={
         <Button
-          key='edit-member'
           type='primary'
-          onClick={() => {}}
+          onClick={() => form.submit()}
         >
-          Edit
-        </Button>,
-      ]}
+          Add
+        </Button>
+      }
     >
       <Form
-        name='basic'
+        form={form}
+        name='new-member'
         wrapperCol={{
           span: 14,
         }}
@@ -43,15 +49,30 @@ export default function ModalEditMember({ isOpen, onOk, onCancel }) {
         initialValues={{
           remember: true,
         }}
-        onFinish={() => {}}
+        onFinish={(fields) => {
+          console.log(fields);
+          console.log(moment(fields.birth_date).format('YYYY-MM-DD'));
+
+          createNewEmployee({
+            ...fields,
+            organization_id: parseInt(orgId),
+            birth_date: moment(fields.birth_date).format('YYYY-MM-DD'),
+          })
+            .unwrap()
+            .then(() => {
+              onOk();
+              form.resetFields();
+            })
+            .catch(() => {});
+        }}
         onFinishFailed={() => {}}
         autoComplete='off'
       >
-        <Row gutter={[16, 12]}>
+        <Row gutter={[40]}>
           <Col span={12}>
             <Form.Item
               label='first name'
-              name='first name'
+              name='first_name'
               rules={[
                 {
                   required: true,
@@ -64,7 +85,7 @@ export default function ModalEditMember({ isOpen, onOk, onCancel }) {
           <Col span={12}>
             <Form.Item
               label='last name'
-              name='last name'
+              name='last_name'
               rules={[
                 {
                   required: true,
@@ -101,7 +122,44 @@ export default function ModalEditMember({ isOpen, onOk, onCancel }) {
             </Form.Item>
           </Col>
 
-          <Col span={16}>
+          <Col span={12}>
+            <Form.Item
+              label='email'
+              name={'email'}
+              rules={[
+                {
+                  required: true,
+                  type: 'email',
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name='phone_number'
+              label='phone number'
+              rules={[
+                {
+                  required: true,
+                  pattern: new RegExp(/^[0-9]+$/),
+                },
+              ]}
+            >
+              <Input style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+
+          <Col span={12}>
+            <Form.Item
+              label='birth date'
+              name='birth_date'
+            >
+              <DatePicker style={{ width: '100%' }} />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
             <Form.Item
               label='permissions'
               name='permissions'
@@ -112,34 +170,41 @@ export default function ModalEditMember({ isOpen, onOk, onCancel }) {
               ]}
             >
               <Select
-                defaultValue='lucy'
+                mode='multiple'
                 options={[
                   {
                     value: 'lucy',
                     label: 'Lucy',
                   },
+                  {
+                    value: 'suzy',
+                    label: 'suzy',
+                  },
                 ]}
               />
             </Form.Item>
           </Col>
-          <Col span={16}>
+
+          <Col span={12}>
             <Form.Item
-              label='profile'
-              name='profile'
+              label='profile picture'
+              name='profile_picture'
               rules={[
                 {
                   required: true,
                 },
               ]}
+              style={{ width: '100%' }}
             >
-              <Upload {...props}>
-                <Button icon={<UploadOutlined />}>
-                  Click to Upload new profile picture
-                </Button>
+              <Upload
+                {...props}
+                listType='picture-circle'
+                maxCount={1}
+              >
+                <span style={{ padding: '1em' }}>Click to Upload</span>
               </Upload>
             </Form.Item>
           </Col>
-          <Col span={12}></Col>
         </Row>
       </Form>
     </Modal>
@@ -147,19 +212,14 @@ export default function ModalEditMember({ isOpen, onOk, onCancel }) {
 }
 
 const props = {
-  name: 'file',
-  action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
-  headers: {
-    authorization: 'authorization-text',
-  },
   onChange(info) {
     if (info.file.status !== 'uploading') {
       console.log(info.file, info.fileList);
     }
     if (info.file.status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully`);
+      console.log('success');
     } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
+      console.log('fail');
     }
   },
 };

@@ -1,8 +1,8 @@
 import { Avatar, Button, Col, Divider, List, Row, Skeleton } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React from 'react';
-import ModalNewMember from './modal-new member';
-import ModalEditMember from './modal-edit member';
+import ModalNewMember from './configure org/modal-new member';
+import ModalEditMember from './configure org/modal-edit member';
 
 export default function TeamPage() {
   return (
