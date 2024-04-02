@@ -38,12 +38,7 @@ import UpdateEventModal from "./UpdateEventModal";
 const ShowEvent = () => {
     const { id } = useParams();
 
-    const {
-        data: eventData,
-        error,
-        isLoading: eventDataIsLoading,
-        refetch,
-    } = useShowQuery();
+    const { data: eventData, error, isLoading: eventDataIsLoading, refetch, isFetching } = useShowQuery();
 
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
@@ -77,26 +72,14 @@ const ShowEvent = () => {
     const handleRegisterClicked = () => {
         message.success("registered successfully");
     };
-    useEffect(() => {
-        console.log(eventData);
-        console.log(error);
-    }, [eventData, error]);
     return (
         <div style={{ display: "flex", justifyContent: "center" }}>
-            <Skeleton
-                loading={eventDataIsLoading}
-                active
-                round
-                paragraph={{ rows: 10 }}
-            >
+            <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}>
                 <Card
                     bodyStyle={{ padding: "20px 20px 20px 20px" }}
                     cover={
                         <>
-                            <Image
-                                height={250}
-                                src="https://picsum.photos/1000/300"
-                            />
+                            <Image height={250} src="https://picsum.photos/1000/300" />
                         </>
                     }
                 >
@@ -110,85 +93,41 @@ const ShowEvent = () => {
                             >
                                 <Space size={0} direction="vertical">
                                     <Space>
-                                        <Typography.Title
-                                            style={{ marginTop: "10px" }}
-                                            level={4}
-                                        >
+                                        <Typography.Title style={{ marginTop: "10px" }} level={4}>
                                             {eventData?.result?.title}
                                         </Typography.Title>
-                                        <Typography.Title
-                                            style={{ marginTop: "10px" }}
-                                            level={5}
-                                            disabled
-                                        >
+                                        <Typography.Title style={{ marginTop: "10px" }} level={5} disabled>
                                             ({eventData?.result?.event_type})
                                         </Typography.Title>
                                     </Space>
                                     <Space>
-                                        <Typography.Text
-                                            level={5}
-                                            disabled
-                                            style={{ marginTop: "0px" }}
-                                        >
+                                        <Typography.Text level={5} disabled style={{ marginTop: "0px" }}>
                                             {(() => {
-                                                const registrationStartDate =
-                                                    new Date(
-                                                        eventData?.result?.registration_start_date
-                                                    );
+                                                const registrationStartDate = new Date(
+                                                    eventData?.result?.registration_start_date
+                                                );
 
                                                 const currentDate = new Date();
 
-                                                const differenceInMilliseconds =
-                                                    currentDate -
-                                                    registrationStartDate;
+                                                const differenceInMilliseconds = currentDate - registrationStartDate;
 
-                                                const differenceInDays =
-                                                    Math.floor(
-                                                        differenceInMilliseconds /
-                                                            (1000 *
-                                                                60 *
-                                                                60 *
-                                                                24)
-                                                    );
+                                                const differenceInDays = Math.floor(
+                                                    differenceInMilliseconds / (1000 * 60 * 60 * 24)
+                                                );
 
                                                 return `${differenceInDays} days ago`;
                                             })()}
                                         </Typography.Text>
-                                        <Typography.Text
-                                            level={5}
-                                            underline
-                                            style={{ marginTop: "0px" }}
-                                        >
-                                            by @
-                                            <a href="@organizer120">
-                                                {
-                                                    eventData?.result
-                                                        ?.organization?.name
-                                                }
-                                            </a>
+                                        <Typography.Text level={5} underline style={{ marginTop: "0px" }}>
+                                            by @<a href="@organizer120">{eventData?.result?.organization?.name}</a>
                                         </Typography.Text>
                                     </Space>
                                 </Space>
                                 <Tooltip title="Edit Event">
-                                    <Button
-                                        icon={<EditOutlined />}
-                                        onClick={() =>
-                                            setIsUpdateModalOpen(true)
-                                        }
-                                    />
+                                    <Button icon={<EditOutlined />} onClick={() => setIsUpdateModalOpen(true)} />
                                 </Tooltip>
                             </div>
                         </Col>
-                        {/* <Col span={4}>
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "flex-end",
-                            }}
-                        >
-                            w
-                        </div>
-                    </Col> */}
 
                         <Col xs={24} md={12}>
                             <Table
@@ -242,11 +181,7 @@ const ShowEvent = () => {
 
                         <Col span={24}>
                             <Divider />
-                            <Typography.Title
-                                style={{ margin: "0px" }}
-                                level={3}
-                                strong
-                            >
+                            <Typography.Title style={{ margin: "0px" }} level={3} strong>
                                 Event Overview
                             </Typography.Title>
                         </Col>
@@ -260,20 +195,14 @@ const ShowEvent = () => {
                                 }}
                             >
                                 <Space direction="vertical" wrap>
-                                    <Typography.Text>
-                                        {eventData?.result?.description}
-                                    </Typography.Text>
+                                    <Typography.Text>{eventData?.result?.description}</Typography.Text>
                                 </Space>
                             </Card>
                         </Col>
 
                         <Col span={24}>
                             <Divider />
-                            <Typography.Title
-                                style={{ margin: "0px" }}
-                                level={3}
-                                strong
-                            >
+                            <Typography.Title style={{ margin: "0px" }} level={3} strong>
                                 Event Detials
                             </Typography.Title>
                         </Col>
@@ -294,58 +223,45 @@ const ShowEvent = () => {
                                                 height: "100%",
                                                 padding: "10px",
                                                 borderRadius: "8px",
-                                                boxShadow:
-                                                    "0 4px 8px rgba(0, 0, 0, 0.1)",
+                                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                                             }}
                                         >
-                                            <Space
-                                                direction="vertical"
-                                                size={30}
-                                            >
+                                            <Space direction="vertical" size={30}>
                                                 <Space wrap>
                                                     <TagsOutlined />
-                                                    <Typography.Text strong>
-                                                        Event Tags:
-                                                    </Typography.Text>
+                                                    <Typography.Text strong>Event Tags:</Typography.Text>
                                                     <div>
-                                                        {eventData?.result?.tags
-                                                            .length === 0
+                                                        {eventData?.result?.tags.length === 0
                                                             ? "No Tags for this event"
-                                                            : eventData?.result?.tags.map(
-                                                                  (tag) => {
-                                                                      <Tag>
-                                                                          {
-                                                                              tag
-                                                                                  ?.tag
-                                                                                  ?.label
-                                                                          }
-                                                                      </Tag>;
-                                                                  }
-                                                              )}
+                                                            : eventData?.result?.tags.map((tag) => (
+                                                                  <Tag
+                                                                      key={tag?.tag?.value}
+                                                                      style={{
+                                                                          padding: "2px 10px",
+                                                                          margin: "5px",
+                                                                          fontSize: "15px",
+                                                                      }}
+                                                                  >
+                                                                      {tag?.tag?.label}
+                                                                  </Tag>
+                                                              ))}
                                                     </div>
                                                 </Space>
 
                                                 <Space wrap Space>
                                                     <UserOutlined />
-                                                    <Typography.Text strong>
-                                                        Event Target Age Group:
-                                                    </Typography.Text>
+                                                    <Typography.Text strong>Event Target Age Group:</Typography.Text>
                                                     <div>
-                                                        {eventData?.result
-                                                            ?.age_groups
-                                                            .length === 0
+                                                        {eventData?.result?.age_groups.length === 0
                                                             ? "No Age Groups for this event"
-                                                            : eventData?.result?.age_groups.map(
-                                                                  (
-                                                                      age_group
-                                                                  ) => {
-                                                                      <Tag>
-                                                                          {
-                                                                              age_group?.age_group_name
-                                                                          }
-                                                                      </Tag>;
-                                                                  }
-                                                              )}
+                                                            : eventData?.result?.age_groups.map((age_group) => (
+                                                                  <Tag
+                                                                      style={{ padding: "2px 10px", fontSize: "15px" }}
+                                                                      key={age_group?.age_group_id}
+                                                                  >
+                                                                      {age_group?.age_group_name}
+                                                                  </Tag>
+                                                              ))}
                                                     </div>
                                                 </Space>
                                             </Space>
@@ -358,71 +274,38 @@ const ShowEvent = () => {
                                                 height: "100%",
                                                 padding: "10px",
                                                 borderRadius: "8px",
-                                                boxShadow:
-                                                    "0 4px 8px rgba(0, 0, 0, 0.1)",
+                                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                                             }}
                                         >
-                                            <Space
-                                                style={{ width: "100%" }}
-                                                direction="vertical"
-                                                size={10}
-                                            >
+                                            <Space style={{ width: "100%" }} direction="vertical" size={10}>
                                                 <Space>
                                                     <EnvironmentOutlined />
-                                                    <Typography.Text strong>
-                                                        Event Address:
-                                                    </Typography.Text>
+                                                    <Typography.Text strong>Event Address:</Typography.Text>
                                                 </Space>
                                                 <Divider
                                                     style={{
                                                         margin: "10px 0px",
                                                     }}
                                                 />
-                                                {eventData?.result?.location
-                                                    ?.latitude && (
+                                                {eventData?.result?.location?.latitude && (
                                                     <ShowMap
                                                         position={{
-                                                            lat: eventData
-                                                                ?.result
-                                                                ?.location
-                                                                ?.latitude
-                                                                ? parseFloat(
-                                                                      eventData
-                                                                          .result
-                                                                          .location
-                                                                          .latitude
-                                                                  )
+                                                            lat: eventData?.result?.location?.latitude
+                                                                ? parseFloat(eventData.result.location.latitude)
                                                                 : 0,
-                                                            lng: eventData
-                                                                ?.result
-                                                                ?.location
-                                                                ?.longitude
-                                                                ? parseFloat(
-                                                                      eventData
-                                                                          .result
-                                                                          .location
-                                                                          .longitude
-                                                                  )
+                                                            lng: eventData?.result?.location?.longitude
+                                                                ? parseFloat(eventData.result.location.longitude)
                                                                 : 0,
                                                         }}
                                                     />
                                                 )}
                                                 <Typography.Text>
-                                                    <strong>
-                                                        Event Address:{" "}
-                                                    </strong>
-                                                    {
-                                                        eventData?.result
-                                                            ?.address?.label
-                                                    }
+                                                    <strong>Event Address: </strong>
+                                                    {eventData?.result?.address?.label}
                                                 </Typography.Text>
                                                 <Typography.Text>
-                                                    <strong>
-                                                        Address Note:
-                                                    </strong>{" "}
-                                                    {eventData?.result
-                                                        ?.address_notes ??
-                                                        "No additional notes"}
+                                                    <strong>Address Note:</strong>{" "}
+                                                    {eventData?.result?.address_notes ?? "No additional notes"}
                                                 </Typography.Text>
                                             </Space>
                                         </Card>
@@ -440,11 +323,7 @@ const ShowEvent = () => {
                                     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                                 }}
                             >
-                                <Space
-                                    direction="vertical"
-                                    style={{ width: "100%" }}
-                                    size={20}
-                                >
+                                <Space direction="vertical" style={{ width: "100%" }} size={20}>
                                     <Space>
                                         <ScheduleOutlined />
                                         <Typography.Text
@@ -487,8 +366,7 @@ const ShowEvent = () => {
                                                         <Typography.Text
                                                             strong
                                                             style={{
-                                                                padding:
-                                                                    "12px 24px",
+                                                                padding: "12px 24px",
                                                             }}
                                                         >
                                                             {slot.label}
@@ -496,17 +374,13 @@ const ShowEvent = () => {
                                                         <List.Item
                                                             style={{
                                                                 display: "flex",
-                                                                justifyContent:
-                                                                    "space-between",
-                                                                alignItems:
-                                                                    "center",
+                                                                justifyContent: "space-between",
+                                                                alignItems: "center",
                                                             }}
                                                         >
                                                             <div>
                                                                 <Typography.Text>
-                                                                    {formatDate(
-                                                                        slot.start_time
-                                                                    )}
+                                                                    {formatDate(slot.start_time)}
                                                                 </Typography.Text>
                                                             </div>
 
@@ -517,9 +391,7 @@ const ShowEvent = () => {
                                                             />
                                                             <div>
                                                                 <Typography.Text>
-                                                                    {formatDate(
-                                                                        slot.end_time
-                                                                    )}
+                                                                    {formatDate(slot.end_time)}
                                                                 </Typography.Text>
                                                             </div>
                                                         </List.Item>
@@ -538,6 +410,9 @@ const ShowEvent = () => {
                         isUpdateModalOpen={isUpdateModalOpen}
                         setIsUpdateModalOpen={setIsUpdateModalOpen}
                         eventData={eventData}
+                        refetch={refetch}
+                        eventDataIsLoading={eventDataIsLoading}
+                        isFetching={isFetching}
                     />
                 )}
             </Skeleton>
