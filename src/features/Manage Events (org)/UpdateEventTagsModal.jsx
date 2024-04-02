@@ -7,8 +7,10 @@ const { Title, Paragraph } = Typography;
 import { useUpdateTagsMutation } from "../../api/services/events";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const UpdateEventTagsModal = ({ isUpdateEventTagsModalOpen, setIsUpdateEventTagsModalOpen, eventData, refetch }) => {
+    const { id } = useParams();
     const [updateTagsMutation, { isLoading: UpdateTagsIsLoading }] = useUpdateTagsMutation();
     const { data: lists, error, isLoading: listsIsLoading } = useEventCreationListsQuery();
 
@@ -24,7 +26,8 @@ const UpdateEventTagsModal = ({ isUpdateEventTagsModalOpen, setIsUpdateEventTags
                     deleted_tags: deletedTags,
                     added_tags: addedTags,
                 };
-                updateTagsMutation(values)
+                console.log(values);
+                updateTagsMutation({ id: id, body: values })
                     .unwrap()
                     .then((res) => {
                         console.log(res);

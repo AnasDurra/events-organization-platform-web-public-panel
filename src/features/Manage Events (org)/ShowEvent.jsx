@@ -38,7 +38,7 @@ import UpdateEventModal from "./UpdateEventModal";
 const ShowEvent = () => {
     const { id } = useParams();
 
-    const { data: eventData, error, isLoading: eventDataIsLoading, refetch, isFetching } = useShowQuery();
+    const { data: eventData, error, isLoading: eventDataIsLoading, refetch, isFetching } = useShowQuery(id);
 
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
@@ -72,6 +72,10 @@ const ShowEvent = () => {
     const handleRegisterClicked = () => {
         message.success("registered successfully");
     };
+
+    useEffect(() => {
+        console.log(id);
+    }, [id]);
     return (
         <div style={{ display: "flex", justifyContent: "center" }}>
             <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}>

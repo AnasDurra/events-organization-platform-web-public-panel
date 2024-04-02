@@ -12,30 +12,30 @@ export const events = apiSlice.injectEndpoints({
         }),
 
         show: builder.query({
-            query: () => ({
-                url: "event/show/13",
+            query: (id) => ({
+                url: `event/show/${id}`,
                 method: "GET",
             }),
         }),
         updateDetails: builder.mutation({
-            query: (data) => ({
-                url: "event/update/13",
+            query: ({ id, body }) => ({
+                url: `event/update/${id}`,
                 method: "POST",
-                body: data,
+                body: body,
             }),
         }),
         updateTags: builder.mutation({
-            query: (data) => ({
-                url: "event/update-tags/13",
+            query: ({ id, body }) => ({
+                url: `event/update-tags/${id}`,
                 method: "POST",
-                body: data,
+                body: body,
             }),
         }),
         updateAgeGroups: builder.mutation({
-            query: (data) => ({
-                url: "event/update-age-groups/13",
+            query: ({ id, body }) => ({
+                url: `event/update-age-groups/${id}`,
                 method: "POST",
-                body: data,
+                body: body,
             }),
         }),
     }),

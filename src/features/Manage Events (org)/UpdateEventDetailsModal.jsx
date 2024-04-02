@@ -19,12 +19,15 @@ import moment from "moment";
 import dayjs from "dayjs";
 
 import { useUpdateDetailsMutation } from "../../api/services/events";
+import { useParams } from "react-router-dom";
 const UpdateEventDetailsModal = ({
     isUpdateEventDetailsModalOpen,
     setIsUpdateEventDetailsModalOpen,
     eventData,
     refetch,
 }) => {
+    const { id } = useParams();
+
     const [updateDetailsMutation, { isLoading: UpdateDetailsIsLoading }] = useUpdateDetailsMutation();
 
     const [form] = useForm();
@@ -59,7 +62,7 @@ const UpdateEventDetailsModal = ({
                 form.submit();
                 if (position) {
                     values = {
-                        ...values, //
+                        ...values,
                         location: {
                             latitude: position?.lat?.toString(),
                             longitude: position?.lng?.toString(),
@@ -68,7 +71,7 @@ const UpdateEventDetailsModal = ({
                     };
                 }
                 console.log("Form values:", values);
-                updateDetailsMutation(values)
+                updateDetailsMutation({ id: id, body: values })
                     .unwrap()
                     .then((res) => {
                         console.log(res);

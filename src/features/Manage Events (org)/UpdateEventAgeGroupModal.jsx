@@ -7,6 +7,7 @@ import { useForm } from "antd/es/form/Form";
 const { Title, Paragraph } = Typography;
 
 import { useUpdateAgeGroupsMutation } from "../../api/services/events";
+import { useParams } from "react-router-dom";
 
 const UpdateEventAgeGroupModal = ({
     isUpdateEventAgeGroupModalOpen,
@@ -14,6 +15,7 @@ const UpdateEventAgeGroupModal = ({
     eventData,
     refetch,
 }) => {
+    const { id } = useParams();
     const [updateAgeGroupsMutation, { isLoading: UpdateAgeGroupsIsLoading }] = useUpdateAgeGroupsMutation();
     const { data: lists, error, isLoading: listsIsLoading } = useEventCreationListsQuery();
 
@@ -29,7 +31,8 @@ const UpdateEventAgeGroupModal = ({
                     deleted_age_groups: deletedAgeGroups,
                     added_age_groups: addedAgeGroups,
                 };
-                updateAgeGroupsMutation(values)
+                console.log(values);
+                updateAgeGroupsMutation({ id: id, body: values })
                     .unwrap()
                     .then((res) => {
                         console.log(res);
