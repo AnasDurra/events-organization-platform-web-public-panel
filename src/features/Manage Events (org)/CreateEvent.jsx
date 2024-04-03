@@ -54,14 +54,13 @@ const CreateEvent = () => {
 
     // Handle on Forms Finish
     const onFormsFinish = async () => {
-        if (!coverImage) {
-            message.error('You have to Upload a cover picture');
-        } else {
-            try {
-                await eventDetailsForm.validateFields();
-                await eventMediaForm.validateFields();
-                await eventRegistrationForm.validateFields();
-
+        try {
+            await eventDetailsForm.validateFields();
+            await eventMediaForm.validateFields();
+            await eventRegistrationForm.validateFields();
+            if (!coverImage) {
+                message.error('You have to Upload a cover picture');
+            } else {
                 const eventDetailsFormValues = eventDetailsForm.getFieldsValue();
                 const eventMediaFormValues = eventMediaForm.getFieldsValue();
                 const eventRegistrationFormValues = eventRegistrationForm.getFieldsValue();
@@ -172,9 +171,9 @@ const CreateEvent = () => {
                             openNotificationWithIcon('error', 'Something wend Wrong!', value);
                         });
                     });
-            } catch (error) {
-                // console.log(error);
             }
+        } catch (error) {
+            // console.log(error);
         }
     };
 

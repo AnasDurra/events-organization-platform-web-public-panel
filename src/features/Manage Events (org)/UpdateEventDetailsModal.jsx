@@ -48,7 +48,7 @@ const UpdateEventDetailsModal = ({
         registration_start_date: dayjs(eventData?.result?.registration_start_date, 'YYYY-MM-DD HH:mm:ss'),
         registration_end_date: dayjs(eventData?.result?.registration_end_date, 'YYYY-MM-DD HH:mm:ss'),
 
-        capacity: eventData?.result?.capacity,
+        capacity: eventData?.result?.capacity.toString(),
         description: eventData?.result?.description,
         event_type: eventData?.result?.event_type,
         title: eventData?.result?.title,
@@ -64,10 +64,16 @@ const UpdateEventDetailsModal = ({
                     values = {
                         ...values,
                         location: {
-                            latitude: position?.lat?.toString(),
-                            longitude: position?.lng?.toString(),
+                            latitude: position?.lat?.toString() ?? null,
+                            longitude: position?.lng?.toString() ?? null,
                         },
-                        capacity: values.capacity.toString(),
+                        capacity: values?.capacity.toString(),
+                    };
+                } else {
+                    values = {
+                        ...values,
+                        location: null,
+                        capacity: values?.capacity.toString(),
                     };
                 }
                 console.log('Form values:', values);
