@@ -6,7 +6,7 @@ const DefaultLocation = { lat: 33.792773, lng: 36.145962 };
 
 const LocationOnMapsModal = ({ isLocationOnMapModalOpen, setIsLocationOnMapModalOpen, position, setPosition }) => {
     const [zoom, setZoom] = useState(9);
-    const [tempPosition, setTempPosition] = useState(position.lat ? position : DefaultLocation);
+    const [tempPosition, setTempPosition] = useState(position?.lat ? position : DefaultLocation);
 
     const handleOk = () => {
         message.success('Location Add Successfully .. ');
