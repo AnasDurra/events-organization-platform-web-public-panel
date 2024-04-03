@@ -5,21 +5,21 @@ import {
     LoadingOutlined,
     SettingOutlined,
     TeamOutlined,
-} from "@ant-design/icons";
-import { Divider, Modal, Select, Space, Spin, Tooltip, message } from "antd";
-import { Typography, Form, Input, DatePicker, InputNumber, Button } from "antd";
-import Dragger from "antd/es/upload/Dragger";
-import { useState } from "react";
-import ShowMap from "./ShowMap";
-import LocationOnMapsModal from "./LocationOnMapsModal";
-import { useForm } from "antd/es/form/Form";
+} from '@ant-design/icons';
+import { Divider, Modal, Select, Space, Spin, Tooltip, message } from 'antd';
+import { Typography, Form, Input, DatePicker, InputNumber, Button } from 'antd';
+import Dragger from 'antd/es/upload/Dragger';
+import { useState } from 'react';
+import ShowMap from './ShowMap';
+import LocationOnMapsModal from './LocationOnMapsModal';
+import { useForm } from 'antd/es/form/Form';
 const { Title, Paragraph } = Typography;
 
-import moment from "moment";
-import dayjs from "dayjs";
+import moment from 'moment';
+import dayjs from 'dayjs';
 
-import { useUpdateDetailsMutation } from "../../api/services/events";
-import { useParams } from "react-router-dom";
+import { useUpdateDetailsMutation } from '../../api/services/events';
+import { useParams } from 'react-router-dom';
 const UpdateEventDetailsModal = ({
     isUpdateEventDetailsModalOpen,
     setIsUpdateEventDetailsModalOpen,
@@ -45,8 +45,8 @@ const UpdateEventDetailsModal = ({
 
     const initialFormValues = {
         address_notes: eventData?.result?.address_notes,
-        registration_start_date: dayjs(eventData?.result?.registration_start_date, "YYYY-MM-DD HH:mm:ss"),
-        registration_end_date: dayjs(eventData?.result?.registration_end_date, "YYYY-MM-DD HH:mm:ss"),
+        registration_start_date: dayjs(eventData?.result?.registration_start_date, 'YYYY-MM-DD HH:mm:ss'),
+        registration_end_date: dayjs(eventData?.result?.registration_end_date, 'YYYY-MM-DD HH:mm:ss'),
 
         capacity: eventData?.result?.capacity,
         description: eventData?.result?.description,
@@ -70,26 +70,26 @@ const UpdateEventDetailsModal = ({
                         capacity: values.capacity.toString(),
                     };
                 }
-                console.log("Form values:", values);
+                console.log('Form values:', values);
                 updateDetailsMutation({ id: id, body: values })
                     .unwrap()
                     .then((res) => {
                         console.log(res);
                         if (res.statusCode === 201) {
                             refetch();
-                            message.success("Events Detials Updated Successfully !");
+                            message.success('Events Detials Updated Successfully !');
                             setIsUpdateEventDetailsModalOpen(false);
                         }
                     })
                     .catch((error) => {
-                        console.error("Error:", error);
+                        console.error('Error:', error);
                         error.data.result.response.message.forEach((value) => {
                             message.error(value);
                         });
                     });
             })
             .catch((error) => {
-                console.error("Validation error:", error);
+                console.error('Validation error:', error);
             });
     };
     return (
@@ -97,17 +97,17 @@ const UpdateEventDetailsModal = ({
             <Modal
                 title={
                     <>
-                        <Title style={{ marginTop: "0px" }} level={4}>
+                        <Title style={{ marginTop: '0px' }} level={4}>
                             Update Event Details
                         </Title>
-                        <Divider style={{ marginBottom: "0px" }} />
+                        <Divider style={{ marginBottom: '0px' }} />
                     </>
                 }
                 open={isUpdateEventDetailsModalOpen}
                 onOk={handleEventDetailsOk}
                 onCancel={handleEventDetailsCancel}
                 width={750}
-                okText={"Update Information"}
+                okText={'Update Information'}
                 okButtonProps={{ loading: UpdateDetailsIsLoading, disabled: UpdateDetailsIsLoading }}
                 cancelButtonProps={{ disabled: UpdateDetailsIsLoading }}
                 closable={!UpdateDetailsIsLoading}
@@ -133,7 +133,7 @@ const UpdateEventDetailsModal = ({
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Please enter event Title",
+                                        message: 'Please enter event Title',
                                     },
                                 ]}
                             >
@@ -145,7 +145,7 @@ const UpdateEventDetailsModal = ({
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Please enter event Description ",
+                                        message: 'Please enter event Description ',
                                     },
                                 ]}
                             >
@@ -157,7 +157,7 @@ const UpdateEventDetailsModal = ({
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Please enter event Type ",
+                                        message: 'Please enter event Type ',
                                     },
                                 ]}
                             >
@@ -165,12 +165,12 @@ const UpdateEventDetailsModal = ({
                                     allowClear
                                     options={[
                                         {
-                                            value: "online",
-                                            label: "Online",
+                                            value: 'online',
+                                            label: 'Online',
                                         },
                                         {
-                                            value: "onsite",
-                                            label: "Onsite",
+                                            value: 'onsite',
+                                            label: 'Onsite',
                                         },
                                     ]}
                                 />
@@ -178,12 +178,12 @@ const UpdateEventDetailsModal = ({
 
                             <Title level={3}>Location</Title>
                             <Form.Item label="Location on Maps">
-                                <Space style={{ width: "100%" }} direction="vertical">
-                                    {!position && (
-                                        <div style={{ height: "30vh" }}>
+                                <Space style={{ width: '100%' }} direction="vertical">
+                                    {!position?.lat && (
+                                        <div style={{ height: '30vh' }}>
                                             <Dragger
                                                 style={{
-                                                    border: "5px",
+                                                    border: '5px',
                                                 }}
                                                 disabled
                                             >
@@ -191,7 +191,7 @@ const UpdateEventDetailsModal = ({
                                             </Dragger>
                                         </div>
                                     )}
-                                    {position && (
+                                    {position?.lat && (
                                         <Tooltip
                                             trigger="hover"
                                             defaultOpen
@@ -203,23 +203,23 @@ const UpdateEventDetailsModal = ({
                                             </div>
                                         </Tooltip>
                                     )}
-                                    <div style={{ textAlign: "center" }}>
+                                    <div style={{ textAlign: 'center' }}>
                                         <Space size={30} wrap>
                                             <Button
                                                 type="primary"
                                                 onClick={() => setIsLocationOnMapModalOpen(true)}
                                                 icon={<EnvironmentFilled />}
                                             >
-                                                {position ? "Change Location" : "Select Location"}
+                                                {position?.lat ? 'Change Location' : 'Select Location'}
                                             </Button>
 
                                             <Button
                                                 type="dashed"
-                                                disabled={!position}
+                                                disabled={!position?.lat}
                                                 danger
                                                 onClick={() => {
                                                     setPosition(null);
-                                                    message.warning("Loacation Deleted ..   ");
+                                                    message.warning('Loacation Deleted ..   ');
                                                 }}
                                             >
                                                 Delete Location
@@ -239,7 +239,7 @@ const UpdateEventDetailsModal = ({
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Please enter event Registration Start Date & Time ",
+                                        message: 'Please enter event Registration Start Date & Time ',
                                     },
                                 ]}
                             >
@@ -251,14 +251,14 @@ const UpdateEventDetailsModal = ({
                                 rules={[
                                     {
                                         required: true,
-                                        message: "Please enter event Registration End Date & Time ",
+                                        message: 'Please enter event Registration End Date & Time ',
                                     },
                                 ]}
                             >
                                 <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                             </Form.Item>
                             <Form.Item label="Capacity" name="capacity">
-                                <InputNumber prefix={<TeamOutlined />} min={0} style={{ width: "100%" }} />
+                                <InputNumber prefix={<TeamOutlined />} min={0} style={{ width: '100%' }} />
                             </Form.Item>
                         </Form>
                     </div>

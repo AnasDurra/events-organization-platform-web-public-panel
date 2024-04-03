@@ -5,7 +5,6 @@ import { router } from '../../router/index.jsx';
 
 const authMiddleware = (store) => (next) => async (action) => {
     var response = await next(action);
-    // console.log("in Middleware",response);
     if (response.payload?.status == 401 || response.payload?.status == 403) {
         if (Cookies.get('refreshToken')) {
             const refreshToken = Cookies.get('refreshToken');

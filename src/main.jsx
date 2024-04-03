@@ -6,6 +6,7 @@ import { RouterProvider } from 'react-router-dom';
 import './index.css';
 import { router } from './router/index.jsx';
 import { store } from './store.js';
+import { NotificationProvider } from './utils/NotificationContext.jsx';
 
 const theme = {
     token: {
@@ -21,7 +22,9 @@ const theme = {
 ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
         <ConfigProvider theme={theme}>
-            <RouterProvider router={router} />
+            <NotificationProvider>
+                <RouterProvider router={router} />
+            </NotificationProvider>
         </ConfigProvider>
     </Provider>
 );

@@ -1,0 +1,189 @@
+import { Button, Card, Form, Input, Select, Slider, Space, Tooltip, message } from 'antd';
+import Dragger from 'antd/es/upload/Dragger';
+import ShowMap from './ShowMap';
+import { EnvironmentFilled } from '@ant-design/icons';
+
+const EventDetailsForm = ({
+    eventDetailsForm,
+    lists,
+    listsIsLoading,
+    position,
+    setIsLocationOnMapModalOpen,
+    setPosition,
+}) => {
+    return (
+        <>
+            <Form form={eventDetailsForm} layout="vertical">
+                <Form.Item
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please enter event Title',
+                        },
+                    ]}
+                    label="Event Name"
+                    name="title"
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="Event Descreption"
+                    name="description"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please enter event Description ',
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item initialValue={1} label="Event Capacity" name="capacity">
+                    <Slider min={1} />
+                </Form.Item>
+                <Form.Item
+                    label="Event Type (Online - Onsite)"
+                    name="event_type"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please enter event Type ',
+                        },
+                    ]}
+                >
+                    <Select
+                        allowClear
+                        options={[
+                            {
+                                value: 'online',
+                                label: 'Online',
+                            },
+                            {
+                                value: 'onsite',
+                                label: 'Onsite',
+                            },
+                        ]}
+                    />
+                </Form.Item>
+
+                <Form.Item
+                    label="Target Age Group"
+                    name="age_groups"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please select at least one from event Age Groups ',
+                        },
+                    ]}
+                >
+                    <Select loading={listsIsLoading} allowClear mode="multiple" options={lists?.result.age_groups} />
+                </Form.Item>
+
+                <Form.Item
+                    label="Tags"
+                    name="tags"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please select at least one from event Tags ',
+                        },
+                    ]}
+                >
+                    <Select loading={listsIsLoading} mode="tags" allowClear options={lists?.result.tags} />
+                </Form.Item>
+
+                {/* <Form.Item label="Address" name="address_id">
+                                    <Cascader
+                                        options={[
+                                            {
+                                                value: "zhejiang",
+                                                label: "Zhejiang",
+                                                children: [
+                                                    {
+                                                        value: "hangzhou",
+                                                        label: "Hangzhou",
+                                                    },
+                                                ],
+                                            },
+                                        ]}
+                                    />
+                                </Form.Item> */}
+
+                <Form.Item
+                    label="Address"
+                    name="address_id"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please select at least one from event Tags ',
+                        },
+                    ]}
+                >
+                    <Select loading={listsIsLoading} allowClear options={lists?.result.addresses} />
+                </Form.Item>
+
+                <Form.Item label="Address Additional Notes" name="address_notes">
+                    <Input.TextArea />
+                </Form.Item>
+
+                <Form.Item label="Select Location on Maps">
+                    <Card size="small">
+                        <Space wrap size={20} direction="vertical" style={{ width: '100%' }}>
+                            {!position && (
+                                <div style={{ height: '30vh' }}>
+                                    <Dragger
+                                        style={{
+                                            border: '5px',
+                                        }}
+                                        disabled
+                                    >
+                                        <p className="ant-upload-hint">No Location Selected Yet</p>
+                                    </Dragger>
+                                </div>
+                            )}
+                            {position && (
+                                <Tooltip
+                                    trigger="hover"
+                                    defaultOpen
+                                    title="Click here to show the selected location on Maps"
+                                    placement="topRight"
+                                >
+                                    <div>
+                                        <ShowMap position={position} />
+                                    </div>
+                                </Tooltip>
+                            )}
+                            <div style={{ textAlign: 'center' }}>
+                                <Space size={30} wrap>
+                                    <Button
+                                        type="primary"
+                                        onClick={() => setIsLocationOnMapModalOpen(true)}
+                                        icon={<EnvironmentFilled />}
+                                    >
+                                        {position ? 'Change Location' : 'Select Location'}
+                                    </Button>
+
+                                    <Button
+                                        type="dashed"
+                                        disabled={!position}
+                                        danger
+                                        onClick={() => {
+                                            setPosition(null);
+                                            message.warning('Loacation Deleted ..   ');
+                                        }}
+                                    >
+                                        Delete Location
+                                    </Button>
+                                </Space>
+                            </div>
+                        </Space>
+                    </Card>
+                </Form.Item>
+            </Form>
+        </>
+    );
+};
+
+export default EventDetailsForm;

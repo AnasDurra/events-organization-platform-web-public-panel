@@ -157,20 +157,15 @@ export default function RegisterAttendee() {
         >
             <Card>
                 <Space
-                    direction='horizontal'
+                    direction="horizontal"
                     style={{
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'flex-start',
                     }}
                 >
-                    <div className='registerImage'>
-                        <Image
-                            width={320}
-                            height={800}
-                            src={image1}
-                            preview={false}
-                        />
+                    <div className="registerImage">
+                        <Image width={320} height={800} src={image1} preview={false} />
                     </div>
                     <div>
                         <Card
@@ -190,7 +185,7 @@ export default function RegisterAttendee() {
                                             <br></br>
                                             Already have an Evento Account?{' '}
                                             <Link
-                                                href='login'
+                                                href="login"
                                                 style={{
                                                     color: 'blue',
                                                     fontWeight: 'bold',
@@ -203,11 +198,7 @@ export default function RegisterAttendee() {
                                     }
                                 />
 
-                                <Steps
-                                    size='small'
-                                    current={current}
-                                    items={items}
-                                />
+                                <Steps size="small" current={current} items={items} />
 
                                 <div style={contentStyle}>{steps[current].content}</div>
 
@@ -229,18 +220,12 @@ export default function RegisterAttendee() {
                                         </Button>
                                     )}
                                     {current < steps.length - 1 && (
-                                        <Button
-                                            type='primary'
-                                            onClick={() => handleFormSubmit()}
-                                        >
+                                        <Button type="primary" onClick={() => handleFormSubmit()}>
                                             Next
                                         </Button>
                                     )}
                                     {current === steps.length - 1 && (
-                                        <Button
-                                            type='primary'
-                                            onClick={onFinish}
-                                        >
+                                        <Button type="primary" onClick={onFinish}>
                                             Done
                                         </Button>
                                     )}
