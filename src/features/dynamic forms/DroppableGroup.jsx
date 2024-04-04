@@ -4,8 +4,21 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 import FormTextField from './FormTextField';
 import FormRadio from './FormRadio';
 import { itemTypes } from './constants';
+import { Badge, Divider, Form, Input, Space, Tooltip } from 'antd';
+import FormTextFieldOverview from './fields overview/FormTextFieldOverview';
+import FormRadioOverview from './fields overview/FormRadioOverview';
+import FormDateOverview from './fields overview/FormDateOverview';
+import FormNumberOverview from './fields overview/FormNumberOverview';
 
-export default function DroppableGroup({ groupId, fields, selectedField, onSelectField }) {
+export default function DroppableGroup({
+    groupId,
+    fields,
+    selectedField,
+    onSelectField,
+    index,
+    onNameChange,
+    onDescriptionChange,
+}) {
     const [hoveredField, setHoveredField] = useState(false);
 
     const handleFieldHover = (field) => {
@@ -15,9 +28,57 @@ export default function DroppableGroup({ groupId, fields, selectedField, onSelec
     const handleClickField = (field) => {
         onSelectField(field);
     };
+
+    const handleNameInputChange = (e) => {
+        const newName = e.target.value;
+        onNameChange(groupId, newName);
+    };
+
+    const handleDescriptionInputChange = (e) => {
+        const newDescription = e.target.value;
+        onDescriptionChange(groupId, newDescription);
+    };
+
     return (
-        <div className=' w-full bg-gray-200 p-2 my-2 '>
-            <Title level={5}> Group {groupId}</Title>
+        <div className='w-full bg-gray-50 bg-slate-100 p-2 my-2 rounded-lg relative'>
+            <Divider>Group</Divider>
+            <Space.Compact
+                align={'center'}
+                className='w-full px-4'
+            >
+                <Title
+                    level={5}
+                    className='w-[20%] text-left'
+                >
+                    name
+                </Title>
+                <Input
+                    bordered={true}
+                    className='bg-gray-50 w-[40%]'
+                    placeholder='group name'
+                    onChange={handleNameInputChange}
+                />
+            </Space.Compact>
+
+            <Space.Compact
+                align={'center'}
+                className='w-full px-4'
+            >
+                <Title
+                    level={5}
+                    className='w-[20%] text-left'
+                >
+                    description
+                </Title>
+                <Input
+                    className='bg-gray-50 w-[40%]'
+                    placeholder='group description'
+                    onChange={handleDescriptionInputChange}
+                />
+            </Space.Compact>
+
+            <Divider> Fields</Divider>
+
             <Droppable
                 droppableId={groupId}
                 type='group-item'
@@ -52,13 +113,29 @@ export default function DroppableGroup({ groupId, fields, selectedField, onSelec
                                         onMouseLeave={() => setHoveredField(null)}
                                     >
                                         {field.type === itemTypes.TEXTFIELD ? (
-                                            <FormTextField isDragging={snapshot.isDragging} />
+                                            <FormTextFieldOverview
+                                                field={field}
+                                                isDragging={snapshot.isDragging}
+                                            />
                                         ) : field.type === itemTypes.RADIO ? (
-                                            <FormRadio isDragging={snapshot.isDragging} />
+                                            <FormRadioOverview
+                                                field={field}
+                                                isDragging={snapshot.isDragging}
+                                            />
+                                        ) : field.type === itemTypes.DATE ? (
+                                            <FormDateOverview
+                                                field={field}
+                                                isDragging={snapshot.isDragging}
+                                            />
+                                        ) : field.type === itemTypes.NUMBER ? (
+                                            <FormNumberOverview
+                                                field={field}
+                                                isDragging={snapshot.isDragging}
+                                            />
                                         ) : null}
 
                                         {hoveredField === field.id && (
-                                            <div className='absolute top-0 left-0 bg-blue-500 bg-opacity-50 text-gray-800 p-2 w-full h-full flex justify-center items-center cursor-pointer'>
+                                            <div className='absolute top-0 left-0 bg-pink-950	 bg-opacity-30 text-gray-800 py-2 w-full h-[50%] flex justify-center items-center cursor-pointer'>
                                                 <span className='text-white font-semibold'>
                                                     {selectedField?.id === field.id
                                                         ? 'Click to unselect'

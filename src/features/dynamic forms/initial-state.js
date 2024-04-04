@@ -5,15 +5,15 @@ const initialData = [
     {
         id: uuidv4(),
         fields: [
-            { type: itemTypes.TEXTFIELD, id: uuidv4(), properties: null },
-            { type: itemTypes.RADIO, id: uuidv4(), properties: null },
+            { type: itemTypes.TEXTFIELD, id: uuidv4() },
+            { type: itemTypes.RADIO, id: uuidv4() },
         ],
     },
     {
         id: uuidv4(),
         fields: [
-            { type: itemTypes.RADIO, id: uuidv4(), properties: null },
-            { type: itemTypes.TEXTFIELD, id: uuidv4(), properties: null },
+            { type: itemTypes.RADIO, id: uuidv4() },
+            { type: itemTypes.TEXTFIELD, id: uuidv4() },
         ],
     },
 ];

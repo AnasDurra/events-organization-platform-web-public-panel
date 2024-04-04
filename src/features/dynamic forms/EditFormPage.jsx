@@ -1,73 +1,12 @@
+import { Button, Form } from 'antd';
 import React, { useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { v4 as uuidv4 } from 'uuid';
 import DroppableGroup from './DroppableGroup';
-import Sidebar from './Sidebar';
-import { SidebarItemsTypeByIndex, itemTypes } from './constants';
-import initialData from './initial-state';
 import PropertiesSidebar from './PropertiesSidebar';
-import Header from '../../components/Header';
-
-const handleReorderGroupItems = (prevGroups, source, destination) => {
-    return prevGroups.map((group) => {
-        if (destination.droppableId === group.id) {
-            const newFields = [...group.fields];
-
-            newFields.splice(source.index, 1);
-            newFields.splice(destination.index, 0, group.fields[source.index]);
-
-            return {
-                ...group,
-                fields: newFields,
-            };
-        } else {
-            return group;
-        }
-    });
-};
-
-const handleReorderGroups = (prevGroups, source, destination) => {
-    const newGroups = [...prevGroups];
-    newGroups.splice(source.index, 1);
-    newGroups.splice(destination.index, 0, prevGroups[source.index]);
-    return newGroups;
-};
-
-const handleSidebarToGroup = (prevGroups, source, destination) => {
-    const itemType = SidebarItemsTypeByIndex[source.index];
-    if (itemType === itemTypes.GROUP) {
-        const newGroups = [...prevGroups];
-        newGroups.splice(destination.index, 0, { id: uuidv4(), fields: [] });
-        return newGroups;
-    } else
-        return prevGroups.map((group) => {
-            if (destination.droppableId === group.id) {
-                const newFields = [...group.fields];
-                newFields.splice(destination.index, 0, {
-                    type: itemType,
-                    id: uuidv4(),
-                });
-                return {
-                    ...group,
-                    fields: newFields,
-                };
-            } else return group;
-        });
-};
-
-const handleMoveItemFromGroupToAnotherGroup = (prevGroups, source, destination) => {
-    let newGroups = [...prevGroups];
-
-    const sourceGroup = newGroups.find((group) => group.id === source.droppableId);
-    const destinationGroup = newGroups.find((group) => group.id === destination.droppableId);
-
-    const removedItem = sourceGroup.fields.splice(source.index, 1)[0];
-
-    destinationGroup.fields.splice(destination.index, 0, removedItem);
-
-    return newGroups;
-};
-
+import Sidebar from './Sidebar';
+import initialData from './initial-state';
+import { onDragEnd } from './utils-drag';
+import './EditFormPage.css';
 export default function EditFormPage() {
     const [groups, setGroups] = useState(initialData);
     const [selectedField, setSelectedField] = useState(null);
@@ -78,71 +17,40 @@ export default function EditFormPage() {
         );
     };
 
-    const handleUpdateFieldProperties = (updatedProperties) => {
-        setGroups(
+    const handleNameChange = (groupId, newName) => {
+        setGroups(groups.map((group) => (group.id === groupId ? { ...group, name: newName } : group)));
+    };
+
+    const handleDescriptionChange = (groupId, newDescription) => {
+        setGroups(groups.map((group) => (group.id === groupId ? { ...group, description: newDescription } : group)));
+    };
+
+    const handleUpdateProperties = (updatedField) => {
+        setGroups((groups) =>
             groups.map((group) => ({
                 ...group,
                 fields: group.fields.map((field) => {
                     if (field.id === selectedField.id) {
-                        return { ...field, properties: updatedProperties };
+                        return updatedField;
                     }
                     return field;
                 }),
             }))
         );
+
+        setSelectedField(updatedField);
     };
 
     return (
         <DragDropContext
             onDragEnd={(result) => {
-                const { source, destination, type } = result;
-
-                console.log(result);
-                if (!destination) {
-                    return;
-                }
-
-                if (destination.droppableId === source.droppableId && destination.index === source.index) {
-                    return;
-                }
-
-                if ((destination.droppableId === source.droppableId) & (type === 'group-item')) {
-                    console.log('same droppable / group-item');
-                    setGroups((prevGroups) => {
-                        return handleReorderGroupItems(prevGroups, source, destination);
-                    });
-                }
-
-                if ((destination.droppableId === source.droppableId) & (type === 'group')) {
-                    console.log('same droppable / group');
-                    setGroups((prevGroups) => {
-                        return handleReorderGroups(prevGroups, source, destination);
-                    });
-                }
-
-                if (
-                    (destination.droppableId !== source.droppableId && source.droppableId === 'sidebar-items') ||
-                    source.droppableId === 'sidebar-item-group'
-                ) {
-                    console.log('sidebar to group');
-                    setGroups((prevGroups) => {
-                        return handleSidebarToGroup(prevGroups, source, destination);
-                    });
-                }
-
-                if (
-                    destination.droppableId !== source.droppableId &&
-                    groups.some((group) => group.id === source.droppableId)
-                ) {
-                    console.log('group to group');
-                    setGroups((prevGroups) => {
-                        return handleMoveItemFromGroupToAnotherGroup(prevGroups, source, destination);
-                    });
-                }
+                const newGroups = onDragEnd(result, groups);
+                console.log('new groups', newGroups);
+                if (newGroups) setGroups(newGroups);
             }}
         >
             <div className='grid grid-cols-6 gap-2 mx-auto'>
-                <div className='col-start-2 col-span-3 h-[90vh] my-2  p-2 w-full bg-slate-400 overflow-y-auto'>
+                <div className='custom-scrollbar col-start-2 col-span-3 h-[90vh] my-2  p-2 w-full bg-slate-400 bg-transparent overflow-y-auto'>
                     <Droppable
                         droppableId={'base-form'}
                         type='group'
@@ -168,9 +76,12 @@ export default function EditFormPage() {
                                                 <DroppableGroup
                                                     key={group.id}
                                                     groupId={group.id}
+                                                    index={index}
                                                     fields={group.fields}
                                                     selectedField={selectedField}
                                                     onSelectField={handleSelectField}
+                                                    onNameChange={handleNameChange}
+                                                    onDescriptionChange={handleDescriptionChange}
                                                 />
                                             </div>
                                         )}
@@ -181,12 +92,11 @@ export default function EditFormPage() {
                         )}
                     </Droppable>
                 </div>
-
-                <div className=' col-start-6 col-span-1 sticky top-0'>
+                <div className=' col-start-6 col-span-1 sticky top-0 bg-gray-50'>
                     {selectedField ? (
                         <PropertiesSidebar
                             field={selectedField}
-                            onUpdateProperties={handleUpdateFieldProperties}
+                            onUpdateProperties={handleUpdateProperties}
                         />
                     ) : (
                         <Sidebar />

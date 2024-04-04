@@ -6,7 +6,7 @@ import { FaFileAlt } from 'react-icons/fa';
 import './FormLayout.css';
 export default function FormLayout() {
     return (
-        <div className='flex flex-col  h-screen bg-gray-100  '>
+        <div className='flex flex-col  h-screen bg-gray-100 max-h-[100vh] overflow-y-auto '>
             <header className='sticky top-0 z-10 my-2'>
                 <Row
                     align={'middle'}
