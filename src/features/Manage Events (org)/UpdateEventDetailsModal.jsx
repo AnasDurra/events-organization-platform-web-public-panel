@@ -9,7 +9,7 @@ import {
 import { Divider, Modal, Select, Space, Spin, Tooltip, message } from 'antd';
 import { Typography, Form, Input, DatePicker, InputNumber, Button } from 'antd';
 import Dragger from 'antd/es/upload/Dragger';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ShowMap from './ShowMap';
 import LocationOnMapsModal from './LocationOnMapsModal';
 import { useForm } from 'antd/es/form/Form';
@@ -20,6 +20,7 @@ import dayjs from 'dayjs';
 
 import { useUpdateDetailsMutation } from '../../api/services/events';
 import { useParams } from 'react-router-dom';
+import RegistrationScheduleForm from './RegistrationScheduleForm';
 const UpdateEventDetailsModal = ({
     isUpdateEventDetailsModalOpen,
     setIsUpdateEventDetailsModalOpen,
@@ -31,6 +32,17 @@ const UpdateEventDetailsModal = ({
     const [updateDetailsMutation, { isLoading: UpdateDetailsIsLoading }] = useUpdateDetailsMutation();
 
     const [form] = useForm();
+
+    const [eventRegistrationForm] = useForm();
+    const [days, setDays] = useState([
+        {
+            id: null,
+            day_date: null,
+            slots: [
+                { id: null, start_time: null, end_time: null, label: null, slot_status: { label: null, value: null } },
+            ],
+        },
+    ]);
 
     const handleEventDetailsCancel = () => {
         setIsUpdateEventDetailsModalOpen(false);
@@ -59,45 +71,63 @@ const UpdateEventDetailsModal = ({
     const handleEventDetailsOk = () => {
         form.validateFields()
             .then((values) => {
-                form.submit();
-                if (position) {
+                eventRegistrationForm.validateFields().then((registration_form_values) => {
+                    form.submit();
+                    eventRegistrationForm.submit();
                     values = {
                         ...values,
-                        location: {
-                            latitude: position?.lat?.toString() ?? null,
-                            longitude: position?.lng?.toString() ?? null,
-                        },
                         capacity: values?.capacity.toString(),
+                        registration_start_date: registration_form_values['registration_start_end_date']
+                            ? registration_form_values['registration_start_end_date'][0].format('YYYY-MM-DD HH:mm:ss')
+                            : null,
+                        registration_end_date: registration_form_values['registration_start_end_date']
+                            ? registration_form_values['registration_start_end_date'][1].format('YYYY-MM-DD HH:mm:ss')
+                            : null,
+                        days: days ?? null,
                     };
-                } else {
-                    values = {
-                        ...values,
-                        location: null,
-                        capacity: values?.capacity.toString(),
-                    };
-                }
-                console.log('Form values:', values);
-                updateDetailsMutation({ id: id, body: values })
-                    .unwrap()
-                    .then((res) => {
-                        console.log(res);
-                        if (res.statusCode === 201) {
-                            refetch();
-                            message.success('Events Detials Updated Successfully !');
-                            setIsUpdateEventDetailsModalOpen(false);
-                        }
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                        error.data.result.response.message.forEach((value) => {
-                            message.error(value);
+                    if (position?.lat && position?.lng) {
+                        values = {
+                            ...values,
+                            location: {
+                                latitude: position?.lat?.toString() ?? null,
+                                longitude: position?.lng?.toString() ?? null,
+                            },
+                        };
+                    } else {
+                        console.log('no position');
+                        values = {
+                            ...values,
+                            location: null,
+                        };
+                    }
+                    console.log('Form values:', values);
+                    updateDetailsMutation({ id: id, body: values })
+                        .unwrap()
+                        .then((res) => {
+                            console.log(res);
+                            if (res.statusCode === 201) {
+                                refetch();
+                                message.success('Events Detials Updated Successfully !');
+                                setIsUpdateEventDetailsModalOpen(false);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                            error.data.result.response.message.forEach((value) => {
+                                message.error(value);
+                            });
                         });
-                    });
+                });
             })
             .catch((error) => {
-                console.error('Validation error:', error);
+                // console.error('Validation error:', error);
             });
     };
+
+    useEffect(() => {
+        setDays(eventData?.result?.days);
+        console.log(days);
+    }, [eventData]);
     return (
         <div>
             <Modal
@@ -238,33 +268,19 @@ const UpdateEventDetailsModal = ({
                                 <Input.TextArea prefix={<EditOutlined />} placeholder="Address Notes" />
                             </Form.Item>
 
-                            <Title level={3}>Registration</Title>
-                            <Form.Item
-                                label="Start Date & Time"
-                                name="registration_start_date"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please enter event Registration Start Date & Time ',
-                                    },
-                                ]}
-                            >
-                                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-                            </Form.Item>
-                            <Form.Item
-                                label="End Date & Time"
-                                name="registration_end_date"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please enter event Registration End Date & Time ',
-                                    },
-                                ]}
-                            >
-                                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-                            </Form.Item>
+                            <Title level={3}>Event Settings</Title>
                             <Form.Item label="Capacity" name="capacity">
                                 <InputNumber prefix={<TeamOutlined />} min={0} style={{ width: '100%' }} />
+                            </Form.Item>
+
+                            <Title level={3}>Event Scheduling Settings</Title>
+                            <Form.Item>
+                                <RegistrationScheduleForm
+                                    eventRegistrationForm={eventRegistrationForm}
+                                    days={days}
+                                    setDays={setDays}
+                                    eventData={eventData}
+                                />
                             </Form.Item>
                         </Form>
                     </div>

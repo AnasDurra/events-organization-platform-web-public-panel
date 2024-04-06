@@ -47,17 +47,8 @@ const AdditionalInfoRegistrationForm = ({ form, setImageFile, imageSrc, setImage
         console.log(data);
     }, [data]);
     return (
-        <Form
-            form={form}
-            autoComplete='off'
-            layout='vertical'
-            style={{ maxWidth: 550 }}
-            className='my-custom-form'
-        >
-            <Form.Item
-                label='Profile Picture'
-                name='profile_img'
-            >
+        <Form form={form} autoComplete="off" layout="vertical" style={{ maxWidth: 550 }} className="my-custom-form">
+            <Form.Item label="Profile Picture" name="profile_img">
                 <div
                     style={{
                         display: 'flex',
@@ -75,19 +66,16 @@ const AdditionalInfoRegistrationForm = ({ form, setImageFile, imageSrc, setImage
                         <Image
                             src={imageSrc}
                             style={{
-                                marginRight: '0.5em',
+                                marginRight: '5em',
                                 width: 100,
                                 borderRadius: '50%',
                                 border: '1px solid #000',
                             }}
                         />
                     )}
-                    <ImgCrop
-                        onModalOk={handleFileChange}
-                        rotationSlider
-                    >
+                    <ImgCrop onModalOk={handleFileChange} rotationSlider>
                         <Upload
-                            listType='picture-circle'
+                            listType="picture-circle"
                             showUploadList={false}
                             maxCount={1}
                             // beforeUpload={(file) => {
@@ -115,8 +103,8 @@ const AdditionalInfoRegistrationForm = ({ form, setImageFile, imageSrc, setImage
             </Form.Item>
 
             <Form.Item
-                label='Birth Date'
-                name='birth_date'
+                label="Birth Date"
+                name="birth_date"
                 rules={[
                     {
                         required: true,
@@ -131,38 +119,21 @@ const AdditionalInfoRegistrationForm = ({ form, setImageFile, imageSrc, setImage
                 />
             </Form.Item>
 
-            <Form.Item
-                label='Job'
-                name='job'
-            >
-                <Select
-                    loading={isLoading}
-                    showSearch
-                    placeholder='Select your job'
-                    options={data?.result.jobs}
-                />
+            <Form.Item label="Job" name="job">
+                <Select loading={isLoading} showSearch placeholder="Select your job" options={data?.result.jobs} />
             </Form.Item>
 
-            <Form.Item
-                label='Address'
-                name='address'
-            >
+            <Form.Item label="Address" name="address">
                 <Select
                     loading={isLoading}
                     showSearch
-                    placeholder='Select your address'
+                    placeholder="Select your address"
                     options={data?.result.addresses}
                 />
             </Form.Item>
 
-            <Form.Item
-                label='Bio'
-                name='bio'
-            >
-                <TextArea
-                    placeholder='Tell us about yourself...'
-                    allowClear
-                />
+            <Form.Item label="Bio" name="bio">
+                <TextArea placeholder="Tell us about yourself..." allowClear />
             </Form.Item>
         </Form>
     );

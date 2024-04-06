@@ -341,7 +341,7 @@ const ShowEvent = () => {
                                         </Typography.Text>
                                     </Space>
                                     <Divider style={{ margin: '0px' }} />
-                                    {fakeData.map((dateObj, index) => (
+                                    {eventData?.result?.days?.map((dateObj, index) => (
                                         <Space
                                             direction="vertical"
                                             style={{

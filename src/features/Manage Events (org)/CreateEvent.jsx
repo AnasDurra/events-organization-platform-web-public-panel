@@ -1,5 +1,5 @@
 import { FileImageOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Image, Row, Skeleton, Spin, Upload, message, notification } from 'antd';
+import { Avatar, Button, Card, Col, Image, Row, Skeleton, Spin, Upload, message } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import { useState } from 'react';
 import LocationOnMapsModal from './LocationOnMapsModal';

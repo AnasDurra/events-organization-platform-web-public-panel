@@ -1,6 +1,6 @@
-import { Divider, Modal, Space, Spin, Tag } from "antd";
-import { useState } from "react";
-import { Typography, Form, Input, DatePicker, InputNumber, Button } from "antd";
+import { Divider, Modal, Space, Spin, Tag } from 'antd';
+import { useState } from 'react';
+import { Typography, Form, Input, DatePicker, InputNumber, Button } from 'antd';
 const { Title, Paragraph } = Typography;
 import {
     CalendarOutlined,
@@ -11,12 +11,13 @@ import {
     TagsOutlined,
     TeamOutlined,
     UserOutlined,
-} from "@ant-design/icons";
-import UpdateEventDetailsModal from "./UpdateEventDetailsModal";
+    FieldTimeOutlined,
+} from '@ant-design/icons';
+import UpdateEventDetailsModal from './UpdateEventDetailsModal';
 
-import ShowMap from "./ShowMap";
-import UpdateEventTagsModal from "./UpdateEventTagsModal";
-import UpdateEventAgeGroupModal from "./UpdateEventAgeGroupModal";
+import ShowMap from './ShowMap';
+import UpdateEventTagsModal from './UpdateEventTagsModal';
+import UpdateEventAgeGroupModal from './UpdateEventAgeGroupModal';
 
 const UpdateEventModal = ({
     isUpdateModalOpen,
@@ -43,10 +44,10 @@ const UpdateEventModal = ({
             <Modal
                 title={
                     <>
-                        <Title style={{ marginTop: "0px" }} level={4}>
+                        <Title style={{ marginTop: '0px' }} level={4}>
                             Update Event
                         </Title>
-                        <Divider style={{ marginBottom: "0px" }} />
+                        <Divider style={{ marginBottom: '0px' }} />
                     </>
                 }
                 open={isUpdateModalOpen}
@@ -58,16 +59,16 @@ const UpdateEventModal = ({
                 <Spin spinning={eventDataIsLoading || isFetching}>
                     <div
                         style={{
-                            padding: "20px",
-                            background: "#fdfdfd",
+                            padding: '20px',
+                            background: '#f5f5f5',
                         }}
                     >
                         <div
                             style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                marginBottom: "20px",
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: '20px',
                             }}
                         >
                             <Title level={2} style={{ margin: 0 }}>
@@ -76,7 +77,7 @@ const UpdateEventModal = ({
                             <Button
                                 type="text"
                                 icon={<EditOutlined />}
-                                style={{ border: "none", color: "#1890ff" }}
+                                style={{ border: 'none', color: '#1890ff' }}
                                 onClick={() => {
                                     setIsUpdateEventDetailsModalOpen(true);
                                 }}
@@ -85,25 +86,25 @@ const UpdateEventModal = ({
                             </Button>
                         </div>
 
-                        <div style={{ marginBottom: "20px" }}>
-                            <Paragraph style={{ marginBottom: "12px", color: "#666" }}>
-                                <EditOutlined style={{ marginRight: "8px", color: "#1890ff" }} />{" "}
+                        <div style={{ marginBottom: '20px' }}>
+                            <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
+                                <EditOutlined style={{ marginRight: '8px', color: '#1890ff' }} />{' '}
                                 <strong>Title:</strong> {eventData?.result?.title}
                             </Paragraph>
-                            <Paragraph style={{ marginBottom: "12px", color: "#666" }}>
-                                <InfoCircleOutlined style={{ marginRight: "8px", color: "#1890ff" }} />{" "}
+                            <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
+                                <InfoCircleOutlined style={{ marginRight: '8px', color: '#1890ff' }} />{' '}
                                 <strong>Description:</strong> {eventData?.result?.description}
                             </Paragraph>
-                            <Paragraph style={{ marginBottom: "12px", color: "#666" }}>
-                                <SettingOutlined style={{ marginRight: "8px", color: "#1890ff" }} />{" "}
+                            <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
+                                <SettingOutlined style={{ marginRight: '8px', color: '#1890ff' }} />{' '}
                                 <strong>Event Type:</strong> {eventData?.result?.event_type}
                             </Paragraph>
 
-                            <Paragraph style={{ marginBottom: "12px", color: "#666" }}>
-                                <EnvironmentOutlined style={{ marginRight: "8px", color: "#1890ff" }} />{" "}
-                                <strong>Location:</strong>{" "}
+                            <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
+                                <EnvironmentOutlined style={{ marginRight: '8px', color: '#1890ff' }} />{' '}
+                                <strong>Location:</strong>{' '}
                                 {
-                                    <div style={{ margin: "15px 10px" }}>
+                                    <div style={{ margin: '15px 10px' }}>
                                         {eventData?.result?.location?.latitude && (
                                             <ShowMap
                                                 position={{
@@ -119,40 +120,55 @@ const UpdateEventModal = ({
                                     </div>
                                 }
                             </Paragraph>
-                            <Paragraph style={{ marginBottom: "12px", color: "#666" }}>
-                                <EnvironmentOutlined style={{ marginRight: "8px", color: "#1890ff" }} />{" "}
-                                <strong>Address Notes</strong>{" "}
-                                {eventData?.result?.address_notes ?? "No additional notes"}
+                            <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
+                                <EnvironmentOutlined style={{ marginRight: '8px', color: '#1890ff' }} />{' '}
+                                <strong>Address Notes</strong>{' '}
+                                {eventData?.result?.address_notes ?? 'No additional notes'}
                             </Paragraph>
-                            <Paragraph style={{ marginBottom: "12px", color: "#666" }}>
-                                <CalendarOutlined style={{ marginRight: "8px", color: "#1890ff" }} />{" "}
+                            <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
+                                <CalendarOutlined style={{ marginRight: '8px', color: '#1890ff' }} />{' '}
                                 <strong>Start Date & Time:</strong> {eventData?.result?.registration_start_date}
                             </Paragraph>
-                            <Paragraph style={{ marginBottom: "12px", color: "#666" }}>
-                                <CalendarOutlined style={{ marginRight: "8px", color: "#1890ff" }} />{" "}
+                            <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
+                                <CalendarOutlined style={{ marginRight: '8px', color: '#1890ff' }} />{' '}
                                 <strong>End Date & Time:</strong>
                                 {eventData?.result?.registration_end_date}
                             </Paragraph>
 
-                            <Paragraph style={{ marginBottom: "12px", color: "#666" }}>
-                                <TeamOutlined style={{ marginRight: "8px", color: "#1890ff" }} />{" "}
+                            <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
+                                <TeamOutlined style={{ marginRight: '8px', color: '#1890ff' }} />{' '}
                                 <strong>Capacity:</strong> {eventData?.result?.capacity}
+                            </Paragraph>
+                            <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
+                                <FieldTimeOutlined style={{ marginRight: '8px', color: '#1890ff' }} />{' '}
+                                <strong>Event Schedule: ...</strong>{' '}
+                                {
+                                    <Button
+                                        type="text"
+                                        style={{ border: 'none', color: '#1890ff' }}
+                                        onClick={() => {
+                                            setIsUpdateEventDetailsModalOpen(true);
+                                        }}
+                                    >
+                                        Show
+                                    </Button>
+                                }
                             </Paragraph>
                         </div>
                     </div>
                     <Divider />
                     <div
                         style={{
-                            padding: "20px",
-                            background: "#fdfdfd",
+                            padding: '20px',
+                            background: '#f5f5f5',
                         }}
                     >
                         <div
                             style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                marginBottom: "20px",
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: '20px',
                             }}
                         >
                             <Title level={2} style={{ margin: 0 }}>
@@ -161,7 +177,7 @@ const UpdateEventModal = ({
                             <Button
                                 type="text"
                                 icon={<EditOutlined />}
-                                style={{ border: "none", color: "#1890ff" }}
+                                style={{ border: 'none', color: '#1890ff' }}
                                 onClick={() => {
                                     setIsUpdateEventTagsModalOpen(true);
                                 }}
@@ -170,24 +186,24 @@ const UpdateEventModal = ({
                             </Button>
                         </div>
 
-                        <div style={{ marginBottom: "20px" }}>
-                            <Paragraph style={{ marginBottom: "12px", color: "#666" }}>
-                                <TagsOutlined style={{ marginRight: "8px", color: "#1890ff" }} />
-                                <strong> Event Tags:</strong>{" "}
+                        <div style={{ marginBottom: '20px' }}>
+                            <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
+                                <TagsOutlined style={{ marginRight: '8px', color: '#1890ff' }} />
+                                <strong> Event Tags:</strong>{' '}
                             </Paragraph>
                             {
                                 <Space wrap>
                                     <Typography.Text strong></Typography.Text>
                                     <div>
                                         {eventData?.result?.tags.length === 0
-                                            ? "No Tags for this event"
+                                            ? 'No Tags for this event'
                                             : eventData?.result?.tags.map((tag) => (
                                                   <Tag
                                                       key={tag?.tag?.value}
                                                       style={{
-                                                          padding: "2px 10px",
-                                                          margin: "5px",
-                                                          fontSize: "15px",
+                                                          padding: '2px 10px',
+                                                          margin: '5px',
+                                                          fontSize: '15px',
                                                       }}
                                                   >
                                                       {tag?.tag?.label}
@@ -201,17 +217,17 @@ const UpdateEventModal = ({
                     <Divider />
                     <div
                         style={{
-                            padding: "20px",
+                            padding: '20px',
 
-                            background: "#fdfdfd",
+                            background: '#f5f5f5',
                         }}
                     >
                         <div
                             style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                marginBottom: "20px",
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: '20px',
                             }}
                         >
                             <Title level={2} style={{ margin: 0 }}>
@@ -220,7 +236,7 @@ const UpdateEventModal = ({
                             <Button
                                 type="text"
                                 icon={<EditOutlined />}
-                                style={{ border: "none", color: "#1890ff" }}
+                                style={{ border: 'none', color: '#1890ff' }}
                                 onClick={() => {
                                     setIsUpdateEventAgeGroupModalOpen(true);
                                 }}
@@ -229,22 +245,22 @@ const UpdateEventModal = ({
                             </Button>
                         </div>
 
-                        <div style={{ marginBottom: "20px" }}>
-                            <Paragraph style={{ marginBottom: "12px", color: "#666" }}>
-                                <UserOutlined style={{ marginRight: "8px", color: "#1890ff" }} />
-                                <strong> Event Age Group:</strong>{" "}
+                        <div style={{ marginBottom: '20px' }}>
+                            <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
+                                <UserOutlined style={{ marginRight: '8px', color: '#1890ff' }} />
+                                <strong> Event Age Group:</strong>{' '}
                             </Paragraph>
                             {
                                 <Space wrap>
                                     <Typography.Text strong></Typography.Text>
                                     <div>
                                         {eventData?.result?.age_groups.length === 0
-                                            ? "No Age Groups for this event"
+                                            ? 'No Age Groups for this event'
                                             : eventData?.result?.age_groups.map((age_group) => (
                                                   <Tag
                                                       key={age_group?.age_group_id}
                                                       style={{
-                                                          fontSize: "15px",
+                                                          fontSize: '15px',
                                                       }}
                                                   >
                                                       {age_group?.age_group_name}
