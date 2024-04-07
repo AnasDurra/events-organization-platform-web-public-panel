@@ -3,7 +3,14 @@ import { Input, Checkbox, Space, Divider, Button } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { CloseCircleOutlined } from '@ant-design/icons';
 
-export default function RadioProperties({ field, onNameChange, onLabelChange, onIsRequiredChange, onOptionsChange }) {
+export default function RadioProperties({
+    field,
+    onNameChange,
+    onLabelChange,
+    onIsRequiredChange,
+    onOptionsChange,
+    onDelete,
+}) {
     const [options, setOptions] = useState(field?.options || []);
 
     const handleNameInputChange = (e) => {
@@ -52,14 +59,14 @@ export default function RadioProperties({ field, onNameChange, onLabelChange, on
     return (
         <Space.Compact
             direction='vertical'
-            className='w-full mt-2 px-2'
+            className='w-full mt-2 px-4'
             align='center'
             block
         >
             <Space.Compact
                 align='center'
                 direction='vertical'
-                className='w-full px-4 my-2'
+                className='w-full  my-2'
             >
                 <Title
                     level={5}
@@ -76,7 +83,7 @@ export default function RadioProperties({ field, onNameChange, onLabelChange, on
             <Space.Compact
                 align='center'
                 direction='vertical'
-                className='w-full px-4 my-2'
+                className='w-full  my-2'
             >
                 <Title
                     level={5}
@@ -93,7 +100,7 @@ export default function RadioProperties({ field, onNameChange, onLabelChange, on
             <Space
                 align='center'
                 direction='vertical'
-                className='w-full px-4 my-2'
+                className='w-full  my-2'
             >
                 <Title
                     level={5}
@@ -113,7 +120,10 @@ export default function RadioProperties({ field, onNameChange, onLabelChange, on
             <Divider style={{ marginTop: '3em' }}>Options</Divider>
 
             {options.map((option, index) => (
-                <div key={option.id} style={{ display: 'flex', marginBottom: '0.5rem' }}>
+                <div
+                    key={option.id}
+                    style={{ display: 'flex', marginBottom: '0.5rem' }}
+                >
                     <Input
                         value={option.name}
                         onChange={(e) => handleOptionChange(index, e.target.value)}
@@ -133,6 +143,14 @@ export default function RadioProperties({ field, onNameChange, onLabelChange, on
                 onClick={handleOptionAdd}
             >
                 Add Option
+            </Button>
+            <Divider />
+            <Button
+                type='primary'
+                danger
+                onClick={onDelete}
+            >
+                Delete Field
             </Button>
         </Space.Compact>
     );

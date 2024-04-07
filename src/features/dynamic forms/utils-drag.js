@@ -1,4 +1,4 @@
-import { SidebarItemsTypeByID, itemTypes } from './constants';
+import { SidebarItemsIDs, SidebarItemsTypeByID, itemTypes } from './constants';
 import { v4 as uuidv4 } from 'uuid';
 
 export const handleReorderGroupItems = (currentGroups, source, destination) => {
@@ -26,26 +26,35 @@ export const handleReorderGroups = (currentGroups, source, destination) => {
     return newGroups;
 };
 
-export const handleSidebarToGroup = (currentGroups, source, destination) => {
+export const handleSidebarToGroup = ({ currentGroups, source, destination, addNewField }) => {
     const itemType = SidebarItemsTypeByID[source.index];
     if (itemType === itemTypes.GROUP) {
         const newGroups = [...currentGroups];
         newGroups.splice(destination.index, 0, { id: uuidv4(), fields: [] });
         return newGroups;
-    } else
-        return currentGroups.map((group) => {
-            if (destination.droppableId === group.id) {
-                const newFields = [...group.fields];
-                newFields.splice(destination.index, 0, {
-                    type: itemType,
-                    id: uuidv4(),
-                });
-                return {
-                    ...group,
-                    fields: newFields,
-                };
-            } else return group;
+    } else {
+        console.log('current groups', currentGroups);
+        console.log('source', source);
+
+        console.log('destination', destination);
+        let options = [];
+
+        if (source.index === SidebarItemsIDs.RADIO) {
+            options = [{ name: 'default 1' }, { name: 'default 2' }];
+        }
+
+        addNewField({
+            group_id: destination.droppableId,
+            fields: {
+                type_id: source.index,
+                position: destination.index + 1,
+                required:false,
+                name:'deafult name',
+                label:'default label',
+                ...(source.index === SidebarItemsIDs.RADIO && { options }),
+            },
         });
+    }
 };
 
 export const handleMoveItemFromGroupToAnotherGroup = (currentGroups, source, destination) => {
@@ -61,7 +70,7 @@ export const handleMoveItemFromGroupToAnotherGroup = (currentGroups, source, des
     return newGroups;
 };
 
-export const onDragEnd = (result, currentGroups) => {
+export const onDragEnd = ({ result, currentGroups, addNewField }) => {
     const { source, destination, type } = result;
 
     console.log(result);
@@ -86,6 +95,6 @@ export const onDragEnd = (result, currentGroups) => {
         return handleMoveItemFromGroupToAnotherGroup(currentGroups, source, destination);
     } else if (destination.droppableId !== source.droppableId && (type === 'group-item' || type === 'group')) {
         console.log('sidebar to group');
-        return handleSidebarToGroup(currentGroups, source, destination);
+        return handleSidebarToGroup({ currentGroups, source, destination, addNewField });
     } else return;
 };

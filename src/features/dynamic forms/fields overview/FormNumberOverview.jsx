@@ -1,10 +1,9 @@
-import { NumberOutlined } from '@ant-design/icons';
-import { DatePicker, Input, InputNumber, Space } from 'antd';
+import { Form, InputNumber, Space } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React from 'react';
 import { WiStars } from 'react-icons/wi';
 
-export default function FormNumberOverview({ isDragging, field }) {
+export default function FormNumberOverview({ isDragging, field, groupIndex, fieldIndex }) {
     return (
         <div
             className='bg-gray-100 w-full p-4 border-2 border-zinc-200'
@@ -24,12 +23,14 @@ export default function FormNumberOverview({ isDragging, field }) {
                 </Title>
 
                 <Space.Compact className='w-[50%] flex items-center'>
-                    <InputNumber
-                        className='w-[100%] '
-                        disabled
-                        placeholder='enter number'
-                    />
-                    {field?.isRequired && <WiStars className='ml-2' />}
+                    <Form.Item name={['groups', groupIndex, 'fields', fieldIndex]}>
+                        <InputNumber
+                            className='w-[100%] '
+                            disabled
+                            placeholder='enter number'
+                        />
+                        {field?.isRequired && <WiStars className='ml-2' />}
+                    </Form.Item>
                 </Space.Compact>
             </Space.Compact>
         </div>

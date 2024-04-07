@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { Input, Checkbox, Space } from 'antd';
+import { Input, Checkbox, Space, Button, Divider } from 'antd';
 import Title from 'antd/es/typography/Title';
 
-export default function TextFieldProperties({ field, onNameChange, onLabelChange, onIsRequiredChange }) {
+export default function TextFieldProperties({ field, onNameChange, onLabelChange, onIsRequiredChange, onDelete }) {
     const handleNameInputChange = (e) => {
         const newName = e.target.value;
         onNameChange(newName);
@@ -28,58 +28,73 @@ export default function TextFieldProperties({ field, onNameChange, onLabelChange
 
     return (
         <Space.Compact
-        direction='vertical'
-        className='w-full mt-2'
-        align='center'
-        block
-    >
-        <Space.Compact
-            align='center'
             direction='vertical'
-            className='w-full px-4 my-2'
+            className='w-full mt-2 px-4'
+            align='center'
+            block
         >
-            <Title
-                level={5}
-                htmlFor='name'
+            <Space.Compact
+                align='center'
+                direction='vertical'
+                className='w-full  my-2'
             >
-                Name
-            </Title>
-            <Input
-                id='tf-prop-name'
-                onChange={handleNameInputChange}
-                defaultValue={field?.name}
-            />
-        </Space.Compact>
-        <Space.Compact
-            align='center'
-            direction='vertical'
-            className='w-full px-4 my-2'
-        >
-            <Title
-                level={5}
-                htmlFor='label'
+                <Title
+                    level={5}
+                    htmlFor='name'
+                >
+                    Name
+                </Title>
+                <Input
+                    id='tf-prop-name'
+                    onChange={handleNameInputChange}
+                    defaultValue={field?.name}
+                />
+            </Space.Compact>
+            <Space.Compact
+                align='center'
+                direction='vertical'
+                className='w-full  my-2'
             >
-                Label
-            </Title>
-            <Input
-                id='tf-prop-label'
-                defaultValue={field?.label}
-                onChange={handleLabelInputChange}
-            />
-        </Space.Compact>
-        <Space
-            align='center'
-            direction='vertical'
-            className='w-full px-4 my-2'
-        >
-            <Title level={5} htmlFor='isRequired' style={{margin:0}}> Is Required</Title> 
-            <Checkbox
-                id='tf-prop-isRequired'
-                defaultChecked={field?.isRequired}
-                onChange={handleIsRequiredCheckboxChange}
-            />
-        </Space>
+                <Title
+                    level={5}
+                    htmlFor='label'
+                >
+                    Label
+                </Title>
+                <Input
+                    id='tf-prop-label'
+                    defaultValue={field?.label}
+                    onChange={handleLabelInputChange}
+                />
+            </Space.Compact>
+            <Space
+                align='center'
+                direction='vertical'
+                className='w-full  my-2'
+            >
+                <Title
+                    level={5}
+                    htmlFor='isRequired'
+                    style={{ margin: 0 }}
+                >
+                    {' '}
+                    Is Required
+                </Title>
+                <Checkbox
+                    id='tf-prop-isRequired'
+                    defaultChecked={field?.isRequired}
+                    onChange={handleIsRequiredCheckboxChange}
+                />
+            </Space>
 
-    </Space.Compact>
+            <Divider />
+            <Button
+                type='primary'
+                danger
+                onClick={onDelete}
+            >
+                Delete Field
+            </Button>
+        </Space.Compact>
     );
 }

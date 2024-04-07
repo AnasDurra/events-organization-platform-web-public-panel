@@ -7,7 +7,7 @@ import Title from 'antd/es/typography/Title';
 import { RxGroup } from 'react-icons/rx';
 import { BsCalendarDate } from 'react-icons/bs';
 import { GoNumber } from 'react-icons/go';
-import { SidebarItemsIDs } from './constants';
+import { SidebarItemsIDs } from '../constants';
 import { Divider } from 'antd';
 
 export default function Sidebar() {

@@ -1,11 +1,11 @@
 import React from 'react';
-import TextFieldProperties from './fields properties/TextFieldProperties';
-import RadioProperties from './fields properties/RadioProperties';
-import { itemTypes } from './constants';
-import DateProperties from './fields properties/DateProperties';
-import NumberProperties from './fields properties/NumberProperties';
+import TextFieldProperties from '../fields properties/TextFieldProperties';
+import RadioProperties from '../fields properties/RadioProperties';
+import { itemTypes } from '../constants';
+import DateProperties from '../fields properties/DateProperties';
+import NumberProperties from '../fields properties/NumberProperties';
 
-export default function PropertiesSidebar({ field, onUpdateProperties }) {
+export default function PropertiesSidebar({ field, onUpdateProperties, onDeleteField }) {
     const handleNameChange = (newName) => {
         onUpdateProperties({ ...field, name: newName });
     };
@@ -30,6 +30,7 @@ export default function PropertiesSidebar({ field, onUpdateProperties }) {
                     onNameChange={handleNameChange}
                     onLabelChange={handleLabelChange}
                     onIsRequiredChange={handleIsRequiredChange}
+                    onDelete={onDeleteField}
                 />
             )}
 
@@ -40,6 +41,7 @@ export default function PropertiesSidebar({ field, onUpdateProperties }) {
                     onLabelChange={handleLabelChange}
                     onIsRequiredChange={handleIsRequiredChange}
                     onOptionsChange={handleOptionsChange}
+                    onDelete={onDeleteField}
                 />
             )}
 
@@ -49,6 +51,7 @@ export default function PropertiesSidebar({ field, onUpdateProperties }) {
                     onNameChange={handleNameChange}
                     onLabelChange={handleLabelChange}
                     onIsRequiredChange={handleIsRequiredChange}
+                    onDelete={onDeleteField}
                 />
             )}
 
@@ -58,6 +61,7 @@ export default function PropertiesSidebar({ field, onUpdateProperties }) {
                     onNameChange={handleNameChange}
                     onLabelChange={handleLabelChange}
                     onIsRequiredChange={handleIsRequiredChange}
+                    onDelete={onDeleteField}
                 />
             )}
         </div>

@@ -1,23 +1,22 @@
+import { Divider, Input, Popconfirm, Space, Form } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
-import FormTextField from './FormTextField';
-import FormRadio from './FormRadio';
-import { itemTypes } from './constants';
-import { Badge, Divider, Form, Input, Space, Tooltip } from 'antd';
-import FormTextFieldOverview from './fields overview/FormTextFieldOverview';
-import FormRadioOverview from './fields overview/FormRadioOverview';
-import FormDateOverview from './fields overview/FormDateOverview';
-import FormNumberOverview from './fields overview/FormNumberOverview';
+import { IoMdClose } from 'react-icons/io';
+import { SidebarItemsTypeByID, itemTypes } from '../constants';
+import FormDateOverview from '../fields overview/FormDateOverview';
+import FormNumberOverview from '../fields overview/FormNumberOverview';
+import FormRadioOverview from '../fields overview/FormRadioOverview';
+import FormTextFieldOverview from '../fields overview/FormTextFieldOverview';
 
 export default function DroppableGroup({
-    groupId,
-    fields,
+    groupIndex,
+    group,
     selectedField,
     onSelectField,
-    index,
     onNameChange,
     onDescriptionChange,
+    onDelete,
 }) {
     const [hoveredField, setHoveredField] = useState(false);
 
@@ -31,56 +30,61 @@ export default function DroppableGroup({
 
     const handleNameInputChange = (e) => {
         const newName = e.target.value;
-        onNameChange(groupId, newName);
+        onNameChange(group?.id, newName);
     };
 
     const handleDescriptionInputChange = (e) => {
         const newDescription = e.target.value;
-        onDescriptionChange(groupId, newDescription);
+        onDescriptionChange(group?.id, newDescription);
     };
 
+    const handleDeleteGroup = () => {
+        onDelete(group?.id);
+    };
+
+    //  console.log('group ', group.id, 'idx:', groupIndex);
+    console.log('fields: ',group.fields);
     return (
-        <div className='w-full bg-gray-50 bg-slate-100 p-2 my-2 rounded-lg relative'>
-            <Divider>Group</Divider>
-            <Space.Compact
-                align={'center'}
-                className='w-full px-4'
+        <div className='w-full bg-gray-50 bg-slate-100 p-4 my-2 rounded-lg relative '>
+            <Popconfirm
+                title='Delete this group?'
+                onConfirm={handleDeleteGroup}
+                okText='Yes'
+                cancelText='No'
+                placement='bottom'
             >
-                <Title
-                    level={5}
-                    className='w-[20%] text-left'
-                >
-                    name
-                </Title>
+                <IoMdClose className='absolute hover:cursor-default hover:text-red-600	' />
+            </Popconfirm>
+
+            <Divider>Group {group.id} </Divider>
+
+            <Form.Item
+                name={['groups', groupIndex, 'name']}
+                label={'name'}
+            >
                 <Input
                     bordered={true}
-                    className='bg-gray-50 w-[40%]'
+                    className='bg-gray-50'
                     placeholder='group name'
                     onChange={handleNameInputChange}
                 />
-            </Space.Compact>
+            </Form.Item>
 
-            <Space.Compact
-                align={'center'}
-                className='w-full px-4'
+            <Form.Item
+                name={['groups', groupIndex, 'description']}
+                label={'description'}
             >
-                <Title
-                    level={5}
-                    className='w-[20%] text-left'
-                >
-                    description
-                </Title>
                 <Input
-                    className='bg-gray-50 w-[40%]'
+                    className='bg-gray-50'
                     placeholder='group description'
                     onChange={handleDescriptionInputChange}
                 />
-            </Space.Compact>
+            </Form.Item>
 
             <Divider> Fields</Divider>
 
             <Droppable
-                droppableId={groupId}
+                droppableId={group?.id}
                 type='group-item'
             >
                 {(provided, snapshot) => (
@@ -89,7 +93,7 @@ export default function DroppableGroup({
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                     >
-                        {fields.map((field, index) => (
+                        {group?.fields.map((field, index) => (
                             <Draggable
                                 draggableId={field.id}
                                 index={index}
@@ -112,30 +116,38 @@ export default function DroppableGroup({
                                         onMouseEnter={() => handleFieldHover(field.id)}
                                         onMouseLeave={() => setHoveredField(null)}
                                     >
-                                        {field.type === itemTypes.TEXTFIELD ? (
+                                        {field.fieldType?.id == SidebarItemsTypeByID.TEXTFIELD ? (
                                             <FormTextFieldOverview
                                                 field={field}
                                                 isDragging={snapshot.isDragging}
+                                                fieldIndex={index}
+                                                groupIndex={groupIndex}
                                             />
-                                        ) : field.type === itemTypes.RADIO ? (
+                                        ) : field.fieldType?.id == SidebarItemsTypeByID.RADIO ? (
                                             <FormRadioOverview
                                                 field={field}
                                                 isDragging={snapshot.isDragging}
+                                                fieldIndex={index}
+                                                groupIndex={groupIndex}
                                             />
-                                        ) : field.type === itemTypes.DATE ? (
+                                        ) : field.fieldType?.id == SidebarItemsTypeByID.DATE ? (
                                             <FormDateOverview
                                                 field={field}
                                                 isDragging={snapshot.isDragging}
+                                                fieldIndex={index}
+                                                groupIndex={groupIndex}
                                             />
-                                        ) : field.type === itemTypes.NUMBER ? (
+                                        ) : field.fieldType?.id == SidebarItemsTypeByID.NUMBER ? (
                                             <FormNumberOverview
                                                 field={field}
                                                 isDragging={snapshot.isDragging}
+                                                fieldIndex={index}
+                                                groupIndex={groupIndex}
                                             />
                                         ) : null}
 
                                         {hoveredField === field.id && (
-                                            <div className='absolute top-0 left-0 bg-pink-950	 bg-opacity-30 text-gray-800 py-2 w-full h-[50%] flex justify-center items-center cursor-pointer'>
+                                            <div className='absolute top-0 left-0 bg-pink-950 bg-opacity-30 text-gray-800 py-2 w-full h-[50%] flex justify-center items-center cursor-pointer'>
                                                 <span className='text-white font-semibold'>
                                                     {selectedField?.id === field.id
                                                         ? 'Click to unselect'

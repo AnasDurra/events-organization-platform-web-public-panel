@@ -1,9 +1,9 @@
-import { DatePicker, Input, Space } from 'antd';
+import { DatePicker, Input, Space, Form } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React from 'react';
 import { WiStars } from 'react-icons/wi';
 
-export default function FormDateOverview({ isDragging, field }) {
+export default function FormDateOverview({ isDragging, field, groupIndex, fieldIndex }) {
     return (
         <div
             className='bg-gray-100 w-full p-4 border-2 border-zinc-200'
@@ -23,13 +23,14 @@ export default function FormDateOverview({ isDragging, field }) {
                 </Title>
 
                 <Space.Compact className='w-[50%] flex items-center'>
-                    <DatePicker
-                        className='w-[100%] '
-                        disabled
-                        value={field?.name}
-                        placeholder='pick a date'
-                    />
-                    {field?.isRequired && <WiStars className='ml-2' />}
+                    <Form.Item name={['groups', groupIndex, 'fields', fieldIndex]}>
+                        <DatePicker
+                            className='w-[100%] '
+                            disabled
+                            placeholder='pick a date'
+                        />
+                        {field?.isRequired && <WiStars className='ml-2' />}
+                    </Form.Item>
                 </Space.Compact>
             </Space.Compact>
         </div>

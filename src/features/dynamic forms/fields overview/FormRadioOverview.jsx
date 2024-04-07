@@ -1,9 +1,9 @@
-import { Input, Radio, Space, Divider } from 'antd';
+import { Input, Radio, Space, Divider, Form } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useState } from 'react';
 import { WiStars } from 'react-icons/wi';
 
-export default function FormRadioOverview({ isDragging, field }) {
+export default function FormRadioOverview({ isDragging, field, groupIndex, fieldIndex }) {
     const [value, setValue] = useState();
 
     const onChange = (e) => {
@@ -29,7 +29,6 @@ export default function FormRadioOverview({ isDragging, field }) {
                         {field?.label ? field.label : 'Label'}
                     </Title>
                     {field?.isRequired && <WiStars className='ml-2' />}
-
                 </Space.Compact>
 
                 <Radio.Group
@@ -37,16 +36,20 @@ export default function FormRadioOverview({ isDragging, field }) {
                     value={value}
                 >
                     <Space direction='vertical'>
-                        {field.options ? (
-                            field?.options?.map((option, index) => (
-                                <Radio
-                                    key={'radio' + field.id + index}
-                                    value={option.name}
-                                    style={{ color: 'gray' }}
-                                >
-                                    {option.name}
-                                </Radio>
-                            ))
+                        {field.options?.length ? (
+                            <Form.Item name={['groups', groupIndex, 'fields', fieldIndex]}>
+                                <Radio.Group>
+                                    {field?.options?.map((option, index) => (
+                                        <Radio
+                                            key={'radio' + field.id + index}
+                                            value={option.name}
+                                            style={{ color: 'gray' }}
+                                        >
+                                            {option.name}
+                                        </Radio>
+                                    ))}
+                                </Radio.Group>
+                            </Form.Item>
                         ) : (
                             <Radio
                                 key={'radio' + field.id + 'dummy'}

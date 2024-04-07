@@ -8,11 +8,11 @@ export const itemTypes = {
 };
 
 export const SidebarItemsIDs = {
-    TEXTFIELD: 0,
-    RADIO: 1,
-    GROUP: 2,
+    TEXTFIELD: 1,
+    NUMBER: 2,
     DATE: 3,
-    NUMBER: 4,
+    RADIO: 4,
+    GROUP: 5,
 };
 
 export const SidebarItemsTypeByID = {

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { Input, Checkbox, Space } from 'antd';
+import { Input, Checkbox, Space, Button, Divider } from 'antd';
 import Title from 'antd/es/typography/Title';
 
-export default function NumberProperties({ field, onNameChange, onLabelChange, onIsRequiredChange }) {
+export default function NumberProperties({ field, onNameChange, onLabelChange, onIsRequiredChange, onDelete }) {
     const handleNameInputChange = (e) => {
         const newName = e.target.value;
         onNameChange(newName);
@@ -29,14 +29,14 @@ export default function NumberProperties({ field, onNameChange, onLabelChange, o
     return (
         <Space.Compact
             direction='vertical'
-            className='w-full mt-2'
+            className='w-full mt-2 px-4'
             align='center'
             block
         >
             <Space.Compact
                 align='center'
                 direction='vertical'
-                className='w-full px-4 my-2'
+                className='w-full my-2'
             >
                 <Title
                     level={5}
@@ -53,7 +53,7 @@ export default function NumberProperties({ field, onNameChange, onLabelChange, o
             <Space.Compact
                 align='center'
                 direction='vertical'
-                className='w-full px-4 my-2'
+                className='w-full my-2'
             >
                 <Title
                     level={5}
@@ -70,14 +70,13 @@ export default function NumberProperties({ field, onNameChange, onLabelChange, o
             <Space
                 align='center'
                 direction='vertical'
-                className='w-full px-4 my-2'
+                className='w-full my-2'
             >
                 <Title
                     level={5}
                     htmlFor='isRequired'
                     style={{ margin: 0 }}
                 >
-                    {' '}
                     Is Required
                 </Title>
                 <Checkbox
@@ -86,6 +85,14 @@ export default function NumberProperties({ field, onNameChange, onLabelChange, o
                     onChange={handleIsRequiredCheckboxChange}
                 />
             </Space>
+            <Divider />
+            <Button
+                type='primary'
+                danger
+                onClick={onDelete}
+            >
+                Delete Field
+            </Button>
         </Space.Compact>
     );
 }
