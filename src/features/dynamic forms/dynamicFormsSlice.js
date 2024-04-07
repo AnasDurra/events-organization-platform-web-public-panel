@@ -72,6 +72,14 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['form'],
         }),
+
+        removeGroup: builder.mutation({
+            query: ({ group_id }) => ({
+                url: `/forms/deleteGroup/${group_id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['form'],
+        }),
     }),
 });
 
@@ -82,5 +90,6 @@ export const {
     useUpdateFormMutation,
     useAddNewGroupMutation,
     useUpdateGroupMutation,
-    useAddNewFieldMutation
+    useAddNewFieldMutation,
+    useRemoveGroupMutation
 } = dynamicFormsSlice;

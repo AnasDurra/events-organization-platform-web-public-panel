@@ -1,27 +1,28 @@
+import { Form } from 'antd';
+import debounce from 'lodash.debounce';
 import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import DroppableGroup from './components/DroppableGroup';
+import { useParams } from 'react-router-dom';
 import './EditFormPage.css';
+import DroppableGroup from './components/DroppableGroup';
 import PropertiesSidebar from './components/PropertiesSidebar';
 import Sidebar from './components/Sidebar';
-import initialData from './initial-state';
-import { onDragEnd } from './utils-drag';
-import { useParams } from 'react-router-dom';
 import {
     useAddNewFieldMutation,
     useAddNewGroupMutation,
     useGetFormQuery,
+    useRemoveGroupMutation,
     useUpdateGroupMutation,
 } from './dynamicFormsSlice';
-import { Form } from 'antd';
-import debounce from 'lodash.debounce';
+import { onDragEnd } from './utils-drag';
 
 export default function EditFormPage() {
     let { form_id } = useParams();
     const { data: { result: DBform } = { result: {} }, isSuccess: isFetchFormSuccess } = useGetFormQuery(form_id);
     const [addNewGroup] = useAddNewGroupMutation();
-    const [updateGroup] = useUpdateGroupMutation();
     const [addNewField] = useAddNewFieldMutation();
+    const [updateGroup] = useUpdateGroupMutation();
+    const [removeGroup] = useRemoveGroupMutation();
     // const [groups, setGroups] = useState([]);
     const [selectedField, setSelectedField] = useState(null);
     const [AntDform] = Form.useForm();
@@ -69,22 +70,11 @@ export default function EditFormPage() {
     };
 
     const handleDeleteGroup = (groupId) => {
-        /*         setGroups(groups.filter((group) => group.id !== groupId));
-         */
+        removeGroup({ group_id: groupId });
     };
 
     useEffect(() => {
-        if (isFetchFormSuccess && DBform.groups.length == 0) {
-            /*             setGroups([{ id: 'default-group', name: 'Default Group', fields: [] }]);
-             */
-
-            addNewGroup({
-                name: 'default group2',
-                description: 'default description',
-                position: 2,
-                fields: [],
-                form_id,
-            });
+        if (isFetchFormSuccess && DBform?.groups?.length == 0) {
             addNewGroup({
                 name: 'default group1',
                 description: 'default description',
@@ -93,16 +83,16 @@ export default function EditFormPage() {
                 form_id,
             });
         }
-    }, [isFetchFormSuccess]);
+    }, [DBform?.groups?.length, addNewGroup, form_id, isFetchFormSuccess]);
 
     useEffect(() => {
         AntDform.setFieldsValue(DBform);
-    }, [DBform]);
+    }, [AntDform, DBform]);
 
     return (
         <DragDropContext
             onDragEnd={(result) => {
-                onDragEnd({ result, currentGroups: DBform.groups, addNewField });
+                onDragEnd({ result, currentGroups: DBform?.groups, addNewField });
             }}
         >
             <Form

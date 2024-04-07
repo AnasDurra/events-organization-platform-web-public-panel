@@ -12,6 +12,7 @@ import CreateEvent from '../features/Manage Events (org)/CreateEvent';
 import ShowEvent from '../features/Manage Events (org)/ShowEvent';
 import ViewFormsPage from '../features/dynamic forms/ViewFormsPage';
 import FormLayout from '../features/dynamic forms/components/FormLayout';
+import SubmitForm from '../features/dynamic forms/submission/SubmitForm';
 
 export const router = createBrowserRouter([
     {
@@ -59,5 +60,9 @@ export const router = createBrowserRouter([
                 element: <EditFormPage />,
             },
         ],
+    },
+    {
+        path: '/form/:form_id/submit',
+        element: <SubmitForm />,
     },
 ]);

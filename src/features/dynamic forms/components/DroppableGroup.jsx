@@ -1,9 +1,8 @@
-import { Divider, Input, Popconfirm, Space, Form } from 'antd';
-import Title from 'antd/es/typography/Title';
+import { Divider, Form, Input, Popconfirm } from 'antd';
 import React, { useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { IoMdClose } from 'react-icons/io';
-import { SidebarItemsTypeByID, itemTypes } from '../constants';
+import { SidebarItemsTypeByID } from '../constants';
 import FormDateOverview from '../fields overview/FormDateOverview';
 import FormNumberOverview from '../fields overview/FormNumberOverview';
 import FormRadioOverview from '../fields overview/FormRadioOverview';
@@ -42,8 +41,6 @@ export default function DroppableGroup({
         onDelete(group?.id);
     };
 
-    //  console.log('group ', group.id, 'idx:', groupIndex);
-    console.log('fields: ',group.fields);
     return (
         <div className='w-full bg-gray-50 bg-slate-100 p-4 my-2 rounded-lg relative '>
             <Popconfirm
@@ -56,7 +53,7 @@ export default function DroppableGroup({
                 <IoMdClose className='absolute hover:cursor-default hover:text-red-600	' />
             </Popconfirm>
 
-            <Divider>Group {group.id} </Divider>
+            <Divider>Group </Divider>
 
             <Form.Item
                 name={['groups', groupIndex, 'name']}
