@@ -152,7 +152,7 @@ export default function EditFormPage() {
                             )}
                         </Droppable>
                     </div>
-                    <div className=' col-start-6 col-span-1 sticky top-0 bg-gray-50'>
+                    <div className='col-start-6 col-span-1 sticky top-0 bg-gray-50'>
                         {selectedField ? (
                             <PropertiesSidebar
                                 field={selectedField}

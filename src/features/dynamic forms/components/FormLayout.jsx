@@ -3,7 +3,7 @@ import { Outlet, useParams } from 'react-router-dom';
 import { FaWpforms } from 'react-icons/fa';
 import { Col, Input, Menu, Row } from 'antd';
 import { FaFileAlt } from 'react-icons/fa';
-import './FormLayout.css';
+import styles from './FormLayout.module.css';
 import { useGetFormQuery, useUpdateFormMutation } from '../dynamicFormsSlice';
 import debounce from 'lodash.debounce';
 export default function FormLayout() {
@@ -74,7 +74,7 @@ export default function FormLayout() {
                     </Col>
                 </Row>
             </header>
-            <main className='border flex-1 paper'>
+            <main className={`border flex-1 ${styles.paper}`}>
                 <Outlet />
             </main>
         </div>

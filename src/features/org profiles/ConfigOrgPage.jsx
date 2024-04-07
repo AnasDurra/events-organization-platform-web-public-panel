@@ -14,7 +14,7 @@ import {
 } from './orgSlice';
 
 export default function ConfigOrgPage() {
-    let { orgId } = useParams();
+    let { orgId = 1 } = useParams();
 
     const [basicForm] = Form.useForm();
     const [addressForm] = Form.useForm();
@@ -38,7 +38,7 @@ export default function ConfigOrgPage() {
             })
             .catch(() => {});
     };
-    
+
     const handleRemoveOrgAddress = (address_id) =>
         removeOrgAddress({
             address_id,
@@ -100,14 +100,16 @@ export default function ConfigOrgPage() {
     ];
 
     return (
-        <>
-            <Header />
-            <Skeleton loading={isGetOrgLoading}>
-                <Tabs
-                    defaultActiveKey='1'
-                    items={tabsItems}
-                />
-            </Skeleton>
-        </>
+        <div className='grid grid-cols-12'>
+            <div className='sm:col-start-4 sm:col-span-12  col-span-12'>
+                <Header />
+                <Skeleton loading={isGetOrgLoading}>
+                    <Tabs
+                        defaultActiveKey='1'
+                        items={tabsItems}
+                    />
+                </Skeleton>
+            </div>
+        </div>
     );
 }
