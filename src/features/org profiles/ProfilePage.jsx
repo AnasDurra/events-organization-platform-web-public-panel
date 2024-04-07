@@ -1,6 +1,4 @@
-import {
-    SettingOutlined
-} from '@ant-design/icons';
+import { SettingOutlined } from '@ant-design/icons';
 import { Button, Col, Row, Typography, message } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useRef } from 'react';
@@ -23,7 +21,7 @@ const { Text } = Typography;
 
 export default function ProfilePage() {
     const navigate = useNavigate();
-    let { orgId } = useParams();
+    let { orgId = 1 } = useParams();
     const [messageApi, contextHolder] = message.useMessage();
     const inputCoverFile = useRef(null);
     const inputProfilePicFile = useRef(null);

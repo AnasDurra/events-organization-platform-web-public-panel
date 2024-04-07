@@ -1,19 +1,18 @@
 import { createBrowserRouter } from 'react-router-dom';
 import AppLayout from '../AppLayout';
-import ConfigOrgPage from '../features/org profiles/ConfigOrgPage';
-import ProfilePage from '../features/org profiles/ProfilePage';
-import TeamPage from '../features/org profiles/TeamPage';
-import EditFormPage from '../features/dynamic forms/EditFormPage';
-import ErrorPage from '../pages/error-page';
 import RegisterAttendee from '../features/Attendees Profiles/RegisterAttendee';
 import ShowAttendeProfile from '../features/Attendees Profiles/ShowAttendeProfile';
-import LoginPage from '../pages/loginPage';
 import CreateEvent from '../features/Manage Events (org)/CreateEvent';
 import ShowEvent from '../features/Manage Events (org)/ShowEvent';
+import EditFormPage from '../features/dynamic forms/EditFormPage';
 import ViewFormsPage from '../features/dynamic forms/ViewFormsPage';
 import FormLayout from '../features/dynamic forms/components/FormLayout';
 import SubmitForm from '../features/dynamic forms/submission/SubmitForm';
-
+import ConfigOrgPage from '../features/org profiles/ConfigOrgPage';
+import ProfilePage from '../features/org profiles/ProfilePage';
+import TeamPage from '../features/org profiles/TeamPage';
+import ErrorPage from '../pages/error-page';
+import LoginPage from '../pages/loginPage';
 export const router = createBrowserRouter([
     {
         path: '/login',
@@ -45,13 +44,17 @@ export const router = createBrowserRouter([
                     },
                 ],
             },
-            { path: '/org/:orgId', element: <ProfilePage /> },
-            { path: '/org/:orgId/config', element: <ConfigOrgPage /> },
+
+            { path: '/org', element: <ProfilePage /> },
+            { path: '/org/config', element: <ConfigOrgPage /> },
+
             { path: '/members', element: <TeamPage /> },
-            { path: '/forms/:organization_id', element: <ViewFormsPage /> },
+            
+            { path: '/forms', element: <ViewFormsPage /> },
         ],
     },
     {
+
         path: '/form/:form_id/',
         element: <FormLayout />,
         children: [

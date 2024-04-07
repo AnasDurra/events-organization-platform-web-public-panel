@@ -6,7 +6,7 @@ import {
     PlusOutlined,
     SettingOutlined,
 } from '@ant-design/icons';
-import { Badge, Button, Card, Col, Divider, Empty, Input, Row, Tag, theme } from 'antd';
+import { Badge, Button, Card, Col, Divider, Empty, Input, Row, Tag, theme, Spin, Skeleton } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import Title from 'antd/es/typography/Title';
 import React, { useState } from 'react';
@@ -29,13 +29,14 @@ const fakeCardsData = [
 export default function ViewFormsPage() {
     const { token } = useToken();
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    let { organization_id } = useParams();
+    let { organization_id = 1 } = useParams();
     const navigate = useNavigate();
 
-    const { data: { result: forms } = { result: [] } } = useGetFormsQuery(organization_id);
+    const { data: { result: forms } = { result: [] }, isLoading: isFetchFormsLoading } =
+        useGetFormsQuery(organization_id);
 
     return (
-        <>
+        <div className='h-full'>
             <Row>
                 <Col
                     xs={{ span: 24 }}
@@ -73,57 +74,59 @@ export default function ViewFormsPage() {
                     md={{ span: 10, offset: 6 }}
                     lg={{ span: 8, offset: 4 }}
                 >
-                    <Input.Search placeholder='search'></Input.Search>
+                    <Input.Search placeholder='search' />
                 </Col>
             </Row>
-            <Row
-                gutter={[
-                    { xs: 20, sm: 20, md: 40, lg: 40 },
-                    { xs: 20, sm: 20, md: 40, lg: 40 },
-                ]}
-            >
-                {forms.length ? (
-                    forms.map((form) => (
-                        <Col
-                            xs={{ span: 24 }}
-                            sm={{ span: 24 }}
-                            md={{ span: 12 }}
-                            lg={{ span: 8 }}
-                            key={form.id}
-                        >
-                            <Card
-                                className={`shadow-md hover:shadow-sm  shadow-[${token.colorPrimary}] border-6 border-[${token.colorPrimary}]`}
-                                actions={[
-                                    <div
-                                        key={'actions-div-3'}
-                                        className='flex flex-row justify-center items-center space-x-2'
-                                    >
-                                        <PaperClipOutlined />
-                                        <span>event</span>
-                                    </div>,
-                                    <div
-                                        key={'actions-div-1'}
-                                        className='flex flex-row justify-center items-center space-x-2'
-                                    >
-                                        <ContainerOutlined />
-                                        <span>submissions</span>
-                                    </div>,
-                                    <div
-                                        key={'actions-div-2'}
-                                        className='flex flex-row justify-center items-center space-x-2'
-                                        onClick={() => navigate(`/form/${form.id}/edit`)}
-                                    >
-                                        <SettingOutlined key='edit' />
-                                        <span>edit</span>
-                                    </div>,
-                                ]}
-                                bordered
+            <Spin spinning={isFetchFormsLoading}>
+                <Row
+                    className='h-full'
+                    gutter={[
+                        { xs: 20, sm: 20, md: 40, lg: 40 },
+                        { xs: 20, sm: 20, md: 40, lg: 40 },
+                    ]}
+                >
+                    {forms.length ? (
+                        forms.map((form) => (
+                            <Col
+                                xs={{ span: 24 }}
+                                sm={{ span: 24 }}
+                                md={{ span: 12 }}
+                                lg={{ span: 8 }}
+                                key={form.id}
                             >
-                                <Meta
-                                    title={form.name}
-                                    description={form.description}
-                                />
-                                {/*  <Divider className='mb-1'></Divider>
+                                <Card
+                                    className={`shadow-md hover:shadow-sm  shadow-[${token.colorPrimary}] border-6 border-[${token.colorPrimary}]`}
+                                    actions={[
+                                        <div
+                                            key={'actions-div-3'}
+                                            className='flex flex-row justify-center items-center space-x-2'
+                                        >
+                                            <PaperClipOutlined />
+                                            <span>event</span>
+                                        </div>,
+                                        <div
+                                            key={'actions-div-1'}
+                                            className='flex flex-row justify-center items-center space-x-2'
+                                        >
+                                            <ContainerOutlined />
+                                            <span>submissions</span>
+                                        </div>,
+                                        <div
+                                            key={'actions-div-2'}
+                                            className='flex flex-row justify-center items-center space-x-2'
+                                            onClick={() => navigate(`/form/${form.id}/edit`)}
+                                        >
+                                            <SettingOutlined key='edit' />
+                                            <span>edit</span>
+                                        </div>,
+                                    ]}
+                                    bordered
+                                >
+                                    <Meta
+                                        title={form.name}
+                                        description={form.description}
+                                    />
+                                    {/*  <Divider className='mb-1'></Divider>
               <div className='flex items-start justify-start flex-wrap space-x-2'>
                   <Tag
                       className='m-1'
@@ -150,19 +153,18 @@ export default function ViewFormsPage() {
                       on hold 40
                   </Tag>
               </div> */}
-                            </Card>
-                        </Col>
-                    ))
-                ) : (
-                    <Col span={24}>
-                        <Empty description='No forms' />
-                    </Col>
-                )}
-            </Row>
+                                </Card>
+                            </Col>
+                        ))
+                    ) : (
+                        <Col span={24}>{!isFetchFormsLoading && <Empty description='No forms' />}</Col>
+                    )}
+                </Row>
+            </Spin>
             <AddFormModal
                 isOpen={isAddModalOpen}
                 onClose={() => setIsAddModalOpen(false)}
             />
-        </>
+        </div>
     );
 }
