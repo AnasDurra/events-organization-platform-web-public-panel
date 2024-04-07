@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { Input, Checkbox, Space, Button, Divider } from 'antd';
+import { Input, Checkbox, Space, Divider, Button } from 'antd';
 import Title from 'antd/es/typography/Title';
 
-export default function TextFieldProperties({ field, onNameChange, onLabelChange, onIsRequiredChange, onDelete }) {
+export default function DateProperties({ field, onNameChange, onLabelChange, onIsRequiredChange, onDelete }) {
     const handleNameInputChange = (e) => {
         const newName = e.target.value;
         onNameChange(newName);
@@ -20,9 +20,9 @@ export default function TextFieldProperties({ field, onNameChange, onLabelChange
 
     useEffect(() => {
         if (field) {
-            document.getElementById('tf-prop-name').value = field.name || '';
-            document.getElementById('tf-prop-label').value = field.label || '';
-            document.getElementById('tf-prop-isRequired').checked = !!field.isRequired;
+            document.getElementById('date-prop-name').value = field.name || '';
+            document.getElementById('date-prop-label').value = field.label || '';
+            document.getElementById('date-prop-isRequired').checked = !!field.isRequired;
         }
     }, [field]);
 
@@ -36,7 +36,7 @@ export default function TextFieldProperties({ field, onNameChange, onLabelChange
             <Space.Compact
                 align='center'
                 direction='vertical'
-                className='w-full  my-2'
+                className='w-full my-2'
             >
                 <Title
                     level={5}
@@ -45,7 +45,7 @@ export default function TextFieldProperties({ field, onNameChange, onLabelChange
                     Name
                 </Title>
                 <Input
-                    id='tf-prop-name'
+                    id='date-prop-name'
                     onChange={handleNameInputChange}
                     defaultValue={field?.name}
                 />
@@ -53,7 +53,7 @@ export default function TextFieldProperties({ field, onNameChange, onLabelChange
             <Space.Compact
                 align='center'
                 direction='vertical'
-                className='w-full  my-2'
+                className='w-full my-2'
             >
                 <Title
                     level={5}
@@ -62,7 +62,7 @@ export default function TextFieldProperties({ field, onNameChange, onLabelChange
                     Label
                 </Title>
                 <Input
-                    id='tf-prop-label'
+                    id='date-prop-label'
                     defaultValue={field?.label}
                     onChange={handleLabelInputChange}
                 />
@@ -70,7 +70,7 @@ export default function TextFieldProperties({ field, onNameChange, onLabelChange
             <Space
                 align='center'
                 direction='vertical'
-                className='w-full  my-2'
+                className='w-full my-2'
             >
                 <Title
                     level={5}
@@ -81,7 +81,7 @@ export default function TextFieldProperties({ field, onNameChange, onLabelChange
                     Is Required
                 </Title>
                 <Checkbox
-                    id='tf-prop-isRequired'
+                    id='date-prop-isRequired'
                     defaultChecked={field?.isRequired}
                     onChange={handleIsRequiredCheckboxChange}
                 />
