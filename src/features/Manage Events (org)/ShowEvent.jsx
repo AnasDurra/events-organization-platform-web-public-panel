@@ -22,8 +22,7 @@ import {
     CalendarOutlined,
     EditOutlined,
     EnvironmentOutlined,
-    FileImageOutlined,
-    ScheduleFilled,
+    TeamOutlined,
     ScheduleOutlined,
     TagsOutlined,
     UserOutlined,
@@ -35,8 +34,10 @@ import ShowMap from './ShowMap';
 import { useShowQuery } from '../../api/services/events';
 import UpdateEventModal from './UpdateEventModal';
 
+import { useNavigate } from 'react-router-dom';
 const ShowEvent = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const { data: eventData, error, isLoading: eventDataIsLoading, refetch, isFetching } = useShowQuery(id);
 
@@ -80,7 +81,7 @@ const ShowEvent = () => {
         <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}>
                 <Card
-                    bodyStyle={{ padding: '20px 20px 20px 20px' }}
+                    bodyStyle={{ padding: '10px 20px' }}
                     cover={
                         <>
                             <Image height={250} src="https://picsum.photos/1000/300" />
@@ -127,9 +128,17 @@ const ShowEvent = () => {
                                         </Typography.Text>
                                     </Space>
                                 </Space>
-                                <Tooltip title="Edit Event">
-                                    <Button icon={<EditOutlined />} onClick={() => setIsUpdateModalOpen(true)} />
-                                </Tooltip>
+                                <div style={{ textAlign: 'end' }}>
+                                    <Tooltip title="Edit Event">
+                                        <Button icon={<EditOutlined />} onClick={() => setIsUpdateModalOpen(true)} />
+                                    </Tooltip>
+                                    <Tooltip title="Show Attendees">
+                                        <Button
+                                            icon={<TeamOutlined />}
+                                            onClick={() => navigate(`/event/show/${id}/attendees`)}
+                                        />
+                                    </Tooltip>
+                                </div>
                             </div>
                         </Col>
 
@@ -156,10 +165,21 @@ const ShowEvent = () => {
                                 }}
                             >
                                 <Descriptions.Item label="Registration Start Date">
-                                    {eventData?.result?.registration_start_date}
+                                    {eventData?.result?.registration_start_date
+                                        ? new Date(eventData.result.registration_start_date).toLocaleDateString(
+                                              'en-US',
+                                              { year: 'numeric', month: 'short', day: 'numeric' }
+                                          )
+                                        : 'N/A'}
                                 </Descriptions.Item>
                                 <Descriptions.Item label="Registration End Date">
-                                    {eventData?.result?.registration_end_date}
+                                    {eventData?.result?.registration_end_date
+                                        ? new Date(eventData.result.registration_end_date).toLocaleDateString('en-US', {
+                                              year: 'numeric',
+                                              month: 'short',
+                                              day: 'numeric',
+                                          })
+                                        : 'N/A'}
                                 </Descriptions.Item>
                             </Descriptions>
                             <Button

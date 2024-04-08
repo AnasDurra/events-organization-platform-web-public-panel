@@ -86,7 +86,6 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
     const onFinish = (values) => {
         const contactsFormValues = { ...contactForm.getFieldValue() };
         for (const key in contactsFormValues) {
-            console.log(contactsFormValues[key]);
             if (contactsFormValues[key] == null) {
                 delete contactsFormValues[key];
             }
@@ -109,13 +108,13 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
             contacts: values.contacts ?? null,
         };
 
-        console.log(dataToSend);
+        // console.log(dataToSend);
 
         updateMyProfileMutation(dataToSend)
             .unwrap()
             .then((res) => {
-                console.log(res);
                 if (res.statusCode === 200) {
+                    console.log(res);
                     message.success('Updated Successfully !');
                     modalOk();
                 }
@@ -143,10 +142,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                         }}
                         gutter={10}
                     >
-                        <Col
-                            xs={24}
-                            sm={24}
-                        >
+                        <Col xs={24} sm={24}>
                             <Popover
                                 content={
                                     <ImgCrop
@@ -157,21 +153,21 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                         rotationSlider
                                     >
                                         <Upload
-                                            name='cover'
+                                            name="cover"
                                             maxCount={1}
                                             showUploadList={false}
                                             onChange={(file) => {
                                                 handleFileChange(file, 'cover');
                                             }}
                                         >
-                                            <Button type='text'>
+                                            <Button type="text">
                                                 <UploadOutlined /> Change Cover
                                             </Button>
                                         </Upload>
                                     </ImgCrop>
                                 }
-                                trigger='click'
-                                placement='bottomRight'
+                                trigger="click"
+                                placement="bottomRight"
                             >
                                 <Image
                                     style={{
@@ -202,10 +198,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                             </Popover>
                         </Col>
 
-                        <Col
-                            xs={24}
-                            sm={6}
-                        >
+                        <Col xs={24} sm={6}>
                             <div
                                 style={{
                                     display: 'flex',
@@ -223,21 +216,21 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                             rotationSlider
                                         >
                                             <Upload
-                                                name='avatar'
+                                                name="avatar"
                                                 maxCount={1}
                                                 showUploadList={false}
                                                 onChange={(file) => {
                                                     handleFileChange(file, 'avatar');
                                                 }}
                                             >
-                                                <Button type='text'>
+                                                <Button type="text">
                                                     <UploadOutlined /> Change Avatar
                                                 </Button>
                                             </Upload>
                                         </ImgCrop>
                                     }
-                                    trigger='click'
-                                    placement='bottom'
+                                    trigger="click"
+                                    placement="bottom"
                                 >
                                     <Space>
                                         <Avatar
@@ -278,10 +271,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                 </Popover>
                             </div>
                         </Col>
-                        <Col
-                            xs={24}
-                            sm={18}
-                        >
+                        <Col xs={24} sm={18}>
                             <div
                                 style={{
                                     display: 'flex',
@@ -289,23 +279,17 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                     width: '100%',
                                 }}
                             >
-                                <Typography.Title
-                                    style={{ marginTop: '0px' }}
-                                    level={3}
-                                >
+                                <Typography.Title style={{ marginTop: '0px' }} level={3}>
                                     {data?.result.full_name ?? ''}
                                 </Typography.Title>
 
                                 <Space size={10}>
                                     {data?.result.contacts?.map((contact) => (
-                                        <Tooltip
-                                            title={contact.contact_name}
-                                            key={contact.id}
-                                        >
+                                        <Tooltip title={contact.contact_name} key={contact.id}>
                                             <a
                                                 href={getContactLink(contact.contact_name)}
-                                                target='_blank'
-                                                rel='noopener noreferrer'
+                                                target="_blank"
+                                                rel="noopener noreferrer"
                                             >
                                                 {contact.contact_name === 'WhatsApp' && (
                                                     <WhatsAppOutlined
@@ -315,7 +299,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                                         }}
                                                     />
                                                 )}
-                                                {contact.contact_name === 'Linkedin' && (
+                                                {contact.contact_name === 'LinkedIn' && (
                                                     <LinkedinOutlined
                                                         style={{
                                                             fontSize: '24px',
@@ -339,6 +323,20 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                                         }}
                                                     />
                                                 )}
+                                                {contact.contact_name === 'Email' && (
+                                                    <MailOutlined
+                                                        style={{
+                                                            fontSize: '24px',
+                                                            color: 'black',
+                                                        }}
+                                                    />
+                                                )}
+                                                {contact.contact_name === 'Phone Number' && (
+                                                    <PhoneOutlined
+                                                        style={{ fontSize: '24px' }}
+                                                        onClick={() => (window.location.href = `tel:${contact.value}`)}
+                                                    />
+                                                )}
                                             </a>
                                         </Tooltip>
                                     ))}
@@ -346,72 +344,58 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                 <Form
                                     onFinish={onFinish}
                                     form={form}
-                                    autoComplete='off'
-                                    layout='vertical'
+                                    autoComplete="off"
+                                    layout="vertical"
                                     style={{
                                         marginTop: '1em',
                                     }}
-                                    className='my-custom-form'
+                                    className="my-custom-form"
                                 >
-                                    <Form.Item
-                                        initialValue={data?.result.bio ?? ''}
-                                        label='Bio'
-                                        name='bio'
-                                    >
-                                        <TextArea
-                                            placeholder='Tell us about yourself...'
-                                            allowClear
-                                        />
+                                    <Form.Item initialValue={data?.result.bio ?? ''} label="Bio" name="bio">
+                                        <TextArea placeholder="Tell us about yourself..." allowClear />
                                     </Form.Item>
                                     <Form.Item
-                                        label='Birth Date'
-                                        name='birth_date'
+                                        label="Birth Date"
+                                        name="birth_date"
                                         initialValue={
                                             data?.result.birth_date
                                                 ? moment(data?.result.birth_date, 'DD-MM-YYYY')
                                                 : null
                                         }
                                     >
-                                        <DatePicker
-                                            format={'DD-MM-YYYY'}
-                                            style={{ width: '100%' }}
-                                        />
+                                        <DatePicker format={'DD-MM-YYYY'} style={{ width: '100%' }} />
                                     </Form.Item>
 
-                                    <Form.Item
-                                        label='Job'
-                                        name='job_id'
-                                        initialValue={data?.result.job?.value ?? null}
-                                    >
+                                    <Form.Item label="Job" name="job_id" initialValue={data?.result.job?.value ?? null}>
                                         <Select
                                             loading={listsIsLoading}
                                             showSearch
-                                            placeholder='Select your job'
+                                            placeholder="Select your job"
                                             options={listsData?.result.jobs}
                                         />
                                     </Form.Item>
 
                                     <Form.Item
-                                        label='Address'
-                                        name='address_id'
+                                        label="Address"
+                                        name="address_id"
                                         initialValue={data?.result.job?.value ?? null}
                                     >
                                         <Select
                                             loading={listsIsLoading}
                                             showSearch
-                                            placeholder='Select your address'
+                                            placeholder="Select your address"
                                             options={listsData?.result.addresses}
                                         />
                                     </Form.Item>
 
                                     <Form
                                         form={contactForm}
-                                        autoComplete='off'
-                                        layout='vertical'
+                                        autoComplete="off"
+                                        layout="vertical"
                                         style={{
                                             marginTop: '1em',
                                         }}
-                                        className='my-custom-form'
+                                        className="my-custom-form"
                                     >
                                         <Form.Item>
                                             {listsData?.result.contacts?.map((contact) => (
@@ -454,15 +438,11 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                                     contactForm.resetFields();
                                                     modalCancel();
                                                 }}
-                                                type='default'
+                                                type="default"
                                             >
                                                 Cancel
                                             </Button>
-                                            <Button
-                                                loading={isLoading}
-                                                type='primary'
-                                                htmlType='submit'
-                                            >
+                                            <Button loading={isLoading} type="primary" htmlType="submit">
                                                 Submit
                                             </Button>
                                         </Space>

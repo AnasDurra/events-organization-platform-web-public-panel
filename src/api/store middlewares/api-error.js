@@ -1,6 +1,6 @@
 // import Cookies from 'js-cookie';
-import { errorMessage } from "../../utils/messages.api.jsx";
-import { router } from "../../router/index.jsx";
+import { errorMessage } from '../../utils/messages.api.jsx';
+import { router } from '../../router/index.jsx';
 
 const apiError = (store) => (next) => async (action) => {
     const response = await next(action);
@@ -11,7 +11,7 @@ const apiError = (store) => (next) => async (action) => {
     //         router.navigate("/login", { replace: true });
     //     } else errorMessage({ content: message });
     // } else
-    if (statusCode > 299) {
+    if (statusCode > 299 && statusCode != 401) {
         errorMessage({ content: message });
     }
 

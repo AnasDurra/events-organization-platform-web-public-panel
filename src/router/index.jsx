@@ -11,6 +11,8 @@ import ShowAttendeProfile from '../features/Attendees Profiles/ShowAttendeProfil
 import LoginPage from '../pages/loginPage';
 import CreateEvent from '../features/Manage Events (org)/CreateEvent';
 import ShowEvent from '../features/Manage Events (org)/ShowEvent';
+import ShowAttendeeEvents from '../features/Attendees Profiles/ShowAttendeeEvents';
+import ShowEventAttendees from '../features/Manage Events (org)/ShowEventAttendees';
 
 export const router = createBrowserRouter([
     {
@@ -27,7 +29,15 @@ export const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             {
-                path: '/attende-profile',
+                path: '/attendee/my-profile',
+                element: <ShowAttendeProfile />,
+            },
+            {
+                path: '/attendee/my-profile/events',
+                element: <ShowAttendeeEvents />,
+            },
+            {
+                path: '/attendee-profile/:id',
                 element: <ShowAttendeProfile />,
             },
             {
@@ -37,9 +47,14 @@ export const router = createBrowserRouter([
                         path: 'create',
                         element: <CreateEvent />,
                     },
+
                     {
                         path: 'show/:id',
                         element: <ShowEvent />,
+                    },
+                    {
+                        path: 'show/:id/attendees',
+                        element: <ShowEventAttendees />,
                     },
                 ],
             },

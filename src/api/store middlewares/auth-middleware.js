@@ -12,7 +12,6 @@ const authMiddleware = (store) => (next) => async (action) => {
             store.dispatch(auth.endpoints.refresh.initiate(refreshToken));
 
             response = await next(action);
-            // console.log("second response",response);
         }
         if (
             (response.payload?.status == 401 || response.payload?.status == 403) && // TODO check if its work fine

@@ -6,9 +6,42 @@ const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
     const [api, contextHolder] = notification.useNotification();
+    const openNotification = (type, message, description) => {
+        const style = {
+            border: '1px solid #ccc',
+            borderRadius: '5px',
+            backgroundColor: '#fff',
+            color: '#333',
+            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+        };
+
+        const config = {
+            message: message,
+            description: description ?? null,
+            placement: 'topLeft',
+            duration: 4, // Adjust as needed
+        };
+
+        switch (type) {
+            case 'success':
+                notification.success({ ...config, style });
+                break;
+            case 'info':
+                notification.info({ ...config, style });
+                break;
+            case 'warning':
+                notification.warning({ ...config, style });
+                break;
+            case 'error':
+                notification.error({ ...config, style });
+                break;
+            default:
+                notification.open({ ...config, style });
+        }
+    };
 
     return (
-        <NotificationContext.Provider value={{ api, contextHolder }}>
+        <NotificationContext.Provider value={{ openNotification }}>
             {children} {contextHolder}
         </NotificationContext.Provider>
     );

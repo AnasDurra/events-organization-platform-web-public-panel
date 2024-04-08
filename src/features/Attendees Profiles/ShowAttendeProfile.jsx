@@ -12,7 +12,9 @@ import {
     TwitterOutlined,
     UserOutlined,
     WarningOutlined,
+    ContactsOutlined,
     WhatsAppOutlined,
+    CalendarOutlined,
 } from '@ant-design/icons';
 import {
     Avatar,
@@ -33,23 +35,30 @@ import {
 } from 'antd';
 const { Meta } = Card;
 
-import { isLargerThanLG } from '../../utils/antd.utils';
-import { useViewMyProfileQuery } from '../../api/services/attendeeProfile';
+import { useLazyViewMyProfileQuery } from '../../api/services/attendeeProfile';
+import { useLazyViewAttendeeProfileQuery } from '../../api/services/attendeeProfile';
 import UpdateProfileModal from './UpdateProfileModal';
 
-const ShowAttendeProfile = () => {
-    const screens = Grid.useBreakpoint();
-    const { data, isLoading, refetch } = useViewMyProfileQuery();
+import { useNavigate, useParams } from 'react-router-dom';
 
-    // const [loading, setLoading] = useState(false);
-    // const [imageUrl, setImageUrl] = useState();
+const ShowAttendeProfile = () => {
+    const { id } = useParams();
+
+    const navigate = useNavigate();
+
+    const [fetchMyProfile, { data: myProfile, isLoading: myProfileIsLoading }] = useLazyViewMyProfileQuery();
+    const [fetchAttendeeProfile, { data: attendeeProfile, isLoading: attendeeProfileIsLoading }] =
+        useLazyViewAttendeeProfileQuery(id);
+
+    const [data, setData] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-    const showModal = () => {
-        setIsUpdateModalOpen(true);
-    };
+
     const handleOk = () => {
-        refetch();
+        !id ? fetchMyProfile() : fetchAttendeeProfile(id);
+        setIsLoading(true);
+        setData(null);
         setIsUpdateModalOpen(false);
     };
     const handleCancel = () => {
@@ -57,21 +66,27 @@ const ShowAttendeProfile = () => {
     };
 
     useEffect(() => {
-        console.log(data);
-    }, [data]);
+        if (!id) {
+            fetchMyProfile();
+            setData(myProfile);
+            if (myProfile) {
+                setIsLoading(myProfileIsLoading);
+            }
+        } else {
+            fetchAttendeeProfile(id);
+            if (attendeeProfile) {
+                setData(attendeeProfile);
+                setIsLoading(attendeeProfileIsLoading);
+            }
+        }
+    }, [attendeeProfile, myProfile, id]);
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Card
                 style={{
                     width: '90%',
                 }}
-                cover={
-                    <Image
-                        height={250}
-                        alt='example'
-                        src={data?.cover_img ?? 'https://picsum.photos/1000/300'}
-                    />
-                }
+                cover={<Image height={250} alt="example" src={data?.cover_img ?? 'https://picsum.photos/1000/300'} />}
                 // actions={[
                 //     <SettingOutlined key="setting" />,
                 //     <EditOutlined key="edit" />,
@@ -124,47 +139,21 @@ const ShowAttendeProfile = () => {
                         />
                     </Skeleton>
 
-                    <Row style={{ marginLeft: '10px' }}>
-                        {/* <Space.Compact block> */}
-                        {/* <Tooltip title="Settings">
-                                        <Button icon={<SettingOutlined />} />
-                                    </Tooltip> */}
-                        <Tooltip title='Edit Your Profile'>
-                            <Button
-                                icon={<EditOutlined />}
-                                onClick={() => setIsUpdateModalOpen(true)}
-                            />
-                        </Tooltip>
-
-                        <Dropdown
-                            placement='bottomRight'
-                            overlay={
-                                <Menu
-                                    items={[
-                                        {
-                                            key: '1',
-                                            label: 'Report',
-                                            icon: <WarningOutlined />,
-                                        },
-                                        {
-                                            key: '2',
-                                            label: 'Mail',
-                                            icon: <MailOutlined />,
-                                        },
-                                        {
-                                            key: '3',
-                                            label: 'Mobile',
-                                            icon: <MobileOutlined />,
-                                        },
-                                    ]}
+                    {!id && (
+                        <Row style={{ marginLeft: '10px' }}>
+                            <Tooltip title="Edit Your Profile">
+                                <Button icon={<EditOutlined />} onClick={() => setIsUpdateModalOpen(true)} />
+                            </Tooltip>
+                            <Tooltip title="Show Your Events">
+                                <Button
+                                    icon={<CalendarOutlined />}
+                                    onClick={() => {
+                                        navigate(`/attendee/my-profile/events`);
+                                    }}
                                 />
-                            }
-                            trigger={['click']}
-                        >
-                            <Button icon={<EllipsisOutlined />} />
-                        </Dropdown>
-                        {/* </Space.Compact> */}
-                    </Row>
+                            </Tooltip>
+                        </Row>
+                    )}
                 </div>
 
                 <Row
@@ -172,16 +161,15 @@ const ShowAttendeProfile = () => {
                     style={{
                         display: 'flex',
                         justifyContent: 'center',
-                        marginTop: '1.5em',
+                        marginTop: '2.5em',
                         width: '100%',
                     }}
+                    align={'middle'}
                 >
-                    <Col
-                        xs={24}
-                        sm={24}
-                        md={14}
-                    >
+                    <Col xs={24} sm={24} md={14}>
                         <Card
+                            bodyStyle={{ padding: '5px' }}
+                            headStyle={{ padding: '5px' }}
                             style={{
                                 height: '100%',
                                 padding: '10px',
@@ -214,74 +202,86 @@ const ShowAttendeProfile = () => {
                                                 margin: '15px 0px 15px 15px',
                                             }}
                                         >
-                                            {data?.result.contacts?.map((contact) => (
-                                                <Tooltip
-                                                    title={contact.contact_name}
-                                                    key={contact.id}
-                                                >
-                                                    <a
-                                                        href={getContactLink(contact.contact_name)}
-                                                        target='_blank'
-                                                        rel='noopener noreferrer'
-                                                    >
-                                                        {contact.contact_name === 'WhatsApp' && (
-                                                            <WhatsAppOutlined
-                                                                style={{
-                                                                    fontSize: '24px',
-                                                                    color: '#25D366',
-                                                                }}
-                                                            />
-                                                        )}
-                                                        {contact.contact_name === 'LinkedIn' && (
-                                                            <LinkedinOutlined
-                                                                style={{
-                                                                    fontSize: '24px',
-                                                                    color: '#0077B5',
-                                                                }}
-                                                            />
-                                                        )}
-                                                        {contact.contact_name === 'Facebook' && (
-                                                            <FacebookOutlined
-                                                                style={{
-                                                                    fontSize: '24px',
-                                                                    color: '#3b5998',
-                                                                }}
-                                                            />
-                                                        )}
-                                                        {contact.contact_name === 'Twitter' && (
-                                                            <TwitterOutlined
-                                                                style={{
-                                                                    fontSize: '24px',
-                                                                    color: '#1DA1F2',
-                                                                }}
-                                                            />
-                                                        )}
-                                                        {contact.contact_name === 'Email' && (
-                                                            <MailOutlined
-                                                                style={{
-                                                                    fontSize: '24px',
-                                                                    color: 'black',
-                                                                }}
-                                                            />
-                                                        )}
-                                                        {contact.contact_name === 'Phone Number' && (
-                                                            <a
-                                                                href={`tel:${contact.value}`}
-                                                                onClick={() =>
-                                                                    (window.location.href = `tel:${contact.value}`)
-                                                                }
-                                                            >
-                                                                <PhoneOutlined
-                                                                    style={{
-                                                                        fontSize: '24px',
-                                                                        // color: "black",
-                                                                    }}
-                                                                />
-                                                            </a>
-                                                        )}
-                                                    </a>
+                                            <Dropdown
+                                                placement="bottomRight"
+                                                overlay={
+                                                    <Menu>
+                                                        {data?.result.contacts?.map((contact) => (
+                                                            <Menu.Item key={contact.id}>
+                                                                <Tooltip title={contact.contact_name}>
+                                                                    <a
+                                                                        href={
+                                                                            contact.contact_name === 'Phone Number'
+                                                                                ? `tel:${contact.value}`
+                                                                                : getContactLink(contact.contact_name)
+                                                                        }
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                    >
+                                                                        {contact.contact_name === 'WhatsApp' && (
+                                                                            <WhatsAppOutlined
+                                                                                style={{
+                                                                                    fontSize: '24px',
+                                                                                    color: '#25D366',
+                                                                                }}
+                                                                            />
+                                                                        )}
+                                                                        {contact.contact_name === 'LinkedIn' && (
+                                                                            <LinkedinOutlined
+                                                                                style={{
+                                                                                    fontSize: '24px',
+                                                                                    color: '#0077B5',
+                                                                                }}
+                                                                            />
+                                                                        )}
+                                                                        {contact.contact_name === 'Facebook' && (
+                                                                            <FacebookOutlined
+                                                                                style={{
+                                                                                    fontSize: '24px',
+                                                                                    color: '#3b5998',
+                                                                                }}
+                                                                            />
+                                                                        )}
+                                                                        {contact.contact_name === 'Twitter' && (
+                                                                            <TwitterOutlined
+                                                                                style={{
+                                                                                    fontSize: '24px',
+                                                                                    color: '#1DA1F2',
+                                                                                }}
+                                                                            />
+                                                                        )}
+                                                                        {contact.contact_name === 'Email' && (
+                                                                            <MailOutlined
+                                                                                style={{
+                                                                                    fontSize: '24px',
+                                                                                    color: 'black',
+                                                                                }}
+                                                                            />
+                                                                        )}
+                                                                        {contact.contact_name === 'Phone Number' && (
+                                                                            <PhoneOutlined
+                                                                                style={{ fontSize: '24px' }}
+                                                                                onClick={() =>
+                                                                                    (window.location.href = `tel:${contact.value}`)
+                                                                                }
+                                                                            />
+                                                                        )}
+                                                                    </a>
+                                                                </Tooltip>
+                                                            </Menu.Item>
+                                                        ))}
+                                                    </Menu>
+                                                }
+                                                trigger={['click']}
+                                            >
+                                                <Tooltip title="Contact Info">
+                                                    <Button
+                                                        type="primary"
+                                                        icon={<ContactsOutlined />}
+                                                        onClick={(e) => e.preventDefault()}
+                                                    />
                                                 </Tooltip>
-                                            ))}
+                                            </Dropdown>
                                         </Space>
                                     </Skeleton>
                                 </div>
@@ -301,30 +301,25 @@ const ShowAttendeProfile = () => {
                             </Skeleton>
                         </Card>
                     </Col>
-                    <Col
-                        xs={24}
-                        sm={24}
-                        md={10}
-                    >
+                    <Col xs={24} sm={24} md={10}>
                         <Card
+                            bodyStyle={{ padding: '5px' }}
+                            headStyle={{ padding: '5px' }}
                             style={{
-                                height: '100%',
+                                // height: '100%',
                                 padding: '10px',
                                 borderRadius: '8px',
                                 boxShadow: '0 3px 18px rgba(0, 0, 0, 0.1)',
                                 paddingBottom: '0px',
                                 margin: '0px',
                             }}
-                            size='small'
-                            type='inner'
+                            size="small"
+                            type="inner"
                         >
                             <div style={{ textAlign: 'center' }}>
                                 <div>
                                     <Row gutter={20}>
-                                        <Col
-                                            style={{ padding: '0px' }}
-                                            span={12}
-                                        >
+                                        <Col style={{ padding: '0px' }} span={12}>
                                             <Statistic
                                                 title={
                                                     <div
@@ -346,10 +341,7 @@ const ShowAttendeProfile = () => {
                                                 }
                                             />
                                         </Col>
-                                        <Col
-                                            style={{ padding: '0px' }}
-                                            span={12}
-                                        >
+                                        <Col style={{ padding: '0px' }} span={12}>
                                             <Statistic
                                                 title={
                                                     <div
@@ -365,10 +357,7 @@ const ShowAttendeProfile = () => {
                                                 prefix={
                                                     <Avatar.Group>
                                                         {badges.map((badge) => (
-                                                            <Tooltip
-                                                                title={badge.name}
-                                                                key={badge.id}
-                                                            >
+                                                            <Tooltip title={badge.name} key={badge.id}>
                                                                 <Avatar
                                                                     size={35}
                                                                     style={{
@@ -393,10 +382,7 @@ const ShowAttendeProfile = () => {
                                     </Row>
 
                                     <Row gutter={20}>
-                                        <Col
-                                            style={{ padding: '0px' }}
-                                            span={12}
-                                        >
+                                        <Col style={{ padding: '0px' }} span={12}>
                                             <Statistic
                                                 title={
                                                     <div
@@ -419,10 +405,7 @@ const ShowAttendeProfile = () => {
                                             />
                                         </Col>
 
-                                        <Col
-                                            style={{ padding: '0px' }}
-                                            span={12}
-                                        >
+                                        <Col style={{ padding: '0px' }} span={12}>
                                             <Statistic
                                                 title={
                                                     <div
@@ -452,18 +435,14 @@ const ShowAttendeProfile = () => {
                 </Row>
             </Card>
             <Modal
-                title='Edit Profile'
+                title="Edit Profile"
                 open={isUpdateModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
                 width={750}
                 footer={null}
             >
-                <UpdateProfileModal
-                    data={data}
-                    modalOk={handleOk}
-                    modalCancel={handleCancel}
-                />
+                <UpdateProfileModal data={data} modalOk={handleOk} modalCancel={handleCancel} />
             </Modal>
         </div>
     );
