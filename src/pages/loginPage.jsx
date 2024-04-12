@@ -7,7 +7,7 @@ import { message } from 'antd';
 import image1 from '../features/Attendees Profiles/assets/Hybrid-illu.png';
 import '../features/Attendees Profiles/styles/styles.css';
 import { useLoginMutation } from '../api/services/auth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormWelcomeTitle from '../features/Form/FormWelcomeTitle';
 import { useNotification } from '../utils/NotificationContext';
 import { useNavigate } from 'react-router-dom';
@@ -30,7 +30,6 @@ export default function RegisterAttendee() {
             .then((res) => {
                 openNotification('success', 'Login Successfully !');
                 navigate(`/attendee/my-profile`);
-                console.log(res);
             })
             .catch((error) => {
                 if (error.status === 401) {
@@ -39,6 +38,7 @@ export default function RegisterAttendee() {
                 console.error('Error:', error);
             });
     };
+
     return (
         <div
             style={{

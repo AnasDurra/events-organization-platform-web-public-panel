@@ -1,5 +1,6 @@
 import { apiSlice } from '../../../src/api/apiSlice';
 import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 
 export const auth = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -56,14 +57,11 @@ export const auth = apiSlice.injectEndpoints({
     }),
 });
 
-// export const getLoggedInUser = () => {
-//   const token = Cookies.get('accessToken');
-//   const decodedToken = jwtDecode(token);
+export const getLoggedInUser = () => {
+    const token = Cookies.get('accessToken');
+    const decodedToken = jwtDecode(token);
 
-//   return {
-//     username: decodedToken.username,
-//     full_name: decodedToken.full_name
-//   };
-// };
+    return decodedToken;
+};
 
 export const { useLoginMutation, useLogoutMutation, useSignupMutation } = auth;

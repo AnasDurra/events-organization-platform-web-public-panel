@@ -12,7 +12,7 @@ const apiError = (store) => (next) => async (action) => {
     //     } else errorMessage({ content: message });
     // } else
     if (statusCode > 299 && statusCode != 401) {
-        errorMessage({ content: message });
+        // errorMessage({ content: message }); // TODO comment this
     }
 
     return response;

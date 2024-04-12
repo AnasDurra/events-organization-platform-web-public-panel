@@ -2,19 +2,17 @@ import { useEffect, useState } from 'react';
 import {
     CheckOutlined,
     EditOutlined,
-    EllipsisOutlined,
     FacebookOutlined,
     LinkedinOutlined,
     MailOutlined,
-    MobileOutlined,
     PhoneOutlined,
     StarFilled,
     TwitterOutlined,
     UserOutlined,
-    WarningOutlined,
     ContactsOutlined,
     WhatsAppOutlined,
     CalendarOutlined,
+    EllipsisOutlined,
 } from '@ant-design/icons';
 import {
     Avatar,
@@ -22,7 +20,6 @@ import {
     Card,
     Col,
     Dropdown,
-    Grid,
     Image,
     Menu,
     Modal,
@@ -41,7 +38,10 @@ import UpdateProfileModal from './UpdateProfileModal';
 
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { getLoggedInUser } from '../../api/services/auth';
+
 const ShowAttendeProfile = () => {
+    const [user, setUser] = useState(null);
     const { id } = useParams();
 
     const navigate = useNavigate();
@@ -65,6 +65,22 @@ const ShowAttendeProfile = () => {
         setIsUpdateModalOpen(false);
     };
 
+    const confirmBlockAttendee = () => {
+        Modal.confirm({
+            title: 'Are you sure you want to block this attendee?',
+            content: 'Blocking this attendee will restrict their access to certain features.',
+            okText: 'Yes, Block',
+            cancelText: 'Cancel',
+            onOk: console.log('done'),
+        });
+    };
+
+    useEffect(() => {
+        const loggedUser = getLoggedInUser();
+        setUser(loggedUser);
+        console.log(loggedUser);
+    }, []);
+
     useEffect(() => {
         if (!id) {
             fetchMyProfile();
@@ -87,11 +103,6 @@ const ShowAttendeProfile = () => {
                     width: '90%',
                 }}
                 cover={<Image height={250} alt="example" src={data?.cover_img ?? 'https://picsum.photos/1000/300'} />}
-                // actions={[
-                //     <SettingOutlined key="setting" />,
-                //     <EditOutlined key="edit" />,
-                //     <EllipsisOutlined key="ellipsis" />,
-                // ]}
             >
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Skeleton
@@ -152,6 +163,28 @@ const ShowAttendeProfile = () => {
                                     }}
                                 />
                             </Tooltip>
+                        </Row>
+                    )}
+
+                    {id && (
+                        <Row style={{ marginLeft: '10px' }}>
+                            {user?.role_id == 3 && (
+                                <Dropdown
+                                    placement="bottomRight"
+                                    overlay={
+                                        <Menu onClick={confirmBlockAttendee}>
+                                            <Menu.Item key="block" style={{ color: 'red' }}>
+                                                Block User
+                                            </Menu.Item>
+                                        </Menu>
+                                    }
+                                    trigger={['click']}
+                                >
+                                    <Tooltip title="Block Attendee">
+                                        <Button icon={<EllipsisOutlined />} onClick={(e) => e.preventDefault()} />
+                                    </Tooltip>
+                                </Dropdown>
+                            )}
                         </Row>
                     )}
                 </div>
@@ -322,12 +355,7 @@ const ShowAttendeProfile = () => {
                                         <Col style={{ padding: '0px' }} span={12}>
                                             <Statistic
                                                 title={
-                                                    <div
-                                                    // style={{
-                                                    //     display: "flex",
-                                                    //     justifyContent: "center",
-                                                    // }}
-                                                    >
+                                                    <div>
                                                         <h3>Following</h3>
                                                     </div>
                                                 }
@@ -344,12 +372,7 @@ const ShowAttendeProfile = () => {
                                         <Col style={{ padding: '0px' }} span={12}>
                                             <Statistic
                                                 title={
-                                                    <div
-                                                    // style={{
-                                                    //     display: "flex",
-                                                    //     justifyContent: "center",
-                                                    // }}
-                                                    >
+                                                    <div>
                                                         <h3>Badges</h3>
                                                     </div>
                                                 }
@@ -385,12 +408,7 @@ const ShowAttendeProfile = () => {
                                         <Col style={{ padding: '0px' }} span={12}>
                                             <Statistic
                                                 title={
-                                                    <div
-                                                    // style={{
-                                                    //     display: "flex",
-                                                    //     justifyContent: "center",
-                                                    // }}
-                                                    >
+                                                    <div>
                                                         <h3>Events</h3>
                                                     </div>
                                                 }
@@ -408,12 +426,7 @@ const ShowAttendeProfile = () => {
                                         <Col style={{ padding: '0px' }} span={12}>
                                             <Statistic
                                                 title={
-                                                    <div
-                                                    // style={{
-                                                    //     display: "flex",
-                                                    //     justifyContent: "center",
-                                                    // }}
-                                                    >
+                                                    <div>
                                                         <h3>Level</h3>
                                                     </div>
                                                 }
