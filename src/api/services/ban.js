@@ -22,7 +22,13 @@ export const ban = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        isBlocked: builder.query({
+            query: (id) => ({
+                url: `organization/is-blocked/${id}`,
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
-export const { useBlockUserMutation, useUnBlockUserMutation, useBlockListQuery } = ban;
+export const { useBlockUserMutation, useUnBlockUserMutation, useBlockListQuery, useIsBlockedQuery } = ban;

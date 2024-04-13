@@ -16,8 +16,13 @@ import LoginPage from '../pages/loginPage';
 import ShowAttendeeEvents from '../features/Attendees Profiles/ShowAttendeeEvents';
 import ShowEventAttendees from '../features/Manage Events (org)/ShowEventAttendees';
 import BlockedUsersPage from '../features/ban/BlockedUsersPage';
+import NotFound from '../pages/notFound';
 
 export const router = createBrowserRouter([
+    {
+        path: '/not-found',
+        element: <NotFound />,
+    },
     {
         path: '/login',
         element: <LoginPage />,

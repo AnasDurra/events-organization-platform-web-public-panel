@@ -37,6 +37,7 @@ import { useLazyViewMyProfileQuery } from '../../api/services/attendeeProfile';
 import { useLazyViewAttendeeProfileQuery } from '../../api/services/attendeeProfile';
 import { useBlockUserMutation } from '../../api/services/ban';
 import { useUnBlockUserMutation } from '../../api/services/ban';
+import { useIsBlockedQuery } from '../../api/services/ban';
 
 import UpdateProfileModal from './UpdateProfileModal';
 
@@ -57,6 +58,12 @@ const ShowAttendeProfile = () => {
         useLazyViewAttendeeProfileQuery(id);
     const [blockMutation, { isLoading: blockIsLoading }] = useBlockUserMutation();
     const [unBlockMutation, { isLoading: unBlockIsLoading }] = useUnBlockUserMutation();
+    const {
+        data: isBlocked,
+        isLoading: isBlockedIsLoading,
+        isFetching,
+        refetch: refetchIsBlocked,
+    } = useIsBlockedQuery(id);
 
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -88,6 +95,7 @@ const ShowAttendeProfile = () => {
                             'success',
                             `${attendeeProfile?.result?.full_name} has been blocked successfully!`
                         );
+                        refetchIsBlocked(id);
                     })
                     .catch((error) => {
                         openNotification('warning', error?.data?.message);
@@ -113,6 +121,7 @@ const ShowAttendeProfile = () => {
                             'success',
                             `${attendeeProfile?.result?.full_name} has been unblocked successfully!`
                         );
+                        refetchIsBlocked(id);
                     })
                     .catch((error) => {
                         openNotification('warning', error.data.message);
@@ -152,7 +161,7 @@ const ShowAttendeProfile = () => {
                 }}
                 cover={<Image height={250} alt="example" src={data?.cover_img ?? 'https://picsum.photos/1000/300'} />}
             >
-                <Spin size="large" spinning={unBlockIsLoading || blockIsLoading}>
+                <Spin size="large" spinning={unBlockIsLoading || blockIsLoading || isBlockedIsLoading}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Skeleton
                             loading={isLoading}
@@ -224,13 +233,11 @@ const ShowAttendeProfile = () => {
                                         overlay={
                                             <Menu
                                                 onClick={
-                                                    data?.result?.isBlocked
-                                                        ? confirmUnblockAttendee
-                                                        : confirmBlockAttendee
+                                                    isBlocked?.result ? confirmUnblockAttendee : confirmBlockAttendee
                                                 }
                                             >
                                                 <Menu.Item key="block" style={{ color: 'red' }}>
-                                                    {data?.result?.isBlocked ? 'Unblock User' : 'Block User'}
+                                                    {isBlocked?.result ? 'Unblock User' : 'Block User'}
                                                 </Menu.Item>
                                             </Menu>
                                         }

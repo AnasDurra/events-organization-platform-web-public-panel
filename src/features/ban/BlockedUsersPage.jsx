@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { List, Dropdown, Button, Typography, Space, Select, Menu, Input, Badge, Modal, Spin } from 'antd';
 import { UnlockOutlined, EllipsisOutlined, RightOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const { Search } = Input;
 
 import moment from 'moment';
