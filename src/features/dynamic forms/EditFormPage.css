@@ -1,0 +1,17 @@
+.custom-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: #94a3b8 #dfdbe5;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+      width: 8px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: gray;
+      border-radius: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+      background-color: gray;
+  }

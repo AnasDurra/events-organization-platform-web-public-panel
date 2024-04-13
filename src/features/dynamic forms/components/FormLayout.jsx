@@ -1,29 +1,54 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 import { FaWpforms } from 'react-icons/fa';
 import { Col, Input, Menu, Row } from 'antd';
 import { FaFileAlt } from 'react-icons/fa';
-import './FormLayout.css';
+import styles from './FormLayout.module.css';
+import { useGetFormQuery, useUpdateFormMutation } from '../dynamicFormsSlice';
+import debounce from 'lodash.debounce';
 export default function FormLayout() {
+    let { form_id } = useParams();
+    const { data: { result: form } = { result: {} } } = useGetFormQuery(form_id);
+    const [updateForm] = useUpdateFormMutation();
+
+    const debounceUpdateForm = debounce(updateForm, 500);
+    
+    const handleFormNameChange = (e) => {
+        debounceUpdateForm({ fields: { name: e.target.value }, form_id });
+    };
     return (
-        <div className='flex flex-col  h-screen bg-gray-100  '>
+        <div className='flex flex-col  h-screen bg-gray-100 max-h-[100vh] overflow-y-auto '>
             <header className='sticky top-0 z-10 my-2'>
                 <Row
                     align={'middle'}
                     justify={'space-between'}
                 >
-                    <Col span={4}>
+                    <Col
+                        sm={{ span: 8 }}
+                        md={{ span: 8 }}
+                        lg={{ span: 4 }}
+                    >
                         <Row>
                             <Col>
                                 <FaFileAlt className='text-xl mx-2'></FaFileAlt>
                             </Col>
                             <Col>
-                                <Input placeholder='Form name'></Input>
+                                {form.name && (
+                                    <Input
+                                        placeholder='Form name'
+                                        defaultValue={form.name}
+                                        onChange={handleFormNameChange}
+                                    />
+                                )}
                             </Col>
                         </Row>
                     </Col>
 
-                    <Col span={16}>
+                    <Col
+                        sm={{ span: 4 }}
+                        md={{ span: 4 }}
+                        lg={{ span: 16 }}
+                    >
                         <ul className='flex space-x-4'>
                             <li
                                 onClick={() => {
@@ -49,7 +74,7 @@ export default function FormLayout() {
                     </Col>
                 </Row>
             </header>
-            <main className='border flex-1 paper'>
+            <main className={`border flex-1 ${styles.paper}`}>
                 <Outlet />
             </main>
         </div>

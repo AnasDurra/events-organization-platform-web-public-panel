@@ -39,4 +39,5 @@ const triggerStyle = {
     alignItems: 'center',
     textAlign: 'center',
     paddingLeft: '1em',
+    height:'10vh'
 };

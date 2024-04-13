@@ -1,57 +1,33 @@
-import React from 'react';
+import { ContainerOutlined, SolutionOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-
+import React from 'react';
 const { Sider: AntDSider } = Layout;
+import { useNavigate } from 'react-router-dom';
 
-const Sider = ({ isSiderOpen }) => {
-    const siderMenuStyle = {
-        height: '100%',
+function getItem(label, key, icon, children) {
+    return {
+        key,
+        icon,
+        children,
+        label,
+    };
+}
+const items = [
+    getItem('forms', '/forms', <ContainerOutlined />),
+    getItem('profile', '/org', <SolutionOutlined />),
+    getItem('members', '/members', <SolutionOutlined />),
+];
+
+export default function Sider({ isSiderOpen }) {
+    const navigate = useNavigate();
+
+    const handleMenuClick = (item) => {
+        navigate(item.key);
     };
 
-    const items = [
-        {
-            key: 'sub1',
-            icon: <UserOutlined />,
-            label: 'subnav 1',
-            children: Array.from({ length: 4 }, (_, j) => ({
-                key: `option${j + 1}`,
-                label: `option ${j + 1}`,
-            })),
-        },
-        {
-            key: 'sub2',
-            icon: <LaptopOutlined />,
-            label: 'subnav 2',
-            children: Array.from({ length: 4 }, (_, j) => ({
-                key: `option${j + 5}`,
-                label: `option ${j + 5}`,
-            })),
-        },
-        {
-            key: 'sub3',
-            icon: <NotificationOutlined />,
-            label: 'subnav 3',
-            children: Array.from({ length: 4 }, (_, j) => ({
-                key: `option${j + 9}`,
-                label: `option ${j + 9}`,
-            })),
-        },
-    ];
-
     return (
-        <AntDSider collapsedWidth="0" trigger={null} collapsed={!isSiderOpen}>
-            <Menu mode="inline" style={siderMenuStyle} defaultSelectedKeys={['option1']}>
-                {items.map((item) => (
-                    <Menu.SubMenu key={item.key} icon={item.icon} title={item.label}>
-                        {item.children.map((child) => (
-                            <Menu.Item key={child.key}>{child.label}</Menu.Item>
-                        ))}
-                    </Menu.SubMenu>
-                ))}
-            </Menu>
+        <AntDSider collapsedWidth="0" trigger={null} collapsed={!isSiderOpen} className="h-[90vh] overflow-y-auto">
+            <Menu mode="inline" items={items} onClick={handleMenuClick} className="min-h-[90vh]" />
         </AntDSider>
     );
-};
-
-export default Sider;
+}
