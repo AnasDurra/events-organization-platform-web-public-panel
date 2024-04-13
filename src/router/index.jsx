@@ -13,6 +13,7 @@ import CreateEvent from '../features/Manage Events (org)/CreateEvent';
 import ShowEvent from '../features/Manage Events (org)/ShowEvent';
 import ShowAttendeeEvents from '../features/Attendees Profiles/ShowAttendeeEvents';
 import ShowEventAttendees from '../features/Manage Events (org)/ShowEventAttendees';
+import BlockedUsersPage from '../features/ban/BlockedUsersPage';
 
 export const router = createBrowserRouter([
     {
@@ -55,6 +56,15 @@ export const router = createBrowserRouter([
                     {
                         path: 'show/:id/attendees',
                         element: <ShowEventAttendees />,
+                    },
+                ],
+            },
+            {
+                path: '/org',
+                children: [
+                    {
+                        path: 'blocklist',
+                        element: <BlockedUsersPage />,
                     },
                 ],
             },

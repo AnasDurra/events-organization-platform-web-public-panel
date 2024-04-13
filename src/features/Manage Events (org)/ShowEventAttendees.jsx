@@ -20,7 +20,7 @@ const ShowEventAttendees = () => {
     const [hoveredIndex, setHoveredIndex] = useState(null);
 
     const handleClick = (attendeeId) => {
-        // navigate(`/attendee-profile/${attendeeId}`); // TODO back to this
+        navigate(`/attendee-profile/${attendeeId}`);
     };
     const handleGoBack = () => {
         navigate(-1);
@@ -131,7 +131,14 @@ const ShowEventAttendees = () => {
                         </div>
                     )}
                 </div>
-
+                <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+                    <Typography.Text style={{ fontSize: '14px', fontWeight: 'bold', marginRight: '8px' }}>
+                        Total Attendees:
+                    </Typography.Text>
+                    <Typography.Text style={{ fontSize: '14px', color: '#1890ff' }}>
+                        {data?.result?.length ?? 0}
+                    </Typography.Text>
+                </div>
                 <List
                     itemLayout="horizontal"
                     dataSource={filteredAttendees}
