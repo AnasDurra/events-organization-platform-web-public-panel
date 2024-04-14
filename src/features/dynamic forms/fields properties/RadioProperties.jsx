@@ -42,12 +42,14 @@ export default function RadioProperties({
 
     const handleOptionChange = (index, value) => {
         const updatedOptions = [...options];
-        updatedOptions[index].name = value;
+        updatedOptions[index] = { ...updatedOptions[index], name: value };
         setOptions(updatedOptions);
         onOptionsChange(updatedOptions);
     };
 
+
     useEffect(() => {
+        console.log("update fild: ",field)
         if (field) {
             document.getElementById('tf-prop-name').value = field.name || '';
             document.getElementById('tf-prop-label').value = field.label || '';
@@ -112,7 +114,7 @@ export default function RadioProperties({
                 </Title>
                 <Checkbox
                     id='tf-prop-isRequired'
-                    defaultChecked={field?.isRequired}
+                    defaultChecked={field?.required}
                     onChange={handleIsRequiredCheckboxChange}
                 />
             </Space>

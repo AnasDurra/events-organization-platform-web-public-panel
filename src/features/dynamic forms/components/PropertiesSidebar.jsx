@@ -1,9 +1,10 @@
 import React from 'react';
 import TextFieldProperties from '../fields properties/TextFieldProperties';
 import RadioProperties from '../fields properties/RadioProperties';
-import { itemTypes } from '../constants';
+import { SidebarItemsIDs } from '../constants';
 import DateProperties from '../fields properties/DateProperties';
 import NumberProperties from '../fields properties/NumberProperties';
+import debounce from 'lodash.debounce';
 
 export default function PropertiesSidebar({ field, onUpdateProperties, onDeleteField }) {
     const handleNameChange = (newName) => {
@@ -15,16 +16,17 @@ export default function PropertiesSidebar({ field, onUpdateProperties, onDeleteF
     };
 
     const handleIsRequiredChange = (newIsRequired) => {
-        onUpdateProperties({ ...field, isRequired: newIsRequired });
+        onUpdateProperties({ ...field, required: newIsRequired });
     };
 
     const handleOptionsChange = (newOptions) => {
         onUpdateProperties({ ...field, options: newOptions });
     };
+    const debouncedHandleOptionsChange = debounce(handleOptionsChange, 1000);
 
     return (
         <div className='w-full h-[90vh] overflow-y-auto'>
-            {field.type === itemTypes.TEXTFIELD && (
+            {field.fieldType.id == SidebarItemsIDs.TEXTFIELD && (
                 <TextFieldProperties
                     field={field}
                     onNameChange={handleNameChange}
@@ -34,18 +36,18 @@ export default function PropertiesSidebar({ field, onUpdateProperties, onDeleteF
                 />
             )}
 
-            {field.type === itemTypes.RADIO && (
+            {field.fieldType.id == SidebarItemsIDs.RADIO && (
                 <RadioProperties
                     field={field}
                     onNameChange={handleNameChange}
                     onLabelChange={handleLabelChange}
                     onIsRequiredChange={handleIsRequiredChange}
-                    onOptionsChange={handleOptionsChange}
+                    onOptionsChange={debouncedHandleOptionsChange}
                     onDelete={onDeleteField}
                 />
             )}
 
-            {field.type === itemTypes.DATE && (
+            {field.fieldType.id == SidebarItemsIDs.DATE && (
                 <DateProperties
                     field={field}
                     onNameChange={handleNameChange}
@@ -55,7 +57,7 @@ export default function PropertiesSidebar({ field, onUpdateProperties, onDeleteF
                 />
             )}
 
-            {field.type === itemTypes.NUMBER && (
+            {field.fieldType.id == SidebarItemsIDs.NUMBER && (
                 <NumberProperties
                     field={field}
                     onNameChange={handleNameChange}

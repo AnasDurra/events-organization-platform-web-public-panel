@@ -22,3 +22,5 @@ export const SidebarItemsTypeByID = {
     [SidebarItemsIDs.DATE]: itemTypes.DATE,
     [SidebarItemsIDs.NUMBER]: itemTypes.NUMBER,
 };
+
+export const debounceTime = 500;

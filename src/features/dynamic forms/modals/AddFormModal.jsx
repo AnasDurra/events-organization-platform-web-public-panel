@@ -5,7 +5,7 @@ import { useAddNewFormMutation } from '../dynamicFormsSlice';
 
 export default function AddFormModal({ isOpen, onClose }) {
     const [form] = Form.useForm();
-    let { organization_id } = useParams();
+    let { organization_id = 1 } = useParams();
     const [addNewForm] = useAddNewFormMutation();
 
     const handleFormSubmit = (fields) => {

@@ -82,7 +82,7 @@ export default function TextFieldProperties({ field, onNameChange, onLabelChange
                 </Title>
                 <Checkbox
                     id='tf-prop-isRequired'
-                    defaultChecked={field?.isRequired}
+                    defaultChecked={field?.required}
                     onChange={handleIsRequiredCheckboxChange}
                 />
             </Space>

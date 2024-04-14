@@ -1,4 +1,5 @@
 import { Form, InputNumber, Space } from 'antd';
+import {FieldNumberOutlined} from '@ant-design/icons'
 import Title from 'antd/es/typography/Title';
 import React from 'react';
 import { WiStars } from 'react-icons/wi';
@@ -15,23 +16,19 @@ export default function FormNumberOverview({ isDragging, field, groupIndex, fiel
                 direction='vertical'
                 className='w-full'
             >
-                <Title
-                    style={{ color: 'gray' }}
-                    level={5}
-                >
-                    {field?.label ? field.label : 'label'}
-                </Title>
+                <div className='text-gray-500 flex items-center space-x-2  w-full mb-2'>
+                    <span>{field?.label}</span>
+                    {field?.required && <WiStars className='ml-2' />}
+                </div>
 
-                <Space.Compact className='w-[50%] flex items-center'>
-                    <Form.Item name={['groups', groupIndex, 'fields', fieldIndex]}>
-                        <InputNumber
-                            className='w-[100%] '
-                            disabled
-                            placeholder='enter number'
-                        />
-                        {field?.isRequired && <WiStars className='ml-2' />}
-                    </Form.Item>
-                </Space.Compact>
+                <Form.Item name={['groups', groupIndex, 'fields', fieldIndex, 'name']}>
+                    <InputNumber
+                        className='w-[100%] '
+                        disabled
+                        placeholder='enter number'
+                        suffix ={<FieldNumberOutlined />}
+                    />
+                </Form.Item>
             </Space.Compact>
         </div>
     );

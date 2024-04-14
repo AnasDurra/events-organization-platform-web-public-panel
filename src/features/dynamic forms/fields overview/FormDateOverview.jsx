@@ -15,23 +15,20 @@ export default function FormDateOverview({ isDragging, field, groupIndex, fieldI
                 direction='vertical'
                 className='w-full'
             >
-                <Title
-                    style={{ color: 'gray' }}
-                    level={5}
-                >
-                    {field?.label ? field.label : 'label'}
-                </Title>
+                <div className=' text-gray-500 flex items-center space-x-2  w-full mb-2'>
+                    <span>{field?.label}</span>
+                    {field?.required && <WiStars className='ml-2' />}
+                </div>
 
-                <Space.Compact className='w-[50%] flex items-center'>
-                    <Form.Item name={['groups', groupIndex, 'fields', fieldIndex]}>
-                        <DatePicker
-                            className='w-[100%] '
-                            disabled
-                            placeholder='pick a date'
-                        />
-                        {field?.isRequired && <WiStars className='ml-2' />}
-                    </Form.Item>
-                </Space.Compact>
+                <Form.Item
+                //name={['groups', groupIndex, 'fields', fieldIndex]}
+                >
+                    <DatePicker
+                        className='w-[100%] '
+                        disabled
+                        placeholder='pick a date'
+                    />
+                </Form.Item>
             </Space.Compact>
         </div>
     );

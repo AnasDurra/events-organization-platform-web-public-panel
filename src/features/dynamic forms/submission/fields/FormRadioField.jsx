@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Space, Radio, Typography, Form, Input } from 'antd';
 import { WiStars } from 'react-icons/wi';
-export default function FormRadioField() {
+export default function FormRadioField({ field, groupIndex, fieldIndex }) {
     const [value, setValue] = useState();
 
     const handleRadioChange = (e) => {
@@ -15,15 +15,24 @@ export default function FormRadioField() {
                 className='w-full'
             >
                 <div className='flex items-center space-x-2  w-full mb-2'>
-                    <span>label</span>
-                    {/*     {field?.isRequired && <WiStars className='ml-2' />} */}
+                    <span>{field?.label}</span>
+                    {field?.required && <WiStars className='ml-2' />}
                     <WiStars />
                 </div>
 
-                <Form.Item>
+                <Form.Item
+                    name={['groups', groupIndex, 'fields', fieldIndex, 'field_id']}
+                    initialValue={field?.id}
+                    hidden
+                />
+
+                <Form.Item
+                    name={['groups', groupIndex, 'fields', fieldIndex, 'value']}
+                    required={field?.required}
+                >
                     <Radio.Group
-                        value={value}
-                        onChange={handleRadioChange}
+                    // value={value}
+                    //onChange={handleRadioChange}
                     >
                         <Space direction='vertical'>
                             {fakeOptions?.map((option, index) => (

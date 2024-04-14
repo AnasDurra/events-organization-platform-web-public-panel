@@ -17,51 +17,48 @@ export default function FormRadioOverview({ isDragging, field, groupIndex, field
                 opacity: isDragging ? 0.5 : 1,
             }}
         >
-            <Space
-                direction='vertical'
+            <div className='text-gray-500 flex items-center space-x-2  w-full mb-2'>
+                <span>{field?.label}</span>
+                {field?.required && <WiStars className='ml-2' />}
+            </div>
+
+            <Radio.Group
+                onChange={onChange}
+                value={value}
                 className='w-full'
             >
-                <Space.Compact block>
-                    <Title
-                        style={{ color: 'gray' }}
-                        level={5}
+                {field.options?.length ? (
+                    <Form.Item
+                        name={['groups', groupIndex, 'fields', fieldIndex]}
+                        className='w-full'
                     >
-                        {field?.label ? field.label : 'Label'}
-                    </Title>
-                    {field?.isRequired && <WiStars className='ml-2' />}
-                </Space.Compact>
-
-                <Radio.Group
-                    onChange={onChange}
-                    value={value}
-                >
-                    <Space direction='vertical'>
-                        {field.options?.length ? (
-                            <Form.Item name={['groups', groupIndex, 'fields', fieldIndex]}>
-                                <Radio.Group>
-                                    {field?.options?.map((option, index) => (
-                                        <Radio
-                                            key={'radio' + field.id + index}
-                                            value={option.name}
-                                            style={{ color: 'gray' }}
-                                        >
-                                            {option.name}
-                                        </Radio>
-                                    ))}
-                                </Radio.Group>
-                            </Form.Item>
-                        ) : (
-                            <Radio
-                                key={'radio' + field.id + 'dummy'}
-                                value={undefined}
-                                style={{ color: 'gray' }}
+                        <Radio.Group disabled>
+                            <Space
+                                direction='vertical'
+                                className='w-full'
                             >
-                                Add options
-                            </Radio>
-                        )}
-                    </Space>
-                </Radio.Group>
-            </Space>
+                                {field?.options?.map((option, index) => (
+                                    <Radio
+                                        key={'radio' + field.id + index}
+                                        value={option.name}
+                                        style={{ color: 'gray' }}
+                                    >
+                                        {option.name}
+                                    </Radio>
+                                ))}
+                            </Space>
+                        </Radio.Group>
+                    </Form.Item>
+                ) : (
+                    <Radio
+                        key={'radio' + field.id + 'dummy'}
+                        value={undefined}
+                        style={{ color: 'gray' }}
+                    >
+                        Add options
+                    </Radio>
+                )}
+            </Radio.Group>
         </div>
     );
 }

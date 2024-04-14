@@ -1,4 +1,5 @@
-import { Badge, Form, Input, Space } from 'antd';
+import { FieldStringOutlined } from '@ant-design/icons';
+import { Form, Input, Space } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React from 'react';
 import { WiStars } from 'react-icons/wi';
@@ -15,26 +16,19 @@ export default function FormTextFieldOverview({ isDragging, field, groupIndex, f
                 direction='vertical'
                 className='w-full'
             >
-                <Title
-                    style={{ color: 'gray' }}
-                    level={5}
-                >
-                    {field?.label ? field.label : 'label'}
-                </Title>
+               <div className='text-gray-500 flex items-center space-x-2  w-full mb-2'>
+                    <span>{field?.label}</span>
+                    {field?.required && <WiStars className='ml-2' />}
+                </div>
 
-                <Space.Compact className='w-[50%] flex items-center'>
-                    <Form.Item
-                        label='name'
-                        name={['groups', groupIndex, 'fields', fieldIndex]}
-                    >
-                        <Input
-                            className='w-[100%] '
-                            disabled
-                            placeholder='field name'
-                        />
-                        {field?.isRequired && <WiStars className='ml-2' />}
-                    </Form.Item>
-                </Space.Compact>
+                <Form.Item name={['groups', groupIndex, 'fields', fieldIndex, 'name']}>
+                    <Input
+                        className='w-[100%] '
+                        disabled
+                        placeholder='field name'
+                        suffix={<FieldStringOutlined />}
+                    />
+                </Form.Item>
             </Space.Compact>
         </div>
     );
