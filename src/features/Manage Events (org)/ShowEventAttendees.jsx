@@ -7,12 +7,13 @@ import { useEffect, useState } from 'react';
 const { Search } = Input;
 const { Option } = Select;
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { useShowEventAttendeesQuery } from '../../api/services/events';
 
 const ShowEventAttendees = () => {
-    const { data, error, isLoading } = useShowEventAttendeesQuery(1);
+    const { id } = useParams();
+    const { data, error, isLoading } = useShowEventAttendeesQuery(id);
     const navigate = useNavigate();
 
     const [filteredAttendees, setFilteredAttendees] = useState(attendees);

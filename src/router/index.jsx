@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import AppLayout from '../AppLayout';
 import RegisterAttendee from '../features/Attendees Profiles/RegisterAttendee';
 import ShowAttendeProfile from '../features/Attendees Profiles/ShowAttendeProfile';
+import ShowMyProfile from '../features/Attendees Profiles/ShowMyProfile';
 import CreateEvent from '../features/Manage Events (org)/CreateEvent';
 import ShowEvent from '../features/Manage Events (org)/ShowEvent';
 import EditFormPage from '../features/dynamic forms/EditFormPage';
@@ -38,7 +39,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: '/attendee/my-profile',
-                element: <ShowAttendeProfile />,
+                element: <ShowMyProfile />,
             },
             {
                 path: '/attendee/my-profile/events',
@@ -67,13 +68,8 @@ export const router = createBrowserRouter([
                 ],
             },
             {
-                path: '/org',
-                children: [
-                    {
-                        path: 'blocklist',
-                        element: <BlockedUsersPage />,
-                    },
-                ],
+                path: '/org/blocklist',
+                element: <BlockedUsersPage />,
             },
 
             { path: '/org', element: <ProfilePage /> },

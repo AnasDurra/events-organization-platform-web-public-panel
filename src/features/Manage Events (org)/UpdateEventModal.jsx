@@ -60,7 +60,7 @@ const UpdateEventModal = ({
                     <div
                         style={{
                             padding: '20px',
-                            background: '#f5f5f5',
+                            background: '#FAFAFA',
                         }}
                     >
                         <div
@@ -160,7 +160,7 @@ const UpdateEventModal = ({
                     <div
                         style={{
                             padding: '20px',
-                            background: '#f5f5f5',
+                            background: '#FAFAFA',
                         }}
                     >
                         <div
@@ -219,7 +219,7 @@ const UpdateEventModal = ({
                         style={{
                             padding: '20px',
 
-                            background: '#f5f5f5',
+                            background: '#FAFAFA',
                         }}
                     >
                         <div

@@ -28,8 +28,21 @@ export default function RegisterAttendee() {
         loginMutation(data)
             .unwrap()
             .then((res) => {
-                openNotification('success', 'Login Successfully !');
-                navigate(`/attendee/my-profile`);
+                console.log(res);
+                openNotification(
+                    'success',
+                    'Login Successfully',
+                    `Welcome back, ${res.result.username}! We're glad to see you again.`
+                );
+                if (res.result.user_role == 3) {
+                    navigate(`/attendee/my-profile`);
+                } else if (res.result.user_role == 2) {
+                    navigate(`/org`);
+                }
+                // TODO handle admin navigation
+                else if (res.result.user_role == 1) {
+                    // navigate(`/admin`);
+                }
             })
             .catch((error) => {
                 if (error.status === 401) {

@@ -18,6 +18,7 @@ const authMiddleware = (store) => (next) => async (action) => {
             !window.location.pathname.startsWith('/login')
         ) {
             console.log('Here');
+            console.log(response);
             errorMessage({ content: 'Session Timeout.. login again' });
             router.navigate('/login', { replace: true });
         }

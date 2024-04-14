@@ -31,4 +31,4 @@ export const ban = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useBlockUserMutation, useUnBlockUserMutation, useBlockListQuery, useIsBlockedQuery } = ban;
+export const { useBlockUserMutation, useUnBlockUserMutation, useBlockListQuery, useLazyIsBlockedQuery } = ban;

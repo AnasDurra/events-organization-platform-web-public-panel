@@ -9,7 +9,7 @@ const LocationOnMapsModal = ({ isLocationOnMapModalOpen, setIsLocationOnMapModal
     const [tempPosition, setTempPosition] = useState(position?.lat ? position : DefaultLocation);
 
     const handleOk = () => {
-        message.success('Location Add Successfully .. ');
+        message.success('Location Updated Successfully ..');
         setIsLocationOnMapModalOpen(false);
         setPosition(tempPosition ?? DefaultLocation);
     };

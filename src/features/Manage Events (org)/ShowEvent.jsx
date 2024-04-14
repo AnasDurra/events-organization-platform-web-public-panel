@@ -272,7 +272,7 @@ const ShowEvent = () => {
                                                     </div>
                                                 </Space>
 
-                                                <Space wrap Space>
+                                                <Space wrap>
                                                     <UserOutlined />
                                                     <Typography.Text strong>Event Target Age Group:</Typography.Text>
                                                     <div>
