@@ -1,11 +1,25 @@
-import { DeleteOutlined, FilterOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Col, Collapse, Image, Input, InputNumber, Row, Select } from 'antd';
+import { DeleteOutlined, DownOutlined, FilterOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Button, Col, Collapse, Image, Input, InputNumber, List, Row, Select } from 'antd';
 import Title from 'antd/es/typography/Title';
+import Typography from 'antd/es/typography/Typography';
 import React from 'react';
+import Filter from './Filter';
+
+const data = ['pending: 100', 'accepted: 40', 'rejected: 30', 'filtered out: 33'];
 
 export default function ViewFormSubmissions() {
     return (
         <div className='grid grid-cols-12 min-h-[100vh]  '>
+            <div className='sm:col-span-1 sm:col-start-2  mt-20 hidden lg:block '>
+                <List
+                    //                    split={false}
+                    size='small'
+                    dataSource={data}
+                    renderItem={(item, index) => <List.Item> {item}</List.Item>}
+                    header={'Status'}
+                    bordered
+                />
+            </div>
             <div className='col-span-12 sm:col-span-8 sm:col-start-3  h-full w-full'>
                 <Title
                     level={2}
@@ -14,8 +28,8 @@ export default function ViewFormSubmissions() {
                     Submissions
                 </Title>
 
-                <div className='grid grid-cols-8 h-full'>
-                    <div className='col-span-8 sm:col-span-6 sm:col-start-2   '>
+                <div className='grid grid-cols-8'>
+                    <div className='col-span-8 lg:col-span-6 lg:col-start-2   '>
                         <Row
                             className='bg-gray-100/50 border-2 border-slate-500 rounded-lg'
                             align={'middle'}
@@ -77,6 +91,7 @@ export default function ViewFormSubmissions() {
                                     <Col span={8}>
                                         <Select
                                             size='small'
+                                            variant='borderless'
                                             showAction={true}
                                             onChange={() => {}}
                                             defaultValue={'jack'}
@@ -101,7 +116,7 @@ export default function ViewFormSubmissions() {
                                             ]}
                                         />
                                     </Col>
-                                    <Col span={8}>
+                                    <Col span={4}>
                                         <Button
                                             type='text'
                                             icon={<DeleteOutlined></DeleteOutlined>}
@@ -114,14 +129,21 @@ export default function ViewFormSubmissions() {
                         <Collapse
                             size='middle'
                             bordered={false}
-                            expandIcon={({ isActive }) => <FilterOutlined></FilterOutlined>}
+                            expandIcon={({ isActive }) =>
+                                isActive ? <DownOutlined /> : <FilterOutlined></FilterOutlined>
+                            }
                             className=' my-2'
                             expandIconPosition='start'
                             items={[
                                 {
                                     key: '1',
-                                    label: <Title level={5}>Filters</Title>,
-                                    children: <p>hi</p>,
+                                    label: (
+                                        <div className='flex space-x-2 items-center'>
+                                            <span className='font-bold'>Filters</span>
+                                            <span>(2 active filters)</span>
+                                        </div>
+                                    ),
+                                    children: <Filter />,
                                 },
                             ]}
                         />
@@ -131,7 +153,12 @@ export default function ViewFormSubmissions() {
                             justify={'space-evenly'}
                             gutter={16}
                         >
-                            <Col xs={12} sm={10} md={10} lg={8}>
+                            <Col
+                                xs={12}
+                                sm={10}
+                                md={10}
+                                lg={8}
+                            >
                                 <Row gutter={16}>
                                     <Col span={6}>
                                         <Image
