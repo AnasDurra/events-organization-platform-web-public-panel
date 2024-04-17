@@ -5,10 +5,14 @@ import FormRadioField from './fields/FormRadioField';
 import FormNumberField from './fields/FormNumberField';
 import FormDateField from './fields/FormDateField';
 import { SidebarItemsIDs } from '../constants';
-export default function FormGroup({ group, groupsLength, groupIndex }) {
+export default function FormGroup({ group, groupsLength, groupIndex, isCustomStyle }) {
     console.log(group);
     return (
-        <div className='min-h-[80vh] p-4 m-4 bg-gray-100/75 rounded-lg border-4 border-teal-500/75 shadow-2xl '>
+        <div
+            className={`min-h-[80vh] p-4 m-4 bg-gray-100/75 rounded-lg  shadow-lg ${
+                isCustomStyle ? 'border-2 border-slate-500/75' : 'border-4 border-teal-500/75'
+            } `}
+        >
             <Typography.Title level={4}>{group?.name}</Typography.Title>
             <Typography.Paragraph>{group?.description}</Typography.Paragraph>
 

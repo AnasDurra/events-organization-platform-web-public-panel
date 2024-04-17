@@ -1,4 +1,5 @@
 import { apiSlice } from '../../api/apiSlice';
+import { v4 as uuidv4 } from 'uuid';
 
 export const dynamicFormsSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -47,7 +48,28 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
                 body: initialGroup,
             }),
             invalidatesTags: ['form'],
+            async onQueryStarted({ initialGroup, ...patch }, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    apiSlice.util.updateQueryData('getForm', initialGroup.form_id, (draft) => {
+                        console.log('draft: ', draft);
+
+                        draft.splice(patch.position - 1, 0, {
+                            id: uuidv4(),
+                            fields: [],
+                            name: `group ${draft?.length ? draft.length + 1 : uuidv4()}`,
+                        });
+
+                    })
+                );
+                console.log("hi ",id)
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patchResult.undo();
+                }
+            },
         }),
+
         addNewField: builder.mutation({
             query: ({ fields, group_id }) => ({
                 url: `/forms/addField/${group_id}`,
@@ -116,5 +138,5 @@ export const {
     useRemoveGroupMutation,
     useUpdateGroupFieldMutation,
     useRemoveFieldMutation,
-    useSubmitFormMutation
+    useSubmitFormMutation,
 } = dynamicFormsSlice;

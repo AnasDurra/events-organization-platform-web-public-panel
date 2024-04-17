@@ -81,7 +81,7 @@ export default function DroppableGroup({
             <Divider> Fields</Divider>
 
             <Droppable
-                droppableId={'' + groupIndex}
+                droppableId={'droppable-group-' + groupIndex}
                 type='group-item'
             >
                 {(provided, snapshot) => (
@@ -92,7 +92,7 @@ export default function DroppableGroup({
                     >
                         {group?.fields?.map((field, index) => (
                             <Draggable
-                                draggableId={field.id}
+                                draggableId={'draggable-inner-group-field-' + field.id}
                                 index={index}
                                 key={field.id}
                             >

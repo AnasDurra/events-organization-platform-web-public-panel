@@ -18,8 +18,9 @@ export const handleReorderGroupItems = ({ currentGroups, source, destination, up
         }
     }); */
 
+    const sourceGroupIndex = source.droppableId.split('-')[2];
     updateGroupField({
-        field_id: currentGroups[source.droppableId].fields[source.index].id,
+        field_id: currentGroups[sourceGroupIndex].fields[source.index].id,
         position: destination.index + 1,
     });
 };
@@ -29,7 +30,6 @@ export const handleReorderGroups = ({ form_id, currentGroups, source, destinatio
     newGroups.splice(source.index, 1);
     newGroups.splice(destination.index, 0, currentGroups[source.index]);
     return newGroups; */
-
     updateGroup({ fields: { position: destination.index + 1 }, group_id: currentGroups[source.index].id });
 };
 
@@ -55,9 +55,10 @@ export const handleSidebarToForm = ({ form_id, currentGroups, source, destinatio
         if (source.index === SidebarItemsIDs.RADIO) {
             options = [{ name: 'default 1' }, { name: 'default 2' }];
         }
+        const destinationGroupIndex = destination.droppableId.split('-')[2];
 
         addNewField({
-            group_id: currentGroups[destination.droppableId].id,
+            group_id: currentGroups[destinationGroupIndex].id,
             fields: {
                 type_id: source.index,
                 position: destination.index + 1,
@@ -82,13 +83,16 @@ export const handleMoveItemFromGroupToAnotherGroup = ({ currentGroups, source, d
 
     return newGroups; */
 
-    console.log("src: ",source);
-    console.log("dest: ",destination)
+    console.log('src: ', source);
+    console.log('dest: ', destination);
+
+    const sourceGroupIndex = source.droppableId.split('-')[2];
+    const destinationGroupIndex = destination.droppableId.split('-')[2];
 
     updateGroupField({
-        field_id: currentGroups[source.droppableId].fields[source.index].id,
+        field_id: currentGroups[sourceGroupIndex].fields[source.index].id,
         position: destination.index + 1,
-        group_id: currentGroups[destination.droppableId].id,
+        group_id: currentGroups[destinationGroupIndex].id,
     });
 };
 
@@ -104,6 +108,8 @@ export const onDragEnd = ({
     const { source, destination, type } = result;
 
     console.log(result);
+    const sourceGroupIndex = source.droppableId.split('-')[2];
+
     if (!destination) {
         return;
     } else if (destination.droppableId === source.droppableId && destination.index === source.index) {
@@ -116,9 +122,8 @@ export const onDragEnd = ({
         console.log('same droppable / group');
 
         return handleReorderGroups({ form_id, currentGroups, source, destination, updateGroup });
-    } else if (destination.droppableId !== source.droppableId && currentGroups[source.droppableId] !== undefined) {
+    } else if (destination.droppableId !== source.droppableId && currentGroups[sourceGroupIndex] !== undefined) {
         console.log('group to group');
-
         return handleMoveItemFromGroupToAnotherGroup({ currentGroups, source, destination, updateGroupField });
     } else if (destination.droppableId !== source.droppableId && (type === 'group-item' || type === 'group')) {
         console.log('sidebar to group');

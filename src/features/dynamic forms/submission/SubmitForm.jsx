@@ -71,7 +71,6 @@ export default function SubmitForm() {
                             Event name
                         </Typography.Title>
                         <Form
-                        disabled
                             form={form}
                             onFinish={handleFormFinish}
                             requiredMark={'optional'}
@@ -91,7 +90,10 @@ export default function SubmitForm() {
                                 </div>
                             ))}
 
-                            <div className='text-gray-500 text-center'> {`<${currentGroupIndex + 1}/${DBform?.groups?.length}>`}</div>
+                            <div className='text-gray-500 text-center'>
+                                {' '}
+                                {`<${currentGroupIndex + 1}/${DBform?.groups?.length}>`}
+                            </div>
                             <div className='flex justify-center space-x-2 m-4'>
                                 <Button
                                     onClick={handlePrevious}

@@ -69,7 +69,7 @@ export const router = createBrowserRouter([
         element: <SubmitForm />,
     },
     {
-        path: '/form/submissions',
+        path: '/form/:form_id/submissions',
         element: <ViewFormSubmissions />,
     },
 ]);

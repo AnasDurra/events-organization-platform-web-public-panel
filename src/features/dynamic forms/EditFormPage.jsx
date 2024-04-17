@@ -150,6 +150,7 @@ export default function EditFormPage() {
         AntDform.setFieldsValue(DBform);
     }, [AntDform, DBform]);
 
+    console.log('db :',DBform )
     return (
         <DragDropContext
             onDragEnd={(result) => {
