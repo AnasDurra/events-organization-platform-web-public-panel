@@ -1,7 +1,7 @@
 import { SidebarItemsIDs, SidebarItemsTypeByID, itemTypes } from './constants';
 import { v4 as uuidv4 } from 'uuid';
 
-export const handleReorderGroupItems = ({ currentGroups, source, destination, updateGroupField }) => {
+export const handleReorderGroupItems = ({ form_id, currentGroups, source, destination, updateGroupField }) => {
     /*  return currentGroups.map((group) => {
         if (destination.droppableId === group.id) {
             const newFields = [...group.fields];
@@ -20,8 +20,12 @@ export const handleReorderGroupItems = ({ currentGroups, source, destination, up
 
     const sourceGroupIndex = source.droppableId.split('-')[2];
     updateGroupField({
-        field_id: currentGroups[sourceGroupIndex].fields[source.index].id,
-        position: destination.index + 1,
+        fields: {
+            field_id: currentGroups[sourceGroupIndex].fields[source.index].id,
+            position: destination.index + 1,
+        },
+        form_id,
+        isNewPosition: true,
     });
 };
 
@@ -30,7 +34,12 @@ export const handleReorderGroups = ({ form_id, currentGroups, source, destinatio
     newGroups.splice(source.index, 1);
     newGroups.splice(destination.index, 0, currentGroups[source.index]);
     return newGroups; */
-    updateGroup({ fields: { position: destination.index + 1 }, group_id: currentGroups[source.index].id });
+    updateGroup({
+        fields: { position: destination.index + 1 },
+        group_id: currentGroups[source.index].id,
+        isNewPosition: true,
+        form_id,
+    });
 };
 
 export const handleSidebarToForm = ({ form_id, currentGroups, source, destination, addNewField, addNewGroup }) => {
@@ -67,6 +76,7 @@ export const handleSidebarToForm = ({ form_id, currentGroups, source, destinatio
                 label: 'default label',
                 ...(source.index === SidebarItemsIDs.RADIO && { options }),
             },
+            form_id,
         });
     }
 };
@@ -117,7 +127,7 @@ export const onDragEnd = ({
     } else if (destination.droppableId === source.droppableId && type === 'group-item') {
         console.log('same droppable / group-item');
 
-        return handleReorderGroupItems({ currentGroups, source, destination, updateGroupField });
+        return handleReorderGroupItems({ form_id, currentGroups, source, destination, updateGroupField });
     } else if (destination.droppableId === source.droppableId && type === 'group') {
         console.log('same droppable / group');
 

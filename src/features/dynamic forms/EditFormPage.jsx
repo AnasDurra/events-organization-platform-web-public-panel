@@ -127,11 +127,11 @@ export default function EditFormPage() {
                 fields: group.fields.filter((field) => field.id !== selectedField.id),
             }))
         ); */
-        removeField({ field_id: selectedField.id }).then(() => setSelectedField(null));
+        removeField({ field_id: selectedField.id, form_id }).then(() => setSelectedField(null));
     };
 
     const handleDeleteGroup = (groupId) => {
-        removeGroup({ group_id: groupId });
+        removeGroup({ group_id: groupId, form_id });
     };
 
     useEffect(() => {
@@ -150,7 +150,6 @@ export default function EditFormPage() {
         AntDform.setFieldsValue(DBform);
     }, [AntDform, DBform]);
 
-    console.log('db :',DBform )
     return (
         <DragDropContext
             onDragEnd={(result) => {

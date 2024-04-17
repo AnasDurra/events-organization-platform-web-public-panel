@@ -1,5 +1,7 @@
+import { FaCommentsDollar } from 'react-icons/fa';
 import { apiSlice } from '../../api/apiSlice';
 import { v4 as uuidv4 } from 'uuid';
+import { current } from '@reduxjs/toolkit';
 
 export const dynamicFormsSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -48,20 +50,17 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
                 body: initialGroup,
             }),
             invalidatesTags: ['form'],
-            async onQueryStarted({ initialGroup, ...patch }, { dispatch, queryFulfilled }) {
+            async onQueryStarted(initialGroup, { dispatch, queryFulfilled }) {
+                console.log(initialGroup);
                 const patchResult = dispatch(
                     apiSlice.util.updateQueryData('getForm', initialGroup.form_id, (draft) => {
-                        console.log('draft: ', draft);
-
-                        draft.splice(patch.position - 1, 0, {
+                        draft?.result?.groups?.splice(initialGroup.position - 1, 0, {
                             id: uuidv4(),
                             fields: [],
-                            name: `group ${draft?.length ? draft.length + 1 : uuidv4()}`,
+                            name: `group ${draft.result?.groups?.length ? draft.result?.groups.length + 1 : uuidv4()}`,
                         });
-
                     })
                 );
-                console.log("hi ",id)
                 try {
                     await queryFulfilled;
                 } catch {
@@ -71,12 +70,35 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
         }),
 
         addNewField: builder.mutation({
-            query: ({ fields, group_id }) => ({
+            query: ({ fields, group_id, form_id }) => ({
                 url: `/forms/addField/${group_id}`,
                 method: 'POST',
                 body: fields,
             }),
             invalidatesTags: ['form'],
+            async onQueryStarted({ fields, group_id, form_id }, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    apiSlice.util.updateQueryData('getForm', form_id, (draft) => {
+                        draft?.result?.groups
+                            ?.find((grp) => grp.id == group_id)
+                            .fields.splice(fields.position - 1, 0, {
+                                ...fields,
+                                id: uuidv4(),
+                                fieldType: { id: fields.type_id },
+                            });
+
+                        draft?.result?.groups
+                            ?.find((grp) => grp.id == group_id)
+                            .fields.forEach((field, index) => (field.position = index));
+                        // console.log('draft: ', current(draft));
+                    })
+                );
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patchResult.undo();
+                }
+            },
         }),
         submitForm: builder.mutation({
             query: (data) => ({
@@ -94,49 +116,156 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
             invalidatesTags: ['form'],
         }),
         updateGroup: builder.mutation({
-            query: ({ fields, group_id }) => ({
+            query: ({ fields, group_id, isNewPosition, form_id }) => ({
                 url: `/forms/group/${group_id}`,
                 method: 'PATCH',
                 body: fields,
             }),
             invalidatesTags: ['form'],
+            async onQueryStarted({ fields, group_id, isNewPosition, form_id }, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    apiSlice.util.updateQueryData('getForm', form_id, (draft) => {
+                        if (isNewPosition && draft && draft.result && Array.isArray(draft.result.groups)) {
+                            const { groups } = draft.result;
+                            const currentIndex = groups.findIndex((group) => group.id == group_id);
+                            if (currentIndex != -1) {
+                                const newPosition = fields.position - 1;
+
+                                const removedGroup = groups.splice(currentIndex, 1)[0];
+
+                                const newIndex = Math.min(Math.max(0, newPosition), groups.length);
+
+                                groups.splice(newIndex, 0, removedGroup);
+
+                                groups.forEach((group, index) => {
+                                    group.position = index;
+                                });
+                                draft.result.groups = groups;
+                            }
+                        }
+                    })
+                );
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patchResult.undo();
+                }
+            },
         }),
         updateGroupField: builder.mutation({
-            query: (data) => ({
+            query: ({ fields, form_id, isNewPosition }) => ({
                 url: `/forms/field`,
                 method: 'PATCH',
-                body: data,
+                body: fields,
             }),
             invalidatesTags: ['form'],
+            async onQueryStarted({ fields, form_id, isNewPosition }, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    apiSlice.util.updateQueryData('getForm', form_id, (draft) => {
+                        if (isNewPosition && draft && draft.result && Array.isArray(draft.result.groups)) {
+                            const { groups } = draft.result;
+                            console.log('hi 1');
+
+                            const groupIndex = groups.findIndex((group) =>
+                                group.fields.some((field) => field.id == fields.field_id)
+                            );
+                            if (groupIndex != -1) {
+                                const group = groups[groupIndex];
+                                console.log('hi 2');
+
+                                const fieldIndex = group.fields.findIndex((field) => field.id == fields.field_id);
+                                if (fieldIndex != -1) {
+                                    const removedField = group.fields.splice(fieldIndex, 1)[0];
+                                    console.log('hi 3');
+
+                                    group.fields.splice(fields.position - 1, 0, removedField);
+
+                                    group.fields.forEach((field, index) => {
+                                        field.position = index;
+                                    });
+
+                                    draft.result.groups[groupIndex] = group;
+                                }
+                            }
+                        }
+                    })
+                );
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patchResult.undo();
+                }
+            },
         }),
 
         removeGroup: builder.mutation({
-            query: ({ group_id }) => ({
+            query: ({ group_id, form_id }) => ({
                 url: `/forms/deleteGroup/${group_id}`,
                 method: 'DELETE',
             }),
             invalidatesTags: ['form'],
+            async onQueryStarted({ group_id, form_id }, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    apiSlice.util.updateQueryData('getForm', form_id, (draft) => {
+                        if (draft && draft.result && Array.isArray(draft.result.groups)) {
+                            draft.result.groups = draft.result.groups.filter((grp) => grp.id !== group_id);
+                            draft.result.groups.forEach((group, index) => (group.position = index));
+                        }
+
+                        console.log('draft: ', current(draft));
+                    })
+                );
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patchResult.undo();
+                }
+            },
         }),
         removeField: builder.mutation({
-            query: ({ field_id }) => ({
+            query: ({ field_id, form_id }) => ({
                 url: `/forms/deleteField/${field_id}`,
                 method: 'DELETE',
             }),
             invalidatesTags: ['form'],
+            async onQueryStarted({ field_id, form_id }, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    apiSlice.util.updateQueryData('getForm', form_id, (draft) => {
+                        if (draft && draft.result && Array.isArray(draft.result.groups)) {
+                            const groupIndex = draft.result.groups.findIndex((group) =>
+                                group.fields.some((field) => field.id === field_id)
+                            );
+                            if (groupIndex != -1) {
+                                draft.result.groups[groupIndex].fields = draft.result.groups[groupIndex].fields?.filter(
+                                    (field) => field.id !== field_id
+                                );
+                                draft.result.groups[groupIndex].fields.forEach(
+                                    (field, index) => (field.position = index)
+                                );
+                            }
+                        }
+                    })
+                );
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patchResult.undo();
+                }
+            },
         }),
     }),
 });
 
 export const {
     useGetFormsQuery,
-    useAddNewFormMutation,
     useGetFormQuery,
-    useUpdateFormMutation,
+    useSubmitFormMutation,
+    useAddNewFormMutation,
     useAddNewGroupMutation,
-    useUpdateGroupMutation,
     useAddNewFieldMutation,
-    useRemoveGroupMutation,
+    useUpdateFormMutation,
+    useUpdateGroupMutation,
     useUpdateGroupFieldMutation,
     useRemoveFieldMutation,
-    useSubmitFormMutation,
+    useRemoveGroupMutation,
 } = dynamicFormsSlice;
