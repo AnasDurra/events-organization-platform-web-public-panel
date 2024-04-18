@@ -18,6 +18,8 @@ import ShowAttendeeEvents from '../features/Attendees Profiles/ShowAttendeeEvent
 import ShowEventAttendees from '../features/Manage Events (org)/ShowEventAttendees';
 import BlockedUsersPage from '../features/ban/BlockedUsersPage';
 import NotFound from '../pages/notFound';
+import FollowersList from '../features/org profiles/FollowersList';
+import ShowFollowingOrgsList from '../features/Attendees Profiles/ShowFollowingOrgsList';
 
 export const router = createBrowserRouter([
     {
@@ -46,8 +48,17 @@ export const router = createBrowserRouter([
                 element: <ShowAttendeeEvents />,
             },
             {
+                //edit this
+                path: '/attendee/my-profile/organizations',
+                element: <ShowAttendeeEvents />,
+            },
+            {
                 path: '/attendee-profile/:id',
                 element: <ShowAttendeProfile />,
+            },
+            {
+                path: '/attendee-profile/:id/organizations',
+                element: <ShowFollowingOrgsList />,
             },
             {
                 path: '/event',
@@ -70,6 +81,10 @@ export const router = createBrowserRouter([
             {
                 path: '/org/blocklist',
                 element: <BlockedUsersPage />,
+            },
+            {
+                path: '/org/followers-list',
+                element: <FollowersList />,
             },
 
             { path: '/org', element: <ProfilePage /> },

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import {
     CheckOutlined,
@@ -50,7 +50,6 @@ const ShowAttendeProfile = () => {
     const { id } = useParams();
 
     const { openNotification } = useNotification();
-    const navigate = useNavigate();
 
     const [fetchAttendeeProfile, { data: attendeeProfile, isLoading: attendeeProfileIsLoading }] =
         useLazyViewAttendeeProfileQuery(id);
@@ -400,92 +399,147 @@ const ShowAttendeProfile = () => {
                                     <div>
                                         <Row gutter={20}>
                                             <Col style={{ padding: '0px' }} span={12}>
-                                                <Statistic
-                                                    title={
-                                                        <div>
-                                                            <h3>Following</h3>
-                                                        </div>
-                                                    }
-                                                    value={1128}
-                                                    prefix={
-                                                        <UserOutlined
-                                                            style={{
-                                                                fontSize: '20px',
-                                                            }}
+                                                <Link
+                                                    to={`organizations`}
+                                                    style={{ textDecoration: 'none', display: 'inline-block' }}
+                                                >
+                                                    <div
+                                                        onMouseEnter={(e) =>
+                                                            (e.currentTarget.style.transform = 'scale(1.06)')
+                                                        }
+                                                        onMouseLeave={(e) =>
+                                                            (e.currentTarget.style.transform = 'scale(1)')
+                                                        }
+                                                        style={{ transition: 'transform 0.2s' }}
+                                                    >
+                                                        <Statistic
+                                                            title={
+                                                                <div>
+                                                                    <h3>Following</h3>
+                                                                </div>
+                                                            }
+                                                            value={1128}
+                                                            prefix={<UserOutlined style={{ fontSize: '20px' }} />}
                                                         />
-                                                    }
-                                                />
+                                                    </div>
+                                                </Link>
                                             </Col>
                                             <Col style={{ padding: '0px' }} span={12}>
-                                                <Statistic
-                                                    title={
-                                                        <div>
-                                                            <h3>Badges</h3>
-                                                        </div>
-                                                    }
-                                                    value={' '}
-                                                    prefix={
-                                                        <Avatar.Group>
-                                                            {badges.map((badge) => (
-                                                                <Tooltip title={badge.name} key={badge.id}>
-                                                                    <Avatar
-                                                                        size={35}
-                                                                        style={{
-                                                                            backgroundColor: badge.bgcolor,
-                                                                            marginRight: '3.5px',
-                                                                        }}
-                                                                    >
-                                                                        <span
-                                                                            style={{
-                                                                                marginRight: '5px',
-                                                                            }}
-                                                                        >
-                                                                            {badge.name}
-                                                                        </span>
-                                                                    </Avatar>
-                                                                </Tooltip>
-                                                            ))}
-                                                        </Avatar.Group>
-                                                    }
-                                                />
+                                                <Link
+                                                    to={'/not-yet'}
+                                                    style={{ textDecoration: 'none', display: 'inline-block' }}
+                                                >
+                                                    <div
+                                                        onMouseEnter={(e) =>
+                                                            (e.currentTarget.style.transform = 'scale(1.06)')
+                                                        }
+                                                        onMouseLeave={(e) =>
+                                                            (e.currentTarget.style.transform = 'scale(1)')
+                                                        }
+                                                        style={{ transition: 'transform 0.2s' }}
+                                                    >
+                                                        <Statistic
+                                                            title={
+                                                                <div>
+                                                                    <h3>Badges</h3>
+                                                                </div>
+                                                            }
+                                                            value={' '}
+                                                            prefix={
+                                                                <Avatar.Group>
+                                                                    {badges.map((badge) => (
+                                                                        <Tooltip title={badge.name} key={badge.id}>
+                                                                            <Avatar
+                                                                                size={35}
+                                                                                style={{
+                                                                                    backgroundColor: badge.bgcolor,
+                                                                                    marginRight: '3.5px',
+                                                                                }}
+                                                                            >
+                                                                                <span
+                                                                                    style={{
+                                                                                        marginRight: '5px',
+                                                                                    }}
+                                                                                >
+                                                                                    {badge.name}
+                                                                                </span>
+                                                                            </Avatar>
+                                                                        </Tooltip>
+                                                                    ))}
+                                                                </Avatar.Group>
+                                                            }
+                                                        />
+                                                    </div>
+                                                </Link>
                                             </Col>
                                         </Row>
 
                                         <Row gutter={20}>
                                             <Col style={{ padding: '0px' }} span={12}>
-                                                <Statistic
-                                                    title={
-                                                        <div>
-                                                            <h3>Events</h3>
-                                                        </div>
-                                                    }
-                                                    value={1128}
-                                                    prefix={
-                                                        <CheckOutlined
-                                                            style={{
-                                                                fontSize: '20px',
-                                                            }}
+                                                <Link
+                                                    to={'/not-yet'}
+                                                    style={{ textDecoration: 'none', display: 'inline-block' }}
+                                                >
+                                                    <div
+                                                        onMouseEnter={(e) =>
+                                                            (e.currentTarget.style.transform = 'scale(1.06)')
+                                                        }
+                                                        onMouseLeave={(e) =>
+                                                            (e.currentTarget.style.transform = 'scale(1)')
+                                                        }
+                                                        style={{ transition: 'transform 0.2s' }}
+                                                    >
+                                                        {' '}
+                                                        <Statistic
+                                                            title={
+                                                                <div>
+                                                                    <h3>Events</h3>
+                                                                </div>
+                                                            }
+                                                            value={1128}
+                                                            prefix={
+                                                                <CheckOutlined
+                                                                    style={{
+                                                                        fontSize: '20px',
+                                                                    }}
+                                                                />
+                                                            }
                                                         />
-                                                    }
-                                                />
+                                                    </div>
+                                                </Link>
                                             </Col>
 
                                             <Col style={{ padding: '0px' }} span={12}>
-                                                <Statistic
-                                                    title={
-                                                        <div>
-                                                            <h3>Level</h3>
-                                                        </div>
-                                                    }
-                                                    value={5}
-                                                    prefix={
-                                                        <StarFilled
-                                                            style={{
-                                                                color: '#FFD700',
-                                                            }}
+                                                <Link
+                                                    to={'/not-yet'}
+                                                    style={{ textDecoration: 'none', display: 'inline-block' }}
+                                                >
+                                                    <div
+                                                        onMouseEnter={(e) =>
+                                                            (e.currentTarget.style.transform = 'scale(1.06)')
+                                                        }
+                                                        onMouseLeave={(e) =>
+                                                            (e.currentTarget.style.transform = 'scale(1)')
+                                                        }
+                                                        style={{ transition: 'transform 0.2s' }}
+                                                    >
+                                                        <Statistic
+                                                            title={
+                                                                <div>
+                                                                    <h3>Level</h3>
+                                                                </div>
+                                                            }
+                                                            value={5}
+                                                            prefix={
+                                                                <StarFilled
+                                                                    style={{
+                                                                        color: '#FFD700',
+                                                                    }}
+                                                                />
+                                                            }
                                                         />
-                                                    }
-                                                />
+                                                    </div>
+                                                </Link>
                                             </Col>
                                         </Row>
                                     </div>
