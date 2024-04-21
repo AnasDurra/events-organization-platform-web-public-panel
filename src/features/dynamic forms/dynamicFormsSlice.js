@@ -22,6 +22,9 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
                         .map((field, index) => ({
                             ...field,
                             position: index,
+                            options: Array.isArray(field.options)
+                                ? field.options.sort((a, b) => a.id.localeCompare(b.id))
+                                : undefined,
                         })),
                 }));
 
@@ -172,38 +175,50 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
             },
         }),
         updateGroupField: builder.mutation({
-            query: ({ fields, form_id, isNewPosition }) => ({
+            query: ({ fields, form_id, isNewPosition, isNewGroup }) => ({
                 url: `/forms/field`,
                 method: 'PATCH',
                 body: fields,
             }),
             invalidatesTags: ['form'],
-            async onQueryStarted({ fields, form_id, isNewPosition }, { dispatch, queryFulfilled }) {
+            async onQueryStarted({ fields, form_id, isNewPosition, isNewGroup }, { dispatch, queryFulfilled }) {
                 const patchResult = dispatch(
                     apiSlice.util.updateQueryData('getForm', form_id, (draft) => {
                         if (isNewPosition && draft && draft.result && Array.isArray(draft.result.groups)) {
                             const { groups } = draft.result;
-                            console.log('hi 1');
-
-                            const groupIndex = groups.findIndex((group) =>
+                            const currentGroupIndex = groups.findIndex((group) =>
                                 group.fields.some((field) => field.id == fields.field_id)
                             );
-                            if (groupIndex != -1) {
-                                const group = groups[groupIndex];
-                                console.log('hi 2');
+                            console.log('ew ', isNewGroup);
 
-                                const fieldIndex = group.fields.findIndex((field) => field.id == fields.field_id);
-                                if (fieldIndex != -1) {
-                                    const removedField = group.fields.splice(fieldIndex, 1)[0];
-                                    console.log('hi 3');
+                            if (currentGroupIndex !== -1) {
+                                console.log('ew ', isNewGroup);
 
-                                    group.fields.splice(fields.position - 1, 0, removedField);
+                                const currentGroup = groups[currentGroupIndex];
+                                const fieldIndex = currentGroup.fields.findIndex(
+                                    (field) => field.id == fields.field_id
+                                );
+                                if (fieldIndex !== -1) {
+                                    const removedField = currentGroup.fields.splice(fieldIndex, 1)[0];
 
-                                    group.fields.forEach((field, index) => {
+                                    currentGroup.fields.forEach((field, index) => {
                                         field.position = index;
                                     });
 
-                                    draft.result.groups[groupIndex] = group;
+                                    console.log('ew ', isNewGroup);
+                                    const targetGroupIndex = groups.findIndex(
+                                        (group) => group.id == (isNewGroup ? isNewGroup : currentGroup.id)
+                                    );
+
+                                    if (targetGroupIndex !== -1) {
+                                        const targetGroup = groups[targetGroupIndex];
+                                        targetGroup.fields.splice(fields.position - 1, 0, removedField);
+                                        targetGroup.fields.forEach((field, index) => {
+                                            field.position = index;
+                                        });
+                                    }
+
+                                    draft.result.groups[currentGroupIndex] = currentGroup;
                                 }
                             }
                         }
@@ -216,7 +231,14 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
                 }
             },
         }),
-
+        updateFieldOptionName: builder.mutation({
+            query: (data) => ({
+                url: `/forms/field/option`,
+                method: 'PATCH',
+                body: data,
+            }),
+            invalidatesTags: ['form'],
+        }),
         removeGroup: builder.mutation({
             query: ({ group_id, form_id }) => ({
                 url: `/forms/deleteGroup/${group_id}`,
@@ -295,6 +317,7 @@ export const {
     useUpdateFormMutation,
     useUpdateGroupMutation,
     useUpdateGroupFieldMutation,
+    useUpdateFieldOptionNameMutation,
     useRemoveFieldMutation,
     useRemoveFieldOptionMutation,
     useRemoveGroupMutation,

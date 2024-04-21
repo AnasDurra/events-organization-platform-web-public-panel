@@ -14,6 +14,7 @@ import RegistrationScheduleForm from './RegistrationScheduleForm';
 
 import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../../utils/NotificationContext';
+import AttachForm from './AttachForm';
 
 const CreateEvent = () => {
     const navigate = useNavigate();
@@ -263,6 +264,7 @@ const CreateEvent = () => {
                                 />
                             </Card>
                         </Col>
+
                         <Col
                             sm={{ span: 24 }}
                             xsm={{ span: 24 }}
@@ -272,9 +274,13 @@ const CreateEvent = () => {
                                 size='small'
                                 type='inner'
                                 title='Media & Attachments'
-                                style={{ height: '100%' }}
+                                //    style={{ height: '100%' }}
                             >
                                 <MediaAndAttachmentsForm eventMediaForm={eventMediaForm} />
+
+                                <div>
+                                    <AttachForm onAttach={() => {}} organization_id={1} />
+                                </div>
                             </Card>
                         </Col>
 

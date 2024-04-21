@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 
 export default function FormDateField({ field, groupIndex, fieldIndex }) {
     return (
-        <div className='bg-gray-100/50 w-full px-4 border-2 rounded-lg border-zinc-200'>
+        <div className='bg-gray-100/50 px-4 border-2 rounded-lg border-zinc-200'>
             <Space.Compact
                 direction='vertical'
                 className='w-full'

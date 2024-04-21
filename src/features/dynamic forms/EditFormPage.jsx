@@ -15,11 +15,12 @@ import {
     useRemoveFieldMutation,
     useRemoveFieldOptionMutation,
     useRemoveGroupMutation,
+    useUpdateFieldOptionNameMutation,
     useUpdateGroupFieldMutation,
     useUpdateGroupMutation,
 } from './dynamicFormsSlice';
 import { onDragEnd } from './utils-drag';
-import { debounceTime } from './constants';
+import { SidebarItemsIDs, debounceTime } from './constants';
 import { getLoggedInUser } from '../../api/services/auth';
 
 export default function EditFormPage() {
@@ -30,7 +31,11 @@ export default function EditFormPage() {
     const [addNewFieldOption] = useAddNewFieldOptionMutation({ fixedCacheKey: 'shared-update-option' });
 
     const [updateGroup] = useUpdateGroupMutation();
-    const [updateGroupField, { isError: isUpdateFormFieldError }] = useUpdateGroupFieldMutation({ fixedCacheKey: 'shared-update-field' });
+    const [updateGroupField, { isError: isUpdateFormFieldError }] = useUpdateGroupFieldMutation({
+        fixedCacheKey: 'shared-update-field',
+    });
+    const [updateFieldOption] = useUpdateFieldOptionNameMutation();
+
     const [removeGroup] = useRemoveGroupMutation();
     const [removeField] = useRemoveFieldMutation();
     const [removeFieldOption] = useRemoveFieldOptionMutation({ fixedCacheKey: 'shared-update-option' });
@@ -57,18 +62,18 @@ export default function EditFormPage() {
     };
 
     const debounceUpdateGroupField = debounce(updateGroupField, debounceTime);
+    const debounceUpdateFieldOption = debounce(updateFieldOption, debounceTime * 10);
 
     const handleUpdateProperties = (updatedField) => {
+        console.log(updatedField);
         const updatedFieldValues = {
             name: updatedField.name,
             label: updatedField.label,
             required: updatedField.required,
             position: updatedField.position,
-            options: updatedField.options,
         };
 
         let currentFieldValues;
-        let optionsToUpdate;
 
         DBform.groups.forEach((group) => {
             const field = group.fields.find((field) => field.id === updatedField.id);
@@ -79,10 +84,7 @@ export default function EditFormPage() {
                     label: field.label,
                     required: field.required,
                     position: field.position,
-                    options: field.options,
                 };
-
-                optionsToUpdate = updatedField.options;
             }
         });
 
@@ -96,11 +98,45 @@ export default function EditFormPage() {
 
         const hasFieldsToUpdate = Object.keys({ ...fieldsToUpdate }).length > 0;
         if (hasFieldsToUpdate) {
-            console.log(fieldsToUpdate);
             debounceUpdateGroupField({ fields: { field_id: updatedField?.id, ...fieldsToUpdate } });
         }
 
-        if (optionsToUpdate) {
+        console.log(updatedField);
+        if (updatedField?.fieldType?.id == SidebarItemsIDs.RADIO) {
+            if (updatedField.options) {
+                DBform.groups.forEach((group) => {
+                    const field = group.fields.find((field) => field.id === updatedField.id);
+
+                    if (field) {
+                        const updatedOptionsMap = new Map(
+                            updatedField.options.map((option) => [option.id, option.name])
+                        );
+                        const currentOptionsMap = new Map(field.options.map((option) => [option.id, option.name]));
+
+                        const optionsToAdd = updatedField.options.filter((option) => !currentOptionsMap.has(option.id));
+
+                        const optionsToRemove = field.options.filter((option) => !updatedOptionsMap.has(option.id));
+
+                        optionsToAdd.forEach((option) => {
+                            addNewFieldOption({ field_id: updatedField?.id, name: option.name });
+                        });
+
+                        optionsToRemove.forEach((option) => {
+                            removeFieldOption({ option_id: option.id });
+                        });
+
+                        updatedField.options.forEach((updatedOption) => {
+                            const currentOptionName = currentOptionsMap.get(updatedOption.id);
+                            if (currentOptionName && updatedOption.name !== currentOptionName) {
+                                debounceUpdateFieldOption({ option_id: updatedOption.id, name: updatedOption.name });
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        /* if (optionsToUpdate) {
             if (!currentFieldValues.options) {
                 optionsToUpdate.forEach((option) => {
                     addNewFieldOption({ field_id: updatedField?.id, name: option.name });
@@ -120,7 +156,7 @@ export default function EditFormPage() {
                     console.log('rem opt: ', option);
                 });
             }
-        }
+        } */
 
         /*  setGroups((groups) =>
         groups.map((group) => ({
@@ -203,8 +239,8 @@ export default function EditFormPage() {
                 }}
                 labelAlign='left'
             >
-                <div className='grid grid-cols-6 gap-2 mx-auto'>
-                    <div className='custom-scrollbar col-start-2 col-span-3 h-[90vh] my-2  p-2 w-full bg-slate-400 bg-transparent overflow-y-auto'>
+                <div className='grid grid-cols-6 gap-2 mx-auto h-[92vh]'>
+                    <div className='custom-scrollbar col-start-2 col-span-3 my-2  p-2 w-full bg-slate-400 bg-transparent overflow-y-auto'>
                         <Droppable
                             droppableId={'base-form'}
                             type='group'
@@ -213,7 +249,6 @@ export default function EditFormPage() {
                                 <div
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
-
                                 >
                                     {DBform?.groups &&
                                         DBform?.groups.map((group, index) => (
@@ -248,7 +283,7 @@ export default function EditFormPage() {
                             )}
                         </Droppable>
                     </div>
-                    <div className='col-start-6 col-span-1 sticky top-0 bg-gray-50'>
+                    <div className='col-start-6 col-span-1 sticky top-0 bg-gray-50 '>
                         {selectedField ? (
                             <PropertiesSidebar
                                 field={selectedField}
