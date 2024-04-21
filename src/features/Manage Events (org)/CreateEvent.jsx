@@ -173,7 +173,7 @@ const CreateEvent = () => {
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Card
-                size="small"
+                size='small'
                 bodyStyle={{ padding: '12px 12px 12px 24px' }}
                 style={{
                     width: '100%',
@@ -181,20 +181,23 @@ const CreateEvent = () => {
                 cover={
                     <>
                         {coverImage ? (
-                            <Image height={250} src="https://picsum.photos/1000/300" />
+                            <Image
+                                height={250}
+                                src='https://picsum.photos/1000/300'
+                            />
                         ) : (
                             <Upload.Dragger
                                 maxCount={1}
-                                name="cover"
+                                name='cover'
                                 showUploadList={false}
                                 beforeUpload={() => false}
                                 onChange={handleCoverImageUpload}
                                 height={250}
                             >
-                                <p className="ant-upload-drag-icon">
+                                <p className='ant-upload-drag-icon'>
                                     <FileImageOutlined />
                                 </p>
-                                <p className="ant-upload-text">
+                                <p className='ant-upload-text'>
                                     Click or drag photo to this area to upload cover picture
                                 </p>
                             </Upload.Dragger>
@@ -239,8 +242,17 @@ const CreateEvent = () => {
                             width: '100%',
                         }}
                     >
-                        <Col span={12}>
-                            <Card size="small" type="inner" title="Event Details" style={{ height: '100%' }}>
+                        <Col
+                            sm={{ span: 24 }}
+                            xsm={{ span: 24 }}
+                            lg={{ span: 12 }}
+                        >
+                            <Card
+                                size='small'
+                                type='inner'
+                                title='Event Details'
+                                style={{ height: '100%' }}
+                            >
                                 <EventDetailsForm
                                     eventDetailsForm={eventDetailsForm}
                                     lists={lists}
@@ -251,14 +263,27 @@ const CreateEvent = () => {
                                 />
                             </Card>
                         </Col>
-                        <Col span={12}>
-                            <Card size="small" type="inner" title="Media & Attachments" style={{ height: '100%' }}>
+                        <Col
+                            sm={{ span: 24 }}
+                            xsm={{ span: 24 }}
+                            lg={{ span: 12 }}
+                        >
+                            <Card
+                                size='small'
+                                type='inner'
+                                title='Media & Attachments'
+                                style={{ height: '100%' }}
+                            >
                                 <MediaAndAttachmentsForm eventMediaForm={eventMediaForm} />
                             </Card>
                         </Col>
 
                         <Col span={24}>
-                            <Card size="small" type="inner" title="Registration Schedule">
+                            <Card
+                                size='small'
+                                type='inner'
+                                title='Registration Schedule'
+                            >
                                 <RegistrationScheduleForm
                                     eventRegistrationForm={eventRegistrationForm}
                                     days={days}
@@ -275,7 +300,11 @@ const CreateEvent = () => {
                                     marginTop: '5em',
                                 }}
                             >
-                                <Button loading={createEventIsLoading} type="primary" onClick={onFormsFinish}>
+                                <Button
+                                    loading={createEventIsLoading}
+                                    type='primary'
+                                    onClick={onFormsFinish}
+                                >
                                     Create Event
                                 </Button>
                             </div>

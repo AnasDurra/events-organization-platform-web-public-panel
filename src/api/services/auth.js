@@ -57,9 +57,7 @@ export const auth = apiSlice.injectEndpoints({
     }),
 });
 
-export const getLoggedInUser = () => {
-    const token = Cookies.get('accessToken');
-    const decodedToken = jwtDecode(token);
+
 export const getLoggedInUser = () => {
     const token = Cookies.get('accessToken');
     const decodedToken = jwtDecode(token);
