@@ -35,6 +35,16 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
             },
             providesTags: ['form'],
         }),
+        getFormFieldTypes: builder.query({
+            query: () => `/forms/fieldsTypes`,
+        }),
+        querySubmissions: builder.mutation({
+            query: (data) => ({
+                url: '/forms/query',
+                method: 'POST',
+                body: data,
+            }),
+        }),
         addNewForm: builder.mutation({
             query: (initialForm) => ({
                 url: '/forms',
@@ -43,6 +53,7 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['forms'],
         }),
+
         addNewGroup: builder.mutation({
             query: (initialGroup) => ({
                 url: '/forms/addGroup',
@@ -99,6 +110,14 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
                     patchResult.undo();
                 }
             },
+        }),
+        addNewFieldOption: builder.mutation({
+            query: ({ field_id, name }) => ({
+                url: `forms/addOption`,
+                method: 'POST',
+                body: { field_id, name },
+            }),
+            invalidatesTags: ['form'],
         }),
         submitForm: builder.mutation({
             query: (data) => ({
@@ -253,19 +272,30 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
                 }
             },
         }),
+        removeFieldOption: builder.mutation({
+            query: ({ option_id }) => ({
+                url: `forms/field/option/${option_id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['form'],
+        }),
     }),
 });
 
 export const {
     useGetFormsQuery,
     useGetFormQuery,
+    useGetFormFieldTypesQuery,
+    useQuerySubmissionsMutation,
     useSubmitFormMutation,
     useAddNewFormMutation,
     useAddNewGroupMutation,
     useAddNewFieldMutation,
+    useAddNewFieldOptionMutation,
     useUpdateFormMutation,
     useUpdateGroupMutation,
     useUpdateGroupFieldMutation,
     useRemoveFieldMutation,
+    useRemoveFieldOptionMutation,
     useRemoveGroupMutation,
 } = dynamicFormsSlice;

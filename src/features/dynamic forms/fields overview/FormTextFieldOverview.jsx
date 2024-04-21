@@ -7,7 +7,7 @@ import { WiStars } from 'react-icons/wi';
 export default function FormTextFieldOverview({ isDragging, field, groupIndex, fieldIndex }) {
     return (
         <div
-            className='bg-gray-100 w-full p-4 border-2 border-zinc-200'
+            className='bg-gray-100 w-full px-4 border-2 border-zinc-200'
             style={{
                 opacity: isDragging ? 0.5 : 1,
             }}
@@ -16,7 +16,7 @@ export default function FormTextFieldOverview({ isDragging, field, groupIndex, f
                 direction='vertical'
                 className='w-full'
             >
-               <div className='text-gray-500 flex items-center space-x-2  w-full mb-2'>
+                <div className='text-gray-500 flex items-center space-x-2  w-full my-2'>
                     <span>{field?.label}</span>
                     {field?.required && <WiStars className='ml-2' />}
                 </div>
@@ -26,6 +26,8 @@ export default function FormTextFieldOverview({ isDragging, field, groupIndex, f
                         className='w-[100%] '
                         disabled
                         placeholder='field name'
+                        size='small'
+                        variant='filled'
                         suffix={<FieldStringOutlined />}
                     />
                 </Form.Item>

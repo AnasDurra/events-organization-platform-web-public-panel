@@ -1,13 +1,14 @@
-import { Col, Input, Row, Spin } from 'antd';
+import { SyncOutlined } from '@ant-design/icons';
+import { Button, Col, Input, Row, Space } from 'antd';
 import debounce from 'lodash.debounce';
 import React from 'react';
-import { SyncOutlined } from '@ant-design/icons';
 import { FaFileAlt } from 'react-icons/fa';
 import { Outlet, useParams } from 'react-router-dom';
+import { debounceTime } from '../constants';
 import { useGetFormQuery, useUpdateFormMutation } from '../dynamicFormsSlice';
 import styles from './FormLayout.module.css';
-import { debounceTime } from '../constants';
-export default function FormLayout() {
+
+export default function FormLayout({children}) {
     let { form_id } = useParams();
     const {
         data: { result: form } = { result: {} },
@@ -23,6 +24,10 @@ export default function FormLayout() {
     };
     return (
         <div className='flex flex-col  h-screen bg-gray-100 max-h-[100vh]'>
+            <Space.Compact className='fixed bottom-4 left-4 '>
+                <Button>-</Button>
+                <Button>+</Button>
+            </Space.Compact>
             <header className='sticky top-0 z-10 my-2'>
                 <Row
                     align={'middle'}
@@ -37,6 +42,7 @@ export default function FormLayout() {
                                 {form.name && (
                                     <Input
                                         placeholder='Form name'
+                                        variant='filled'
                                         defaultValue={form.name}
                                         onChange={handleFormNameChange}
                                     />
@@ -89,9 +95,7 @@ export default function FormLayout() {
                     </Col>
                 </Row>
             </header>
-            <main className={`border flex-1 ${styles.paper}`}>
-                <Outlet />
-            </main>
+            <main className={`border flex-1 ${styles.paper}`}>{children}</main>
         </div>
     );
 }

@@ -2,22 +2,15 @@ import React, { useState } from 'react';
 import { Space, Radio, Typography, Form, Input } from 'antd';
 import { WiStars } from 'react-icons/wi';
 export default function FormRadioField({ field, groupIndex, fieldIndex }) {
-    const [value, setValue] = useState();
-
-    const handleRadioChange = (e) => {
-        setValue(e.target.value);
-    };
-
     return (
-        <div className='bg-gray-100 w-full p-4 border-2 rounded-lg border-zinc-200'>
+        <div className='bg-gray-100/50 w-full px-4 border-2 rounded-lg border-zinc-200'>
             <Space
                 direction='vertical'
                 className='w-full'
             >
-                <div className='flex items-center space-x-2  w-full mb-2'>
+                <div className='flex items-center space-x-2  w-full my-2'>
                     <span>{field?.label}</span>
                     {field?.required && <WiStars className='ml-2' />}
-                    <WiStars />
                 </div>
 
                 <Form.Item
@@ -27,15 +20,16 @@ export default function FormRadioField({ field, groupIndex, fieldIndex }) {
                 />
 
                 <Form.Item
-                    name={['groups', groupIndex, 'fields', fieldIndex, 'value']}
-                    required={field?.required}
+                    name={['groups', groupIndex, 'fields', fieldIndex, 'option_id']}
+                    rules={[{ required: field?.required }]}
                 >
                     <Radio.Group
                     // value={value}
                     //onChange={handleRadioChange}
+                    size='small'
                     >
                         <Space direction='vertical'>
-                            {fakeOptions?.map((option, index) => (
+                            {field.options?.map((option, index) => (
                                 <Radio
                                     key={'radio' + option.id + index}
                                     value={option.id}
@@ -51,21 +45,3 @@ export default function FormRadioField({ field, groupIndex, fieldIndex }) {
     );
 }
 
-const fakeOptions = [
-    {
-        id: '5',
-        createdAt: '2024-04-06T14:14:26.103Z',
-        updatedAt: '2024-04-06T14:14:26.103Z',
-        deletedAt: null,
-        name: 'op2',
-        formFieldId: '9',
-    },
-    {
-        id: '6',
-        createdAt: '2024-04-06T14:14:26.105Z',
-        updatedAt: '2024-04-06T14:14:26.105Z',
-        deletedAt: null,
-        name: 'op1',
-        formFieldId: '9',
-    },
-];

@@ -9,25 +9,32 @@ import PropertiesSidebar from './components/PropertiesSidebar';
 import Sidebar from './components/Sidebar';
 import {
     useAddNewFieldMutation,
+    useAddNewFieldOptionMutation,
     useAddNewGroupMutation,
     useGetFormQuery,
     useRemoveFieldMutation,
+    useRemoveFieldOptionMutation,
     useRemoveGroupMutation,
     useUpdateGroupFieldMutation,
     useUpdateGroupMutation,
 } from './dynamicFormsSlice';
 import { onDragEnd } from './utils-drag';
 import { debounceTime } from './constants';
+import { getLoggedInUser } from '../../api/services/auth';
 
 export default function EditFormPage() {
     let { form_id } = useParams();
     const { data: { result: DBform } = { result: {} }, isSuccess: isFetchFormSuccess } = useGetFormQuery(form_id);
     const [addNewGroup] = useAddNewGroupMutation();
     const [addNewField] = useAddNewFieldMutation();
+    const [addNewFieldOption] = useAddNewFieldOptionMutation({ fixedCacheKey: 'shared-update-option' });
+
     const [updateGroup] = useUpdateGroupMutation();
-    const [updateGroupField, { isError: isUpdateFormFieldError }] = useUpdateGroupFieldMutation();
+    const [updateGroupField, { isError: isUpdateFormFieldError }] = useUpdateGroupFieldMutation({ fixedCacheKey: 'shared-update-field' });
     const [removeGroup] = useRemoveGroupMutation();
     const [removeField] = useRemoveFieldMutation();
+    const [removeFieldOption] = useRemoveFieldOptionMutation({ fixedCacheKey: 'shared-update-option' });
+
     // const [groups, setGroups] = useState([]);
     const [selectedField, setSelectedField] = useState(null);
     const [AntDform] = Form.useForm();
@@ -50,62 +57,82 @@ export default function EditFormPage() {
     };
 
     const debounceUpdateGroupField = debounce(updateGroupField, debounceTime);
+
     const handleUpdateProperties = (updatedField) => {
         const updatedFieldValues = {
             name: updatedField.name,
             label: updatedField.label,
             required: updatedField.required,
             position: updatedField.position,
+            options: updatedField.options,
         };
 
         let currentFieldValues;
         let optionsToUpdate;
 
         DBform.groups.forEach((group) => {
-            console.log('group: ', group);
-            console.log('upd: ', updatedField);
-            const field = group.fields.find((field) => field.id == updatedField.id);
-            console.log('field: ', field);
+            const field = group.fields.find((field) => field.id === updatedField.id);
+
             if (field) {
                 currentFieldValues = {
                     name: field.name,
                     label: field.label,
                     required: field.required,
                     position: field.position,
+                    options: field.options,
                 };
 
-                if ('options' in field) {
-                    optionsToUpdate = updatedField.options;
-                }
+                optionsToUpdate = updatedField.options;
             }
         });
 
         const fieldsToUpdate = {};
 
         Object.keys(updatedFieldValues).forEach((key) => {
-            if (updatedFieldValues[key] !== currentFieldValues[key]) {
+            if (updatedFieldValues[key] != currentFieldValues[key] && key != 'options') {
                 fieldsToUpdate[key] = updatedFieldValues[key];
             }
         });
 
-        if (optionsToUpdate) {
-            fieldsToUpdate.options = optionsToUpdate;
+        const hasFieldsToUpdate = Object.keys({ ...fieldsToUpdate }).length > 0;
+        if (hasFieldsToUpdate) {
+            console.log(fieldsToUpdate);
+            debounceUpdateGroupField({ fields: { field_id: updatedField?.id, ...fieldsToUpdate } });
         }
-        console.log(fieldsToUpdate);
 
-        debounceUpdateGroupField({ field_id: updatedField?.id, ...fieldsToUpdate });
+        if (optionsToUpdate) {
+            if (!currentFieldValues.options) {
+                optionsToUpdate.forEach((option) => {
+                    addNewFieldOption({ field_id: updatedField?.id, name: option.name });
+                    console.log('new opt: ', option);
+                });
+            } else {
+                const addedOptions = optionsToUpdate.filter((option) => !currentFieldValues.options.includes(option));
+                const removedOptions = currentFieldValues.options.filter((option) => !optionsToUpdate.includes(option));
+
+                addedOptions.forEach((option) => {
+                    addNewFieldOption({ field_id: updatedField?.id, name: option.name });
+                    console.log('new opt: ', option);
+                });
+
+                removedOptions.forEach((option) => {
+                    removeFieldOption({ option_id: option.id });
+                    console.log('rem opt: ', option);
+                });
+            }
+        }
 
         /*  setGroups((groups) =>
-            groups.map((group) => ({
-                ...group,
-                fields: group.fields.map((field) => {
-                    if (field.id === selectedField.id) {
-                        return updatedField;
-                    }
-                    return field;
-                }),
-            }))
-        ); */
+        groups.map((group) => ({
+            ...group,
+            fields: group.fields.map((field) => {
+                if (field.id === selectedField.id) {
+                    return updatedField;
+                }
+                return field;
+            }),
+        }))
+    ); */
         // setSelectedField(updatedField);
     };
 
@@ -116,7 +143,6 @@ export default function EditFormPage() {
             ?.flatMap((group) => group.fields)
             .find((field) => field.id == selectedField?.id);
 
-        console.log('selec: ', newSelectedField);
         setSelectedField(newSelectedField);
     }, [DBform, selectedField, isUpdateFormFieldError]);
 
@@ -187,6 +213,7 @@ export default function EditFormPage() {
                                 <div
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
+
                                 >
                                     {DBform?.groups &&
                                         DBform?.groups.map((group, index) => (

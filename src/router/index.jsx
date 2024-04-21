@@ -55,21 +55,26 @@ export const router = createBrowserRouter([
         ],
     },
     {
-        path: '/form/:form_id/',
-        element: <FormLayout />,
+        path: 'event/:event_id/form/:form_id/',
         children: [
             {
                 path: 'edit',
-                element: <EditFormPage />,
+                element: (
+                    <FormLayout>
+                        <EditFormPage />
+                    </FormLayout>
+                ),
+            },
+            {
+                path: 'submit',
+                element: <SubmitForm />,
+            },
+            {
+                path: 'submissions',
+                element: <ViewFormSubmissions />,
             },
         ],
     },
-    {
-        path: '/form/:form_id/submit',
-        element: <SubmitForm />,
-    },
-    {
-        path: '/form/:form_id/submissions',
-        element: <ViewFormSubmissions />,
-    },
+  
+    
 ]);

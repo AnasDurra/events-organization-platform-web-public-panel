@@ -22,6 +22,7 @@ export default function PropertiesSidebar({ field, onUpdateProperties, onDeleteF
     const handleOptionsChange = (newOptions) => {
         onUpdateProperties({ ...field, options: newOptions });
     };
+    
     const debouncedHandleOptionsChange = debounce(handleOptionsChange, 1000);
 
     return (

@@ -6,7 +6,6 @@ import FormNumberField from './fields/FormNumberField';
 import FormDateField from './fields/FormDateField';
 import { SidebarItemsIDs } from '../constants';
 export default function FormGroup({ group, groupsLength, groupIndex, isCustomStyle }) {
-    console.log(group);
     return (
         <div
             className={`min-h-[80vh] p-4 m-4 bg-gray-100/75 rounded-lg  shadow-lg ${

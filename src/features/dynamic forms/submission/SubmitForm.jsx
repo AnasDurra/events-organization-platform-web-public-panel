@@ -7,7 +7,7 @@ import { useGetFormQuery, useSubmitFormMutation } from '../dynamicFormsSlice';
 import dayjs from 'dayjs';
 
 export default function SubmitForm() {
-    let { form_id } = useParams();
+    let { form_id, event_id } = useParams();
     const {
         data: { result: DBform } = { result: {} },
         isSuccess: isFetchFormSuccess,
@@ -22,7 +22,17 @@ export default function SubmitForm() {
     // const { groups } = fakeForm;
 
     const handleNext = () => {
-        setCurrentGroupIndex((prevIndex) => prevIndex + 1);
+        console.log(form.getFieldsValue());
+        form.validateFields([['groups', currentGroupIndex]], { recursive: true })
+            .then((values) => {
+                setCurrentGroupIndex((prevIndex) => prevIndex + 1);
+            })
+            .catch((errorInfo) => {
+                form.scrollToField(errorInfo.errorFields[0].name, {
+                    behavior: 'smooth',
+                    block: 'start',
+                });
+            });
     };
 
     const handlePrevious = () => {
@@ -31,14 +41,18 @@ export default function SubmitForm() {
 
     const handleFormFinish = (fields) => {
         const obj = {
-            event_id: 1,
-            attendee_id: 1,
+            event_id: parseInt(event_id),
+            //TODO from user object
+            attendee_id: parseInt(1),
             form_id: parseInt(form_id),
             fields: fields.groups.flatMap((group) =>
-                group.fields.map((field) => ({
-                    field_id: parseInt(field.field_id),
-                    value: dayjs.isDayjs(field.value) ? field.value.format('YYYY-MM-DD') : field.value,
-                }))
+                group.fields
+                    .filter((field) => field.value || field.option_id)
+                    .map((field) => ({
+                        field_id: parseInt(field.field_id),
+                        value: dayjs.isDayjs(field.value) ? field.value.format('YYYY-MM-DD') : field.value,
+                        option_id: field.option_id,
+                    }))
             ),
         };
 
@@ -75,7 +89,6 @@ export default function SubmitForm() {
                             onFinish={handleFormFinish}
                             requiredMark={'optional'}
                             layout='vertical'
-                            validateTrigger={'onSubmit'}
                         >
                             {DBform?.groups?.map((group, index) => (
                                 <div

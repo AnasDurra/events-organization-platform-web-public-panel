@@ -30,6 +30,8 @@ import React, { useState } from 'react';
 import { SidebarItemsIDs } from '../constants';
 import './Filter.css';
 import useNumberFieldState from './useNumberFieldState';
+import { useGetFormFieldTypesQuery, useGetFormQuery } from '../dynamicFormsSlice';
+import { useParams } from 'react-router-dom';
 const fieldIcons = {
     [SidebarItemsIDs.TEXTFIELD]: <FieldStringOutlined />,
     [SidebarItemsIDs.NUMBER]: <FieldNumberOutlined />,
@@ -42,9 +44,18 @@ const getFieldIcon = (fieldType) => {
 };
 
 export default function Filter({ onFilter }) {
+    let { form_id, event_id } = useParams();
+
     const [sets, setSets] = useState([{ selectedFieldsIds: [] }]);
     const { operator, showRangeInputs, fromValue, toValue, handleOperatorChange, setFromValue, setToValue } =
         useNumberFieldState();
+
+    const {
+        data: { result: DBform } = { result: {} },
+        isSuccess: isFetchFormSuccess,
+        isLoading,
+    } = useGetFormQuery(form_id);
+    const { data: { result: fieldTypes } = { result: {} } } = useGetFormFieldTypesQuery();
 
     const handleAddSet = () => {
         setSets((prevSets) => [...prevSets, { selectedFieldsIds: [] }]);
@@ -70,9 +81,9 @@ export default function Filter({ onFilter }) {
     const handleOnFilterFinish = (fields) => {
         fields?.groups?.forEach((group) => {
             group.conditions?.forEach((condition) => {
-                const matchingField = fake_form.groups
-                    .flatMap((grp) => grp.fields)
-                    .find((field) => field.id === condition.field_id);
+                const matchingField = DBform.groups
+                    ?.flatMap((grp) => grp.fields)
+                    ?.find((field) => field.id === condition.field_id);
 
                 if (matchingField && matchingField.fieldType?.id == SidebarItemsIDs.DATE) {
                     condition.value = moment(condition.value).format('YYYY-MM-DD');
@@ -86,9 +97,9 @@ export default function Filter({ onFilter }) {
 
     const filterOptions = {
         [SidebarItemsIDs.TEXTFIELD]: ({ field, setIndex, fieldIndex }) => {
-            const options = fake_field_types
-                .find((fieldType) => fieldType.id == field.fieldType.id)
-                .fieldTypeOperators.map((operator) => (
+            const options = fieldTypes
+                ?.find((fieldType) => fieldType.id == field.fieldType.id)
+                .fieldTypeOperators?.map((operator) => (
                     <Select.Option
                         key={operator.query_operator.id}
                         value={operator.query_operator.id}
@@ -153,9 +164,9 @@ export default function Filter({ onFilter }) {
         },
 
         [SidebarItemsIDs.NUMBER]: ({ field, setIndex, fieldIndex }) => {
-            const options = fake_field_types
-                .find((fieldType) => fieldType.id == field.fieldType.id)
-                .fieldTypeOperators.map((operator) => (
+            const options = fieldTypes
+                ?.find((fieldType) => fieldType.id == field.fieldType.id)
+                .fieldTypeOperators?.map((operator) => (
                     <Select.Option
                         key={operator.query_operator.id}
                         value={operator.query_operator.id}
@@ -246,9 +257,9 @@ export default function Filter({ onFilter }) {
         },
 
         [SidebarItemsIDs.DATE]: ({ field, setIndex, fieldIndex }) => {
-            const options = fake_field_types
-                .find((fieldType) => fieldType.id == field.fieldType.id)
-                .fieldTypeOperators.map((operator) => (
+            const options = fieldTypes
+                ?.find((fieldType) => fieldType.id == field.fieldType.id)
+                .fieldTypeOperators?.map((operator) => (
                     <Select.Option
                         key={operator.query_operator.id}
                         value={operator.query_operator.id}
@@ -362,9 +373,9 @@ export default function Filter({ onFilter }) {
                                 variant='filled'
                             >
                                 {sets[setIndex].selectedFieldsIds.length > 0 &&
-                                    fake_form.groups
-                                        .flatMap((group) => group.fields)
-                                        .find((innerField) => innerField.id === field.id)
+                                    DBform.groups
+                                        ?.flatMap((group) => group.fields)
+                                        ?.find((innerField) => innerField.id === field.id)
                                         ?.options?.map((option) => (
                                             <Select.Option
                                                 key={option.id}
@@ -399,7 +410,7 @@ export default function Filter({ onFilter }) {
                     children: (
                         <div>
                             <Form onFinish={handleOnFilterFinish}>
-                                {sets.map((set, setIndex) => (
+                                {sets?.map((set, setIndex) => (
                                     <div key={setIndex}>
                                         <div className='flex justify-center items-center mt-2 mb-6'>
                                             <div className='w-full flex  flex-col justify-center items-start'>
@@ -414,13 +425,13 @@ export default function Filter({ onFilter }) {
                                                     onChange={(selectedFields) =>
                                                         handleSelectFields(selectedFields, setIndex)
                                                     }
-                                                    treeData={fake_form.groups.map((group) => ({
+                                                    treeData={DBform.groups?.map((group) => ({
                                                         value: group.id,
                                                         title: `${group.name} (${
                                                             group.description ? group.description : 'no description'
                                                         })`,
                                                         selectable: false,
-                                                        children: group.fields.map((field) => ({
+                                                        children: group.fields?.map((field) => ({
                                                             value: field.id,
                                                             title: field.name,
                                                             icon: getFieldIcon(field.fieldType.id),
@@ -458,10 +469,10 @@ export default function Filter({ onFilter }) {
                                                 </Space.Compact>
                                             )}
                                             <div className='w-full mx-2 my-2'>
-                                                {set.selectedFieldsIds.map((fieldId, fieldIndex) => {
-                                                    const field = fake_form.groups
-                                                        .flatMap((group) => group.fields)
-                                                        .find((field) => field.id === fieldId);
+                                                {set.selectedFieldsIds?.map((fieldId, fieldIndex) => {
+                                                    const field = DBform.groups
+                                                        ?.flatMap((group) => group.fields)
+                                                        ?.find((field) => field.id === fieldId);
 
                                                     return (
                                                         <div
@@ -483,9 +494,9 @@ export default function Filter({ onFilter }) {
                                             <Space.Compact className='w-full space-x-2'>
                                                 <div className='w-[50%] '>
                                                     <Button
-                                                        type='primary'
+                                                        type='dashed'
                                                         size='small'
-                                                        className='w-full '
+                                                        className='w-full rounded-lg '
                                                         onClick={handleAddSet}
                                                     >
                                                         OR
@@ -529,7 +540,7 @@ export default function Filter({ onFilter }) {
     );
 }
 
-const fake_field_types = [
+const fake_field_type = [
     {
         id: '1',
         createdAt: '2024-03-22T00:06:35.710Z',

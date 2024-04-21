@@ -2,6 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Input, Checkbox, Space, Divider, Button } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { CloseCircleOutlined } from '@ant-design/icons';
+import {
+    useAddNewFieldOptionMutation,
+    useRemoveFieldMutation,
+    useRemoveFieldOptionMutation,
+    useUpdateGroupFieldMutation,
+} from '../dynamicFormsSlice';
+import { v4 as uuidv4 } from 'uuid';
+
 
 export default function RadioProperties({
     field,
@@ -11,6 +19,16 @@ export default function RadioProperties({
     onOptionsChange,
     onDelete,
 }) {
+    const [, { isError: isErrorRemovingOption }] = useRemoveFieldOptionMutation({
+        fixedCacheKey: 'shared-update-option',
+    });
+    const [, { isError: isErrorAddingOption }] = useAddNewFieldOptionMutation({
+        fixedCacheKey: 'shared-update-option',
+    });
+    const [, { isError: isUpdateFormFieldError }] = useUpdateGroupFieldMutation({
+        fixedCacheKey: 'shared-update-field',
+    });
+
     const [options, setOptions] = useState(field?.options || []);
 
     const handleNameInputChange = (e) => {
@@ -29,8 +47,7 @@ export default function RadioProperties({
     };
 
     const handleOptionAdd = () => {
-        const newOptions = [...options, { id: options.length + 1, name: '' }];
-        setOptions(newOptions);
+        const newOptions = [...options, { id: uuidv4(), name: '' }];
         onOptionsChange(newOptions);
     };
 
@@ -47,16 +64,15 @@ export default function RadioProperties({
         onOptionsChange(updatedOptions);
     };
 
-
     useEffect(() => {
-        console.log("update fild: ",field)
+        console.log('update fild: ', field);
         if (field) {
             document.getElementById('tf-prop-name').value = field.name || '';
             document.getElementById('tf-prop-label').value = field.label || '';
             document.getElementById('tf-prop-isRequired').checked = !!field.isRequired;
             setOptions(field.options || []);
         }
-    }, [field]);
+    }, [field, isErrorAddingOption, isErrorRemovingOption, isUpdateFormFieldError]);
 
     return (
         <Space.Compact
@@ -143,6 +159,7 @@ export default function RadioProperties({
             <Button
                 type='primary'
                 onClick={handleOptionAdd}
+                disabled={options.some((option) => option.name.trim() === '')}
             >
                 Add Option
             </Button>

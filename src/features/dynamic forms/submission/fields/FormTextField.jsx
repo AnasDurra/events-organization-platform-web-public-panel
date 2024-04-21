@@ -4,15 +4,14 @@ import { WiStars } from 'react-icons/wi';
 import { FieldStringOutlined } from '@ant-design/icons';
 export default function FormTextField({ field, groupIndex, fieldIndex }) {
     return (
-        <div className='bg-gray-100 w-full p-4 border-2 rounded-lg border-zinc-200'>
+        <div className='bg-gray-100/50 w-full px-4 border-2 rounded-lg border-zinc-200'>
             <Space.Compact
                 direction='vertical'
                 className='w-full'
             >
-                <div className='flex items-center space-x-2  w-full mb-2'>
+                <div className='flex items-center space-x-2  w-full my-2'>
                     <span>{field?.label}</span>
                     {field?.required && <WiStars className='ml-2' />}
-                    <WiStars />
                 </div>
 
                 <Form.Item
@@ -23,11 +22,13 @@ export default function FormTextField({ field, groupIndex, fieldIndex }) {
 
                 <Form.Item
                     name={['groups', groupIndex, 'fields', fieldIndex, 'value']}
-                    required={field?.required}
+                    rules={[{ required: field?.required }]}
                 >
                     <Input
                         placeholder='name'
                         className='sm:w-[50%] w-full'
+                        variant='filled'
+                        size='small'
                         suffix={<FieldStringOutlined />}
                     />
                 </Form.Item>

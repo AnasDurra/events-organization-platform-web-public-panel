@@ -100,9 +100,11 @@ export const handleMoveItemFromGroupToAnotherGroup = ({ currentGroups, source, d
     const destinationGroupIndex = destination.droppableId.split('-')[2];
 
     updateGroupField({
-        field_id: currentGroups[sourceGroupIndex].fields[source.index].id,
-        position: destination.index + 1,
-        group_id: currentGroups[destinationGroupIndex].id,
+        fields: {
+            field_id: currentGroups[sourceGroupIndex].fields[source.index].id,
+            position: destination.index + 1,
+            group_id: currentGroups[destinationGroupIndex].id,
+        },
     });
 };
 
