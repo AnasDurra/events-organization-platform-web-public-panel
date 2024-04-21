@@ -95,7 +95,7 @@ export default function ViewFormsPage() {
                                 key={form.id}
                             >
                                 <Card
-                                    className={`shadow-md hover:shadow-sm  shadow-[${token.colorPrimary}] border-6 border-[${token.colorPrimary}]`}
+                                    className={`shadow-md hover:shadow-sm shadow-[${token.colorPrimary}] border-6 border-[${token.colorPrimary}]`}
                                     actions={[
                                         <div
                                             key={'actions-div-3'}
@@ -124,7 +124,7 @@ export default function ViewFormsPage() {
                                 >
                                     <Meta
                                         title={form.name}
-                                        description={form.description}
+                                        description={form.description ? form.description : 'no description'}
                                     />
                                     {/*  <Divider className='mb-1'></Divider>
               <div className='flex items-start justify-start flex-wrap space-x-2'>

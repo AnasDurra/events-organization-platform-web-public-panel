@@ -1,8 +1,8 @@
-import { Divider, Form, Input, Popconfirm } from 'antd';
+import { Col, Divider, Form, Input, Popconfirm, Row } from 'antd';
 import React, { useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import { IoMdClose } from 'react-icons/io';
-import { SidebarItemsTypeByID } from '../constants';
+import { SidebarItemsIDs } from '../constants';
 import FormDateOverview from '../fields overview/FormDateOverview';
 import FormNumberOverview from '../fields overview/FormNumberOverview';
 import FormRadioOverview from '../fields overview/FormRadioOverview';
@@ -56,43 +56,53 @@ export default function DroppableGroup({
             <Divider>Group </Divider>
 
             <Form.Item
+            className='w-[70%]'
                 name={['groups', groupIndex, 'name']}
                 label={'name'}
+                wrapperCol={{ span: 12 }}
+                labelCol={{ span: 8 }}
             >
                 <Input
-                    bordered={true}
-                    className='bg-gray-50'
+                    //className='bg-gray-50/75'
                     placeholder='group name'
+                    size='small'
+                    variant='filled'
                     onChange={handleNameInputChange}
                 />
             </Form.Item>
-
             <Form.Item
+                className='w-[70%]'
                 name={['groups', groupIndex, 'description']}
                 label={'description'}
+                required={false}
+                wrapperCol={{ span: 16 }}
+                labelCol={{ span: 8 }}
             >
-                <Input
-                    className='bg-gray-50'
+                <Input.TextArea
+                    rows={2}
+                    //className='bg-gray-50/75'
                     placeholder='group description'
+                    size='small'
+                    variant='filled'
                     onChange={handleDescriptionInputChange}
                 />
             </Form.Item>
 
-            <Divider> Fields</Divider>
+            <Divider style={{ marginTop: 0 }}> Fields</Divider>
 
             <Droppable
-                droppableId={group?.id}
+                droppableId={'droppable-group-' + groupIndex}
                 type='group-item'
             >
                 {(provided, snapshot) => (
                     <div
-                        className='h-full w-full p-2'
+                        className='h-full w-full px-2 pb-2'
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                     >
-                        {group?.fields.map((field, index) => (
+                        {group?.fields?.map((field, index) => (
                             <Draggable
-                                draggableId={field.id}
+                                draggableId={'draggable-inner-group-field-' + field.id}
                                 index={index}
                                 key={field.id}
                             >
@@ -107,34 +117,36 @@ export default function DroppableGroup({
                                         }}
                                         className={
                                             'relative bg-white my-2 ' +
-                                            (selectedField?.id === field.id ? 'border-2 border-blue-500' : '')
+                                            (selectedField?.id === field.id
+                                                ? 'border-8 border-slate-500 animate-pulse'
+                                                : '')
                                         }
                                         onClick={() => handleClickField(field)}
                                         onMouseEnter={() => handleFieldHover(field.id)}
                                         onMouseLeave={() => setHoveredField(null)}
                                     >
-                                        {field.fieldType?.id == SidebarItemsTypeByID.TEXTFIELD ? (
+                                        {field.fieldType?.id == SidebarItemsIDs.TEXTFIELD ? (
                                             <FormTextFieldOverview
                                                 field={field}
                                                 isDragging={snapshot.isDragging}
                                                 fieldIndex={index}
                                                 groupIndex={groupIndex}
                                             />
-                                        ) : field.fieldType?.id == SidebarItemsTypeByID.RADIO ? (
+                                        ) : field.fieldType?.id == SidebarItemsIDs.RADIO ? (
                                             <FormRadioOverview
                                                 field={field}
                                                 isDragging={snapshot.isDragging}
                                                 fieldIndex={index}
                                                 groupIndex={groupIndex}
                                             />
-                                        ) : field.fieldType?.id == SidebarItemsTypeByID.DATE ? (
+                                        ) : field.fieldType?.id == SidebarItemsIDs.DATE ? (
                                             <FormDateOverview
                                                 field={field}
                                                 isDragging={snapshot.isDragging}
                                                 fieldIndex={index}
                                                 groupIndex={groupIndex}
                                             />
-                                        ) : field.fieldType?.id == SidebarItemsTypeByID.NUMBER ? (
+                                        ) : field.fieldType?.id == SidebarItemsIDs.NUMBER ? (
                                             <FormNumberOverview
                                                 field={field}
                                                 isDragging={snapshot.isDragging}
@@ -142,7 +154,6 @@ export default function DroppableGroup({
                                                 groupIndex={groupIndex}
                                             />
                                         ) : null}
-
                                         {hoveredField === field.id && (
                                             <div className='absolute top-0 left-0 bg-pink-950 bg-opacity-30 text-gray-800 py-2 w-full h-[50%] flex justify-center items-center cursor-pointer'>
                                                 <span className='text-white font-semibold'>

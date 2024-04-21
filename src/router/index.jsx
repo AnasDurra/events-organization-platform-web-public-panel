@@ -13,6 +13,7 @@ import ProfilePage from '../features/org profiles/ProfilePage';
 import TeamPage from '../features/org profiles/TeamPage';
 import ErrorPage from '../pages/error-page';
 import LoginPage from '../pages/loginPage';
+import ViewFormSubmissions from '../features/dynamic forms/submission/ViewFormSubmissions';
 export const router = createBrowserRouter([
     {
         path: '/login',
@@ -49,23 +50,31 @@ export const router = createBrowserRouter([
             { path: '/org/config', element: <ConfigOrgPage /> },
 
             { path: '/members', element: <TeamPage /> },
-            
+
             { path: '/forms', element: <ViewFormsPage /> },
         ],
     },
     {
-
-        path: '/form/:form_id/',
-        element: <FormLayout />,
+        path: 'event/:event_id/form/:form_id/',
         children: [
             {
                 path: 'edit',
-                element: <EditFormPage />,
+                element: (
+                    <FormLayout>
+                        <EditFormPage />
+                    </FormLayout>
+                ),
+            },
+            {
+                path: 'submit',
+                element: <SubmitForm />,
+            },
+            {
+                path: 'submissions',
+                element: <ViewFormSubmissions />,
             },
         ],
     },
-    {
-        path: '/form/:form_id/submit',
-        element: <SubmitForm />,
-    },
+  
+    
 ]);

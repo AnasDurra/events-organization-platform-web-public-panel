@@ -82,7 +82,7 @@ export default function DateProperties({ field, onNameChange, onLabelChange, onI
                 </Title>
                 <Checkbox
                     id='date-prop-isRequired'
-                    defaultChecked={field?.isRequired}
+                    defaultChecked={field?.required}
                     onChange={handleIsRequiredCheckboxChange}
                 />
             </Space>

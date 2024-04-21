@@ -9,20 +9,32 @@ import PropertiesSidebar from './components/PropertiesSidebar';
 import Sidebar from './components/Sidebar';
 import {
     useAddNewFieldMutation,
+    useAddNewFieldOptionMutation,
     useAddNewGroupMutation,
     useGetFormQuery,
+    useRemoveFieldMutation,
+    useRemoveFieldOptionMutation,
     useRemoveGroupMutation,
+    useUpdateGroupFieldMutation,
     useUpdateGroupMutation,
 } from './dynamicFormsSlice';
 import { onDragEnd } from './utils-drag';
+import { debounceTime } from './constants';
+import { getLoggedInUser } from '../../api/services/auth';
 
 export default function EditFormPage() {
     let { form_id } = useParams();
     const { data: { result: DBform } = { result: {} }, isSuccess: isFetchFormSuccess } = useGetFormQuery(form_id);
     const [addNewGroup] = useAddNewGroupMutation();
     const [addNewField] = useAddNewFieldMutation();
+    const [addNewFieldOption] = useAddNewFieldOptionMutation({ fixedCacheKey: 'shared-update-option' });
+
     const [updateGroup] = useUpdateGroupMutation();
+    const [updateGroupField, { isError: isUpdateFormFieldError }] = useUpdateGroupFieldMutation({ fixedCacheKey: 'shared-update-field' });
     const [removeGroup] = useRemoveGroupMutation();
+    const [removeField] = useRemoveFieldMutation();
+    const [removeFieldOption] = useRemoveFieldOptionMutation({ fixedCacheKey: 'shared-update-option' });
+
     // const [groups, setGroups] = useState([]);
     const [selectedField, setSelectedField] = useState(null);
     const [AntDform] = Form.useForm();
@@ -33,30 +45,106 @@ export default function EditFormPage() {
         );
     };
 
-    const debounceUpdateGroup = debounce(updateGroup, 500);
+    const debounceUpdateGroup = debounce(updateGroup, debounceTime);
     const handleGroupNameChange = (groupId, newName) => {
         debounceUpdateGroup({ fields: { name: newName }, group_id: groupId });
     };
 
     const handleDescriptionChange = (groupId, newDescription) => {
+        debounceUpdateGroup({ fields: { description: newDescription }, group_id: groupId });
+
         // setGroups(groups.map((group) => (group.id === groupId ? { ...group, description: newDescription } : group)));
     };
 
-    const handleUpdateProperties = (updatedField) => {
-        /*  setGroups((groups) =>
-            groups.map((group) => ({
-                ...group,
-                fields: group.fields.map((field) => {
-                    if (field.id === selectedField.id) {
-                        return updatedField;
-                    }
-                    return field;
-                }),
-            }))
-        ); */
+    const debounceUpdateGroupField = debounce(updateGroupField, debounceTime);
 
-        setSelectedField(updatedField);
+    const handleUpdateProperties = (updatedField) => {
+        const updatedFieldValues = {
+            name: updatedField.name,
+            label: updatedField.label,
+            required: updatedField.required,
+            position: updatedField.position,
+            options: updatedField.options,
+        };
+
+        let currentFieldValues;
+        let optionsToUpdate;
+
+        DBform.groups.forEach((group) => {
+            const field = group.fields.find((field) => field.id === updatedField.id);
+
+            if (field) {
+                currentFieldValues = {
+                    name: field.name,
+                    label: field.label,
+                    required: field.required,
+                    position: field.position,
+                    options: field.options,
+                };
+
+                optionsToUpdate = updatedField.options;
+            }
+        });
+
+        const fieldsToUpdate = {};
+
+        Object.keys(updatedFieldValues).forEach((key) => {
+            if (updatedFieldValues[key] != currentFieldValues[key] && key != 'options') {
+                fieldsToUpdate[key] = updatedFieldValues[key];
+            }
+        });
+
+        const hasFieldsToUpdate = Object.keys({ ...fieldsToUpdate }).length > 0;
+        if (hasFieldsToUpdate) {
+            console.log(fieldsToUpdate);
+            debounceUpdateGroupField({ fields: { field_id: updatedField?.id, ...fieldsToUpdate } });
+        }
+
+        if (optionsToUpdate) {
+            if (!currentFieldValues.options) {
+                optionsToUpdate.forEach((option) => {
+                    addNewFieldOption({ field_id: updatedField?.id, name: option.name });
+                    console.log('new opt: ', option);
+                });
+            } else {
+                const addedOptions = optionsToUpdate.filter((option) => !currentFieldValues.options.includes(option));
+                const removedOptions = currentFieldValues.options.filter((option) => !optionsToUpdate.includes(option));
+
+                addedOptions.forEach((option) => {
+                    addNewFieldOption({ field_id: updatedField?.id, name: option.name });
+                    console.log('new opt: ', option);
+                });
+
+                removedOptions.forEach((option) => {
+                    removeFieldOption({ option_id: option.id });
+                    console.log('rem opt: ', option);
+                });
+            }
+        }
+
+        /*  setGroups((groups) =>
+        groups.map((group) => ({
+            ...group,
+            fields: group.fields.map((field) => {
+                if (field.id === selectedField.id) {
+                    return updatedField;
+                }
+                return field;
+            }),
+        }))
+    ); */
+        // setSelectedField(updatedField);
     };
+
+    useEffect(() => {
+        if (!DBform || !selectedField) return;
+
+        const newSelectedField = DBform.groups
+            ?.flatMap((group) => group.fields)
+            .find((field) => field.id == selectedField?.id);
+
+        setSelectedField(newSelectedField);
+    }, [DBform, selectedField, isUpdateFormFieldError]);
 
     const handleDeleteField = () => {
         /* setGroups((groups) =>
@@ -65,12 +153,11 @@ export default function EditFormPage() {
                 fields: group.fields.filter((field) => field.id !== selectedField.id),
             }))
         ); */
-
-        setSelectedField(null);
+        removeField({ field_id: selectedField.id, form_id }).then(() => setSelectedField(null));
     };
 
     const handleDeleteGroup = (groupId) => {
-        removeGroup({ group_id: groupId });
+        removeGroup({ group_id: groupId, form_id });
     };
 
     useEffect(() => {
@@ -92,7 +179,15 @@ export default function EditFormPage() {
     return (
         <DragDropContext
             onDragEnd={(result) => {
-                onDragEnd({ result, currentGroups: DBform?.groups, addNewField });
+                onDragEnd({
+                    result,
+                    currentGroups: DBform?.groups,
+                    form_id,
+                    addNewField,
+                    addNewGroup,
+                    updateGroup,
+                    updateGroupField,
+                });
             }}
         >
             <Form
@@ -118,6 +213,7 @@ export default function EditFormPage() {
                                 <div
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
+
                                 >
                                     {DBform?.groups &&
                                         DBform?.groups.map((group, index) => (

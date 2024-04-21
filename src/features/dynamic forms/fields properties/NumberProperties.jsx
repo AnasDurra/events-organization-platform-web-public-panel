@@ -81,7 +81,7 @@ export default function NumberProperties({ field, onNameChange, onLabelChange, o
                 </Title>
                 <Checkbox
                     id='num-prop-isRequired'
-                    defaultChecked={field?.isRequired}
+                    defaultChecked={field?.required}
                     onChange={handleIsRequiredCheckboxChange}
                 />
             </Space>

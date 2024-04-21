@@ -6,7 +6,7 @@ import { WiStars } from 'react-icons/wi';
 export default function FormDateOverview({ isDragging, field, groupIndex, fieldIndex }) {
     return (
         <div
-            className='bg-gray-100 w-full p-4 border-2 border-zinc-200'
+            className='bg-gray-100 w-full px-4 border-2 border-zinc-200'
             style={{
                 opacity: isDragging ? 0.5 : 1,
             }}
@@ -15,23 +15,21 @@ export default function FormDateOverview({ isDragging, field, groupIndex, fieldI
                 direction='vertical'
                 className='w-full'
             >
-                <Title
-                    style={{ color: 'gray' }}
-                    level={5}
-                >
-                    {field?.label ? field.label : 'label'}
-                </Title>
+                <div className=' text-gray-500 flex items-center space-x-2  w-full my-2'>
+                    <span>{field?.label}</span>
+                    {field?.required && <WiStars className='ml-2' />}
+                </div>
 
-                <Space.Compact className='w-[50%] flex items-center'>
-                    <Form.Item name={['groups', groupIndex, 'fields', fieldIndex]}>
-                        <DatePicker
-                            className='w-[100%] '
-                            disabled
-                            placeholder='pick a date'
-                        />
-                        {field?.isRequired && <WiStars className='ml-2' />}
-                    </Form.Item>
-                </Space.Compact>
+                <Form.Item
+                //name={['groups', groupIndex, 'fields', fieldIndex]}
+                >
+                    <DatePicker
+                        className='w-[100%] '
+                        disabled
+                        placeholder='pick a date'
+                        size='small'
+                    />
+                </Form.Item>
             </Space.Compact>
         </div>
     );

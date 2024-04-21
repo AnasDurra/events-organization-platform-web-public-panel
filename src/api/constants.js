@@ -1,1 +1,1 @@
-export const URL = 'https://eop-api.onrender.com/api';
+export const URL = 'https://eop.onrender.com/api';
