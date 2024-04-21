@@ -12,13 +12,13 @@ const authMiddleware = (store) => (next) => async (action) => {
             store.dispatch(auth.endpoints.refresh.initiate(refreshToken));
 
             response = await next(action);
-            // console.log("second response",response);
         }
         if (
             (response.payload?.status == 401 || response.payload?.status == 403) && // TODO check if its work fine
             !window.location.pathname.startsWith('/login')
         ) {
             console.log('Here');
+            console.log(response);
             errorMessage({ content: 'Session Timeout.. login again' });
             router.navigate('/login', { replace: true });
         }

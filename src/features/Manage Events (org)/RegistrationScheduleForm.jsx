@@ -31,11 +31,16 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
         });
     };
     const deleteSlot = (dayIndex, slotIndex) => {
-        const newDays = [...days];
-        if (newDays[dayIndex]?.slots?.length > 1) {
-            newDays[dayIndex].slots.splice(slotIndex, 1);
-            setDays(newDays);
-        }
+        setDays((prevDays) => {
+            const newDays = prevDays.slice();
+            if (newDays[dayIndex]?.slots?.length > 1) {
+                const newSlots = newDays[dayIndex].slots.slice();
+                newSlots.pop();
+                newDays[dayIndex] = { ...newDays[dayIndex], slots: newSlots };
+            }
+            console.log(newDays);
+            return newDays;
+        });
     };
     const addDay = (dayIndex) => {
         setDays((prevDays) => [
@@ -174,7 +179,7 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                     >
                         <Row style={{ width: '100%' }} gutter={[25, 16]}>
                             {days?.map((_, dayIndex) => (
-                                <>
+                                <div key={dayIndex} style={{ display: 'flex', width: '100%' }}>
                                     <Col span={10}>
                                         <Form.Item
                                             label={`Day ${dayIndex + 1}`}
@@ -342,7 +347,7 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                                             }}
                                         />
                                     )}
-                                </>
+                                </div>
                             ))}
                         </Row>
                     </div>

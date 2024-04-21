@@ -26,18 +26,8 @@ export default function Sider({ isSiderOpen }) {
     };
 
     return (
-        <AntDSider
-            collapsedWidth='0'
-            trigger={null}
-            collapsed={!isSiderOpen}
-            className='h-[90vh] overflow-y-auto'
-        >
-            <Menu
-                mode='inline'
-                items={items}
-                onClick={handleMenuClick}
-                className='min-h-[90vh]'
-            />
+        <AntDSider collapsedWidth="0" trigger={null} collapsed={!isSiderOpen} className="h-[90vh] overflow-y-auto">
+            <Menu mode="inline" items={items} onClick={handleMenuClick} className="min-h-[90vh]" />
         </AntDSider>
     );
 }

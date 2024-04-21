@@ -21,14 +21,7 @@ const CreateEvent = () => {
     const { data: lists, error, isLoading: listsIsLoading } = useEventCreationListsQuery();
     const [createMutation, { isLoading: createEventIsLoading }] = useCreateMutation();
 
-    const { api } = useNotification();
-    const openNotificationWithIcon = (type, message, description) => {
-        api[type]({
-            message: message,
-            description: description ?? null,
-            placement: 'topLeft',
-        });
-    };
+    const { openNotification } = useNotification();
 
     const [coverImage, setCoverImage] = useState(null);
     const [isLocationOnMapModalOpen, setIsLocationOnMapModalOpen] = useState(null);
@@ -161,14 +154,14 @@ const CreateEvent = () => {
                     .then((res) => {
                         console.log(res);
                         if (res.statusCode === 201) {
-                            openNotificationWithIcon('success', 'Event Created Successfully !');
+                            openNotification('success', 'Event Created Successfully !');
                             navigate(`/event/show/${res.result.id}`);
                         }
                     })
                     .catch((error) => {
                         console.error('Error:', error);
                         error.data.result.response.message.forEach((value) => {
-                            openNotificationWithIcon('error', 'Something wend Wrong!', value);
+                            openNotification('error', 'Something wend Wrong!', value);
                         });
                     });
             }

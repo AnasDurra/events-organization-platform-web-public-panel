@@ -17,6 +17,21 @@ export const attendeeProfile = apiSlice.injectEndpoints({
             //   return responseData;
             // },
         }),
+        viewAttendeeProfile: builder.query({
+            query: (id) => ({
+                url: `attendee/profile/${id}`,
+                method: 'GET',
+            }),
+            // transformResponse: (responseData) => {
+            //   Cookies.set('accessToken', responseData?.accessToken, {
+            //     expires: 12,
+            //   });
+            //   Cookies.set('refreshToken', responseData?.accessToken, {
+            //     expires: 12,
+            //   });
+            //   return responseData;
+            // },
+        }),
 
         updateMyProfile: builder.mutation({
             query: (credentials) => ({
@@ -25,7 +40,19 @@ export const attendeeProfile = apiSlice.injectEndpoints({
                 body: credentials,
             }),
         }),
+
+        showAttendeeEvents: builder.query({
+            query: () => ({
+                url: `attendee/events`,
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
-export const { useViewMyProfileQuery, useUpdateMyProfileMutation } = attendeeProfile;
+export const {
+    useLazyViewMyProfileQuery,
+    useLazyViewAttendeeProfileQuery,
+    useUpdateMyProfileMutation,
+    useShowAttendeeEventsQuery,
+} = attendeeProfile;

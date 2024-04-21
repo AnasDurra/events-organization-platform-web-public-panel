@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-
 import {
     CheckOutlined,
     EditOutlined,
@@ -35,29 +33,20 @@ import {
 } from 'antd';
 const { Meta } = Card;
 
-import { useLazyViewAttendeeProfileQuery } from '../../api/services/attendeeProfile';
-import { useBlockUserMutation } from '../../api/services/ban';
-import { useUnBlockUserMutation } from '../../api/services/ban';
-import { useLazyIsBlockedQuery } from '../../api/services/ban';
+import { useLazyViewMyProfileQuery } from '../../api/services/attendeeProfile';
 
 import UpdateProfileModal from './UpdateProfileModal';
+
+import { useNavigate } from 'react-router-dom';
 
 import { getLoggedInUser } from '../../api/services/auth';
 import { useNotification } from '../../utils/NotificationContext';
 
 const ShowAttendeProfile = () => {
-    const [user, setUser] = useState(null);
-    const { id } = useParams();
-
     const { openNotification } = useNotification();
     const navigate = useNavigate();
 
-    const [fetchAttendeeProfile, { data: attendeeProfile, isLoading: attendeeProfileIsLoading }] =
-        useLazyViewAttendeeProfileQuery(id);
-
-    const [blockMutation, { isLoading: blockIsLoading }] = useBlockUserMutation();
-    const [unBlockMutation, { isLoading: unBlockIsLoading }] = useUnBlockUserMutation();
-    const [fetchIsBlocked, { data: isBlocked, isLoading: isBlockedIsLoading }] = useLazyIsBlockedQuery(id);
+    const [fetchMyProfile, { data: myProfile, isLoading: myProfileIsLoading }] = useLazyViewMyProfileQuery();
 
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -65,89 +54,23 @@ const ShowAttendeProfile = () => {
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
     const handleOk = () => {
-        fetchAttendeeProfile(id);
-        setIsLoading(true);
+        fetchMyProfile();
         setData(null);
+        setIsLoading(true);
         setIsUpdateModalOpen(false);
     };
     const handleCancel = () => {
         setIsUpdateModalOpen(false);
     };
 
-    const confirmBlockAttendee = () => {
-        Modal.confirm({
-            title: 'Are you sure you want to block this attendee?',
-            content: 'Blocking this attendee will restrict their access to certain features.',
-            okText: 'Yes, Block',
-            cancelText: 'Cancel',
-            onOk: () => {
-                blockMutation({ attendee_id: id })
-                    .unwrap()
-                    .then((res) => {
-                        openNotification(
-                            'success',
-                            `${attendeeProfile?.result?.full_name} has been blocked successfully`
-                        );
-                        fetchIsBlocked(id);
-                    })
-                    .catch((error) => {
-                        openNotification('warning', error?.data?.message);
-
-                        console.error('Error:', error);
-                    });
-            },
-        });
-    };
-
-    const confirmUnblockAttendee = () => {
-        Modal.confirm({
-            title: 'Are you sure you want to unblock this attendee?',
-            content: 'Unblocking this attendee will restore their access to all features.',
-            okText: 'Yes, Unblock',
-            cancelText: 'Cancel',
-            onOk: () => {
-                unBlockMutation({ attendee_id: id })
-                    .unwrap()
-                    .then((res) => {
-                        console.log(res);
-                        openNotification(
-                            'success',
-                            `${attendeeProfile?.result?.full_name} has been unblocked successfully`
-                        );
-                        fetchIsBlocked(id);
-                    })
-                    .catch((error) => {
-                        openNotification('warning', error.data.message);
-                        console.error('Error:', error);
-                    });
-            },
-        });
-    };
-
     useEffect(() => {
-        const loggedUser = getLoggedInUser();
-        setUser(loggedUser);
-        if (loggedUser?.role_id == 2) {
-            fetchIsBlocked(id);
+        fetchMyProfile();
+        setData(myProfile);
+        console.log(myProfile);
+        if (myProfile) {
+            setIsLoading(myProfileIsLoading);
         }
-        console.log(loggedUser);
-    }, []);
-
-    useEffect(() => {
-        fetchAttendeeProfile(id);
-        if (attendeeProfile) {
-            setData(attendeeProfile);
-            setIsLoading(attendeeProfileIsLoading);
-        }
-    }, [attendeeProfile, id]);
-
-    // TODO back it to later
-    // useEffect(() => {
-    //     console.log(attendeeProfile?.result.id, user?.id);
-    //     if (attendeeProfile?.result.id === user?.id) {
-    //         navigate('/attendee/my-profile');
-    //     }
-    // }, [user, attendeeProfile]);
+    }, [myProfile]);
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Card
@@ -156,7 +79,7 @@ const ShowAttendeProfile = () => {
                 }}
                 cover={<Image height={250} alt="example" src={data?.cover_img ?? 'https://picsum.photos/1000/300'} />}
             >
-                <Spin size="large" spinning={unBlockIsLoading || blockIsLoading || isBlockedIsLoading}>
+                <Spin size="large" spinning={myProfileIsLoading}>
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                         <Skeleton
                             loading={isLoading}
@@ -203,32 +126,19 @@ const ShowAttendeProfile = () => {
                             />
                         </Skeleton>
 
-                        {id && user?.role_id == 2 && (
-                            <Row style={{ marginLeft: '10px' }}>
-                                {user?.role_id == 2 && (
-                                    <Dropdown
-                                        placement="bottomRight"
-                                        //TODO replace this
-                                        overlay={
-                                            <Menu
-                                                onClick={
-                                                    isBlocked?.result ? confirmUnblockAttendee : confirmBlockAttendee
-                                                }
-                                            >
-                                                <Menu.Item key="block" style={{ color: 'red' }}>
-                                                    {isBlocked?.result ? 'Unblock User' : 'Block User'}
-                                                </Menu.Item>
-                                            </Menu>
-                                        }
-                                        trigger={['click']}
-                                    >
-                                        <Tooltip title="Block Attendee">
-                                            <Button icon={<EllipsisOutlined />} onClick={(e) => e.preventDefault()} />
-                                        </Tooltip>
-                                    </Dropdown>
-                                )}
-                            </Row>
-                        )}
+                        <Row style={{ marginLeft: '10px' }}>
+                            <Tooltip title="Edit Your Profile">
+                                <Button icon={<EditOutlined />} onClick={() => setIsUpdateModalOpen(true)} />
+                            </Tooltip>
+                            <Tooltip title="Show Your Events">
+                                <Button
+                                    icon={<CalendarOutlined />}
+                                    onClick={() => {
+                                        navigate(`/attendee/my-profile/events`);
+                                    }}
+                                />
+                            </Tooltip>
+                        </Row>
                     </div>
 
                     <Row

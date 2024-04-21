@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import AppLayout from '../AppLayout';
 import RegisterAttendee from '../features/Attendees Profiles/RegisterAttendee';
 import ShowAttendeProfile from '../features/Attendees Profiles/ShowAttendeProfile';
+import ShowMyProfile from '../features/Attendees Profiles/ShowMyProfile';
 import CreateEvent from '../features/Manage Events (org)/CreateEvent';
 import ShowEvent from '../features/Manage Events (org)/ShowEvent';
 import EditFormPage from '../features/dynamic forms/EditFormPage';
@@ -14,7 +15,16 @@ import TeamPage from '../features/org profiles/TeamPage';
 import ErrorPage from '../pages/error-page';
 import LoginPage from '../pages/loginPage';
 import ViewFormSubmissions from '../features/dynamic forms/submission/ViewFormSubmissions';
+import ShowAttendeeEvents from '../features/Attendees Profiles/ShowAttendeeEvents';
+import ShowEventAttendees from '../features/Manage Events (org)/ShowEventAttendees';
+import BlockedUsersPage from '../features/ban/BlockedUsersPage';
+import NotFound from '../pages/notFound';
+
 export const router = createBrowserRouter([
+    {
+        path: '/not-found',
+        element: <NotFound />,
+    },
     {
         path: '/login',
         element: <LoginPage />,
@@ -29,7 +39,15 @@ export const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             {
-                path: '/attende-profile',
+                path: '/attendee/my-profile',
+                element: <ShowMyProfile />,
+            },
+            {
+                path: '/attendee/my-profile/events',
+                element: <ShowAttendeeEvents />,
+            },
+            {
+                path: '/attendee-profile/:id',
                 element: <ShowAttendeProfile />,
             },
             {
@@ -39,11 +57,20 @@ export const router = createBrowserRouter([
                         path: 'create',
                         element: <CreateEvent />,
                     },
+
                     {
                         path: 'show/:id',
                         element: <ShowEvent />,
                     },
+                    {
+                        path: 'show/:id/attendees',
+                        element: <ShowEventAttendees />,
+                    },
                 ],
+            },
+            {
+                path: '/org/blocklist',
+                element: <BlockedUsersPage />,
             },
 
             { path: '/org', element: <ProfilePage /> },

@@ -255,7 +255,7 @@ const UpdateEventDetailsModal = ({
                                                 danger
                                                 onClick={() => {
                                                     setPosition(null);
-                                                    message.warning('Loacation Deleted ..   ');
+                                                    message.warning('Loacation Deleted Successfully ..   ');
                                                 }}
                                             >
                                                 Delete Location

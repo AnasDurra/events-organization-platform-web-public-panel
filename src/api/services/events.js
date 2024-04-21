@@ -1,12 +1,11 @@
-import { apiSlice } from "../../../src/api/apiSlice";
-import Cookies from "js-cookie";
+import { apiSlice } from '../../../src/api/apiSlice';
 
 export const events = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         create: builder.mutation({
             query: (data) => ({
-                url: "event/create",
-                method: "POST",
+                url: 'event/create',
+                method: 'POST',
                 body: data,
             }),
         }),
@@ -14,28 +13,34 @@ export const events = apiSlice.injectEndpoints({
         show: builder.query({
             query: (id) => ({
                 url: `event/show/${id}`,
-                method: "GET",
+                method: 'GET',
             }),
         }),
         updateDetails: builder.mutation({
             query: ({ id, body }) => ({
                 url: `event/update/${id}`,
-                method: "POST",
+                method: 'POST',
                 body: body,
             }),
         }),
         updateTags: builder.mutation({
             query: ({ id, body }) => ({
                 url: `event/update-tags/${id}`,
-                method: "POST",
+                method: 'POST',
                 body: body,
             }),
         }),
         updateAgeGroups: builder.mutation({
             query: ({ id, body }) => ({
                 url: `event/update-age-groups/${id}`,
-                method: "POST",
+                method: 'POST',
                 body: body,
+            }),
+        }),
+        showEventAttendees: builder.query({
+            query: (id) => ({
+                url: `event/attendees/${id}`,
+                method: 'GET',
             }),
         }),
     }),
@@ -47,4 +52,5 @@ export const {
     useUpdateDetailsMutation,
     useUpdateTagsMutation,
     useUpdateAgeGroupsMutation,
+    useShowEventAttendeesQuery,
 } = events;
