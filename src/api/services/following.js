@@ -17,8 +17,8 @@ export const following = apiSlice.injectEndpoints({
             }),
         }),
         followersList: builder.query({
-            query: () => ({
-                url: 'organization/followers-list',
+            query: (id) => ({
+                url: `organization/followers-list/${id}`,
                 method: 'GET',
             }),
         }),

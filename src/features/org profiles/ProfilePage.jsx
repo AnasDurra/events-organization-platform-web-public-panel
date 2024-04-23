@@ -1,7 +1,7 @@
 import { MinusOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons';
 import { Button, Col, Row, Typography, message } from 'antd';
 import Title from 'antd/es/typography/Title';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 const { Text } = Typography;
 import './ProfilePage.css';
@@ -19,7 +19,6 @@ import {
 } from './orgSlice';
 import {
     useFollowOrgMutation,
-    useLazyFollowersListQuery,
     useUnFollowOrgMutation,
     useLazyIsAttendeeFollowingOrgQuery,
 } from '../../api/services/following';
@@ -33,12 +32,12 @@ export default function ProfilePage() {
     const { openNotification } = useNotification();
     const [user, setUser] = useState(null);
 
-    let { orgId = 1 } = useParams();
+    let { orgId } = useParams();
     const [messageApi, contextHolder] = message.useMessage();
     const inputCoverFile = useRef(null);
     const inputProfilePicFile = useRef(null);
 
-    const { data: { result: org } = { result: {} }, isLoading } = useGetOrgQuery(orgId);
+    const { data: { result: org } = { result: {} }, isLoading, refetch } = useGetOrgQuery(orgId);
     const [newCoverPic, { isLoading: isUpdateCoverLoading }] = useNewCoverPicMutation();
     const [newProfilePic, { isLoading: isUpdateProfilePicLoading }] = useNewProfilePicMutation();
     const [removeCoverPic] = useRemoveCoverPicMutation();
@@ -46,8 +45,6 @@ export default function ProfilePage() {
 
     const [followOrg, { isLoading: isFollowingOrgLoading }] = useFollowOrgMutation();
     const [unFollowOrg, { isLoading: isUnFollowingOrgLoading }] = useUnFollowOrgMutation();
-    const [fetchFollowersList, { data: followersList, isLoading: isFollowersListLoading }] =
-        useLazyFollowersListQuery();
     const [
         fetchIsAttendeeFollowing,
         { data: isAttendeeFollowing, isLoading: isAttendeeFollowingLoading, isFetching: isAttendeeFollowingFetching },
@@ -65,14 +62,16 @@ export default function ProfilePage() {
     }, [isUpdateCoverLoading, isUpdateProfilePicLoading, messageApi]);
 
     useEffect(() => {
+        console.log(org);
+    }, [org]);
+
+    useEffect(() => {
         const loggedUser = getLoggedInUser();
         setUser(loggedUser);
-        if (loggedUser.role_id == 2) {
-            fetchFollowersList();
-        } else if (loggedUser.role_id == 3) {
+        console.log(loggedUser);
+        if (loggedUser.role_id == 3) {
             fetchIsAttendeeFollowing(orgId);
         }
-        console.log(loggedUser);
     }, []);
 
     return (
@@ -101,8 +100,8 @@ export default function ProfilePage() {
                             {org?.name}
                         </Title>
                         <Link
-                            hidden={isFollowersListLoading}
-                            to="/org/followers-list"
+                            hidden={isLoading}
+                            to={`/org/${orgId}/followers-list`}
                             style={{
                                 fontSize: '12px',
                                 fontWeight: 'bold',
@@ -116,21 +115,22 @@ export default function ProfilePage() {
                                 e.target.style.textDecoration = 'none';
                             }}
                         >
-                            Followers: {followersList?.result?.length}
+                            Followers: {org?.organization_followers_count}
                         </Link>
                     </Col>
 
-                    {/*  TODO only if member */}
-                    <Col xs={{ span: 3 }} sm={{ span: 7 }} lg={{ span: 7 }} className="text-right">
-                        <Button
-                            type="text"
-                            className="mt-2"
-                            icon={<SettingOutlined />}
-                            onClick={() => {
-                                navigate('config');
-                            }}
-                        />
-                    </Col>
+                    {user?.role_id == 2 && user?.organization_id == orgId && (
+                        <Col xs={{ span: 3 }} sm={{ span: 7 }} lg={{ span: 7 }} className="text-right">
+                            <Button
+                                type="text"
+                                className="mt-2"
+                                icon={<SettingOutlined />}
+                                onClick={() => {
+                                    navigate('config');
+                                }}
+                            />
+                        </Col>
+                    )}
                 </Row>
 
                 <Row justify={'center'}>
@@ -147,55 +147,60 @@ export default function ProfilePage() {
                     </Col>
                 </Row>
 
-                {user?.role_id == 2}
-                <Col span={24} className="text-right">
-                    <Button
-                        style={{ width: '30%', margin: '10px 30px' }}
-                        block
-                        icon={isAttendeeFollowing?.result ? <MinusOutlined /> : <PlusOutlined />}
-                        loading={isFollowingOrgLoading || isUnFollowingOrgLoading || isAttendeeFollowingFetching}
-                        disabled={isLoading || isAttendeeFollowingLoading || isAttendeeFollowingFetching}
-                        onClick={() => {
-                            isAttendeeFollowing?.result
-                                ? unFollowOrg({ organization_id: orgId })
-                                      .unwrap()
-                                      .then((res) => {
-                                          if (res.statusCode == 200) {
-                                              openNotification(
-                                                  'success',
-                                                  'You are no longer following this organization.'
-                                              );
-                                              fetchIsAttendeeFollowing(orgId);
-                                          }
-                                      })
-                                : followOrg({ organization_id: orgId })
-                                      .unwrap()
-                                      .then((res) => {
-                                          if (res.statusCode == 200) {
-                                              openNotification('success', 'You are now following this organization.');
-                                              fetchIsAttendeeFollowing(orgId);
-                                          }
-                                      })
-                                      .catch((error) => {
-                                          openNotification('warning', error.data.message);
-                                          console.error('Error:', error);
-                                      })
-                                      .catch((error) => {
-                                          openNotification('warning', error.data.message);
-                                          console.error('Error:', error);
-                                      });
-                        }}
-                    >
-                        {isAttendeeFollowing?.result
-                            ? isUnFollowingOrgLoading
-                                ? 'Unfollowing..'
-                                : 'Unfollow'
-                            : isFollowingOrgLoading
-                            ? 'Following..'
-                            : 'Follow'}
-                    </Button>
-                </Col>
-
+                {user?.role_id == 3 && (
+                    <Col span={24} className="text-right">
+                        <Button
+                            style={{ width: '30%', margin: '10px 30px' }}
+                            block
+                            icon={isAttendeeFollowing?.result ? <MinusOutlined /> : <PlusOutlined />}
+                            loading={isFollowingOrgLoading || isUnFollowingOrgLoading || isAttendeeFollowingFetching}
+                            disabled={isLoading || isAttendeeFollowingLoading || isAttendeeFollowingFetching}
+                            onClick={() => {
+                                isAttendeeFollowing?.result
+                                    ? unFollowOrg({ organization_id: orgId })
+                                          .unwrap()
+                                          .then((res) => {
+                                              if (res.statusCode == 200) {
+                                                  openNotification(
+                                                      'success',
+                                                      'You are no longer following this organization.'
+                                                  );
+                                                  fetchIsAttendeeFollowing(orgId);
+                                                  refetch();
+                                              }
+                                          })
+                                    : followOrg({ organization_id: orgId })
+                                          .unwrap()
+                                          .then((res) => {
+                                              if (res.statusCode == 200) {
+                                                  openNotification(
+                                                      'success',
+                                                      'You are now following this organization.'
+                                                  );
+                                                  fetchIsAttendeeFollowing(orgId);
+                                                  refetch();
+                                              }
+                                          })
+                                          .catch((error) => {
+                                              openNotification('warning', error.data.message);
+                                              console.error('Error:', error);
+                                          })
+                                          .catch((error) => {
+                                              openNotification('warning', error.data.message);
+                                              console.error('Error:', error);
+                                          });
+                            }}
+                        >
+                            {isAttendeeFollowing?.result
+                                ? isUnFollowingOrgLoading
+                                    ? 'Unfollowing..'
+                                    : 'Unfollow'
+                                : isFollowingOrgLoading
+                                ? 'Following..'
+                                : 'Follow'}
+                        </Button>
+                    </Col>
+                )}
                 <Row justify={'start'}>
                     <Col sm={{ span: 21 }} xs={{ span: 21 }} lg={{ span: 5 }}>
                         <AddressInfo org={org} isLoading={isLoading} />

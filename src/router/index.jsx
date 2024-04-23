@@ -82,13 +82,13 @@ export const router = createBrowserRouter([
                 path: '/org/blocklist',
                 element: <BlockedUsersPage />,
             },
+
+            { path: '/org/:orgId', element: <ProfilePage /> },
             {
-                path: '/org/followers-list',
+                path: '/org/:orgId/followers-list',
                 element: <FollowersList />,
             },
-
-            { path: '/org', element: <ProfilePage /> },
-            { path: '/org/config', element: <ConfigOrgPage /> },
+            { path: '/org/:orgId/config', element: <ConfigOrgPage /> },
 
             { path: '/members', element: <TeamPage /> },
 

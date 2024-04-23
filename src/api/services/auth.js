@@ -54,6 +54,13 @@ export const auth = apiSlice.injectEndpoints({
                 // body: refresh_token,
             }),
         }),
+
+        userMenu: builder.query({
+            query: () => ({
+                url: 'user/menu',
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
@@ -64,4 +71,4 @@ export const getLoggedInUser = () => {
     return decodedToken;
 };
 
-export const { useLoginMutation, useLogoutMutation, useSignupMutation } = auth;
+export const { useLoginMutation, useLogoutMutation, useSignupMutation, useUserMenuQuery } = auth;

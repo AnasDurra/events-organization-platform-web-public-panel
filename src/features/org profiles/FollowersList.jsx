@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { List, Dropdown, Button, Typography, Space, Menu, Input, Spin, Avatar } from 'antd';
 import { EllipsisOutlined, RightOutlined, ArrowLeftOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const { Text } = Typography;
 const { Search } = Input;
@@ -12,7 +12,8 @@ import { useFollowersListQuery } from '../../api/services/following';
 
 const FollowersList = () => {
     const navigate = useNavigate();
-    const { data, isLoading, error } = useFollowersListQuery();
+    let { orgId } = useParams();
+    const { data, isLoading, error } = useFollowersListQuery(orgId);
 
     // const data = {
     //     status: true,
@@ -96,6 +97,7 @@ const FollowersList = () => {
 
     useEffect(() => {
         setFilteredAttendees(data?.result);
+        console.log(data);
     }, [data]);
 
     return (
