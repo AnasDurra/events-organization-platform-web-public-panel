@@ -3,14 +3,13 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useAddNewFormMutation } from '../dynamicFormsSlice';
 
-export default function AddFormModal({ isOpen, onClose }) {
+export default function AddFormModal({ isOpen, onClose ,onSubmit}) {
     const [form] = Form.useForm();
+    //TODO org from user
     let { organization_id = 1 } = useParams();
-    const [addNewForm] = useAddNewFormMutation();
 
     const handleFormSubmit = (fields) => {
-        addNewForm({ ...fields, groups: [], organization_id });
-        onClose();
+        onSubmit({ ...fields, groups: [], organization_id });
     };
 
     return (
@@ -31,10 +30,7 @@ export default function AddFormModal({ isOpen, onClose }) {
                 title={'Add new form'}
                 okText={'Add'}
                 onOk={() => form.submit()}
-                onCancel={() => {
-                    form.resetFields();
-                    onClose();
-                }}
+                onCancel={onClose}
                 destroyOnClose
             >
                 <Form.Item

@@ -69,12 +69,12 @@ export default function DroppableGroup({
                         placeholder='group name'
                         size='small'
                         variant='filled'
-                        onChange={handleNameInputChange}
+                        //[]  onChange={handleNameInputChange}
+                        onBlur={handleNameInputChange}
                     />
                 </Form.Item>
                 <Form.Item
                     className='w-[80%]'
-
                     name={['groups', groupIndex, 'description']}
                     label={'description'}
                     required={false}
@@ -87,7 +87,8 @@ export default function DroppableGroup({
                         placeholder='group description'
                         size='small'
                         variant='filled'
-                        onChange={handleDescriptionInputChange}
+                        onBlur={handleDescriptionInputChange}
+                        //    onChange={handleDescriptionInputChange}
                     />
                 </Form.Item>
             </div>

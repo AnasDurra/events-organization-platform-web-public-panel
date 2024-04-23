@@ -18,6 +18,7 @@ import UpdateEventDetailsModal from './UpdateEventDetailsModal';
 import ShowMap from './ShowMap';
 import UpdateEventTagsModal from './UpdateEventTagsModal';
 import UpdateEventAgeGroupModal from './UpdateEventAgeGroupModal';
+import AttachForm from './AttachForm';
 
 const UpdateEventModal = ({
     isUpdateModalOpen,
@@ -44,7 +45,10 @@ const UpdateEventModal = ({
             <Modal
                 title={
                     <>
-                        <Title style={{ marginTop: '0px' }} level={4}>
+                        <Title
+                            style={{ marginTop: '0px' }}
+                            level={4}
+                        >
                             Update Event
                         </Title>
                         <Divider style={{ marginBottom: '0px' }} />
@@ -71,11 +75,14 @@ const UpdateEventModal = ({
                                 marginBottom: '20px',
                             }}
                         >
-                            <Title level={2} style={{ margin: 0 }}>
+                            <Title
+                                level={2}
+                                style={{ margin: 0 }}
+                            >
                                 Event Details
                             </Title>
                             <Button
-                                type="text"
+                                type='text'
                                 icon={<EditOutlined />}
                                 style={{ border: 'none', color: '#1890ff' }}
                                 onClick={() => {
@@ -144,7 +151,7 @@ const UpdateEventModal = ({
                                 <strong>Event Schedule: ...</strong>{' '}
                                 {
                                     <Button
-                                        type="text"
+                                        type='text'
                                         style={{ border: 'none', color: '#1890ff' }}
                                         onClick={() => {
                                             setIsUpdateEventDetailsModalOpen(true);
@@ -171,11 +178,14 @@ const UpdateEventModal = ({
                                 marginBottom: '20px',
                             }}
                         >
-                            <Title level={2} style={{ margin: 0 }}>
+                            <Title
+                                level={2}
+                                style={{ margin: 0 }}
+                            >
                                 Event Tags
                             </Title>
                             <Button
-                                type="text"
+                                type='text'
                                 icon={<EditOutlined />}
                                 style={{ border: 'none', color: '#1890ff' }}
                                 onClick={() => {
@@ -230,11 +240,14 @@ const UpdateEventModal = ({
                                 marginBottom: '20px',
                             }}
                         >
-                            <Title level={2} style={{ margin: 0 }}>
+                            <Title
+                                level={2}
+                                style={{ margin: 0 }}
+                            >
                                 Event Age Group
                             </Title>
                             <Button
-                                type="text"
+                                type='text'
                                 icon={<EditOutlined />}
                                 style={{ border: 'none', color: '#1890ff' }}
                                 onClick={() => {
@@ -270,6 +283,20 @@ const UpdateEventModal = ({
                                 </Space>
                             }
                         </div>
+                    </div>
+                    <div className='pl p-2 bg-gray-100/50 my-2'>
+                        <Title
+                            level={2}
+                            className='my-2 '
+                        >
+                            Attached Form
+                        </Title>
+                        <AttachForm
+                            onAttach={() => {}}
+                            organization_id={1}
+                            attachedForm={{ name: 'dummy' }}
+                            onDetachForm={() => {}}
+                        />
                     </div>
                 </Spin>
             </Modal>

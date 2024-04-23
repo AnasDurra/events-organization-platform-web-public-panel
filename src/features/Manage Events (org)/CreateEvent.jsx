@@ -2,11 +2,10 @@ import { FileImageOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Col, Image, Row, Skeleton, Spin, Upload, message } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import { useState } from 'react';
-import LocationOnMapsModal from './LocationOnMapsModal';
 import { useEventCreationListsQuery } from '../../api/services/lists';
+import LocationOnMapsModal from './LocationOnMapsModal';
 
 import { useForm } from 'antd/es/form/Form';
-import moment from 'moment';
 import { useCreateMutation } from '../../api/services/events';
 import EventDetailsForm from './EventDetailsForm';
 import MediaAndAttachmentsForm from './MediaAndAttachmentsForm';
@@ -25,6 +24,7 @@ const CreateEvent = () => {
     const { openNotification } = useNotification();
 
     const [coverImage, setCoverImage] = useState(null);
+    const [attachedForm, setAttachedForm] = useState(null);
     const [isLocationOnMapModalOpen, setIsLocationOnMapModalOpen] = useState(null);
 
     const [days, setDays] = useState([
@@ -44,6 +44,13 @@ const CreateEvent = () => {
 
     const handleCoverImageUpload = (coverImage) => {
         setCoverImage(coverImage);
+    };
+
+    const handleAttachForm = (form) => {
+        setAttachedForm(form);
+    };
+    const handleDetachForm = () => {
+        setAttachedForm(null);
     };
 
     // Handle on Forms Finish
@@ -100,6 +107,7 @@ const CreateEvent = () => {
                     attachments: data?.attachments?.fileList,
                     location: data?.location,
                     cover_picture: coverImage.file ?? null,
+                    form_id: attachedForm ? attachedForm.id : undefined,
                 };
                 for (const key in dataToSend) {
                     if (dataToSend[key] == null) {
@@ -279,7 +287,13 @@ const CreateEvent = () => {
                                 <MediaAndAttachmentsForm eventMediaForm={eventMediaForm} />
 
                                 <div>
-                                    <AttachForm onAttach={() => {}} organization_id={1} />
+                                    {/* TODO org_id */}
+                                    <AttachForm
+                                        onAttach={handleAttachForm}
+                                        organization_id={1}
+                                        attachedForm={attachedForm}
+                                        onDetachForm={handleDetachForm}
+                                    />
                                 </div>
                             </Card>
                         </Col>

@@ -11,7 +11,7 @@ import Meta from 'antd/es/card/Meta';
 import Title from 'antd/es/typography/Title';
 import React, { useState } from 'react';
 import AddFormModal from './modals/AddFormModal';
-import { useGetFormsQuery } from './dynamicFormsSlice';
+import { useAddNewFormMutation, useGetFormsQuery } from './dynamicFormsSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 const { useToken } = theme;
 
@@ -34,6 +34,7 @@ export default function ViewFormsPage() {
 
     const { data: { result: forms } = { result: [] }, isLoading: isFetchFormsLoading } =
         useGetFormsQuery(organization_id);
+    const [addNewForm] = useAddNewFormMutation();
 
     return (
         <div className='h-full'>
@@ -164,6 +165,9 @@ export default function ViewFormsPage() {
             <AddFormModal
                 isOpen={isAddModalOpen}
                 onClose={() => setIsAddModalOpen(false)}
+                onSubmit={(fields) => {
+                    addNewForm(fields).then(() => setIsAddModalOpen(false));
+                }}
             />
         </div>
     );

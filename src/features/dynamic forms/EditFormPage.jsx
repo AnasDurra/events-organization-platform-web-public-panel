@@ -50,7 +50,7 @@ export default function EditFormPage() {
         );
     };
 
-    const debounceUpdateGroup = debounce(updateGroup, debounceTime);
+    const debounceUpdateGroup = debounce(updateGroup, debounceTime * 10);
     const handleGroupNameChange = (groupId, newName) => {
         debounceUpdateGroup({ fields: { name: newName }, group_id: groupId });
     };
@@ -62,7 +62,7 @@ export default function EditFormPage() {
     };
 
     const debounceUpdateGroupField = debounce(updateGroupField, debounceTime);
-    const debounceUpdateFieldOption = debounce(updateFieldOption, debounceTime * 10);
+    const debounceUpdateFieldOption = debounce(updateFieldOption, debounceTime);
 
     const handleUpdateProperties = (updatedField) => {
         console.log(updatedField);
@@ -172,16 +172,6 @@ export default function EditFormPage() {
         // setSelectedField(updatedField);
     };
 
-    useEffect(() => {
-        if (!DBform || !selectedField) return;
-
-        const newSelectedField = DBform.groups
-            ?.flatMap((group) => group.fields)
-            .find((field) => field.id == selectedField?.id);
-
-        setSelectedField(newSelectedField);
-    }, [DBform, selectedField, isUpdateFormFieldError]);
-
     const handleDeleteField = () => {
         /* setGroups((groups) =>
             groups.map((group) => ({
@@ -195,6 +185,16 @@ export default function EditFormPage() {
     const handleDeleteGroup = (groupId) => {
         removeGroup({ group_id: groupId, form_id });
     };
+
+    useEffect(() => {
+        if (!DBform || !selectedField) return;
+
+        const newSelectedField = DBform.groups
+            ?.flatMap((group) => group.fields)
+            .find((field) => field.id == selectedField?.id);
+
+        setSelectedField(newSelectedField);
+    }, [DBform, selectedField, isUpdateFormFieldError]);
 
     useEffect(() => {
         if (isFetchFormSuccess && DBform?.groups?.length == 0) {

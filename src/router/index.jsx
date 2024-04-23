@@ -19,6 +19,8 @@ import ShowAttendeeEvents from '../features/Attendees Profiles/ShowAttendeeEvent
 import ShowEventAttendees from '../features/Manage Events (org)/ShowEventAttendees';
 import BlockedUsersPage from '../features/ban/BlockedUsersPage';
 import NotFound from '../pages/notFound';
+import HomeLayout from '../features/landing/HomeLayout';
+import Home from '../features/landing/Home';
 
 export const router = createBrowserRouter([
     {
@@ -102,6 +104,14 @@ export const router = createBrowserRouter([
             },
         ],
     },
-  
-    
+    {
+        path: 'home',
+        element: <HomeLayout />,
+        children: [
+            {
+                index: true,
+                element: <Home />,
+            },
+        ],
+    },
 ]);
