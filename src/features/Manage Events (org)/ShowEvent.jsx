@@ -11,6 +11,7 @@ import {
     Skeleton,
     Space,
     Table,
+    Tabs,
     Tag,
     Tooltip,
     Typography,
@@ -28,16 +29,20 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import ShowMap from './ShowMap';
 
 import { useShowQuery } from '../../api/services/events';
 import UpdateEventModal from './UpdateEventModal';
 
 import { useNavigate } from 'react-router-dom';
+import { getLoggedInUser } from '../../api/services/auth';
+import EventChat from './EventChat';
 const ShowEvent = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+
+    const [user, setUser] = useState(null);
 
     const { data: eventData, error, isLoading: eventDataIsLoading, refetch, isFetching } = useShowQuery(id);
 
@@ -77,10 +82,19 @@ const ShowEvent = () => {
     useEffect(() => {
         console.log(eventData);
     }, [eventData]);
+
+    useEffect(() => {
+        const loggedUser = getLoggedInUser();
+        setUser(loggedUser);
+        console.log(loggedUser);
+    }, []);
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}>
+            {/* <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}> */}
+
+            <Skeleton loading={false} active round paragraph={{ rows: 10 }}>
                 <Card
+                    style={{ width: '100%' }}
                     bodyStyle={{ padding: '10px 20px' }}
                     cover={
                         <>
@@ -88,7 +102,7 @@ const ShowEvent = () => {
                         </>
                     }
                 >
-                    <Row gutter={[50, 30]}>
+                    <Row gutter={[0, 20]}>
                         <Col span={24}>
                             <div
                                 style={{
@@ -124,308 +138,377 @@ const ShowEvent = () => {
                                             })()}
                                         </Typography.Text>
                                         <Typography.Text level={5} underline style={{ marginTop: '0px' }}>
-                                            by @<a href="@organizer120">{eventData?.result?.organization?.name}</a>
+                                            by @
+                                            <Link to={`/org/${eventData?.result?.organization?.id}`}>
+                                                {eventData?.result?.organization?.name}
+                                            </Link>
                                         </Typography.Text>
                                     </Space>
                                 </Space>
-                                <div style={{ textAlign: 'end' }}>
-                                    <Tooltip title="Edit Event">
-                                        <Button icon={<EditOutlined />} onClick={() => setIsUpdateModalOpen(true)} />
-                                    </Tooltip>
-                                    <Tooltip title="Show Attendees">
-                                        <Button
-                                            icon={<TeamOutlined />}
-                                            onClick={() => navigate(`/event/show/${id}/attendees`)}
-                                        />
-                                    </Tooltip>
-                                </div>
-                            </div>
-                        </Col>
-
-                        <Col xs={24} md={12}>
-                            <Table
-                                style={{
-                                    height: '100%',
-                                    padding: '10px',
-                                    borderRadius: '8px',
-                                    boxShadow: '0 1px 5px rgba(0, 0, 0, 0.1)',
-                                }}
-                                dataSource={dataSource}
-                                columns={columns}
-                                bordered
-                                pagination={false}
-                            />
-                        </Col>
-                        <Col xs={24} md={12}>
-                            <Descriptions
-                                bordered
-                                column={1}
-                                style={{
-                                    width: '100%',
-                                }}
-                            >
-                                <Descriptions.Item label="Registration Start Date">
-                                    {eventData?.result?.registration_start_date
-                                        ? new Date(eventData.result.registration_start_date).toLocaleDateString(
-                                              'en-US',
-                                              { year: 'numeric', month: 'short', day: 'numeric' }
-                                          )
-                                        : 'N/A'}
-                                </Descriptions.Item>
-                                <Descriptions.Item label="Registration End Date">
-                                    {eventData?.result?.registration_end_date
-                                        ? new Date(eventData.result.registration_end_date).toLocaleDateString('en-US', {
-                                              year: 'numeric',
-                                              month: 'short',
-                                              day: 'numeric',
-                                          })
-                                        : 'N/A'}
-                                </Descriptions.Item>
-                            </Descriptions>
-                            <Button
-                                size="large"
-                                onClick={handleRegisterClicked}
-                                style={{
-                                    width: '100%',
-                                    height: '6vh',
-                                    border: '2px solid #000000',
-                                    backgroundColor: '#8B0000',
-                                    borderColor: '#8B0000',
-                                    color: 'white',
-                                    borderRadius: '4px',
-                                    padding: '0px 20px',
-
-                                    fontSize: '16px',
-                                    fontWeight: 'bold',
-                                }}
-                            >
-                                Register Now
-                            </Button>
-                        </Col>
-
-                        <Col span={24}>
-                            <Divider />
-                            <Typography.Title style={{ margin: '0px' }} level={3} strong>
-                                Event Overview
-                            </Typography.Title>
-                        </Col>
-                        <Col span={24}>
-                            <Card
-                                style={{
-                                    height: '100%',
-                                    padding: '10px',
-                                    borderRadius: '8px',
-                                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                                }}
-                            >
-                                <Space direction="vertical" wrap>
-                                    <Typography.Text>{eventData?.result?.description}</Typography.Text>
-                                </Space>
-                            </Card>
-                        </Col>
-
-                        <Col span={24}>
-                            <Divider />
-                            <Typography.Title style={{ margin: '0px' }} level={3} strong>
-                                Event Detials
-                            </Typography.Title>
-                        </Col>
-                        <Col xs={24} lg={12}>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    height: '100%',
-                                    width: '100%',
-                                }}
-                            >
-                                <Row style={{ flex: 1 }} gutter={[20, 10]}>
-                                    <Col span={24}>
-                                        <Card
-                                            type="inner"
-                                            style={{
-                                                width: '100%',
-                                                height: '100%',
-                                                padding: '10px',
-                                                borderRadius: '8px',
-                                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                                            }}
-                                        >
-                                            <Space direction="vertical" size={30}>
-                                                <Space wrap>
-                                                    <TagsOutlined />
-                                                    <Typography.Text strong>Event Tags:</Typography.Text>
-                                                    <div>
-                                                        {eventData?.result?.tags.length === 0
-                                                            ? 'No Tags for this event'
-                                                            : eventData?.result?.tags.map((tag) => (
-                                                                  <Tag
-                                                                      key={tag?.tag?.value}
-                                                                      style={{
-                                                                          padding: '2px 10px',
-                                                                          margin: '5px',
-                                                                          fontSize: '15px',
-                                                                      }}
-                                                                  >
-                                                                      {tag?.tag?.label}
-                                                                  </Tag>
-                                                              ))}
-                                                    </div>
-                                                </Space>
-
-                                                <Space wrap>
-                                                    <UserOutlined />
-                                                    <Typography.Text strong>Event Target Age Group:</Typography.Text>
-                                                    <div>
-                                                        {eventData?.result?.age_groups.length === 0
-                                                            ? 'No Age Groups for this event'
-                                                            : eventData?.result?.age_groups.map((age_group) => (
-                                                                  <Tag
-                                                                      style={{ padding: '2px 10px', fontSize: '15px' }}
-                                                                      key={age_group?.age_group_id}
-                                                                  >
-                                                                      {age_group?.age_group_name}
-                                                                  </Tag>
-                                                              ))}
-                                                    </div>
-                                                </Space>
-                                            </Space>
-                                        </Card>
-                                    </Col>
-                                    <Col span={24}>
-                                        <Card
-                                            type="inner"
-                                            style={{
-                                                height: '100%',
-                                                padding: '10px',
-                                                borderRadius: '8px',
-                                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                                            }}
-                                        >
-                                            <Space style={{ width: '100%' }} direction="vertical" size={10}>
-                                                <Space>
-                                                    <EnvironmentOutlined />
-                                                    <Typography.Text strong>Event Address:</Typography.Text>
-                                                </Space>
-                                                <Divider
-                                                    style={{
-                                                        margin: '10px 0px',
-                                                    }}
-                                                />
-                                                {eventData?.result?.location?.latitude && (
-                                                    <ShowMap
-                                                        position={{
-                                                            lat: eventData?.result?.location?.latitude
-                                                                ? parseFloat(eventData.result.location.latitude)
-                                                                : 0,
-                                                            lng: eventData?.result?.location?.longitude
-                                                                ? parseFloat(eventData.result.location.longitude)
-                                                                : 0,
-                                                        }}
-                                                    />
-                                                )}
-                                                <Typography.Text>
-                                                    <strong>Event Address: </strong>
-                                                    {eventData?.result?.address?.label}
-                                                </Typography.Text>
-                                                <Typography.Text>
-                                                    <strong>Address Note:</strong>{' '}
-                                                    {eventData?.result?.address_notes ?? 'No additional notes'}
-                                                </Typography.Text>
-                                            </Space>
-                                        </Card>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </Col>
-                        <Col xs={24} lg={12}>
-                            <Card
-                                type="inner"
-                                style={{
-                                    height: '100%',
-                                    padding: '10px',
-                                    borderRadius: '8px',
-                                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                                }}
-                            >
-                                <Space direction="vertical" style={{ width: '100%' }} size={20}>
-                                    <Space>
-                                        <ScheduleOutlined />
-                                        <Typography.Text
-                                            strong
-                                            style={{
-                                                fontWeight: 'bold',
-                                                fontSize: '18px',
-                                            }}
-                                        >
-                                            Event Schedule:
-                                        </Typography.Text>
-                                    </Space>
-                                    <Divider style={{ margin: '0px' }} />
-                                    {eventData?.result?.days?.map((dateObj, index) => (
-                                        <Space
-                                            direction="vertical"
-                                            style={{
-                                                width: '100%',
-                                            }}
-                                            size={20}
-                                            key={index}
-                                        >
-                                            <Space>
-                                                <CalendarOutlined />
-                                                <Typography.Text
-                                                    strong
-                                                    style={{
-                                                        fontWeight: 'bold',
-                                                        fontSize: '16px',
-                                                    }}
-                                                >
-                                                    {dateObj.day_date}
-                                                </Typography.Text>
-                                            </Space>
-                                            <List
-                                                bordered
-                                                dataSource={dateObj.slots}
-                                                renderItem={(slot, i) => (
-                                                    <>
-                                                        <Typography.Text
-                                                            strong
-                                                            style={{
-                                                                padding: '12px 24px',
-                                                            }}
-                                                        >
-                                                            {slot.label}
-                                                        </Typography.Text>
-                                                        <List.Item
-                                                            style={{
-                                                                display: 'flex',
-                                                                justifyContent: 'space-between',
-                                                                alignItems: 'center',
-                                                            }}
-                                                        >
-                                                            <div>
-                                                                <Typography.Text>
-                                                                    {formatDate(slot.start_time)}
-                                                                </Typography.Text>
-                                                            </div>
-
-                                                            <ArrowRightOutlined
-                                                                style={{
-                                                                    margin: '0em 1em',
-                                                                }}
-                                                            />
-                                                            <div>
-                                                                <Typography.Text>
-                                                                    {formatDate(slot.end_time)}
-                                                                </Typography.Text>
-                                                            </div>
-                                                        </List.Item>
-                                                    </>
-                                                )}
+                                {user?.role_id == 2 && user?.organization_id == eventData?.result?.organization?.id && (
+                                    <div style={{ textAlign: 'end' }}>
+                                        <Tooltip title="Edit Event">
+                                            <Button
+                                                icon={<EditOutlined />}
+                                                onClick={() => setIsUpdateModalOpen(true)}
                                             />
-                                        </Space>
-                                    ))}
-                                </Space>
-                            </Card>
+                                        </Tooltip>
+                                        <Tooltip title="Show Attendees">
+                                            <Button
+                                                icon={<TeamOutlined />}
+                                                onClick={() => navigate(`/event/show/${id}/attendees`)}
+                                            />
+                                        </Tooltip>
+                                    </div>
+                                )}
+                            </div>
+                        </Col>
+                        <Col span={24}>
+                            <Tabs
+                                defaultActiveKey="1"
+                                items={[
+                                    {
+                                        key: '1',
+                                        label: 'Event Details',
+                                        children: (
+                                            <Row gutter={[50, 30]}>
+                                                <Col xs={24} md={12}>
+                                                    <Table
+                                                        style={{
+                                                            height: '100%',
+                                                            padding: '10px',
+                                                            borderRadius: '8px',
+                                                            boxShadow: '0 1px 5px rgba(0, 0, 0, 0.1)',
+                                                        }}
+                                                        dataSource={dataSource}
+                                                        columns={columns}
+                                                        bordered
+                                                        pagination={false}
+                                                    />
+                                                </Col>
+                                                <Col xs={24} md={12}>
+                                                    <Descriptions
+                                                        bordered
+                                                        column={1}
+                                                        style={{
+                                                            width: '100%',
+                                                        }}
+                                                    >
+                                                        <Descriptions.Item label="Registration Start Date">
+                                                            {eventData?.result?.registration_start_date
+                                                                ? new Date(
+                                                                      eventData.result.registration_start_date
+                                                                  ).toLocaleDateString('en-US', {
+                                                                      year: 'numeric',
+                                                                      month: 'short',
+                                                                      day: 'numeric',
+                                                                  })
+                                                                : 'N/A'}
+                                                        </Descriptions.Item>
+                                                        <Descriptions.Item label="Registration End Date">
+                                                            {eventData?.result?.registration_end_date
+                                                                ? new Date(
+                                                                      eventData.result.registration_end_date
+                                                                  ).toLocaleDateString('en-US', {
+                                                                      year: 'numeric',
+                                                                      month: 'short',
+                                                                      day: 'numeric',
+                                                                  })
+                                                                : 'N/A'}
+                                                        </Descriptions.Item>
+                                                    </Descriptions>
+                                                    <Button
+                                                        size="large"
+                                                        onClick={handleRegisterClicked}
+                                                        style={{
+                                                            width: '100%',
+                                                            height: '6vh',
+                                                            border: '2px solid #000000',
+                                                            backgroundColor: '#8B0000',
+                                                            borderColor: '#8B0000',
+                                                            color: 'white',
+                                                            borderRadius: '4px',
+                                                            padding: '0px 20px',
+
+                                                            fontSize: '16px',
+                                                            fontWeight: 'bold',
+                                                        }}
+                                                    >
+                                                        Register Now
+                                                    </Button>
+                                                </Col>
+
+                                                <Col span={24}>
+                                                    <Divider />
+                                                    <Typography.Title style={{ margin: '0px' }} level={3} strong>
+                                                        Event Overview
+                                                    </Typography.Title>
+                                                </Col>
+                                                <Col span={24}>
+                                                    <Card
+                                                        style={{
+                                                            height: '100%',
+                                                            padding: '10px',
+                                                            borderRadius: '8px',
+                                                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                                                        }}
+                                                    >
+                                                        <Space direction="vertical" wrap>
+                                                            <Typography.Text>
+                                                                {eventData?.result?.description}
+                                                            </Typography.Text>
+                                                        </Space>
+                                                    </Card>
+                                                </Col>
+
+                                                <Col span={24}>
+                                                    <Divider />
+                                                    <Typography.Title style={{ margin: '0px' }} level={3} strong>
+                                                        Event Detials
+                                                    </Typography.Title>
+                                                </Col>
+                                                <Col xs={24} lg={12}>
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            height: '100%',
+                                                            width: '100%',
+                                                        }}
+                                                    >
+                                                        <Row style={{ flex: 1 }} gutter={[20, 10]}>
+                                                            <Col span={24}>
+                                                                <Card
+                                                                    type="inner"
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        height: '100%',
+                                                                        padding: '10px',
+                                                                        borderRadius: '8px',
+                                                                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                                                                    }}
+                                                                >
+                                                                    <Space direction="vertical" size={30}>
+                                                                        <Space wrap>
+                                                                            <TagsOutlined />
+                                                                            <Typography.Text strong>
+                                                                                Event Tags:
+                                                                            </Typography.Text>
+                                                                            <div>
+                                                                                {eventData?.result?.tags.length === 0
+                                                                                    ? 'No Tags for this event'
+                                                                                    : eventData?.result?.tags.map(
+                                                                                          (tag) => (
+                                                                                              <Tag
+                                                                                                  key={tag?.tag?.value}
+                                                                                                  style={{
+                                                                                                      padding:
+                                                                                                          '2px 10px',
+                                                                                                      margin: '5px',
+                                                                                                      fontSize: '15px',
+                                                                                                  }}
+                                                                                              >
+                                                                                                  {tag?.tag?.label}
+                                                                                              </Tag>
+                                                                                          )
+                                                                                      )}
+                                                                            </div>
+                                                                        </Space>
+
+                                                                        <Space wrap>
+                                                                            <UserOutlined />
+                                                                            <Typography.Text strong>
+                                                                                Event Target Age Group:
+                                                                            </Typography.Text>
+                                                                            <div>
+                                                                                {eventData?.result?.age_groups
+                                                                                    .length === 0
+                                                                                    ? 'No Age Groups for this event'
+                                                                                    : eventData?.result?.age_groups.map(
+                                                                                          (age_group) => (
+                                                                                              <Tag
+                                                                                                  style={{
+                                                                                                      padding:
+                                                                                                          '2px 10px',
+                                                                                                      fontSize: '15px',
+                                                                                                  }}
+                                                                                                  key={
+                                                                                                      age_group?.age_group_id
+                                                                                                  }
+                                                                                              >
+                                                                                                  {
+                                                                                                      age_group?.age_group_name
+                                                                                                  }
+                                                                                              </Tag>
+                                                                                          )
+                                                                                      )}
+                                                                            </div>
+                                                                        </Space>
+                                                                    </Space>
+                                                                </Card>
+                                                            </Col>
+                                                            <Col span={24}>
+                                                                <Card
+                                                                    type="inner"
+                                                                    style={{
+                                                                        height: '100%',
+                                                                        padding: '10px',
+                                                                        borderRadius: '8px',
+                                                                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                                                                    }}
+                                                                >
+                                                                    <Space
+                                                                        style={{ width: '100%' }}
+                                                                        direction="vertical"
+                                                                        size={10}
+                                                                    >
+                                                                        <Space>
+                                                                            <EnvironmentOutlined />
+                                                                            <Typography.Text strong>
+                                                                                Event Address:
+                                                                            </Typography.Text>
+                                                                        </Space>
+                                                                        <Divider
+                                                                            style={{
+                                                                                margin: '10px 0px',
+                                                                            }}
+                                                                        />
+                                                                        {eventData?.result?.location?.latitude && (
+                                                                            <ShowMap
+                                                                                position={{
+                                                                                    lat: eventData?.result?.location
+                                                                                        ?.latitude
+                                                                                        ? parseFloat(
+                                                                                              eventData.result.location
+                                                                                                  .latitude
+                                                                                          )
+                                                                                        : 0,
+                                                                                    lng: eventData?.result?.location
+                                                                                        ?.longitude
+                                                                                        ? parseFloat(
+                                                                                              eventData.result.location
+                                                                                                  .longitude
+                                                                                          )
+                                                                                        : 0,
+                                                                                }}
+                                                                            />
+                                                                        )}
+                                                                        <Typography.Text>
+                                                                            <strong>Event Address: </strong>
+                                                                            {eventData?.result?.address?.label}
+                                                                        </Typography.Text>
+                                                                        <Typography.Text>
+                                                                            <strong>Address Note:</strong>{' '}
+                                                                            {eventData?.result?.address_notes ??
+                                                                                'No additional notes'}
+                                                                        </Typography.Text>
+                                                                    </Space>
+                                                                </Card>
+                                                            </Col>
+                                                        </Row>
+                                                    </div>
+                                                </Col>
+                                                <Col xs={24} lg={12}>
+                                                    <Card
+                                                        type="inner"
+                                                        style={{
+                                                            height: '100%',
+                                                            padding: '10px',
+                                                            borderRadius: '8px',
+                                                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                                                        }}
+                                                    >
+                                                        <Space direction="vertical" style={{ width: '100%' }} size={20}>
+                                                            <Space>
+                                                                <ScheduleOutlined />
+                                                                <Typography.Text
+                                                                    strong
+                                                                    style={{
+                                                                        fontWeight: 'bold',
+                                                                        fontSize: '18px',
+                                                                    }}
+                                                                >
+                                                                    Event Schedule:
+                                                                </Typography.Text>
+                                                            </Space>
+                                                            <Divider style={{ margin: '0px' }} />
+                                                            {eventData?.result?.days?.map((dateObj, index) => (
+                                                                <Space
+                                                                    direction="vertical"
+                                                                    style={{
+                                                                        width: '100%',
+                                                                    }}
+                                                                    size={20}
+                                                                    key={index}
+                                                                >
+                                                                    <Space>
+                                                                        <CalendarOutlined />
+                                                                        <Typography.Text
+                                                                            strong
+                                                                            style={{
+                                                                                fontWeight: 'bold',
+                                                                                fontSize: '16px',
+                                                                            }}
+                                                                        >
+                                                                            {dateObj.day_date}
+                                                                        </Typography.Text>
+                                                                    </Space>
+                                                                    <List
+                                                                        bordered
+                                                                        dataSource={dateObj.slots}
+                                                                        renderItem={(slot, i) => (
+                                                                            <>
+                                                                                <Typography.Text
+                                                                                    strong
+                                                                                    style={{
+                                                                                        padding: '12px 24px',
+                                                                                    }}
+                                                                                >
+                                                                                    {slot.label}
+                                                                                </Typography.Text>
+                                                                                <List.Item
+                                                                                    style={{
+                                                                                        display: 'flex',
+                                                                                        justifyContent: 'space-between',
+                                                                                        alignItems: 'center',
+                                                                                    }}
+                                                                                >
+                                                                                    <div>
+                                                                                        <Typography.Text>
+                                                                                            {formatDate(
+                                                                                                slot.start_time
+                                                                                            )}
+                                                                                        </Typography.Text>
+                                                                                    </div>
+
+                                                                                    <ArrowRightOutlined
+                                                                                        style={{
+                                                                                            margin: '0em 1em',
+                                                                                        }}
+                                                                                    />
+                                                                                    <div>
+                                                                                        <Typography.Text>
+                                                                                            {formatDate(slot.end_time)}
+                                                                                        </Typography.Text>
+                                                                                    </div>
+                                                                                </List.Item>
+                                                                            </>
+                                                                        )}
+                                                                    />
+                                                                </Space>
+                                                            ))}
+                                                        </Space>
+                                                    </Card>
+                                                </Col>
+                                            </Row>
+                                        ),
+                                    },
+                                    {
+                                        key: '2',
+                                        label: 'Event Chat',
+                                        children: <EventChat />,
+                                    },
+                                ]}
+                            />
                         </Col>
                     </Row>
                 </Card>
@@ -445,55 +528,6 @@ const ShowEvent = () => {
 };
 
 export default ShowEvent;
-const fakeData = [
-    {
-        day_date: '2024-04-01',
-        slots: [
-            {
-                label: 'intro',
-                start_time: '2024-04-01 10:00:00',
-                end_time: '2024-04-01 12:00:00',
-                slot_status: {
-                    value: '1',
-                    status: 'Pending',
-                },
-            },
-            {
-                label: 'intro 2',
-                start_time: '2024-04-01 16:00:00',
-                end_time: '2024-04-01 22:00:00',
-                slot_status: {
-                    value: '1',
-                    status: 'Pending',
-                },
-            },
-        ],
-    },
-    {
-        day_date: '2024-04-02',
-        slots: [
-            {
-                label: 'intro',
-                start_time: '2024-04-01 12:00:00',
-                end_time: '2024-04-01 14:00:00',
-                slot_status: {
-                    value: '1',
-                    status: 'Pending',
-                },
-            },
-            {
-                label: 'intro 2',
-                start_time: '2024-04-01 13:00:00',
-                end_time: '2024-04-01 19:00:00',
-                slot_status: {
-                    value: '1',
-                    status: 'Pending',
-                },
-            },
-        ],
-    },
-    // More fake data entries...
-];
 
 function formatDate(dateTimeString) {
     const date = new Date(dateTimeString);

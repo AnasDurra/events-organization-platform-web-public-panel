@@ -1,5 +1,5 @@
 import { ContainerOutlined, SolutionOutlined } from '@ant-design/icons';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
 const { Sider: AntDSider } = Layout;
 import { useNavigate } from 'react-router-dom';
@@ -42,7 +42,9 @@ export default function Sider({ isSiderOpen, userMenu, userMenuIsLoading }) {
 
     return (
         <AntDSider collapsedWidth="0" trigger={null} collapsed={!isSiderOpen} className="h-[90vh] overflow-y-auto">
-            <Menu mode="inline" items={items} onClick={handleMenuClick} className="min-h-[90vh]" />
+            <Spin spinning={userMenuIsLoading}>
+                <Menu mode="inline" items={items} onClick={handleMenuClick} className="min-h-[90vh]" />
+            </Spin>
         </AntDSider>
     );
 }
