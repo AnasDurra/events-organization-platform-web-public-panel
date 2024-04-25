@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { List, Input, Button, Avatar, Divider } from 'antd';
 import Message from './Message';
 import { TYPE_RECEIVED_MESSAGE, TYPE_SENT_MESSAGE, TYPE_SYSTEM_MESSAGE } from './CONSTANTS';
@@ -9,17 +9,36 @@ const EventChat = () => {
     const [inputValue, setInputValue] = useState('');
     const [user] = useState({ name: 'Alice' });
 
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+        }
+    };
+    useEffect(() => {
+        scrollToBottom();
+    }, []);
+
     const fakeData = [
         {
             date: '2024-04-25',
             messages: [
                 {
-                    text: 'Hello, how are you?',
+                    text: 'Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you?Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you?',
                     user: {
                         name: 'Alice',
                         avatar: 'https://i.pravatar.cc/40',
                     },
                     timestamp: '2024-04-25 10:30 AM',
+                    reactions: [
+                        {
+                            like: 2,
+                        },
+                        {
+                            love: 10,
+                        },
+                    ],
                 },
                 {
                     text: 'Any plans for the weekend?',
@@ -53,6 +72,14 @@ const EventChat = () => {
                         avatar: 'https://i.pravatar.cc/40',
                     },
                     timestamp: '2024-04-25 10:30 AM',
+                    reactions: [
+                        {
+                            like: 2,
+                        },
+                        {
+                            love: 10,
+                        },
+                    ],
                 },
             ],
         },
@@ -92,21 +119,18 @@ const EventChat = () => {
 
     return (
         <div style={{ width: '100%', margin: '0 auto', padding: '10px' }}>
-            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+            <div ref={messagesEndRef} style={{ maxHeight: '400px', overflowY: 'auto' }}>
                 {fakeData.map((dateGroup) => (
                     <div key={dateGroup.date}>
                         <Divider orientation="left">{moment(dateGroup.date).format('MMMM DD, YYYY')}</Divider>
                         <List
                             itemLayout="horizontal"
                             dataSource={dateGroup.messages}
-                            renderItem={(item, index) => (
+                            renderItem={(message, index) => (
                                 <Message
-                                    key={item.timestamp}
-                                    user={item.user}
+                                    message={message}
                                     previousUser={index > 0 ? dateGroup.messages[index - 1]?.user : null}
-                                    content={item.text}
-                                    date={moment(item.timestamp).format('h:mm A')}
-                                    type={item.user.name === user.name ? TYPE_SENT_MESSAGE : TYPE_RECEIVED_MESSAGE}
+                                    type={message.user.name === user.name ? TYPE_SENT_MESSAGE : TYPE_RECEIVED_MESSAGE}
                                 />
                             )}
                         />
