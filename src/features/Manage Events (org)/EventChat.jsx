@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import { List, Input, Button, Avatar, Divider } from 'antd';
+import { List, Input, Button, Avatar, Divider, Space } from 'antd';
 import Message from './Message';
 import { TYPE_RECEIVED_MESSAGE, TYPE_SENT_MESSAGE, TYPE_SYSTEM_MESSAGE } from './CONSTANTS';
 import moment from 'moment';
+import ReplyMessage from './ReplyMessage';
 
 const EventChat = () => {
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [user] = useState({ name: 'Alice' });
+
+    const [isReplying, setIsReplying] = useState(false);
+    const [replyMessage, setReplyMessage] = useState(null);
 
     const messagesEndRef = useRef(null);
 
@@ -117,6 +121,11 @@ const EventChat = () => {
         }
     };
 
+    const replyOnMessage = (replyMessage) => {
+        setIsReplying(true);
+        setReplyMessage(replyMessage);
+    };
+
     return (
         <div style={{ width: '100%', margin: '0 auto', padding: '10px' }}>
             <div ref={messagesEndRef} style={{ maxHeight: '400px', overflowY: 'auto' }}>
@@ -131,23 +140,28 @@ const EventChat = () => {
                                     message={message}
                                     previousUser={index > 0 ? dateGroup.messages[index - 1]?.user : null}
                                     type={message.user.name === user.name ? TYPE_SENT_MESSAGE : TYPE_RECEIVED_MESSAGE}
+                                    replyOnMessage={replyOnMessage}
                                 />
                             )}
                         />
                     </div>
                 ))}
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', marginTop: '20px' }}>
-                <Input
-                    style={{ flex: 1, marginRight: '10px' }}
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    onPressEnter={handleSendMessage}
-                    placeholder="Type your message..."
-                />
-                <Button style={{ width: '80px' }} type="primary" onClick={handleSendMessage}>
-                    Send
-                </Button>
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '5px' }}>
+                {isReplying && <ReplyMessage message={replyMessage} setIsReplying={setIsReplying} />}
+
+                <div style={{ display: 'flex', width: '100%' }}>
+                    <Input
+                        style={{ flex: 1, marginRight: '10px' }}
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        onPressEnter={handleSendMessage}
+                        placeholder="Type your message..."
+                    />
+                    <Button style={{ width: '80px' }} type="primary" onClick={handleSendMessage}>
+                        Send
+                    </Button>
+                </div>
             </div>
         </div>
     );
