@@ -1,5 +1,5 @@
-import { CloseCircleOutlined, CloseOutlined } from '@ant-design/icons';
-import ReplyIcon from '@mui/icons-material/Reply';
+import { CloseOutlined } from '@ant-design/icons';
+import { MdOutlineReply } from 'react-icons/md';
 import { Button } from 'antd';
 
 const ReplyMessage = ({ message, setIsReplying }) => {
@@ -19,7 +19,7 @@ const ReplyMessage = ({ message, setIsReplying }) => {
     return (
         <div style={cardStyle}>
             <div style={{ display: 'flex' }}>
-                <ReplyIcon style={{ color: '#1679AB', marginRight: '5px' }} />
+                <MdOutlineReply style={{ fontSize: '24px', color: '#1679AB', marginRight: '5px' }} />
 
                 <div>
                     <strong style={{ color: '#1679AB' }}>Reply to {message.user.name}</strong>
