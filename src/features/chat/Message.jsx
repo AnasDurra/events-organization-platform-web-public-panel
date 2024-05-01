@@ -1,17 +1,30 @@
 import { Avatar, Button, Card, Input, List, Popover, Space, Tooltip, Typography } from 'antd';
 import { TYPE_RECEIVED_MESSAGE, TYPE_SENT_MESSAGE, TYPE_SYSTEM_MESSAGE } from './CONSTANTS';
-import Icon from '@ant-design/icons/lib/components/Icon';
-import { useState } from 'react';
+
+import { useRef, useState } from 'react';
 import { HeartFilled, LikeFilled, MessageOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
-function Message({ message, previousUser, type, replyOnMessage }) {
+function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedMessage, isFocused }) {
     const [showText, setShowText] = useState(false);
 
-    const cardStyle = {
-        width: '80%',
+    const messageStyle = {
+        width: '85%',
         margin: '0.5rem 0',
         padding: '0.8rem',
+        border: '2px solid transparent',
+        transition: 'border-color 0.7s ease-in-out',
+        borderColor: isFocused ? 'black' : 'transparent',
+        outline: 'none',
+    };
+
+    const replyMessageStyle = {
+        textAlign: 'start',
+        width: '90%',
+        margin: '0.5rem 0',
+        padding: '0.4rem',
+        borderRadius: '0rem 1.5rem 1.5rem 0rem',
+        borderLeft: '4px solid blue',
     };
 
     const containerStyle = {
@@ -23,23 +36,30 @@ function Message({ message, previousUser, type, replyOnMessage }) {
 
     switch (type) {
         case TYPE_SENT_MESSAGE:
-            cardStyle.borderRadius = '1.5rem 1.5rem 0rem 1.5rem';
-            cardStyle.backgroundColor = '#C8E6C9';
+            messageStyle.borderRadius = '1.5rem 1.5rem 0rem 1.5rem';
+            messageStyle.backgroundColor = '#C8E6C9';
+            replyMessageStyle.backgroundColor = '#EDF5FB';
             containerStyle.direction = 'rtl';
 
             break;
         case TYPE_RECEIVED_MESSAGE:
-            cardStyle.borderRadius = '1.5rem 1.5rem 1.5rem 0rem';
-            cardStyle.backgroundColor = '#BBDEFB';
+            messageStyle.borderRadius = '1.5rem 1.5rem 1.5rem 0rem';
+            messageStyle.backgroundColor = '#BBDEFB';
+            replyMessageStyle.backgroundColor = '#EDF5FB';
             containerStyle.direction = 'ltr';
             break;
 
         case TYPE_SYSTEM_MESSAGE:
-            cardStyle.borderRadius = '0';
-            cardStyle.fontSize = 12;
-            cardStyle.backgroundColor = '#f3f3f3';
-            cardStyle.borderRadius = '2rem';
-            cardStyle.textAlign = 'center';
+            messageStyle.borderRadius = '0';
+            messageStyle.fontSize = 12;
+            messageStyle.backgroundColor = '#f3f3f3';
+            messageStyle.borderRadius = '2rem';
+            messageStyle.textAlign = 'center';
+            replyMessageStyle.borderRadius = '0';
+            replyMessageStyle.fontSize = 12;
+            replyMessageStyle.backgroundColor = '#f3f3f3';
+            replyMessageStyle.borderRadius = '2rem';
+            replyMessageStyle.textAlign = 'center';
 
             containerStyle.justifyContent = 'center';
             break;
@@ -117,35 +137,50 @@ function Message({ message, previousUser, type, replyOnMessage }) {
                     {message.user.name !== 'Alice' && (
                         <Avatar src={message.user.avatar} style={{ marginRight: '8px' }} />
                     )}
-                    <Popover
-                        // placement={message.user.name === 'Alice' ? 'left' : 'right'}
-                        placement={'top'}
-                        content={reactionsContent}
-                        trigger="hover"
-                    >
-                        <div style={cardStyle}>
-                            {previousUser?.name != message.user.name && (
+                    <Popover placement={'top'} content={reactionsContent} trigger="hover">
+                        <div
+                            id={message.id}
+                            style={messageStyle}
+                            onDoubleClick={() => {
+                                replyOnMessage(message);
+                            }}
+                        >
+                            {previousUser?.name != message.user.name && message.user.name != 'Alice' && (
                                 <div style={{ fontWeight: 'bold', fontSize: '13px', marginBottom: '4px' }}>
                                     {message.user.name}
                                 </div>
+                            )}
+
+                            {message?.replyTo && (
+                                <button
+                                    style={replyMessageStyle}
+                                    onClick={() => {
+                                        scrollToRepliedMessage(message.replyTo.id);
+                                    }}
+                                >
+                                    <div
+                                        style={{
+                                            color: '#1679AB',
+                                            fontWeight: 'bold',
+                                            fontSize: '13px',
+                                            marginBottom: '4px',
+                                        }}
+                                    >
+                                        {message?.replyTo.user.name}
+                                    </div>
+
+                                    <div style={{ fontSize: '14px', direction: 'ltr' }}>
+                                        <Typography.Text ellipsis={{ rows: 1 }}>
+                                            {message?.replyTo.text}
+                                        </Typography.Text>
+                                    </div>
+                                </button>
                             )}
 
                             <div style={{ fontSize: '14px', direction: 'ltr' }}>{message.text}</div>
                             <Space size={20} style={{ marginTop: '1em' }}>
                                 <div style={{ fontSize: '10px', color: 'gray', marginTop: '4px' }}>
                                     {moment(message.timestamp).format('h:mm A')}
-                                    {showText && (
-                                        <div style={{ fontWeight: 'bold' }}>
-                                            <MessageOutlined />{' '}
-                                            <button
-                                                onClick={() => {
-                                                    replyOnMessage(message);
-                                                }}
-                                            >
-                                                <span style={{ textDecoration: 'underline' }}>Reply</span>
-                                            </button>
-                                        </div>
-                                    )}
                                 </div>
                                 {message?.reactions?.length != 0 && (
                                     <Space size={0}>
@@ -204,6 +239,24 @@ function Message({ message, previousUser, type, replyOnMessage }) {
                                     </Space>
                                 )}
                             </Space>
+                            {showText && (
+                                <div
+                                    style={{
+                                        fontWeight: 'bold',
+                                        fontSize: '10px',
+                                        color: 'gray',
+                                        marginTop: '4px',
+                                    }}
+                                >
+                                    <button
+                                        onClick={() => {
+                                            replyOnMessage(message);
+                                        }}
+                                    >
+                                        <span style={{ textDecoration: 'underline' }}>Reply</span>
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </Popover>
                 </div>

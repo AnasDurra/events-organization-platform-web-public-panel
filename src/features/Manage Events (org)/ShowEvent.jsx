@@ -29,7 +29,7 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import ShowMap from './ShowMap';
 
 import { useShowQuery } from '../../api/services/events';
@@ -37,10 +37,13 @@ import UpdateEventModal from './UpdateEventModal';
 
 import { useNavigate } from 'react-router-dom';
 import { getLoggedInUser } from '../../api/services/auth';
-import EventChat from './EventChat';
+import EventChat from '../chat/EventChat';
 const ShowEvent = () => {
-    const { id } = useParams();
     const navigate = useNavigate();
+    const { id } = useParams();
+    const [searchParams] = useSearchParams();
+    const showChat = searchParams.get('showChat');
+    console.log(showChat);
 
     const [user, setUser] = useState(null);
 
@@ -165,7 +168,7 @@ const ShowEvent = () => {
                         </Col>
                         <Col span={24}>
                             <Tabs
-                                defaultActiveKey="1"
+                                defaultActiveKey={showChat === 'true' ? '2' : '1'}
                                 items={[
                                     {
                                         key: '1',
