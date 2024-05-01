@@ -1,5 +1,5 @@
 import { CloseCircleOutlined, CloseOutlined } from '@ant-design/icons';
-import ReplyIcon from '@material-ui/icons/Reply';
+import ReplyIcon from '@mui/icons-material/Reply';
 import { Button } from 'antd';
 
 const ReplyMessage = ({ message, setIsReplying }) => {
