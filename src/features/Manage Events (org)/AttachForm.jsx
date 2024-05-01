@@ -10,6 +10,7 @@ import AddFormModal from '../dynamic forms/modals/AddFormModal';
 import { IoMdDesktop } from 'react-icons/io';
 import { SlOptionsVertical } from 'react-icons/sl';
 import { DeleteOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 export default function AttachForm({ onAttach, organization_id, attachedForm, onDetachForm }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -70,6 +71,7 @@ export default function AttachForm({ onAttach, organization_id, attachedForm, on
 
 const ModalChooseForm = ({ isModalOpen, handleOk, handleCancel, organization_id, onSelectForm }) => {
     const { token } = useToken();
+    const navigate  = useNavigate();
     const [isAddFormModalOpen, setIsAddFormModalOpen] = useState(false);
     const { data: { result: forms } = { result: [] }, isLoading: isFetchFormsLoading } =
         useGetFormsQuery(organization_id);
@@ -79,7 +81,9 @@ const ModalChooseForm = ({ isModalOpen, handleOk, handleCancel, organization_id,
         addNewForm(form).then((res) => {
             onSelectForm(res?.data?.result);
             setIsAddFormModalOpen(false);
-            //TODO navigate to correct address
+            //TODO with no event id
+            window.open(`${window.location.origin}/form/${res?.data?.result?.id}/edit`)
+
         });
     };
 

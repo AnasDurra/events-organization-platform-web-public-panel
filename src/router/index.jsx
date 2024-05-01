@@ -20,7 +20,10 @@ import ShowEventAttendees from '../features/Manage Events (org)/ShowEventAttende
 import BlockedUsersPage from '../features/ban/BlockedUsersPage';
 import NotFound from '../pages/notFound';
 import HomeLayout from '../features/landing/HomeLayout';
-import Home from '../features/landing/Home';
+import PopularPage from '../features/landing/PopularPage';
+import ExplorePage from '../features/landing/ExplorePage';
+import HomePage from '../features/landing/HomePage';
+import ViewOrgsPage from '../features/landing/ViewOrgsPage';
 
 export const router = createBrowserRouter([
     {
@@ -75,7 +78,7 @@ export const router = createBrowserRouter([
                 element: <BlockedUsersPage />,
             },
 
-            { path: '/org', element: <ProfilePage /> },
+            { path: '/org/:orgId', element: <ProfilePage /> },
             { path: '/org/config', element: <ConfigOrgPage /> },
 
             { path: '/members', element: <TeamPage /> },
@@ -84,7 +87,7 @@ export const router = createBrowserRouter([
         ],
     },
     {
-        path: 'event/:event_id/form/:form_id/',
+        path: 'form/:form_id/',
         children: [
             {
                 path: 'edit',
@@ -95,7 +98,7 @@ export const router = createBrowserRouter([
                 ),
             },
             {
-                path: 'submit',
+                path: 'event/:event_id/submit',
                 element: <SubmitForm />,
             },
             {
@@ -110,8 +113,20 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Home />,
+                element: <HomePage />,
             },
+            {
+                path:'popular',
+                element: <PopularPage />,
+            },
+            {
+                path:'explore',
+                element: <ExplorePage />,
+            },
+            {
+                path:'orgs',
+                element: <ViewOrgsPage />,
+            }
         ],
     },
 ]);

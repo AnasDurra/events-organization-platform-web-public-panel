@@ -5,8 +5,9 @@ import { SidebarItemsIDs } from '../constants';
 import DateProperties from '../fields properties/DateProperties';
 import NumberProperties from '../fields properties/NumberProperties';
 import debounce from 'lodash.debounce';
+import { CloseOutlined } from '@ant-design/icons';
 
-export default function PropertiesSidebar({ field, onUpdateProperties, onDeleteField }) {
+export default function PropertiesSidebar({ field, onUpdateProperties, onDeleteField, onClose }) {
     const handleNameChange = (newName) => {
         onUpdateProperties({ ...field, name: newName });
     };
@@ -22,11 +23,16 @@ export default function PropertiesSidebar({ field, onUpdateProperties, onDeleteF
     const handleOptionsChange = (newOptions) => {
         onUpdateProperties({ ...field, options: newOptions });
     };
-    
+
     const debouncedHandleOptionsChange = debounce(handleOptionsChange, 1000);
 
     return (
-        <div className='w-full h-[90vh] overflow-y-auto'>
+        <div className='w-full h-[90vh] overflow-y-auto absolute'>
+            <CloseOutlined
+                className='absolute top-0 right-0 hover:cursor-pointer hover:shadow-lg m-2'
+                onClick={onClose}
+            />
+
             {field.fieldType.id == SidebarItemsIDs.TEXTFIELD && (
                 <TextFieldProperties
                     field={field}

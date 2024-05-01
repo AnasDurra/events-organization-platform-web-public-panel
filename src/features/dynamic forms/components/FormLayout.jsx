@@ -1,15 +1,38 @@
-import { SyncOutlined } from '@ant-design/icons';
-import { Button, Col, Input, Row, Space } from 'antd';
+import { CloseOutlined, SyncOutlined } from '@ant-design/icons';
+import { Avatar, Button, Col, Input, List, Modal, Row, Space } from 'antd';
 import debounce from 'lodash.debounce';
 import React from 'react';
 import { FaFileAlt } from 'react-icons/fa';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { debounceTime } from '../constants';
-import { useGetFormQuery, useUpdateFormMutation } from '../dynamicFormsSlice';
+import { useGetFormEventsQuery, useGetFormQuery, useUpdateFormMutation } from '../dynamicFormsSlice';
 import styles from './FormLayout.module.css';
+import { events } from '../../../api/services/events';
 
-export default function FormLayout({children}) {
+const data = [
+    {
+        title: 'Ant Design Title 1',
+    },
+    {
+        title: 'Ant Design Title 2',
+    },
+    {
+        title: 'Ant Design Title 3',
+    },
+    {
+        title: 'Ant Design Title 4',
+    },
+];
+
+export default function FormLayout({ children }) {
     let { form_id } = useParams();
+    const navigate = useNavigate();
+
+    const {
+        data: { result: events } = { result: [] },
+        isLoading: isFormEventsLoading,
+        isFetching: isFormEventsFetching,
+    } = useGetFormEventsQuery(form_id);
     const {
         data: { result: form } = { result: {} },
         isLoading: isFormLoading,
@@ -52,9 +75,9 @@ export default function FormLayout({children}) {
                                 <ul className='flex space-x-4'>
                                     <li
                                         onClick={() => {
-                                            console.log('submissions');
+                                            navigate('../submissions');
                                         }}
-                                        className='cursor-pointer hover:text-blue-500'
+                                        className='cursor-pointer hover:text-slate-400'
                                     >
                                         Submissions
                                     </li>
@@ -90,8 +113,57 @@ export default function FormLayout({children}) {
                         className='mr-5'
                         offset={1}
                     >
-                        currently assigned to
-                        <a className='text-sky-600'> @event</a>
+                        {Array.isArray(events) && events.length == 0 ? (
+                            'No Assigned Events'
+                        ) : (
+                            <span>
+                                <span>currently assigned to</span>
+                                <a
+                                    className='text-sky-600'
+                                    onClick={() => navigate(`/event/show/${events[0].id}`)}
+                                >
+                                    {' '}
+                                    @{events[0].title}
+                                </a>
+                                {events.length > 1 ? (
+                                    <span
+                                        onClick={() => {
+                                            Modal.info({
+                                                title: 'Events List',
+                                                content: (
+                                                    <List
+                                                        itemLayout='horizontal'
+                                                        dataSource={events}
+                                                        renderItem={(event, index) => (
+                                                            <List.Item className='hover:cursor-pointer hover:shadow-lg hover:border-2 px-2 '>
+                                                                <List.Item.Meta
+                                                                    title={<span className='p-2'>{event.title}</span>}
+                                                                    description={event.date}
+                                                                />
+                                                            </List.Item>
+                                                        )}
+                                                    />
+                                                ),
+                                                icon: null,
+                                                maskClosable: true,
+                                                footer: null,
+                                                styles: {
+                                                    body: {
+                                                        maxHeight: '60svh',
+                                                        overflowY: 'scroll',
+                                                        scrollbarWidth: 'thin',
+                                                    },
+                                                },
+                                            });
+                                        }}
+                                        className='hover:text-blue-400 hover:cursor-pointer'
+                                    >
+                                        {' '}
+                                        +{events.length - 1} more
+                                    </span>
+                                ) : null}
+                            </span>
+                        )}
                     </Col>
                 </Row>
             </header>

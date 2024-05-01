@@ -49,6 +49,9 @@ export default function EditFormPage() {
             prevSelectedField && prevSelectedField.id === field.id ? null : field
         );
     };
+    const handleDeselectField = (field) => {
+        setSelectedField(null);
+    };
 
     const debounceUpdateGroup = debounce(updateGroup, debounceTime * 10);
     const handleGroupNameChange = (groupId, newName) => {
@@ -289,6 +292,7 @@ export default function EditFormPage() {
                                 field={selectedField}
                                 onUpdateProperties={handleUpdateProperties}
                                 onDeleteField={handleDeleteField}
+                                onClose={handleDeselectField}
                             />
                         ) : (
                             <Sidebar />

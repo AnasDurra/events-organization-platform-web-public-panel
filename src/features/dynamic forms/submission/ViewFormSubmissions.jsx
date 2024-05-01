@@ -12,7 +12,7 @@ const data = ['⏰ Pending | 100', ' ✅ Accepted | 40', '❌ Rejected | 30', '�
 
 export default function ViewFormSubmissions() {
     const [form] = Form.useForm();
-    const [querySubmissions] = useQuerySubmissionsMutation();
+    const [querySubmissions,{isLoading: isQueryingLoading}] = useQuerySubmissionsMutation();
     let { form_id, event_id } = useParams();
     const {
         data: { result: DBform } = { result: {} },
@@ -22,11 +22,12 @@ export default function ViewFormSubmissions() {
     } = useGetFormQuery(form_id);
 
     const handleFilter = (fields) => {
-        querySubmissions({ event_id, ...fields }).then(() => {});
+        querySubmissions({ event_id: parseInt(event_id), ...fields }).then((response) => {
+            form.setFieldsValue(response?.data?.result)
+        });
     };
     return (
         <div className={`grid grid-cols-12 min-h-[100vh] ${styles.paper} `}>
-           
             <Spin
                 size='large'
                 spinning={isLoading}
@@ -122,11 +123,12 @@ export default function ViewFormSubmissions() {
                                     >
                                         <Col span={8}>
                                             <Select
-                                                size='small'
-                                                variant='borderless'
+                                                size='middle'
+                                                variant='filled'
                                                 showAction={true}
                                                 onChange={() => {}}
                                                 defaultValue={'jack'}
+                                                className=''
                                                 options={[
                                                     {
                                                         value: 'jack',
@@ -148,12 +150,12 @@ export default function ViewFormSubmissions() {
                                                 ]}
                                             />
                                         </Col>
-                                        <Col span={4}>
+                                        {/*  <Col span={4}>
                                             <Button
                                                 type='text'
                                                 icon={<DeleteOutlined></DeleteOutlined>}
-                                            ></Button>
-                                        </Col>
+                                            />
+                                        </Col> */}
                                     </Row>
                                 </Col>
                             </Row>
@@ -198,19 +200,21 @@ export default function ViewFormSubmissions() {
                                 requiredMark={'optional'}
                                 layout='vertical'
                             >
-                                {DBform?.groups?.map((group, index) => (
-                                    <div key={group.id}>
-                                        <FormGroup
-                                            isCustomStyle
-                                            group={group}
-                                            groupsLength={DBform.groups?.length}
-                                            groupIndex={index}
-                                        />
-                                        <div className='text-gray-500 text-center'>
-                                            {`<${index + 1}/${DBform?.groups?.length}>`}
+                                <Spin spinning={isQueryingLoading}>
+                                    {DBform?.groups?.map((group, index) => (
+                                        <div key={group.id}>
+                                            <FormGroup
+                                                isCustomStyle
+                                                group={group}
+                                                groupsLength={DBform.groups?.length}
+                                                groupIndex={index}
+                                            />
+                                            <div className='text-gray-500 text-center'>
+                                                {`<${index + 1}/${DBform?.groups?.length}>`}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </Spin>
                             </Form>
                         </div>
                     </div>

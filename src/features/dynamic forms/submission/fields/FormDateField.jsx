@@ -24,13 +24,13 @@ export default function FormDateField({ field, groupIndex, fieldIndex }) {
 
                 <Form.Item
                     name={['groups', groupIndex, 'fields', fieldIndex, 'value']}
-                    rules={[{ required: field?.required }]}
+                    rules={[{ required: field?.required, message: 'Required Field'}]}
                 >
                     <DatePicker
                         placeholder='select date'
                         className='sm:w-[50%] w-full'
-                        size='small'
-                        variant='filled'
+                        size='medium'
+                        variant='borderless'
                     />
                 </Form.Item>
             </Space.Compact>

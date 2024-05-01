@@ -21,7 +21,7 @@ const { Text } = Typography;
 
 export default function ProfilePage() {
     const navigate = useNavigate();
-    let { orgId = 1 } = useParams();
+    let { orgId } = useParams();
     const [messageApi, contextHolder] = message.useMessage();
     const inputCoverFile = useRef(null);
     const inputProfilePicFile = useRef(null);

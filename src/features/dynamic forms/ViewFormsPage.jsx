@@ -38,22 +38,7 @@ export default function ViewFormsPage() {
 
     return (
         <div className='h-full'>
-            <Row>
-                <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 24 }}
-                    lg={{ span: 24 }}
-                    className='mt-2 text-center'
-                >
-                    <Title
-                        level={3}
-                        className='mb-0'
-                    >
-                        Forms
-                    </Title>
-                </Col>
-            </Row>
+           
             <Row className='my-4'>
                 <Col
                     xs={{ span: 12 }}
@@ -62,7 +47,7 @@ export default function ViewFormsPage() {
                     lg={{ span: 12 }}
                 >
                     <Button
-                        type='text'
+                        type='primary'
                         icon={<PlusOutlined />}
                         onClick={() => setIsAddModalOpen(true)}
                     >
@@ -78,7 +63,7 @@ export default function ViewFormsPage() {
                     <Input.Search placeholder='search' />
                 </Col>
             </Row>
-            <Spin spinning={isFetchFormsLoading}>
+            <Spin spinning={isFetchFormsLoading}  wrapperClassName='h-full'>
                 <Row
                     className='h-full'
                     gutter={[

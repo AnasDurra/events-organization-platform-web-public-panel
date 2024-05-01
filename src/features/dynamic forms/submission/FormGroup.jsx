@@ -1,15 +1,19 @@
 import React from 'react';
-import { Typography, Badge } from 'antd';
+import { Typography, Badge, theme } from 'antd';
 import FormTextField from './fields/FormTextField';
 import FormRadioField from './fields/FormRadioField';
 import FormNumberField from './fields/FormNumberField';
 import FormDateField from './fields/FormDateField';
 import { SidebarItemsIDs } from '../constants';
+
+const { useToken } = theme;
+
 export default function FormGroup({ group, groupsLength, groupIndex, isCustomStyle }) {
+    const { token } = useToken();
     return (
         <div
-            className={`min-h-[80vh] p-4 m-4 bg-gray-100/75 rounded-lg  shadow-lg ${
-                isCustomStyle ? 'border-2 border-slate-500/75' : 'border-4 border-teal-500/75'
+            className={`min-h-[80vh] p-4 m-4 bg-gray-100/90 rounded-lg  shadow-lg ${
+                isCustomStyle ? `border-2 border-slate-500/75` : `border-2`
             } `}
         >
             <Typography.Title level={4}>{group?.name}</Typography.Title>

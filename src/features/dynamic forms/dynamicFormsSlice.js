@@ -38,6 +38,9 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
             },
             providesTags: ['form'],
         }),
+        getFormEvents: builder.query({
+            query: (form_id) => `/forms/${form_id}/events`,
+        }),
         getFormFieldTypes: builder.query({
             query: () => `/forms/fieldsTypes`,
         }),
@@ -307,6 +310,7 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
 export const {
     useGetFormsQuery,
     useGetFormQuery,
+    useGetFormEventsQuery,
     useGetFormFieldTypesQuery,
     useQuerySubmissionsMutation,
     useSubmitFormMutation,

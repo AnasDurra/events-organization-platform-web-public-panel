@@ -16,7 +16,7 @@ import {
 import { Badge, Button, Col, Image, Layout, Row, Tag, Typography, theme } from 'antd';
 import { Content, Footer, Header } from 'antd/es/layout/layout';
 import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { BsTicketPerforated } from 'react-icons/bs';
 import Title from 'antd/es/typography/Title';
@@ -24,14 +24,15 @@ import { BottomNavigation, BottomNavigationAction } from '@mui/material';
 import { FaVolumeMute } from 'react-icons/fa';
 import { MdEvent } from 'react-icons/md';
 import './Landing.css';
+import Sider from 'antd/es/layout/Sider';
 
 const { useToken } = theme;
 
 export default function HomeLayout() {
     const { token } = useToken();
+    const navigate = useNavigate();
     const [value, setValue] = useState(0);
 
-    console.log(value);
     return (
         <Layout className='h-[100svh]'>
             <Header className='h-[8svh] px-2'>
@@ -76,15 +77,54 @@ export default function HomeLayout() {
                                     icon={<IoMdNotificationsOutline />}
                                 />
                             </Badge>
+                            <img
+                                className='w-[2.5em] aspect-square rounded-full hidden md:block md:ml-4'
+                                src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+                            />
                         </div>
                     </Col>
                 </Row>
             </Header>
-            <Content className='h-[84svh]'>
-                <Outlet />
-            </Content>
+            <Layout>
+                <Sider
+                    theme='light'
+                    className='hidden md:block'
+                    style={{ backgroundColor: 'whitesmoke' }}
+                    width={'20%'}
+                >
+                    <div className='flex flex-col h-full mt-4 p-4 space-y-2'>
+                        <div
+                            className={`rounded-lg flex space-x-2 p-4 bg-[#00474f]/0  hover:bg-[#00474f]/30 hover:cursor-pointer `}
+                        >
+                            <HomeOutlined className='text-[1.2em]' />
+                            <span className='text-lg'>Home</span>
+                        </div>
+                        <div
+                            className={`rounded-lg flex space-x-2 p-4 bg-red-300/20  hover:bg-red-300/30 hover:cursor-pointer `}
+                        >
+                            <FireFilled className='text-red-300 text-[1.2em]' />
+                            <span className='text-lg'>Popular</span>
+                        </div>
+                        <div
+                            className={`rounded-lg flex space-x-2 p-4 bg-[#00474f]/0  hover:bg-[#00474f]/30 hover:cursor-pointer `}
+                        >
+                            <ExperimentOutlined className='text-[1.2em]' />
+                            <span className='text-lg'>Explore</span>
+                        </div>
+                    </div>
+                </Sider>
+                <div className='md:grid md:grid-cols-10 w-full'>
+                    <Content
+                        className='md:col-span-7 md:col-start-2 h-[84svh] md:h-[92svh] overflow-y-scroll scroll-0 '
+                        style={{ scrollbarWidth: 'none' }}
+                    >
+                        <Outlet />
+                    </Content>
+                </div>
+            </Layout>
+
             <Footer
-                className={`h-[8svh] p-0`}
+                className={`h-[8svh] p-0 md:hidden`}
                 style={{ backgroundColor: token.colorPrimary }}
             >
                 <BottomNavigation
@@ -92,6 +132,15 @@ export default function HomeLayout() {
                     value={value}
                     onChange={(event, newValue) => {
                         setValue(newValue);
+                        if (newValue == 1) {
+                            navigate('/home/popular');
+                        } else if (newValue == 0) {
+                            navigate('/home');
+                        }
+                        else if(newValue==2){
+                            navigate('/home/explore');
+
+                        }
                     }}
                     style={{ height: '100%', backgroundColor: token.colorPrimary }}
                 >
@@ -109,9 +158,9 @@ export default function HomeLayout() {
                     <BottomNavigationAction
                         label={
                             value == 1 ? (
-                                <div className='mt-[0.8em]  text-red-500'>Featured</div>
+                                <div className='mt-[0.8em]  text-red-500'>Popular</div>
                             ) : (
-                                <div className='mt-[0.8em] '>Featured</div>
+                                <div className='mt-[0.8em] '>Popular</div>
                             )
                         }
                         style={{ color: 'white ' }}
@@ -122,6 +171,7 @@ export default function HomeLayout() {
                                 <FireOutlined className='text-[1.2em]' />
                             )
                         }
+                        
                     />
 
                     <BottomNavigationAction

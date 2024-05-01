@@ -1,0 +1,15 @@
+.down {
+    position: relative;
+}
+
+.down:after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    height: 4px;
+    width: 100%;
+    border: solid 2px #6490e2;
+    border-color: #f40404 transparent transparent transparent;
+    border-radius: 64%;
+}

@@ -121,7 +121,7 @@ export default function DroppableGroup({
                                             opacity: selectedField?.id !== field.id && selectedField ? 0.5 : 1,
                                         }}
                                         className={
-                                            'relative bg-transparent w-[75%] rounded-3xl my-2 ' +
+                                            'relative bg-transparent w-[90%] rounded-3xl my-2 ' +
                                             (selectedField?.id === field.id
                                                 ? 'border-4 border-slate-500 animate-pulse'
                                                 : '')

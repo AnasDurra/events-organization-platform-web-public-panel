@@ -1,0 +1,58 @@
+import { current } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
+import { apiSlice } from '../../api/apiSlice';
+
+export const feedsSlice = apiSlice.injectEndpoints({
+    endpoints: (builder) => ({
+        getSoonEvents: builder.query({
+            query: ({ page, pageSize }) => `/feed/soonEvents?page=${page}&pageSize=${pageSize}`,
+        }),
+        getOrganizationsSummary: builder.query({
+            query: ({ page, pageSize }) => `/feed/organizations?page=${page}&pageSize=${pageSize}`,
+        }),
+
+        querySubmissions: builder.mutation({
+            query: (data) => ({
+                url: '/forms/query',
+                method: 'POST',
+                body: data,
+            }),
+        }),
+
+        updateForm: builder.mutation({
+            query: ({ fields, form_id }) => ({
+                url: `/forms/${form_id}`,
+                method: 'PATCH',
+                body: fields,
+            }),
+            invalidatesTags: ['form'],
+        }),
+        removeGroup: builder.mutation({
+            query: ({ group_id, form_id }) => ({
+                url: `/forms/deleteGroup/${group_id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['form'],
+            async onQueryStarted({ group_id, form_id }, { dispatch, queryFulfilled }) {
+                const patchResult = dispatch(
+                    apiSlice.util.updateQueryData('getForm', form_id, (draft) => {
+                        if (draft && draft.result && Array.isArray(draft.result.groups)) {
+                            draft.result.groups = draft.result.groups.filter((grp) => grp.id !== group_id);
+                            draft.result.groups.forEach((group, index) => (group.position = index));
+                        }
+
+                        console.log('draft: ', current(draft));
+                    })
+                );
+                try {
+                    await queryFulfilled;
+                } catch {
+                    patchResult.undo();
+                }
+            },
+        }),
+    }),
+});
+
+export const { useGetSoonEventsQuery, useGetOrganizationsSummaryQuery, useLazyGetOrganizationsSummaryQuery } =
+    feedsSlice;

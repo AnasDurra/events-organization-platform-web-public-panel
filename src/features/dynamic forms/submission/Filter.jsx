@@ -39,8 +39,8 @@ const fieldIcons = {
     [SidebarItemsIDs.RADIO]: <CheckCircleOutlined />,
 };
 
-const getFieldIcon = (fieldType) => {
-    return fieldIcons[fieldType] || null;
+const getFieldIcon = (fieldTypeId) => {
+    return fieldIcons[fieldTypeId] || null;
 };
 
 export default function Filter({ onFilter }) {
@@ -81,9 +81,12 @@ export default function Filter({ onFilter }) {
     const handleOnFilterFinish = (fields) => {
         fields?.groups?.forEach((group) => {
             group.conditions?.forEach((condition) => {
+                if (condition.field_id) condition.field_id = parseInt(condition.field_id);
+                if (condition.operator_id) condition.operator_id = parseInt(condition.operator_id);
+
                 const matchingField = DBform.groups
                     ?.flatMap((grp) => grp.fields)
-                    ?.find((field) => field.id === condition.field_id);
+                    ?.find((field) => field.id == condition.field_id);
 
                 if (matchingField && matchingField.fieldType?.id == SidebarItemsIDs.DATE) {
                     condition.value = moment(condition.value).format('YYYY-MM-DD');
@@ -101,7 +104,7 @@ export default function Filter({ onFilter }) {
                 ?.find((fieldType) => fieldType.id == field.fieldType.id)
                 .fieldTypeOperators?.map((operator) => (
                     <Select.Option
-                        key={operator.query_operator.id}
+                        key={'operator' + operator.query_operator.id}
                         value={operator.query_operator.id}
                     >
                         {operator.query_operator.name}
@@ -168,7 +171,7 @@ export default function Filter({ onFilter }) {
                 ?.find((fieldType) => fieldType.id == field.fieldType.id)
                 .fieldTypeOperators?.map((operator) => (
                     <Select.Option
-                        key={operator.query_operator.id}
+                        key={'select option' + operator.query_operator.id}
                         value={operator.query_operator.id}
                     >
                         {operator.query_operator.name}
@@ -400,7 +403,7 @@ export default function Filter({ onFilter }) {
             bordered
             items={[
                 {
-                    key: '1',
+                    key: 'col-item-1',
                     label: (
                         <div className='flex space-x-2 items-center'>
                             <span className='font-bold'>Filters</span>
@@ -411,7 +414,7 @@ export default function Filter({ onFilter }) {
                         <div>
                             <Form onFinish={handleOnFilterFinish}>
                                 {sets?.map((set, setIndex) => (
-                                    <div key={setIndex}>
+                                    <div key={'sets' + setIndex}>
                                         <div className='flex justify-center items-center mt-2 mb-6'>
                                             <div className='w-full flex  flex-col justify-center items-start'>
                                                 {setIndex == 0 && <Title level={5}>Select Fields</Title>}
@@ -426,7 +429,7 @@ export default function Filter({ onFilter }) {
                                                         handleSelectFields(selectedFields, setIndex)
                                                     }
                                                     treeData={DBform.groups?.map((group) => ({
-                                                        value: group.id,
+                                                        value: 'group' + group.id,
                                                         title: `${group.name} (${
                                                             group.description ? group.description : 'no description'
                                                         })`,
@@ -440,12 +443,23 @@ export default function Filter({ onFilter }) {
                                                     treeIcon
                                                     switcherIcon={<GroupOutlined />}
                                                     onSelect={(selected_value) => console.log(selected_value)}
-                                                    tagRender={(props) => (
-                                                        <Tag className='bg-transparent'>
-                                                            {' '}
-                                                            {`${props.label} (id:${props.value})`}
-                                                        </Tag>
-                                                    )}
+                                                    tagRender={(props) => {
+                                                        const field = DBform.groups
+                                                            ?.flatMap((group) => group.fields)
+                                                            ?.find((field) => field.id == props.value);
+
+                                                        return (
+                                                            <Tag
+                                                                key={'tag' + props.value}
+                                                                className='bg-transparent'
+                                                            >
+                                                                <div className='flex space-x-2 justify-between'>
+                                                                    <span>{`${props.label}`}</span>
+                                                                    {getFieldIcon(field?.fieldType?.id)}
+                                                                </div>
+                                                            </Tag>
+                                                        );
+                                                    }}
                                                     allowClear
                                                 />
                                             </div>
@@ -477,7 +491,7 @@ export default function Filter({ onFilter }) {
                                                     return (
                                                         <div
                                                             className='my-2'
-                                                            key={fieldId}
+                                                            key={'options' + fieldId}
                                                         >
                                                             {filterOptions[field.fieldType.id]({
                                                                 field,
@@ -539,353 +553,3 @@ export default function Filter({ onFilter }) {
         />
     );
 }
-
-const fake_field_type = [
-    {
-        id: '1',
-        createdAt: '2024-03-22T00:06:35.710Z',
-        updatedAt: '2024-03-22T00:06:35.710Z',
-        deletedAt: null,
-        name: 'Text',
-        fieldTypeOperators: [
-            {
-                id: '1',
-                field_type_id: '1',
-                query_operator_id: '5',
-                query_operator: {
-                    id: '5',
-                    createdAt: '2024-03-25T15:00:55.657Z',
-                    updatedAt: '2024-03-25T15:00:55.657Z',
-                    deletedAt: null,
-                    name: 'Equal',
-                    value: '=',
-                },
-            },
-            {
-                id: '2',
-                field_type_id: '1',
-                query_operator_id: '6',
-                query_operator: {
-                    id: '6',
-                    createdAt: '2024-03-25T15:01:29.793Z',
-                    updatedAt: '2024-03-25T15:01:29.793Z',
-                    deletedAt: null,
-                    name: 'Contain',
-                    value: 'LIKE',
-                },
-            },
-            {
-                id: '3',
-                field_type_id: '1',
-                query_operator_id: '7',
-                query_operator: {
-                    id: '7',
-                    createdAt: '2024-03-25T15:01:29.793Z',
-                    updatedAt: '2024-03-25T15:01:29.793Z',
-                    deletedAt: null,
-                    name: 'Not Contain',
-                    value: 'NOT LIKE',
-                },
-            },
-        ],
-    },
-    {
-        id: '2',
-        createdAt: '2024-03-22T00:06:40.090Z',
-        updatedAt: '2024-03-22T00:06:40.090Z',
-        deletedAt: null,
-        name: 'Number',
-        fieldTypeOperators: [
-            {
-                id: '4',
-                field_type_id: '2',
-                query_operator_id: '1',
-                query_operator: {
-                    id: '1',
-                    createdAt: '2024-03-25T15:00:11.568Z',
-                    updatedAt: '2024-03-25T15:00:11.568Z',
-                    deletedAt: null,
-                    name: 'Greater',
-                    value: '>',
-                },
-            },
-            {
-                id: '5',
-                field_type_id: '2',
-                query_operator_id: '2',
-                query_operator: {
-                    id: '2',
-                    createdAt: '2024-03-25T15:00:24.837Z',
-                    updatedAt: '2024-03-25T15:00:24.837Z',
-                    deletedAt: null,
-                    name: 'Greater Or Equal',
-                    value: '>=',
-                },
-            },
-            {
-                id: '6',
-                field_type_id: '2',
-                query_operator_id: '3',
-                query_operator: {
-                    id: '3',
-                    createdAt: '2024-03-25T15:00:37.353Z',
-                    updatedAt: '2024-03-25T15:00:37.353Z',
-                    deletedAt: null,
-                    name: 'Smaller',
-                    value: '<',
-                },
-            },
-            {
-                id: '7',
-                field_type_id: '2',
-                query_operator_id: '4',
-                query_operator: {
-                    id: '4',
-                    createdAt: '2024-03-25T15:00:47.382Z',
-                    updatedAt: '2024-03-25T15:00:47.382Z',
-                    deletedAt: null,
-                    name: 'Smaller Or Equal',
-                    value: '<=',
-                },
-            },
-            {
-                id: '8',
-                field_type_id: '2',
-                query_operator_id: '5',
-                query_operator: {
-                    id: '5',
-                    createdAt: '2024-03-25T15:00:55.657Z',
-                    updatedAt: '2024-03-25T15:00:55.657Z',
-                    deletedAt: null,
-                    name: 'Equal',
-                    value: '=',
-                },
-            },
-        ],
-    },
-    {
-        id: '3',
-        createdAt: '2024-03-22T00:37:06.189Z',
-        updatedAt: '2024-03-22T00:37:06.189Z',
-        deletedAt: null,
-        name: 'Date',
-        fieldTypeOperators: [
-            {
-                id: '11',
-                field_type_id: '3',
-                query_operator_id: '3',
-                query_operator: {
-                    id: '3',
-                    createdAt: '2024-03-25T15:00:37.353Z',
-                    updatedAt: '2024-03-25T15:00:37.353Z',
-                    deletedAt: null,
-                    name: 'Smaller',
-                    value: '<',
-                },
-            },
-            {
-                id: '9',
-                field_type_id: '3',
-                query_operator_id: '1',
-                query_operator: {
-                    id: '1',
-                    createdAt: '2024-03-25T15:00:11.568Z',
-                    updatedAt: '2024-03-25T15:00:11.568Z',
-                    deletedAt: null,
-                    name: 'Greater',
-                    value: '>',
-                },
-            },
-            {
-                id: '10',
-                field_type_id: '3',
-                query_operator_id: '2',
-                query_operator: {
-                    id: '2',
-                    createdAt: '2024-03-25T15:00:24.837Z',
-                    updatedAt: '2024-03-25T15:00:24.837Z',
-                    deletedAt: null,
-                    name: 'Greater Or Equal',
-                    value: '>=',
-                },
-            },
-            {
-                id: '12',
-                field_type_id: '3',
-                query_operator_id: '4',
-                query_operator: {
-                    id: '4',
-                    createdAt: '2024-03-25T15:00:47.382Z',
-                    updatedAt: '2024-03-25T15:00:47.382Z',
-                    deletedAt: null,
-                    name: 'Smaller Or Equal',
-                    value: '<=',
-                },
-            },
-            {
-                id: '13',
-                field_type_id: '3',
-                query_operator_id: '5',
-                query_operator: {
-                    id: '5',
-                    createdAt: '2024-03-25T15:00:55.657Z',
-                    updatedAt: '2024-03-25T15:00:55.657Z',
-                    deletedAt: null,
-                    name: 'Equal',
-                    value: '=',
-                },
-            },
-        ],
-    },
-    {
-        id: '4',
-        createdAt: '2024-03-22T00:37:06.189Z',
-        updatedAt: '2024-03-22T00:37:06.189Z',
-        deletedAt: null,
-        name: 'Radio Button',
-        fieldTypeOperators: [
-            {
-                id: '14',
-                field_type_id: '4',
-                query_operator_id: '5',
-                query_operator: {
-                    id: '5',
-                    createdAt: '2024-03-25T15:00:55.657Z',
-                    updatedAt: '2024-03-25T15:00:55.657Z',
-                    deletedAt: null,
-                    name: 'Equal',
-                    value: '=',
-                },
-            },
-        ],
-    },
-];
-const fake_form = {
-    id: '3',
-    createdAt: '2024-04-06T14:14:26.087Z',
-    updatedAt: '2024-04-06T14:14:26.087Z',
-    deletedAt: null,
-    name: 'form name',
-    description: 'form desc',
-    groups: [
-        {
-            id: '6',
-            createdAt: '2024-04-06T14:14:26.087Z',
-            updatedAt: '2024-04-06T14:14:26.087Z',
-            deletedAt: null,
-            name: 'group1',
-            description: null,
-            position: 1,
-            fields: [
-                {
-                    id: '8',
-                    createdAt: '2024-04-06T14:14:26.087Z',
-                    updatedAt: '2024-04-06T14:14:26.087Z',
-                    deletedAt: null,
-                    name: 'field1',
-                    label: 'label1',
-                    required: false,
-                    position: 1,
-                    fieldTypeId: '1',
-                    options: [],
-                    fieldType: {
-                        id: '1',
-                        createdAt: '2024-04-03T19:25:49.918Z',
-                        updatedAt: '2024-04-03T19:25:49.918Z',
-                        deletedAt: null,
-                        name: 'TEXT',
-                        fieldTypeOperators: [],
-                    },
-                },
-                {
-                    id: '88',
-                    createdAt: '2024-04-06T14:14:26.087Z',
-                    updatedAt: '2024-04-06T14:14:26.087Z',
-                    deletedAt: null,
-                    name: 'field1',
-                    label: 'label1',
-                    required: false,
-                    position: 1,
-                    fieldTypeId: '3',
-                    options: [],
-                    fieldType: {
-                        id: '3',
-                        createdAt: '2024-04-03T19:25:49.918Z',
-                        updatedAt: '2024-04-03T19:25:49.918Z',
-                        deletedAt: null,
-                        name: 'DATE',
-                        fieldTypeOperators: [],
-                    },
-                },
-            ],
-        },
-        {
-            id: '7',
-            createdAt: '2024-04-06T14:14:26.087Z',
-            updatedAt: '2024-04-06T14:14:26.087Z',
-            deletedAt: null,
-            name: 'group2',
-            description: null,
-            position: 2,
-            fields: [
-                {
-                    id: '9',
-                    createdAt: '2024-04-06T14:14:26.097Z',
-                    updatedAt: '2024-04-06T14:14:26.097Z',
-                    deletedAt: null,
-                    name: 'field2',
-                    label: 'label2',
-                    required: false,
-                    position: 1,
-                    fieldTypeId: '4',
-                    options: [
-                        {
-                            id: '5',
-                            createdAt: '2024-04-06T14:14:26.103Z',
-                            updatedAt: '2024-04-06T14:14:26.103Z',
-                            deletedAt: null,
-                            name: 'op2',
-                            formFieldId: '9',
-                        },
-                        {
-                            id: '6',
-                            createdAt: '2024-04-06T14:14:26.105Z',
-                            updatedAt: '2024-04-06T14:14:26.105Z',
-                            deletedAt: null,
-                            name: 'op1',
-                            formFieldId: '9',
-                        },
-                    ],
-                    fieldType: {
-                        id: '4',
-                        createdAt: '2024-04-03T19:25:49.918Z',
-                        updatedAt: '2024-04-03T19:25:49.918Z',
-                        deletedAt: null,
-                        name: 'RADIO_BUTTON',
-                        fieldTypeOperators: [],
-                    },
-                },
-                {
-                    id: '10',
-                    createdAt: '2024-04-06T14:14:26.098Z',
-                    updatedAt: '2024-04-06T14:14:26.098Z',
-                    deletedAt: null,
-                    name: 'number field',
-                    label: 'label21',
-                    required: false,
-                    position: 2,
-                    fieldTypeId: '2',
-                    options: [],
-                    fieldType: {
-                        id: '2',
-                        createdAt: '2024-04-03T19:25:49.918Z',
-                        updatedAt: '2024-04-03T19:25:49.918Z',
-                        deletedAt: null,
-                        name: 'NUMBER',
-                        fieldTypeOperators: [],
-                    },
-                },
-            ],
-        },
-    ],
-};

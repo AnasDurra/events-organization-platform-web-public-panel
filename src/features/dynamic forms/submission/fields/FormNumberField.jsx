@@ -22,13 +22,13 @@ export default function FormNumberField({ field, groupIndex, fieldIndex }) {
 
                 <Form.Item
                     name={['groups', groupIndex, 'fields', fieldIndex, 'value']}
-                    rules={[{ type: 'number' }, { required: field?.required }]}
+                    rules={[{ type: 'number' }, { required: field?.required, message: 'Required Field' }]}
                 >
                     <InputNumber
                         placeholder='enter number'
                         className='sm:w-[50%] w-full'
-                        variant='filled'
-                        size='small'
+                        variant='borderless'
+                        size='medium'
                         suffix={<FieldNumberOutlined />}
                     />
                 </Form.Item>

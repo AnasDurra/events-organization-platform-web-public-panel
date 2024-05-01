@@ -15,6 +15,7 @@ export const events = apiSlice.injectEndpoints({
                 url: `event/show/${id}`,
                 method: 'GET',
             }),
+            providesTags: ['event'],
         }),
         updateDetails: builder.mutation({
             query: ({ id, body }) => ({
@@ -22,6 +23,7 @@ export const events = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: body,
             }),
+            invalidatesTags:['event']
         }),
         updateTags: builder.mutation({
             query: ({ id, body }) => ({
@@ -43,6 +45,13 @@ export const events = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        removeForm: builder.mutation({
+            query: (event_id) => ({
+                url: `event/${event_id}/form`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['event'],
+        }),
     }),
 });
 
@@ -53,4 +62,5 @@ export const {
     useUpdateTagsMutation,
     useUpdateAgeGroupsMutation,
     useShowEventAttendeesQuery,
+    useRemoveFormMutation,
 } = events;

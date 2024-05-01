@@ -42,8 +42,6 @@ export default function SubmitForm() {
     const handleFormFinish = (fields) => {
         const obj = {
             event_id: parseInt(event_id),
-            //TODO from user object
-            attendee_id: parseInt(1),
             form_id: parseInt(form_id),
             fields: fields.groups.flatMap((group) =>
                 group.fields

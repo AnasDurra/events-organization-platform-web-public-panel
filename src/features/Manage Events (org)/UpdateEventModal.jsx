@@ -19,6 +19,7 @@ import ShowMap from './ShowMap';
 import UpdateEventTagsModal from './UpdateEventTagsModal';
 import UpdateEventAgeGroupModal from './UpdateEventAgeGroupModal';
 import AttachForm from './AttachForm';
+import { useRemoveFormMutation, useUpdateDetailsMutation } from '../../api/services/events';
 
 const UpdateEventModal = ({
     isUpdateModalOpen,
@@ -28,6 +29,8 @@ const UpdateEventModal = ({
     eventDataIsLoading,
     isFetching,
 }) => {
+    const [removeForm] = useRemoveFormMutation();
+    const [updateEvent] = useUpdateDetailsMutation();
     const handleOk = () => {
         setIsUpdateModalOpen(false);
     };
@@ -39,6 +42,14 @@ const UpdateEventModal = ({
 
     const [isUpdateEventTagsModalOpen, setIsUpdateEventTagsModalOpen] = useState(false);
     const [isUpdateEventAgeGroupModalOpen, setIsUpdateEventAgeGroupModalOpen] = useState(false);
+
+    const handleAttachForm = (form) => {
+        updateEvent({ id: eventData.result?.id, body: { form_id: form.id } });
+    };
+    const handleDetachForm = () => {
+        console.log(eventData);
+        removeForm(eventData?.result?.id);
+    };
 
     return (
         <div>
@@ -292,10 +303,11 @@ const UpdateEventModal = ({
                             Attached Form
                         </Title>
                         <AttachForm
-                            onAttach={() => {}}
+                            onAttach={handleAttachForm}
                             organization_id={1}
+                            //TODO attachedform from eventdata
                             attachedForm={{ name: 'dummy' }}
-                            onDetachForm={() => {}}
+                            onDetachForm={handleDetachForm}
                         />
                     </div>
                 </Spin>

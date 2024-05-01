@@ -22,13 +22,13 @@ export default function FormTextField({ field, groupIndex, fieldIndex }) {
 
                 <Form.Item
                     name={['groups', groupIndex, 'fields', fieldIndex, 'value']}
-                    rules={[{ required: field?.required }]}
+                    rules={[{ required: field?.required, message: 'Required Field'}]}
                 >
                     <Input
                         placeholder='name'
                         className='sm:w-[50%] w-full'
-                        variant='filled'
-                        size='small'
+                        variant='borderless'
+                        size='medium'
                         suffix={<FieldStringOutlined />}
                     />
                 </Form.Item>
