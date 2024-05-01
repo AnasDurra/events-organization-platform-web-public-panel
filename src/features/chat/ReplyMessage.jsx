@@ -5,25 +5,25 @@ import { Button } from 'antd';
 const ReplyMessage = ({ message, setIsReplying }) => {
     const cardStyle = {
         display: 'flex',
-        flexDirection: 'row', // Set the direction to row
+        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         width: '100%',
         margin: '0.5rem 0',
         padding: '0.5rem',
         borderRadius: '1rem 1rem 1rem 0rem',
-        backgroundColor: '#BBDEFB',
+        border: '1px solid #ccc',
         direction: 'ltr',
     };
     console.log(message);
     return (
         <div style={cardStyle}>
             <div style={{ display: 'flex' }}>
-                <ReplyIcon style={{ marginRight: '5px' }} />
+                <ReplyIcon style={{ color: '#1679AB', marginRight: '5px' }} />
 
                 <div>
-                    <strong>Reply to {message.user.name}</strong>
-                    <div style={{ fontSize: '14px', direction: 'ltr' }}>{'hello world'}</div>
+                    <strong style={{ color: '#1679AB' }}>Reply to {message.user.name}</strong>
+                    <div style={{ fontSize: '14px', direction: 'ltr' }}>{message.text}</div>
                 </div>
             </div>
             <div>

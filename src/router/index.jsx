@@ -21,6 +21,7 @@ import BlockedUsersPage from '../features/ban/BlockedUsersPage';
 import NotFound from '../pages/notFound';
 import FollowersList from '../features/org profiles/FollowersList';
 import ShowFollowingOrgsList from '../features/Attendees Profiles/ShowFollowingOrgsList';
+import ChatsList from '../features/chat/ChatsList';
 
 export const router = createBrowserRouter([
     {
@@ -60,6 +61,10 @@ export const router = createBrowserRouter([
             {
                 path: '/attendee-profile/:id/organizations',
                 element: <ShowFollowingOrgsList />,
+            },
+            {
+                path: '/attendee/chats',
+                element: <ChatsList />,
             },
             {
                 path: '/event',
@@ -117,6 +122,4 @@ export const router = createBrowserRouter([
             },
         ],
     },
-  
-    
 ]);

@@ -12,24 +12,17 @@ const EventChat = () => {
 
     const [isReplying, setIsReplying] = useState(false);
     const [replyMessage, setReplyMessage] = useState(null);
+    const [focusedMessageId, setFocusedMessageId] = useState(null);
 
     const messagesEndRef = useRef(null);
-
-    const scrollToBottom = () => {
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
-        }
-    };
-    useEffect(() => {
-        scrollToBottom();
-    }, []);
 
     const fakeData = [
         {
             date: '2024-04-25',
             messages: [
                 {
-                    text: 'Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you?Hello, how are you? Hello, how are you? Hello, how are you? Hello, how are you?',
+                    id: '1',
+                    text: 'Hello, how are you?',
                     user: {
                         name: 'Alice',
                         avatar: 'https://i.pravatar.cc/40',
@@ -45,6 +38,7 @@ const EventChat = () => {
                     ],
                 },
                 {
+                    id: '2',
                     text: 'Any plans for the weekend?',
                     user: {
                         name: 'Alice',
@@ -53,7 +47,17 @@ const EventChat = () => {
                     timestamp: '2024-04-25 10:35 AM',
                 },
                 {
-                    text: 'I am doing well, thank you!',
+                    id: '3',
+                    replyTo: {
+                        id: '2',
+                        text: 'Any plans for the weekend?',
+                        user: {
+                            name: 'Alice',
+                            avatar: 'https://i.pravatar.cc/40',
+                        },
+                        timestamp: '2024-04-25 10:30 AM',
+                    },
+                    text: 'I am doing well, thank you!, yes very nice plans !!!',
                     user: {
                         name: 'Bob',
                         avatar: 'https://i.pravatar.cc/41',
@@ -61,15 +65,16 @@ const EventChat = () => {
                     timestamp: '2024-04-26 10:32 AM',
                 },
                 {
-                    text: 'I am doing well, thank you!',
-                    user: {
-                        name: 'Bob',
-                        avatar: 'https://i.pravatar.cc/41',
+                    id: '4',
+                    replyTo: {
+                        id: '1',
+                        text: 'Hello, how are you?',
+                        user: {
+                            name: 'Alice',
+                            avatar: 'https://i.pravatar.cc/40',
+                        },
+                        timestamp: '2024-04-25 10:30 AM',
                     },
-                    timestamp: '2024-04-26 10:32 AM',
-                },
-
-                {
                     text: 'Hello, how are you?',
                     user: {
                         name: 'SOSO',
@@ -91,9 +96,28 @@ const EventChat = () => {
             date: '2024-04-26',
             messages: [
                 {
-                    text: 'I am doing well, thank you!',
+                    id: '5',
+                    text: 'I am doing well, thank you all!',
                     user: {
-                        name: 'Bob',
+                        name: 'Alice',
+                        avatar: 'https://i.pravatar.cc/41',
+                    },
+                    timestamp: '2024-04-26 10:32 AM',
+                },
+                {
+                    id: '6',
+                    replyTo: {
+                        id: '3',
+                        text: 'I am doing well, thank you!, yes very nice plans !!!',
+                        user: {
+                            name: 'Bob',
+                            avatar: 'https://i.pravatar.cc/40',
+                        },
+                        timestamp: '2024-04-25 10:30 AM',
+                    },
+                    text: 'I am very excited !!!',
+                    user: {
+                        name: 'Alice',
                         avatar: 'https://i.pravatar.cc/41',
                     },
                     timestamp: '2024-04-26 10:32 AM',
@@ -126,6 +150,24 @@ const EventChat = () => {
         setReplyMessage(replyMessage);
     };
 
+    const scrollToRepliedMessage = (messageId) => {
+        if (messageId) {
+            const repliedMessageElement = document.getElementById(messageId);
+            console.log(repliedMessageElement);
+            if (repliedMessageElement) {
+                repliedMessageElement.scrollIntoView({ behavior: 'smooth' });
+
+                setFocusedMessageId(messageId);
+            }
+        }
+    };
+
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+        }
+    }, []);
+
     return (
         <div style={{ width: '100%', margin: '0 auto', padding: '10px' }}>
             <div ref={messagesEndRef} style={{ maxHeight: '400px', overflowY: 'auto' }}>
@@ -141,6 +183,8 @@ const EventChat = () => {
                                     previousUser={index > 0 ? dateGroup.messages[index - 1]?.user : null}
                                     type={message.user.name === user.name ? TYPE_SENT_MESSAGE : TYPE_RECEIVED_MESSAGE}
                                     replyOnMessage={replyOnMessage}
+                                    scrollToRepliedMessage={scrollToRepliedMessage}
+                                    isFocused={focusedMessageId === message.id}
                                 />
                             )}
                         />
