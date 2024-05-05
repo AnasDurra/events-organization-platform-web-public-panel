@@ -1,37 +1,29 @@
 import {
-    CiOutlined,
-    CrownFilled,
-    CrownOutlined,
-    DeploymentUnitOutlined,
     ExperimentFilled,
     ExperimentOutlined,
     FireFilled,
     FireOutlined,
     HomeFilled,
     HomeOutlined,
-    MonitorOutlined,
-    NotificationOutlined,
-    RestOutlined,
 } from '@ant-design/icons';
-import { Badge, Button, Col, Image, Layout, Row, Tag, Typography, theme } from 'antd';
-import { Content, Footer, Header } from 'antd/es/layout/layout';
-import React, { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { IoMdNotificationsOutline } from 'react-icons/io';
-import { BsTicketPerforated } from 'react-icons/bs';
-import Title from 'antd/es/typography/Title';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
-import { FaVolumeMute } from 'react-icons/fa';
-import { MdEvent } from 'react-icons/md';
-import './Landing.css';
+import { Badge, Button, Col, Layout, Row, theme } from 'antd';
 import Sider from 'antd/es/layout/Sider';
+import { Content, Footer, Header } from 'antd/es/layout/layout';
+import Title from 'antd/es/typography/Title';
+import React, { useState } from 'react';
+import { BsTicketPerforated } from 'react-icons/bs';
+import { IoMdNotificationsOutline } from 'react-icons/io';
+import { Outlet, useNavigate } from 'react-router-dom';
+import './Landing.css';
+import { v4 as uuidv4 } from 'uuid';
 
 const { useToken } = theme;
 
 export default function HomeLayout() {
     const { token } = useToken();
     const navigate = useNavigate();
-    const [value, setValue] = useState(0);
+    const [navIndex, setNavIndex] = useState(0);
 
     return (
         <Layout className='h-[100svh]'>
@@ -93,24 +85,42 @@ export default function HomeLayout() {
                     width={'20%'}
                 >
                     <div className='flex flex-col h-full mt-4 p-4 space-y-2'>
-                        <div
-                            className={`rounded-lg flex space-x-2 p-4 bg-[#00474f]/0  hover:bg-[#00474f]/30 hover:cursor-pointer `}
-                        >
-                            <HomeOutlined className='text-[1.2em]' />
-                            <span className='text-lg'>Home</span>
-                        </div>
-                        <div
-                            className={`rounded-lg flex space-x-2 p-4 bg-red-300/20  hover:bg-red-300/30 hover:cursor-pointer `}
-                        >
-                            <FireFilled className='text-red-300 text-[1.2em]' />
-                            <span className='text-lg'>Popular</span>
-                        </div>
-                        <div
-                            className={`rounded-lg flex space-x-2 p-4 bg-[#00474f]/0  hover:bg-[#00474f]/30 hover:cursor-pointer `}
-                        >
-                            <ExperimentOutlined className='text-[1.2em]' />
-                            <span className='text-lg'>Explore</span>
-                        </div>
+                        <SiderNavigationItem
+                            key={uuidv4()}
+                            filledIcon={<HomeFilled />}
+                            outLinedIcon={<HomeOutlined />}
+                            isActive={navIndex == 0}
+                            label={'Home'}
+                            onClick={() => {
+                                setNavIndex(0);
+                                navigate('/home');
+                            }}
+                        />
+
+                        <SiderNavigationItem
+                            key={uuidv4()}
+                            filledIcon={<FireFilled className='text-red-300 text-[1.2em]' />}
+                            outLinedIcon={<FireOutlined className='text-red-300 text-[1.2em]' />}
+                            isActive={navIndex == 1}
+                            label={'Popular'}
+                            onClick={() => {
+                                setNavIndex(1);
+                                navigate('popular');
+                            }}
+                            fire
+                        />
+
+                        <SiderNavigationItem
+                            key={uuidv4()}
+                            filledIcon={<ExperimentFilled />}
+                            outLinedIcon={<ExperimentOutlined />}
+                            isActive={navIndex == 2}
+                            label={'Explore'}
+                            onClick={() => {
+                                setNavIndex(2);
+                                navigate('explore');
+                            }}
+                        />
                     </div>
                 </Sider>
                 <div className='md:grid md:grid-cols-10 w-full'>
@@ -129,18 +139,9 @@ export default function HomeLayout() {
             >
                 <BottomNavigation
                     showLabels
-                    value={value}
+                    value={navIndex}
                     onChange={(event, newValue) => {
-                        setValue(newValue);
-                        if (newValue == 1) {
-                            navigate('/home/popular');
-                        } else if (newValue == 0) {
-                            navigate('/home');
-                        }
-                        else if(newValue==2){
-                            navigate('/home/explore');
-
-                        }
+                        setNavIndex(newValue);
                     }}
                     style={{ height: '100%', backgroundColor: token.colorPrimary }}
                 >
@@ -148,7 +149,7 @@ export default function HomeLayout() {
                         label={<div className='mt-[0.8em]'>Home</div>}
                         style={{ color: 'white' }}
                         icon={
-                            value == 0 ? (
+                            navIndex == 0 ? (
                                 <HomeFilled className='text-[1.2em]' />
                             ) : (
                                 <HomeOutlined className='text-[1.2em]' />
@@ -157,7 +158,7 @@ export default function HomeLayout() {
                     />
                     <BottomNavigationAction
                         label={
-                            value == 1 ? (
+                            navIndex == 1 ? (
                                 <div className='mt-[0.8em]  text-red-500'>Popular</div>
                             ) : (
                                 <div className='mt-[0.8em] '>Popular</div>
@@ -165,20 +166,19 @@ export default function HomeLayout() {
                         }
                         style={{ color: 'white ' }}
                         icon={
-                            value == 1 ? (
+                            navIndex == 1 ? (
                                 <FireFilled className='text-[1.2em]  text-red-300' />
                             ) : (
                                 <FireOutlined className='text-[1.2em]' />
                             )
                         }
-                        
                     />
 
                     <BottomNavigationAction
                         label={<div className='mt-[0.8em]'>Explore</div>}
                         style={{ color: 'white ' }}
                         icon={
-                            value == 2 ? (
+                            navIndex == 2 ? (
                                 <ExperimentFilled className='text-[1.2em] ' />
                             ) : (
                                 <ExperimentOutlined className='text-[1.2em]' />
@@ -199,5 +199,32 @@ export default function HomeLayout() {
                 </BottomNavigation>
             </Footer>
         </Layout>
+    );
+}
+
+function SiderNavigationItem({ label, outLinedIcon, filledIcon, isActive, onClick, fire }) {
+    return (
+        <div
+            className={`rounded-lg flex space-x-2 p-4 bg-[#00474f]/0 hover:bg-[#00474f]/30 hover:cursor-pointer ${
+                isActive ? 'bg-[#00474f]/30 ' : null
+            }
+            ${fire ? '  hover:bg-red-300/30' : null}
+            `}
+            onClick={onClick}
+        >
+            {isActive ? filledIcon : outLinedIcon}
+            <span className='text-lg'>{label}</span>
+        </div>
+    );
+}
+
+function BottomNavigationItem({ label, outLinedIcon, filledIcon, isActive, id }) {
+    return (
+        <BottomNavigationAction
+            label={<div className='mt-2'>{label}</div>}
+            style={{ color: 'white' }}
+            icon={isActive ? filledIcon : outLinedIcon}
+            value={id}
+        />
     );
 }

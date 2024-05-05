@@ -10,7 +10,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 export default function ViewOrgsPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [loadedOrgs, setLoadedOrgs] = useState([]);
-    const [orgsCount, setOrgsCount] = useState(50);
+    const [orgsCount, setOrgsCount] = useState(0);
     const [orgIds] = useState(new Set());
 
     const [getOrgs] = useLazyGetOrganizationsSummaryQuery();

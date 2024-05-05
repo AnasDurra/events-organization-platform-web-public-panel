@@ -50,6 +50,7 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: data,
             }),
+            providesTags: ['form-query'],
         }),
         addNewForm: builder.mutation({
             query: (initialForm) => ({
@@ -242,6 +243,14 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['form'],
         }),
+        updateSubmissionStatus: builder.mutation({
+            query: (body) => ({
+                url: `/attend-event/manage`,
+                method: 'POST',
+                body: body,
+            }),
+            invalidatesTags: ['form-query'],
+        }),
         removeGroup: builder.mutation({
             query: ({ group_id, form_id }) => ({
                 url: `/forms/deleteGroup/${group_id}`,
@@ -322,6 +331,7 @@ export const {
     useUpdateGroupMutation,
     useUpdateGroupFieldMutation,
     useUpdateFieldOptionNameMutation,
+    useUpdateSubmissionStatusMutation,
     useRemoveFieldMutation,
     useRemoveFieldOptionMutation,
     useRemoveGroupMutation,

@@ -7,6 +7,7 @@ import './EditFormPage.css';
 import DroppableGroup from './components/DroppableGroup';
 import PropertiesSidebar from './components/PropertiesSidebar';
 import Sidebar from './components/Sidebar';
+import { SidebarItemsIDs, debounceTime } from './constants';
 import {
     useAddNewFieldMutation,
     useAddNewFieldOptionMutation,
@@ -20,8 +21,6 @@ import {
     useUpdateGroupMutation,
 } from './dynamicFormsSlice';
 import { onDragEnd } from './utils-drag';
-import { SidebarItemsIDs, debounceTime } from './constants';
-import { getLoggedInUser } from '../../api/services/auth';
 
 export default function EditFormPage() {
     let { form_id } = useParams();

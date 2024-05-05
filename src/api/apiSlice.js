@@ -16,7 +16,7 @@ export const apiSlice = createApi({
             return headers;
         },
     }),
-    tagTypes: ['one-org', 'forms', 'form','event'],
+    tagTypes: ['one-org', 'forms', 'form','form-query','event'],
 
     endpoints: () => ({}),
 });

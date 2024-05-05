@@ -71,26 +71,7 @@ export default function FormLayout({ children }) {
                                     />
                                 )}
                             </Col>
-                            <Col offset={1}>
-                                <ul className='flex space-x-4'>
-                                    <li
-                                        onClick={() => {
-                                            navigate('../submissions');
-                                        }}
-                                        className='cursor-pointer hover:text-slate-400'
-                                    >
-                                        Submissions
-                                    </li>
-                                    {/* <li
-                                onClick={() => {
-                                    console.log('settings');
-                                }}
-                                className='cursor-pointer hover:text-blue-500'
-                            >
-                                Settings
-                            </li> */}
-                                </ul>
-                            </Col>
+                           
                         </Row>
                     </Col>
 
@@ -123,7 +104,7 @@ export default function FormLayout({ children }) {
                                     onClick={() => navigate(`/event/show/${events[0].id}`)}
                                 >
                                     {' '}
-                                    @{events[0].title}
+                                    {events[0].title}
                                 </a>
                                 {events.length > 1 ? (
                                     <span
@@ -135,7 +116,7 @@ export default function FormLayout({ children }) {
                                                         itemLayout='horizontal'
                                                         dataSource={events}
                                                         renderItem={(event, index) => (
-                                                            <List.Item className='hover:cursor-pointer hover:shadow-lg hover:border-2 px-2 '>
+                                                            <List.Item className='hover:cursor-pointer shadow-sm hover:shadow-none hover:border-2 px-2 '>
                                                                 <List.Item.Meta
                                                                     title={<span className='p-2'>{event.title}</span>}
                                                                     description={event.date}

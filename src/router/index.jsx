@@ -98,12 +98,17 @@ export const router = createBrowserRouter([
                 ),
             },
             {
-                path: 'event/:event_id/submit',
-                element: <SubmitForm />,
-            },
-            {
-                path: 'submissions',
-                element: <ViewFormSubmissions />,
+                path: 'event/:event_id/',
+                children: [
+                    {
+                        path: 'submit',
+                        element: <SubmitForm />,
+                    },
+                    {
+                        path: 'submissions',
+                        element: <ViewFormSubmissions />,
+                    },
+                ],
             },
         ],
     },
@@ -116,17 +121,17 @@ export const router = createBrowserRouter([
                 element: <HomePage />,
             },
             {
-                path:'popular',
+                path: 'popular',
                 element: <PopularPage />,
             },
             {
-                path:'explore',
+                path: 'explore',
                 element: <ExplorePage />,
             },
             {
-                path:'orgs',
+                path: 'orgs',
                 element: <ViewOrgsPage />,
-            }
+            },
         ],
     },
 ]);

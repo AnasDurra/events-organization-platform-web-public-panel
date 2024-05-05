@@ -27,11 +27,14 @@ import {
 import Title from 'antd/es/typography/Title';
 import moment from 'moment';
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { SidebarItemsIDs } from '../constants';
+import { useGetFormFieldTypesQuery, useGetFormQuery } from '../dynamicFormsSlice';
 import './Filter.css';
 import useNumberFieldState from './useNumberFieldState';
-import { useGetFormFieldTypesQuery, useGetFormQuery } from '../dynamicFormsSlice';
-import { useParams } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
+import dayjs from 'dayjs';
+
 const fieldIcons = {
     [SidebarItemsIDs.TEXTFIELD]: <FieldStringOutlined />,
     [SidebarItemsIDs.NUMBER]: <FieldNumberOutlined />,
@@ -45,6 +48,8 @@ const getFieldIcon = (fieldTypeId) => {
 
 export default function Filter({ onFilter }) {
     let { form_id, event_id } = useParams();
+    const [form] = Form.useForm();
+    const [formValues, setFormValues] = useState({});
 
     const [sets, setSets] = useState([{ selectedFieldsIds: [] }]);
     const { operator, showRangeInputs, fromValue, toValue, handleOperatorChange, setFromValue, setToValue } =
@@ -61,7 +66,6 @@ export default function Filter({ onFilter }) {
         setSets((prevSets) => [...prevSets, { selectedFieldsIds: [] }]);
     };
 
-    // Function to handle selecting fields for a particular set
     const handleSelectFields = (selectedFields, index) => {
         setSets((prevSets) => {
             const newSets = [...prevSets];
@@ -78,24 +82,24 @@ export default function Filter({ onFilter }) {
         });
     };
 
-    const handleOnFilterFinish = (fields) => {
-        fields?.groups?.forEach((group) => {
+    const handleOnFilterFinish = () => {
+        console.log('form obj: ', formValues);
+
+        formValues?.groups?.forEach((group) => {
             group.conditions?.forEach((condition) => {
                 if (condition.field_id) condition.field_id = parseInt(condition.field_id);
                 if (condition.operator_id) condition.operator_id = parseInt(condition.operator_id);
+                console.log('before: ', condition);
 
-                const matchingField = DBform.groups
-                    ?.flatMap((grp) => grp.fields)
-                    ?.find((field) => field.id == condition.field_id);
-
-                if (matchingField && matchingField.fieldType?.id == SidebarItemsIDs.DATE) {
-                    condition.value = moment(condition.value).format('YYYY-MM-DD');
+                if (dayjs.isDayjs(condition.value)) {
+                    condition.value = dayjs(condition.value).format('YYYY-MM-DD');
                 }
+
+                console.log('after: ', condition);
             });
         });
 
-        console.log('form fields: ', fields);
-        onFilter(fields);
+        onFilter(formValues);
     };
 
     const filterOptions = {
@@ -122,7 +126,7 @@ export default function Filter({ onFilter }) {
 
                     <Col span={10}>
                         <Typography.Text>
-                            <Typography.Text>{`➥ ${field.name}`}</Typography.Text>
+                            <Typography.Text>{`- ${field.name}`}</Typography.Text>
                             <Typography.Text type='secondary'>{` (id:${field.id})`}</Typography.Text>
                         </Typography.Text>
                     </Col>
@@ -135,7 +139,7 @@ export default function Filter({ onFilter }) {
                                 <Select
                                     className='w-full'
                                     size='small'
-                                    variant='filled'
+                                    variant='borderless'
                                     placeholder='Select operator'
                                     onChange={(value) => handleOperatorChange(field.id, value)}
                                 >
@@ -153,7 +157,7 @@ export default function Filter({ onFilter }) {
                                     >
                                         <Input
                                             size='small'
-                                            variant='filled'
+                                            variant='borderless'
                                             placeholder='write here..'
                                             className='w-full'
                                         />
@@ -190,7 +194,7 @@ export default function Filter({ onFilter }) {
 
                     <Col span={10}>
                         <Typography.Text>
-                            <Typography.Text>{`➥ ${field.name}`}</Typography.Text>
+                            <Typography.Text>{`- ${field.name}`}</Typography.Text>
                             <Typography.Text type='secondary'>{` (id:${field.id})`}</Typography.Text>
                         </Typography.Text>
                     </Col>
@@ -203,7 +207,7 @@ export default function Filter({ onFilter }) {
                                 <Select
                                     className='w-full'
                                     size='small'
-                                    variant='filled'
+                                    variant='borderless'
                                     placeholder='Select operator'
                                     onChange={(value) => handleOperatorChange(field.id, value)}
                                 >
@@ -215,7 +219,7 @@ export default function Filter({ onFilter }) {
                                 <Space.Compact size={8}>
                                     <InputNumber
                                         size='small'
-                                        variant='filled'
+                                        variant='borderless'
                                         placeholder='From'
                                         className='w-full'
                                         value={fromValue[field.id]}
@@ -225,7 +229,7 @@ export default function Filter({ onFilter }) {
                                     />
                                     <InputNumber
                                         size='small'
-                                        variant='filled'
+                                        variant='borderless'
                                         className='w-full'
                                         placeholder='To'
                                         value={toValue[field.id]}
@@ -243,7 +247,7 @@ export default function Filter({ onFilter }) {
                                         <InputNumber
                                             className='w-full'
                                             size='small'
-                                            variant='filled'
+                                            variant='borderless'
                                             placeholder='number'
                                             value={fromValue[field.id]}
                                             onChange={(value) =>
@@ -283,7 +287,7 @@ export default function Filter({ onFilter }) {
 
                     <Col span={10}>
                         <Typography.Text>
-                            <Typography.Text>{`➥ ${field.name}`}</Typography.Text>
+                            <Typography.Text>{`- ${field.name}`}</Typography.Text>
                             <Typography.Text type='secondary'>{` (id:${field.id})`}</Typography.Text>
                         </Typography.Text>
                     </Col>
@@ -296,7 +300,7 @@ export default function Filter({ onFilter }) {
                                 <Select
                                     className='w-full'
                                     size='small'
-                                    variant='filled'
+                                    variant='borderless'
                                     placeholder='Select operator'
                                     onChange={(value) => handleOperatorChange(field.id, value)}
                                 >
@@ -312,7 +316,7 @@ export default function Filter({ onFilter }) {
                                     <DatePicker.RangePicker
                                         className='w-full'
                                         size='small'
-                                        variant='filled'
+                                        variant='borderless'
                                         placeholder='From Date'
                                         value={fromValue[field.id]}
                                         onChange={(value) =>
@@ -332,12 +336,8 @@ export default function Filter({ onFilter }) {
                                         <DatePicker
                                             className='w-full'
                                             size='small'
-                                            variant='filled'
+                                            variant='borderless'
                                             placeholder='Select Date'
-                                            value={fromValue[field.id]}
-                                            onChange={(value) =>
-                                                setFromValue((prevState) => ({ ...prevState, [field.id]: value }))
-                                            }
                                         />
                                     </Form.Item>
                                 </Space.Compact>
@@ -360,7 +360,7 @@ export default function Filter({ onFilter }) {
                     </Form.Item>
                     <Col span={10}>
                         <Typography.Text>
-                            <Typography.Text>{`➥ ${field.name}`}</Typography.Text>
+                            <Typography.Text>{`- ${field.name}`}</Typography.Text>
                             <Typography.Text type='secondary'>{` (id:${field.id})`}</Typography.Text>
                         </Typography.Text>
                     </Col>
@@ -373,7 +373,7 @@ export default function Filter({ onFilter }) {
                                 className='w-full'
                                 size='small'
                                 placeholder='click and Select option'
-                                variant='filled'
+                                variant='borderless'
                             >
                                 {sets[setIndex].selectedFieldsIds.length > 0 &&
                                     DBform.groups
@@ -397,7 +397,7 @@ export default function Filter({ onFilter }) {
 
     return (
         <Collapse
-            className={`shadow shadow-lg`}
+            className={`shadow shadow-xl`}
             size='middle'
             expandIcon={({ isActive }) => (isActive ? <DownOutlined /> : <FilterOutlined />)}
             bordered
@@ -412,66 +412,139 @@ export default function Filter({ onFilter }) {
                     ),
                     children: (
                         <div>
-                            <Form onFinish={handleOnFilterFinish}>
-                                {sets?.map((set, setIndex) => (
-                                    <div key={'sets' + setIndex}>
-                                        <div className='flex justify-center items-center mt-2 mb-6'>
-                                            <div className='w-full flex  flex-col justify-center items-start'>
-                                                {setIndex == 0 && <Title level={5}>Select Fields</Title>}
-                                                <TreeSelect
-                                                    className='w-full overflow-auto b'
-                                                    variant='outlined'
-                                                    placeholder='Please select field to add filter'
-                                                    treeLine
-                                                    multiple
-                                                    treeDefaultExpandAll
-                                                    onChange={(selectedFields) =>
-                                                        handleSelectFields(selectedFields, setIndex)
-                                                    }
-                                                    treeData={DBform.groups?.map((group) => ({
-                                                        value: 'group' + group.id,
-                                                        title: `${group.name} (${
-                                                            group.description ? group.description : 'no description'
-                                                        })`,
-                                                        selectable: false,
-                                                        children: group.fields?.map((field) => ({
-                                                            value: field.id,
-                                                            title: field.name,
-                                                            icon: getFieldIcon(field.fieldType.id),
-                                                        })),
-                                                    }))}
-                                                    treeIcon
-                                                    switcherIcon={<GroupOutlined />}
-                                                    onSelect={(selected_value) => console.log(selected_value)}
-                                                    tagRender={(props) => {
-                                                        const field = DBform.groups
-                                                            ?.flatMap((group) => group.fields)
-                                                            ?.find((field) => field.id == props.value);
+                            <Form
+                                name='filter-form'
+                                form={form}
+                                onFinish={handleOnFilterFinish}
+                                onValuesChange={(_, values) => {
+                                    console.log('new values: ', values);
+                                    setFormValues(values);
+                                }}
+                            >
+                                {() => (
+                                    <div>
+                                        {sets?.map((set, setIndex) => (
+                                            <div key={'sets' + setIndex}>
+                                                <div className='flex justify-center items-center mt-2 mb-6'>
+                                                    <div className='w-full flex  flex-col justify-center items-start'>
+                                                        {setIndex == 0 && <Title level={5}>Select Fields</Title>}
+                                                        <TreeSelect
+                                                            className='w-full overflow-auto b'
+                                                            variant='borderless'
+                                                            placeholder='Click to select fields'
+                                                            treeLine
+                                                            multiple
+                                                            treeDefaultExpandAll
+                                                            onChange={(selectedFields) =>
+                                                                handleSelectFields(selectedFields, setIndex)
+                                                            }
+                                                            treeData={DBform.groups?.map((group) => ({
+                                                                value: 'group' + group.id,
+                                                                title: `${group.name} (${
+                                                                    group.description
+                                                                        ? group.description
+                                                                        : 'no description'
+                                                                })`,
+                                                                selectable: false,
+                                                                children: group.fields?.map((field) => ({
+                                                                    value: field.id,
+                                                                    title: field.name,
+                                                                    icon: getFieldIcon(field.fieldType.id),
+                                                                })),
+                                                            }))}
+                                                            treeIcon
+                                                            switcherIcon={<GroupOutlined />}
+                                                            onSelect={(selected_value) => console.log(selected_value)}
+                                                            tagRender={(props) => {
+                                                                const field = DBform.groups
+                                                                    ?.flatMap((group) => group.fields)
+                                                                    ?.find((field) => field.id == props.value);
 
-                                                        return (
-                                                            <Tag
-                                                                key={'tag' + props.value}
-                                                                className='bg-transparent'
-                                                            >
-                                                                <div className='flex space-x-2 justify-between'>
-                                                                    <span>{`${props.label}`}</span>
-                                                                    {getFieldIcon(field?.fieldType?.id)}
+                                                                return (
+                                                                    <Tag
+                                                                        key={'tag' + props.value}
+                                                                        className='bg-transparent'
+                                                                    >
+                                                                        <div className='flex space-x-2 justify-between'>
+                                                                            <span>{`${props.label}`}</span>
+                                                                            {getFieldIcon(field?.fieldType?.id)}
+                                                                        </div>
+                                                                    </Tag>
+                                                                );
+                                                            }}
+                                                            allowClear
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div className='flex flex-col justify-center items-center'>
+                                                    {setIndex == 0 && (
+                                                        <Space.Compact className='w-full'>
+                                                            <Space className='w-[95%] block text-center'>
+                                                                <Divider level={5}>Filtered Fields</Divider>
+                                                            </Space>
+                                                            {sets.length > 1 && (
+                                                                <Space>
+                                                                    <Button
+                                                                        type='text'
+                                                                        icon={<MinusOutlined />}
+                                                                        onClick={() => handleRemoveSet(setIndex)}
+                                                                    />
+                                                                </Space>
+                                                            )}
+                                                        </Space.Compact>
+                                                    )}
+                                                    <div className='w-full mx-2 my-2'>
+                                                        {set.selectedFieldsIds?.map((fieldId, fieldIndex) => {
+                                                            const field = DBform.groups
+                                                                ?.flatMap((group) => group.fields)
+                                                                ?.find((field) => field.id == fieldId);
+                                                            return (
+                                                                <div
+                                                                    className='my-2'
+                                                                    key={'options' + fieldId}
+                                                                >
+                                                                    {filterOptions[field.fieldType.id]({
+                                                                        field,
+                                                                        setIndex,
+                                                                        fieldIndex,
+                                                                    })}
                                                                 </div>
-                                                            </Tag>
-                                                        );
-                                                    }}
-                                                    allowClear
-                                                />
-                                            </div>
-                                        </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
 
-                                        <div className='flex flex-col justify-center items-center'>
-                                            {setIndex == 0 && (
-                                                <Space.Compact className='w-full'>
-                                                    <Space className='w-[95%] block text-center'>
-                                                        <Divider level={5}>Filtered Fields</Divider>
-                                                    </Space>
-                                                    {sets.length > 1 && (
+                                                {setIndex == sets.length - 1 && (
+                                                    <Space.Compact className='w-full space-x-2'>
+                                                        <div className='w-[50%] '>
+                                                            <Button
+                                                                type='dashed'
+                                                                size='small'
+                                                                className='w-full rounded-lg '
+                                                                onClick={handleAddSet}
+                                                            >
+                                                                OR
+                                                            </Button>
+                                                        </div>
+                                                        <div className='w-[50%] '>
+                                                            <Button
+                                                                type='primary'
+                                                                size='small'
+                                                                className='w-full'
+                                                                htmlType='submit'
+                                                            >
+                                                                Save
+                                                            </Button>
+                                                        </div>
+                                                    </Space.Compact>
+                                                )}
+
+                                                {setIndex != sets.length - 1 && (
+                                                    <Space.Compact className='w-full'>
+                                                        <Space className='w-[95%] block'>
+                                                            <Divider>OR</Divider>
+                                                        </Space>
                                                         <Space>
                                                             <Button
                                                                 type='text'
@@ -479,72 +552,12 @@ export default function Filter({ onFilter }) {
                                                                 onClick={() => handleRemoveSet(setIndex)}
                                                             />
                                                         </Space>
-                                                    )}
-                                                </Space.Compact>
-                                            )}
-                                            <div className='w-full mx-2 my-2'>
-                                                {set.selectedFieldsIds?.map((fieldId, fieldIndex) => {
-                                                    const field = DBform.groups
-                                                        ?.flatMap((group) => group.fields)
-                                                        ?.find((field) => field.id === fieldId);
-
-                                                    return (
-                                                        <div
-                                                            className='my-2'
-                                                            key={'options' + fieldId}
-                                                        >
-                                                            {filterOptions[field.fieldType.id]({
-                                                                field,
-                                                                setIndex,
-                                                                fieldIndex,
-                                                            })}
-                                                        </div>
-                                                    );
-                                                })}
+                                                    </Space.Compact>
+                                                )}
                                             </div>
-                                        </div>
-
-                                        {setIndex == sets.length - 1 && (
-                                            <Space.Compact className='w-full space-x-2'>
-                                                <div className='w-[50%] '>
-                                                    <Button
-                                                        type='dashed'
-                                                        size='small'
-                                                        className='w-full rounded-lg '
-                                                        onClick={handleAddSet}
-                                                    >
-                                                        OR
-                                                    </Button>
-                                                </div>
-                                                <div className='w-[50%] '>
-                                                    <Button
-                                                        type='primary'
-                                                        size='small'
-                                                        className='w-full'
-                                                        htmlType='submit'
-                                                    >
-                                                        Save
-                                                    </Button>
-                                                </div>
-                                            </Space.Compact>
-                                        )}
-
-                                        {setIndex != sets.length - 1 && (
-                                            <Space.Compact className='w-full'>
-                                                <Space className='w-[95%] block'>
-                                                    <Divider>OR</Divider>
-                                                </Space>
-                                                <Space>
-                                                    <Button
-                                                        type='text'
-                                                        icon={<MinusOutlined />}
-                                                        onClick={() => handleRemoveSet(setIndex)}
-                                                    />
-                                                </Space>
-                                            </Space.Compact>
-                                        )}
+                                        ))}
                                     </div>
-                                ))}
+                                )}
                             </Form>
                         </div>
                     ),

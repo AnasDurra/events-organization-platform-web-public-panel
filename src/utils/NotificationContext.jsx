@@ -6,7 +6,7 @@ const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
     const [api, contextHolder] = notification.useNotification();
-    const openNotification = (type, message, description) => {
+    const openNotification = (type, message, description, placement = 'topLeft') => {
         const style = {
             border: '1px solid #ccc',
             borderRadius: '5px',
@@ -18,7 +18,7 @@ export const NotificationProvider = ({ children }) => {
         const config = {
             message: message,
             description: description ?? null,
-            placement: 'topLeft',
+            placement: placement,
             duration: 4, // Adjust as needed
         };
 

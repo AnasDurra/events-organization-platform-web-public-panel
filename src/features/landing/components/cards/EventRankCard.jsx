@@ -19,7 +19,7 @@ export default function EventRankCard({ rank, imgUrl }) {
 
     return (
         <div
-            className={`relative h-[16svh]  bg-white shadow-md p-6  bg-[length:100%_100%] rounded-tl-3xl rounded-br-3xl rounded-tr-3xl `}
+            className={`relative h-[24svh]  bg-white shadow-md p-6  bg-[length:100%_100%] rounded-tl-3xl rounded-br-3xl rounded-tr-3xl `}
             style={{ backgroundImage: `url('${imgUrl}')` }}
         >
             <div
