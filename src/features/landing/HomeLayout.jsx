@@ -11,7 +11,7 @@ import { Badge, Button, Col, Layout, Row, theme } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import { Content, Footer, Header } from 'antd/es/layout/layout';
 import Title from 'antd/es/typography/Title';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BsTicketPerforated } from 'react-icons/bs';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { Outlet, useNavigate } from 'react-router-dom';
@@ -24,6 +24,23 @@ export default function HomeLayout() {
     const { token } = useToken();
     const navigate = useNavigate();
     const [navIndex, setNavIndex] = useState(0);
+
+
+    useEffect(()=>{
+
+        if(navIndex==0){
+            navigate('/home')
+        }
+        else if(navIndex==1){
+            navigate('popular')
+        }
+        else if(navIndex==2){
+            navigate('explore')
+        }
+        else if(navIndex==3){
+            //TODO go to  profile
+        }
+    },[navIndex])
 
     return (
         <Layout className='h-[100svh]'>
@@ -93,7 +110,6 @@ export default function HomeLayout() {
                             label={'Home'}
                             onClick={() => {
                                 setNavIndex(0);
-                                navigate('/home');
                             }}
                         />
 
@@ -105,7 +121,6 @@ export default function HomeLayout() {
                             label={'Popular'}
                             onClick={() => {
                                 setNavIndex(1);
-                                navigate('popular');
                             }}
                             fire
                         />
@@ -118,7 +133,6 @@ export default function HomeLayout() {
                             label={'Explore'}
                             onClick={() => {
                                 setNavIndex(2);
-                                navigate('explore');
                             }}
                         />
                     </div>
@@ -137,11 +151,13 @@ export default function HomeLayout() {
                 className={`h-[8svh] p-0 md:hidden`}
                 style={{ backgroundColor: token.colorPrimary }}
             >
+            
                 <BottomNavigation
                     showLabels
                     value={navIndex}
                     onChange={(event, newValue) => {
                         setNavIndex(newValue);
+
                     }}
                     style={{ height: '100%', backgroundColor: token.colorPrimary }}
                 >
