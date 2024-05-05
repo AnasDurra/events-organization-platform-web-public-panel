@@ -8,7 +8,15 @@ export const chats = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+
+        groupChatList: builder.query({
+            query: ({ chat_group_id, pageSize, page }) => ({
+                url: `chat/group?pageSize=${pageSize}&page=${page}`,
+                method: 'POST',
+                body: { group_id: chat_group_id },
+            }),
+        }),
     }),
 });
 
-export const { useChattingListQuery } = chats;
+export const { useChattingListQuery, useGroupChatListQuery } = chats;

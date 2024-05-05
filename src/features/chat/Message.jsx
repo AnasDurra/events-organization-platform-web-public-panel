@@ -1,12 +1,16 @@
 import { Avatar, Button, Card, Input, List, Popover, Space, Tooltip, Typography } from 'antd';
 import { TYPE_RECEIVED_MESSAGE, TYPE_SENT_MESSAGE, TYPE_SYSTEM_MESSAGE } from './CONSTANTS';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { HeartFilled, LikeFilled, MessageOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { getLoggedInUser } from '../../api/services/auth';
 
 function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedMessage, isFocused }) {
+    // console.log(message, '-', previousUser);
     const [showText, setShowText] = useState(false);
+
+    const [user, setUser] = useState(null);
 
     const messageStyle = {
         width: '85%',
@@ -79,7 +83,8 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
             ...prevReactions,
             [reaction]: prevReactions[reaction] + 1,
         }));
-        // Here you can also send a request to the backend to store the reaction
+
+        //
     };
 
     const iconStyle = {
@@ -122,6 +127,11 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
         </Space>
     );
 
+    useEffect(() => {
+        const loggedUser = getLoggedInUser();
+        setUser(loggedUser);
+    }, []);
+
     return (
         <div style={containerStyle}>
             <List.Item
@@ -134,8 +144,12 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
                 onMouseLeave={() => setShowText(false)}
             >
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {message.user.name !== 'Alice' && (
-                        <Avatar src={message.user.avatar} style={{ marginRight: '8px' }} />
+                    {message.user.name != user?.username && (
+                        <Avatar
+                            // src={message.user.avatar}
+                            src={message.user.avatar}
+                            style={{ marginRight: '8px' }}
+                        />
                     )}
                     <Popover placement={'top'} content={reactionsContent} trigger="hover">
                         <div
@@ -145,7 +159,9 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
                                 replyOnMessage(message);
                             }}
                         >
-                            {previousUser?.name != message.user.name && message.user.name != 'Alice' && (
+                            {/* {previousUser?.name != message.user.name && message.user.name != user?.username && ( */}
+                            {console.log(message)}
+                            {message?.user?.username !== user?.username && (
                                 <div style={{ fontWeight: 'bold', fontSize: '13px', marginBottom: '4px' }}>
                                     {message.user.name}
                                 </div>
@@ -186,54 +202,53 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
                                     <Space size={0}>
                                         {message?.reactions?.map((reaction, index) => (
                                             <div key={index}>
-                                                {Object.entries(reaction).map(([reactionType, count]) => (
-                                                    <div
-                                                        key={reactionType}
-                                                        style={{
-                                                            display: 'inline-flex',
-                                                            alignItems: 'center',
-                                                            marginRight: '10px',
-                                                            direction: 'ltr',
-                                                        }}
-                                                    >
-                                                        {reactionType === 'like' && (
-                                                            <>
-                                                                <Button
-                                                                    size="small"
-                                                                    type="text"
-                                                                    icon={
-                                                                        <LikeFilled
-                                                                            onClick={() => handleReaction('like')}
-                                                                            style={{ ...iconStyle, color: '#1890ff' }}
-                                                                        />
-                                                                    }
-                                                                    // onClick={handleLikeClicked} //TODO implement handleLikeClicked function
-                                                                />
-                                                                <span style={{ marginLeft: '4px', fontSize: '14px' }}>
-                                                                    {count}
-                                                                </span>
-                                                            </>
-                                                        )}
-                                                        {reactionType === 'love' && (
-                                                            <>
-                                                                <Button
-                                                                    size="small"
-                                                                    type="text"
-                                                                    icon={
-                                                                        <HeartFilled
-                                                                            onClick={() => handleReaction('love')}
-                                                                            style={{ ...iconStyle, color: '#eb2f96' }}
-                                                                        />
-                                                                    }
-                                                                    // onClick={handleLikeClicked} //TODO implement handleLikeClicked function
-                                                                />
-                                                                <span style={{ marginLeft: '4px', fontSize: '14px' }}>
-                                                                    {count}
-                                                                </span>
-                                                            </>
-                                                        )}
-                                                    </div>
-                                                ))}
+                                                <div
+                                                    key={reaction.reaction.id}
+                                                    style={{
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        marginRight: '10px',
+                                                        direction: 'ltr',
+                                                    }}
+                                                >
+                                                    {reaction.reaction.id === 2 && (
+                                                        <>
+                                                            <Button
+                                                                size="small"
+                                                                type="text"
+                                                                icon={
+                                                                    <LikeFilled
+                                                                        onClick={() => handleReaction('like')}
+                                                                        style={{ ...iconStyle, color: '#1890ff' }}
+                                                                    />
+                                                                }
+                                                                // onClick={handleLikeClicked} //TODO implement handleLikeClicked function
+                                                            />
+                                                            <span style={{ marginLeft: '4px', fontSize: '14px' }}>
+                                                                {1}
+                                                            </span>
+                                                        </>
+                                                    )}
+
+                                                    {reaction.reaction.id === '1' && (
+                                                        <>
+                                                            <Button
+                                                                size="small"
+                                                                type="text"
+                                                                icon={
+                                                                    <HeartFilled
+                                                                        onClick={() => handleReaction('love')}
+                                                                        style={{ ...iconStyle, color: '#eb2f96' }}
+                                                                    />
+                                                                }
+                                                                // onClick={handleLikeClicked} //TODO implement handleLikeClicked function
+                                                            />
+                                                            <span style={{ marginLeft: '4px', fontSize: '14px' }}>
+                                                                {1}
+                                                            </span>
+                                                        </>
+                                                    )}
+                                                </div>
                                             </div>
                                         ))}
                                     </Space>

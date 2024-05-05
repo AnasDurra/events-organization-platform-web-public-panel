@@ -508,7 +508,7 @@ const ShowEvent = () => {
                                     {
                                         key: '2',
                                         label: 'Event Chat',
-                                        children: <EventChat />,
+                                        children: <EventChat chat_group_id={eventData?.result?.chat_group?.id} />,
                                     },
                                 ]}
                             />

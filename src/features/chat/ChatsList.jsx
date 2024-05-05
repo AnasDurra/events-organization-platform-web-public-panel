@@ -94,7 +94,7 @@ const ChatsList = () => {
                                 image={<MessageOutlined style={{ fontSize: 48 }} />}
                                 description={
                                     <Text type="secondary">
-                                        There are currently no chats available. Start a conversation to see them here!
+                                        There are currently no chats available. Join a conversation to see them here!
                                     </Text>
                                 }
                             />
