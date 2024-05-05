@@ -422,6 +422,7 @@ const AttendeeEvents = () => {
     //         },
     //     ],
     // };
+
     const navigate = useNavigate();
     const [selectedRange, setSelectedRange] = useState(null);
 

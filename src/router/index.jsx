@@ -24,6 +24,8 @@ import PopularPage from '../features/landing/PopularPage';
 import ExplorePage from '../features/landing/ExplorePage';
 import HomePage from '../features/landing/HomePage';
 import ViewOrgsPage from '../features/landing/ViewOrgsPage';
+import FollowersList from '../features/org profiles/FollowersList';
+import ShowFollowingOrgsList from '../features/Attendees Profiles/ShowFollowingOrgsList';
 
 export const router = createBrowserRouter([
     {
@@ -52,8 +54,17 @@ export const router = createBrowserRouter([
                 element: <ShowAttendeeEvents />,
             },
             {
+                //edit this
+                path: '/attendee/my-profile/organizations',
+                element: <ShowAttendeeEvents />,
+            },
+            {
                 path: '/attendee-profile/:id',
                 element: <ShowAttendeProfile />,
+            },
+            {
+                path: '/attendee-profile/:id/organizations',
+                element: <ShowFollowingOrgsList />,
             },
             {
                 path: '/event',
@@ -79,7 +90,11 @@ export const router = createBrowserRouter([
             },
 
             { path: '/org/:orgId', element: <ProfilePage /> },
-            { path: '/org/config', element: <ConfigOrgPage /> },
+            {
+                path: '/org/:orgId/followers-list',
+                element: <FollowersList />,
+            },
+            { path: '/org/:orgId/config', element: <ConfigOrgPage /> },
 
             { path: '/members', element: <TeamPage /> },
 
