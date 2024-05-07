@@ -17,6 +17,9 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 import { Outlet, useNavigate } from 'react-router-dom';
 import './Landing.css';
 import { v4 as uuidv4 } from 'uuid';
+import TicketsCard from './TicketsCard';
+import { getLoggedInUser, getLoggedInUserV2 } from '../../api/services/auth';
+import { useGetAttendeeBalanceQuery } from '../Ticketing Packages/TicketingPackagesSlice';
 
 const { useToken } = theme;
 
@@ -24,23 +27,21 @@ export default function HomeLayout() {
     const { token } = useToken();
     const navigate = useNavigate();
     const [navIndex, setNavIndex] = useState(0);
+    const { data: { result: balance } = { result: {} }, isLoading: isBalanceLoading } = useGetAttendeeBalanceQuery(
+        getLoggedInUserV2().user_id
+    );
 
-
-    useEffect(()=>{
-
-        if(navIndex==0){
-            navigate('/home')
-        }
-        else if(navIndex==1){
-            navigate('popular')
-        }
-        else if(navIndex==2){
-            navigate('explore')
-        }
-        else if(navIndex==3){
+    useEffect(() => {
+        if (navIndex == 0) {
+            navigate('/home');
+        } else if (navIndex == 1) {
+            navigate('popular');
+        } else if (navIndex == 2) {
+            navigate('explore');
+        } else if (navIndex == 3) {
             //TODO go to  profile
         }
-    },[navIndex])
+    }, [navIndex]);
 
     return (
         <Layout className='h-[100svh]'>
@@ -67,13 +68,11 @@ export default function HomeLayout() {
                         className='h-full pr-2'
                     >
                         <div className='w-full flex  mx-2 h-full items-center justify-end'>
-                            <div className='flex items-center mr-2 space-x-2  px-2 bg-gray-400 shadow-sm shadow-gray-300  rounded-3xl  h-[4svh]'>
-                                <BsTicketPerforated
-                                    type='text'
-                                    className={'text-xl bg-yellow-600 text-white rounded-lg p-1'}
-                                    icon={<BsTicketPerforated />}
-                                />
-                                <span className='bg-transparent text-black font-mono'>150</span>
+                            <div
+                                onClick={() => navigate('tickets')}
+                                className='flex items-center mr-2 space-x-2  px-2 bg-gray-400 shadow-sm shadow-gray-300  rounded-3xl  h-[4svh] shadow-lg hover:shadow-sm hover:cursor-pointer'
+                            >
+                                <TicketsCard ticketsCount={balance?.balance} />
                             </div>
 
                             <Badge
@@ -151,13 +150,11 @@ export default function HomeLayout() {
                 className={`h-[8svh] p-0 md:hidden`}
                 style={{ backgroundColor: token.colorPrimary }}
             >
-            
                 <BottomNavigation
                     showLabels
                     value={navIndex}
                     onChange={(event, newValue) => {
                         setNavIndex(newValue);
-
                     }}
                     style={{ height: '100%', backgroundColor: token.colorPrimary }}
                 >

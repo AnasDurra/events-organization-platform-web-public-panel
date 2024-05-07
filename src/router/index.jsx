@@ -26,11 +26,17 @@ import HomePage from '../features/landing/HomePage';
 import ViewOrgsPage from '../features/landing/ViewOrgsPage';
 import FollowersList from '../features/org profiles/FollowersList';
 import ShowFollowingOrgsList from '../features/Attendees Profiles/ShowFollowingOrgsList';
+import TicketsBalancePage from '../features/Ticketing Packages/TicketsBalancePage';
+import ResultSuccessPage from '../features/Ticketing Packages/ResultSuccessPage';
 
 export const router = createBrowserRouter([
     {
         path: '/not-found',
         element: <NotFound />,
+    },
+    {
+        path: '/payment/success',
+        element: <ResultSuccessPage />,
     },
     {
         path: '/login',
@@ -128,7 +134,7 @@ export const router = createBrowserRouter([
         ],
     },
     {
-        path: 'home',
+        path: '/home',
         element: <HomeLayout />,
         children: [
             {
@@ -146,6 +152,10 @@ export const router = createBrowserRouter([
             {
                 path: 'orgs',
                 element: <ViewOrgsPage />,
+            },
+            {
+                path: '/home/tickets',
+                element: <TicketsBalancePage />,
             },
         ],
     },

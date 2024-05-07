@@ -28,7 +28,9 @@ export const auth = apiSlice.injectEndpoints({
                 body: credentials,
             }),
             transformResponse: (responseData) => {
-                console.log(responseData?.result?.accessToken);
+                Cookies.set('user', JSON.stringify(responseData?.result), {
+                    expires: 12,
+                });
                 Cookies.set('accessToken', responseData?.result?.access_token, {
                     expires: 12,
                 });
@@ -69,6 +71,10 @@ export const getLoggedInUser = () => {
     const decodedToken = jwtDecode(token);
 
     return decodedToken;
+};
+
+export const getLoggedInUserV2 = () => {
+    return JSON.parse(Cookies.get('user'));
 };
 
 export const { useLoginMutation, useLogoutMutation, useSignupMutation, useUserMenuQuery } = auth;
