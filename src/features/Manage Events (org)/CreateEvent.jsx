@@ -98,6 +98,8 @@ const CreateEvent = () => {
                     attachments: data?.attachments?.fileList,
                     location: data?.location,
                     cover_picture: coverImage.file ?? null,
+                    is_chatting_enabled: data?.isChatEnabled,
+                    chat_group_title: data?.groupName,
                 };
                 for (const key in dataToSend) {
                     if (dataToSend[key] == null) {
@@ -140,6 +142,8 @@ const CreateEvent = () => {
                         const [latitude, longitude] = [dataToSend.location.latitude, dataToSend.location.longitude];
                         formData.append(`location[latitude]`, latitude);
                         formData.append(`location[longitude]`, longitude);
+                    } else if (key === 'chat_group_title') {
+                        formData.append(`chat_group[group_title]`, dataToSend[key]);
                     } else {
                         formData.append(key, dataToSend[key]);
                     }

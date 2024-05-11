@@ -9,6 +9,13 @@ import Sider from './components/Sider';
 
 import { useUserMenuQuery } from './api/services/auth';
 
+import { chatSocket, joinChannel, setChatSocketHeader } from './chatSocket';
+
+import Cookies from 'js-cookie';
+
+import { useSelector, useDispatch } from 'react-redux';
+import { setGroups } from './redux/chatSlice';
+
 export default function AppLayout() {
     const screens = Grid.useBreakpoint();
 
@@ -16,6 +23,9 @@ export default function AppLayout() {
     const [isSiderOpen, setIsSiderOpen] = useState(true);
 
     const { data: userMenu, isLoading: userMenuIsLoading } = useUserMenuQuery();
+
+    const groups = useSelector((state) => state.counter.value);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setIsSiderOpen(isLargerThanLGScreen);
@@ -25,9 +35,34 @@ export default function AppLayout() {
         setIsLargerThanLGScreen(isLargerThanLG(screens));
     }, [screens]);
 
+    const authToken = Cookies.get('accessToken');
     useEffect(() => {
-        console.log(userMenu);
-    }, [userMenu]);
+        function onGroupsJoined(groups) {
+            dispatch(setGroups(groups));
+            // console.log();
+            groups.groups.map((group) => {
+                const { channel } = group;
+                joinChannel(channel);
+            });
+            console.log(groups);
+        }
+
+        if (authToken) {
+            console.log(authToken);
+            setChatSocketHeader(authToken);
+            console.log(chatSocket);
+        }
+
+        chatSocket.on('groups-joined', onGroupsJoined);
+
+        return () => {
+            chatSocket.off('groups-joined', onGroupsJoined);
+        };
+    }, [authToken]);
+
+    useEffect(() => {
+        console.log(groups);
+    }, [groups]);
 
     return (
         <Layout>

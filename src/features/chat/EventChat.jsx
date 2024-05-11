@@ -7,13 +7,14 @@ import ReplyMessage from './ReplyMessage';
 
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useGroupChatListQuery } from '../../api/services/chats';
+import { sendMessage } from '../../chatSocket';
 
 const EventChat = ({ chat_group_id }) => {
-    console.log(chat_group_id);
     const [pageSize, setPageSize] = useState(3);
     const [page, setPage] = useState(1);
-
     const { data, error, isLoading, refetch, isFetching } = useGroupChatListQuery({ chat_group_id, pageSize, page });
+
+    console.log(chat_group_id); // TODO Delete this
 
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
@@ -32,14 +33,11 @@ const EventChat = ({ chat_group_id }) => {
     const handleSendMessage = () => {
         if (inputValue.trim() !== '') {
             const newMessage = {
-                text: inputValue,
-                user: {
-                    name: 'Alice',
-                    avatar: 'https://i.pravatar.cc/40',
-                },
-                timestamp: new Date().toLocaleString(),
+                content: inputValue,
+                group_id: chat_group_id,
             };
-            setMessages([...messages, newMessage]);
+            // setMessages([...messages, newMessage]);
+            sendMessage(newMessage);
             setInputValue('');
         }
     };

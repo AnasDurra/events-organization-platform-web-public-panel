@@ -1,7 +1,8 @@
-import { Button, Card, Form, Input, Select, Slider, Space, Tooltip, message } from 'antd';
+import { Button, Card, Checkbox, Form, Input, Select, Slider, Space, Tooltip, message } from 'antd';
 import Dragger from 'antd/es/upload/Dragger';
 import ShowMap from './ShowMap';
 import { EnvironmentFilled } from '@ant-design/icons';
+import { useState } from 'react';
 
 const EventDetailsForm = ({
     eventDetailsForm,
@@ -11,6 +12,8 @@ const EventDetailsForm = ({
     setIsLocationOnMapModalOpen,
     setPosition,
 }) => {
+    const [isChatEnabled, setIsChatEnabled] = useState(false);
+
     return (
         <>
             <Form form={eventDetailsForm} layout="vertical">
@@ -43,6 +46,23 @@ const EventDetailsForm = ({
                 <Form.Item initialValue={1} label="Event Capacity" name="capacity">
                     <Slider min={1} />
                 </Form.Item>
+                <Form.Item name="isChatEnabled" valuePropName="checked">
+                    <Checkbox onChange={() => setIsChatEnabled(!isChatEnabled)}>Is Chatting Enabled?</Checkbox>
+                </Form.Item>
+                {isChatEnabled && (
+                    <Form.Item
+                        name="groupName"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Please input your group name!',
+                            },
+                        ]}
+                        style={{ marginTop: '-20px' }}
+                    >
+                        <Input placeholder="Enter Group Name" />
+                    </Form.Item>
+                )}
                 <Form.Item
                     label="Event Type (Online - Onsite)"
                     name="event_type"

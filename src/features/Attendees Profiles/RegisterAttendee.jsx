@@ -124,6 +124,7 @@ export default function RegisterAttendee() {
                 console.log(res);
                 if (res.statusCode === 200) {
                     message.success('Registered Successfully !');
+                    // TODO Navigate to user profile
                 }
             })
             .catch((error) => {
