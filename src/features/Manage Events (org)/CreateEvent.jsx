@@ -108,6 +108,7 @@ const CreateEvent = () => {
                     location: data?.location,
                     cover_picture: coverImage.file ?? null,
                     form_id: attachedForm ? attachedForm.id : undefined,
+                    fees: data?.fees ? data.fees : undefined,
                 };
                 for (const key in dataToSend) {
                     if (dataToSend[key] == null) {
@@ -164,7 +165,7 @@ const CreateEvent = () => {
                         console.log(res);
                         if (res.statusCode === 201) {
                             openNotification('success', 'Event Created Successfully !');
-                           // navigate(`/event/show/${res.result.id}`);
+                            // navigate(`/event/show/${res.result.id}`);
                         }
                     })
                     .catch((error) => {

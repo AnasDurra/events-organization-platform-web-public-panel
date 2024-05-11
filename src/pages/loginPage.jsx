@@ -86,7 +86,8 @@ export default function RegisterAttendee() {
                                         <>
                                             New to Evento?{' '}
                                             <Link
-                                                href="register"
+                                            
+                                                href="/register"
                                                 style={{
                                                     color: 'blue',
                                                     fontWeight: 'bold',

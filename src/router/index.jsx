@@ -108,7 +108,7 @@ export const router = createBrowserRouter([
         ],
     },
     {
-        path: 'form/:form_id/',
+        path: 'form/:form_id',
         children: [
             {
                 path: 'edit',
@@ -134,13 +134,10 @@ export const router = createBrowserRouter([
         ],
     },
     {
-        path: '/home',
+        path: 'home',
         element: <HomeLayout />,
         children: [
-            {
-                index: true,
-                element: <HomePage />,
-            },
+            { index: true, element: <HomePage /> },
             {
                 path: 'popular',
                 element: <PopularPage />,
@@ -154,8 +151,12 @@ export const router = createBrowserRouter([
                 element: <ViewOrgsPage />,
             },
             {
-                path: '/home/tickets',
+                path: 'tickets',
                 element: <TicketsBalancePage />,
+            },
+            {
+                path: 'profile',
+                element: <ShowMyProfile />,
             },
         ],
     },

@@ -12,14 +12,13 @@ import Sider from 'antd/es/layout/Sider';
 import { Content, Footer, Header } from 'antd/es/layout/layout';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState } from 'react';
-import { BsTicketPerforated } from 'react-icons/bs';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { Outlet, useNavigate } from 'react-router-dom';
-import './Landing.css';
 import { v4 as uuidv4 } from 'uuid';
-import TicketsCard from './TicketsCard';
-import { getLoggedInUser, getLoggedInUserV2 } from '../../api/services/auth';
+import { getLoggedInUserV2 } from '../../api/services/auth';
 import { useGetAttendeeBalanceQuery } from '../Ticketing Packages/TicketingPackagesSlice';
+import './Landing.css';
+import TicketsCard from './TicketsCard';
 
 const { useToken } = theme;
 
@@ -28,7 +27,7 @@ export default function HomeLayout() {
     const navigate = useNavigate();
     const [navIndex, setNavIndex] = useState(0);
     const { data: { result: balance } = { result: {} }, isLoading: isBalanceLoading } = useGetAttendeeBalanceQuery(
-        getLoggedInUserV2().user_id
+        getLoggedInUserV2()?.attendee_id
     );
 
     useEffect(() => {
@@ -88,6 +87,7 @@ export default function HomeLayout() {
                             <img
                                 className='w-[2.5em] aspect-square rounded-full hidden md:block md:ml-4'
                                 src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+                                onClick={()=>navigate('profile')}
                             />
                         </div>
                     </Col>

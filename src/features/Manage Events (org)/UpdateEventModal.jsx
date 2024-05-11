@@ -20,6 +20,7 @@ import UpdateEventTagsModal from './UpdateEventTagsModal';
 import UpdateEventAgeGroupModal from './UpdateEventAgeGroupModal';
 import AttachForm from './AttachForm';
 import { useRemoveFormMutation, useUpdateDetailsMutation } from '../../api/services/events';
+import { getLoggedInUserV2 } from '../../api/services/auth';
 
 const UpdateEventModal = ({
     isUpdateModalOpen,
@@ -44,12 +45,13 @@ const UpdateEventModal = ({
     const [isUpdateEventAgeGroupModalOpen, setIsUpdateEventAgeGroupModalOpen] = useState(false);
 
     const handleAttachForm = (form) => {
-        updateEvent({ id: eventData.result?.id, body: { form_id: form.id } });
+        updateEvent({ id: eventData?.result?.id, body: { form_id: form.id } });
     };
     const handleDetachForm = () => {
         console.log(eventData);
         removeForm(eventData?.result?.id);
     };
+
 
     return (
         <div>
@@ -304,9 +306,9 @@ const UpdateEventModal = ({
                         </Title>
                         <AttachForm
                             onAttach={handleAttachForm}
-                            organization_id={1}
-                            //TODO attachedform from eventdata
-                            attachedForm={{ name: 'dummy' }}
+                            //TODO org id 
+                            organization_id={getLoggedInUserV2()?.organization_id}
+                            attachedForm={eventData?.result?.form}
                             onDetachForm={handleDetachForm}
                         />
                     </div>

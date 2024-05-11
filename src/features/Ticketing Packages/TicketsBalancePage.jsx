@@ -5,14 +5,18 @@ import React from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import { TiTicket } from 'react-icons/ti';
 import PackageCard from './PackageCard';
-import { useCheckoutMutation, useGetPackagesQuery } from './TicketingPackagesSlice';
+import { useCheckoutMutation, useGetAttendeeBalanceQuery, useGetPackagesQuery } from './TicketingPackagesSlice';
 import { useNotification } from '../../utils/NotificationContext';
 import { useNavigate } from 'react-router-dom';
+import { getLoggedInUserV2 } from '../../api/services/auth';
 
 export default function TicketsBalancePage() {
     const { openNotification } = useNotification();
 
     const { data: { result: packages } = { result: [] }, isLoading: isPackagesLoading } = useGetPackagesQuery();
+    const { data: { result: balanceObj } = { result: {} }, isLoading: isBalanceLoading } = useGetAttendeeBalanceQuery(
+        getLoggedInUserV2()?.attendee_id
+    );
     const [checkout] = useCheckoutMutation();
 
     const handleCheckoutRequest = (price_id) => {
@@ -26,25 +30,24 @@ export default function TicketsBalancePage() {
         });
     };
 
+
     return (
         <div className='flex flex-col justify-center items-center w-full'>
             <div className='flex flex-col justify-center items-center space-y-4 mt-4'>
                 <Typography.Text className='text-[2em] font-semibold font-mono'> Your Tickets Balance</Typography.Text>
                 <TiTicket className='text-[5em] text-yellow-500' />
-                <Typography.Text
-                    code
-                    className='text-[2em]'
-                >
-                    {' '}
-                    1500
-                </Typography.Text>
+                <Spin spinning={isBalanceLoading}>
+                    <Typography.Text
+                        code
+                        className='text-[2em]'
+                    >
+                        {balanceObj?.balance}
+                    </Typography.Text>
+                </Spin>
             </div>
             <Divider> Buy More</Divider>
-            <Skeleton
-                loading={isPackagesLoading}
-                
-            >
-                <div className='grid grid-cols-1 gap-4 gap-y-8  md:grid-cols-3 md:gap-8 md:gap-y-12 w-full p-12 md:p-0'>
+            <Skeleton loading={isPackagesLoading}>
+                <div className='grid grid-cols-1 gap-4 gap-y-8  lg:grid-cols-3 lg:gap-8 lg:gap-y-12 w-full p-12 lg:p-0'>
                     {packages
                         .filter((pck) => pck.active)
                         .map((pck, idx) => (
