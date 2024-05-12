@@ -52,17 +52,16 @@ export const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             {
-                path: '/attendee/my-profile',
+                path: '/home/profile',
                 element: <ShowMyProfile />,
             },
             {
-                path: '/attendee/my-profile/events',
+                path: '/home/profile/events',
                 element: <ShowAttendeeEvents />,
             },
             {
-                //edit this
-                path: '/attendee/my-profile/organizations',
-                element: <ShowAttendeeEvents />,
+                path: '/home/profile/organizations',
+                element: <ShowFollowingOrgsList />,
             },
             {
                 path: '/attendee-profile/:id',

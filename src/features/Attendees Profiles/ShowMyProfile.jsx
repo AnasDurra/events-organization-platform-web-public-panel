@@ -37,7 +37,7 @@ import { useLazyViewMyProfileQuery } from '../../api/services/attendeeProfile';
 
 import UpdateProfileModal from './UpdateProfileModal';
 
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { getLoggedInUser } from '../../api/services/auth';
 import { useNotification } from '../../utils/NotificationContext';
@@ -134,7 +134,7 @@ const ShowAttendeProfile = () => {
                                 <Button
                                     icon={<CalendarOutlined />}
                                     onClick={() => {
-                                        navigate(`/attendee/my-profile/events`);
+                                        navigate(`/home/profile/events`);
                                     }}
                                 />
                             </Tooltip>
@@ -310,21 +310,36 @@ const ShowAttendeProfile = () => {
                                     <div>
                                         <Row gutter={20}>
                                             <Col style={{ padding: '0px' }} span={12}>
-                                                <Statistic
-                                                    title={
-                                                        <div>
-                                                            <h3>Following</h3>
-                                                        </div>
-                                                    }
-                                                    value={1128}
-                                                    prefix={
-                                                        <UserOutlined
-                                                            style={{
-                                                                fontSize: '20px',
-                                                            }}
+                                                <Link
+                                                    to={`organizations`}
+                                                    style={{ textDecoration: 'none', display: 'inline-block' }}
+                                                >
+                                                    <div
+                                                        onMouseEnter={(e) =>
+                                                            (e.currentTarget.style.transform = 'scale(1.06)')
+                                                        }
+                                                        onMouseLeave={(e) =>
+                                                            (e.currentTarget.style.transform = 'scale(1)')
+                                                        }
+                                                        style={{ transition: 'transform 0.2s' }}
+                                                    >
+                                                        <Statistic
+                                                            title={
+                                                                <div>
+                                                                    <h3>Following</h3>
+                                                                </div>
+                                                            }
+                                                            value={1128}
+                                                            prefix={
+                                                                <UserOutlined
+                                                                    style={{
+                                                                        fontSize: '20px',
+                                                                    }}
+                                                                />
+                                                            }
                                                         />
-                                                    }
-                                                />
+                                                    </div>
+                                                </Link>
                                             </Col>
                                             <Col style={{ padding: '0px' }} span={12}>
                                                 <Statistic

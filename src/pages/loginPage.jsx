@@ -35,7 +35,7 @@ export default function RegisterAttendee() {
                     `Welcome back, ${res.result.username}! We're glad to see you again.`
                 );
                 if (res.result.user_role == 3) {
-                    navigate(`/attendee/my-profile`);
+                    navigate(`/home/profile`);
                 } else if (res.result.user_role == 2) {
                     navigate(`/org`);
                 }
@@ -86,7 +86,6 @@ export default function RegisterAttendee() {
                                         <>
                                             New to Evento?{' '}
                                             <Link
-                                            
                                                 href="/register"
                                                 style={{
                                                     color: 'blue',

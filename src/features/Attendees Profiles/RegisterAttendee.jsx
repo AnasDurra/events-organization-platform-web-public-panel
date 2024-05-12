@@ -11,9 +11,14 @@ import AdditionalInfoRegistrationForm from '../Form/AdditionalInfoRegistrationFo
 import ContactInfoRegistrationForm from '../Form/ContactInfoRegistrationForm';
 import FormWelcomeTitle from '../Form/FormWelcomeTitle';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useNotification } from '../../utils/NotificationContext';
 
 export default function RegisterAttendee() {
     const [signupMutation, { isLoading }] = useSignupMutation();
+    const navigate = useNavigate();
+
+    const { openNotification } = useNotification();
 
     const [imageFile, setImageFile] = useState(null);
     const [imageSrc, setImageSrc] = useState('');
@@ -122,15 +127,19 @@ export default function RegisterAttendee() {
             .unwrap()
             .then((res) => {
                 console.log(res);
-                if (res.statusCode === 200) {
-                    message.success('Registered Successfully !');
+                if (res.statusCode === 201) {
+                    openNotification(
+                        'success',
+                        'Registered Successfully',
+                        `Welcome to Eventure ${res?.result?.username}!`
+                    );
+                    navigate('/home');
                 }
             })
             .catch((error) => {
                 console.error('Error:', error);
-                error.data.result.response.message.forEach((value) => {
-                    message.error(value);
-                });
+
+                message.error(error?.data?.result?.response?.message[0]);
             });
     };
 
@@ -165,12 +174,30 @@ export default function RegisterAttendee() {
                     }}
                 >
                     <div className="registerImage">
-                        <Image width={320} height={800} src={image1} preview={false} />
+                        <Image width={320} height={700} src={image1} preview={false} />
                     </div>
                     <div>
-                        <Card
+                        <Typography.Title
+                            level={3}
                             style={{
-                                height: '750px',
+                                textAlign: 'center',
+                                color: '#333',
+                                // marginBottom: '24px',
+                                fontWeight: 'bold',
+                                fontSize: '28px',
+                                fontFamily: 'Arial, sans-serif',
+                                textTransform: 'uppercase',
+                                letterSpacing: '1px',
+                                lineHeight: '1.5',
+                            }}
+                        >
+                            Join us for Eventure!
+                        </Typography.Title>
+                        <Card
+                            bodyStyle={{ paddingTop: '0px' }}
+                            bordered={false}
+                            style={{
+                                height: '600px',
                                 width: '100%',
                                 maxWidth: '430px',
                                 overflow: 'auto',
@@ -178,7 +205,6 @@ export default function RegisterAttendee() {
                         >
                             <Spin spinning={isLoading}>
                                 <FormWelcomeTitle
-                                    title={'Join us for Evento!'}
                                     paragraph={
                                         <>
                                             Register today for exclusive offers and a seamless event experience.{' '}
@@ -206,7 +232,7 @@ export default function RegisterAttendee() {
                                     style={{
                                         display: 'flex',
                                         justifyContent: 'flex-end',
-                                        marginTop: 24,
+                                        // marginTop: 24,
                                     }}
                                 >
                                     {current > 0 && (

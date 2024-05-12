@@ -11,10 +11,10 @@ export const auth = apiSlice.injectEndpoints({
                 body: credentials,
             }),
             transformResponse: (responseData) => {
-                Cookies.set('accessToken', responseData?.accessToken, {
+                Cookies.set('accessToken', responseData?.result?.access_token, {
                     expires: 12,
                 });
-                Cookies.set('refreshToken', responseData?.accessToken, {
+                Cookies.set('refreshToken', responseData?.result?.refresh_token, {
                     expires: 12,
                 });
                 return responseData;
