@@ -20,8 +20,8 @@ export default function RegisterAttendee() {
 
     const { openNotification } = useNotification();
 
-    const [imageFile, setImageFile] = useState(null);
-    const [imageSrc, setImageSrc] = useState('');
+    const [imageFile, setImageFile] = useState([]);
+
     const [data, setData] = useState(null);
 
     const [form1] = Form.useForm();
@@ -35,14 +35,7 @@ export default function RegisterAttendee() {
         },
         {
             title: 'Additional',
-            content: (
-                <AdditionalInfoRegistrationForm
-                    form={form2}
-                    setImageFile={setImageFile}
-                    imageSrc={imageSrc}
-                    setImageSrc={setImageSrc}
-                />
-            ),
+            content: <AdditionalInfoRegistrationForm form={form2} imageFile={imageFile} setImageFile={setImageFile} />,
         },
         {
             title: 'Contact',
@@ -94,11 +87,11 @@ export default function RegisterAttendee() {
             job_id: finalData.job ?? null,
             address_id: finalData.address ?? null,
 
-            profile_img: imageFile?.file.originFileObj ?? null,
+            profile_img: imageFile[0]?.originFileObj ?? null,
             cover_img: finalData.cover_img?.originFileObj ?? null,
             contacts: finalData.contacts ?? null,
         };
-        // console.log(dataToSend);
+        console.log(dataToSend);
 
         for (const key in dataToSend) {
             if (dataToSend[key] == null) {
@@ -108,7 +101,6 @@ export default function RegisterAttendee() {
 
         const formData = new FormData();
         Object.keys(dataToSend).forEach((key) => {
-            // console.log(key);
             if (key === 'contacts') {
                 dataToSend.contacts.forEach((contact, index) => {
                     const [contact_id, contact_link] = contact;
@@ -166,14 +158,14 @@ export default function RegisterAttendee() {
         >
             <Card>
                 <Space
-                    direction="horizontal"
+                    direction='horizontal'
                     style={{
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'flex-start',
                     }}
                 >
-                    <div className="registerImage">
+                    <div className='registerImage'>
                         <Image width={320} height={700} src={image1} preview={false} />
                     </div>
                     <div>
@@ -211,7 +203,7 @@ export default function RegisterAttendee() {
                                             <br></br>
                                             Already have an Evento Account?{' '}
                                             <Link
-                                                href="login"
+                                                href='login'
                                                 style={{
                                                     color: 'blue',
                                                     fontWeight: 'bold',
@@ -224,7 +216,7 @@ export default function RegisterAttendee() {
                                     }
                                 />
 
-                                <Steps size="small" current={current} items={items} />
+                                <Steps size='small' current={current} items={items} />
 
                                 <div style={contentStyle}>{steps[current].content}</div>
 
@@ -246,12 +238,12 @@ export default function RegisterAttendee() {
                                         </Button>
                                     )}
                                     {current < steps.length - 1 && (
-                                        <Button type="primary" onClick={() => handleFormSubmit()}>
+                                        <Button type='primary' onClick={() => handleFormSubmit()}>
                                             Next
                                         </Button>
                                     )}
                                     {current === steps.length - 1 && (
-                                        <Button type="primary" onClick={onFinish}>
+                                        <Button type='primary' onClick={onFinish}>
                                             Done
                                         </Button>
                                     )}

@@ -13,6 +13,7 @@ import {
     WhatsAppOutlined,
     CalendarOutlined,
     EllipsisOutlined,
+    InstagramOutlined,
 } from '@ant-design/icons';
 import {
     Avatar,
@@ -20,6 +21,7 @@ import {
     Card,
     Col,
     Dropdown,
+    Empty,
     Image,
     Menu,
     Modal,
@@ -46,30 +48,27 @@ const ShowAttendeProfile = () => {
     const { openNotification } = useNotification();
     const navigate = useNavigate();
 
-    const [fetchMyProfile, { data: myProfile, isLoading: myProfileIsLoading }] = useLazyViewMyProfileQuery();
+    const [fetchMyProfile, { data: myProfile, isLoading, isFetching: myProfileIsFetching }] =
+        useLazyViewMyProfileQuery();
 
     const [data, setData] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
 
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const [updateModalKey, setUpdateModalKey] = useState(0);
 
     const handleOk = () => {
         fetchMyProfile();
-        setData(null);
-        setIsLoading(true);
         setIsUpdateModalOpen(false);
     };
     const handleCancel = () => {
         setIsUpdateModalOpen(false);
+        setUpdateModalKey(updateModalKey + 1);
     };
 
     useEffect(() => {
         fetchMyProfile();
         setData(myProfile);
         console.log(myProfile);
-        if (myProfile) {
-            setIsLoading(myProfileIsLoading);
-        }
     }, [myProfile]);
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -77,10 +76,28 @@ const ShowAttendeProfile = () => {
                 style={{
                     width: '90%',
                 }}
-                cover={<Image height={250} alt="example" src={data?.cover_img ?? 'https://picsum.photos/1000/300'} />}
+                bodyStyle={{ paddingTop: '0px', paddingRight: '10px' }}
+                cover={
+                    <div>
+                        {data?.result?.cover_img ? (
+                            <Image
+                                width={'100%'}
+                                src={data?.result?.cover_img}
+                                fallback={
+                                    <Empty
+                                        image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                        description='No cover picture available'
+                                    />
+                                }
+                            />
+                        ) : (
+                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No cover picture available' />
+                        )}
+                    </div>
+                }
             >
-                <Spin size="large" spinning={myProfileIsLoading}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Spin size='large' spinning={isLoading || myProfileIsFetching}>
+                    <div>
                         <Skeleton
                             loading={isLoading}
                             active
@@ -90,55 +107,95 @@ const ShowAttendeProfile = () => {
                                 width: '90%',
                             }}
                         >
-                            <Meta
-                                avatar={
-                                    <Avatar
-                                        size={100}
-                                        icon={<UserOutlined />}
-                                        src={'https://api.dicebear.com/7.x/miniavs/svg?seed=8'}
-                                        style={{
-                                            textAlign: 'center',
-                                            marginBottom: '10px',
-                                            border: '3px solid white',
-                                            borderRadius: '50%',
-                                            marginTop: '-70px',
+                            <Row justify={{ md: 'start', sm: 'start', xs: 'center' }}>
+                                <Col span={24}>
+                                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                        <Tooltip title='Edit Your Profile'>
+                                            <Button
+                                                icon={<EditOutlined />}
+                                                onClick={() => setIsUpdateModalOpen(true)}
+                                            />
+                                        </Tooltip>
+                                        <Tooltip title='Show Your Events'>
+                                            <Button
+                                                icon={<CalendarOutlined />}
+                                                onClick={() => {
+                                                    navigate(`/home/profile/events`);
+                                                }}
+                                            />
+                                        </Tooltip>
+                                    </div>
+                                </Col>
+                                <Col xs={{ span: 24 }} sm={{ span: 5 }} md={{ span: 4 }}>
+                                    <a
+                                        style={{ display: 'flex', justifyContent: 'center' }}
+                                        onClick={() => {
+                                            Modal.info({
+                                                title: 'Avatar Picture',
+                                                content: (
+                                                    <img
+                                                        alt='Preview'
+                                                        style={{ width: '100%' }}
+                                                        src={
+                                                            data?.result?.profile_img ??
+                                                            'https://api.dicebear.com/7.x/miniavs/svg?seed=8'
+                                                        }
+                                                    />
+                                                ),
+                                                okText: 'Close',
+                                            });
                                         }}
-                                    />
-                                }
-                                title={
-                                    <Typography.Title
-                                        style={{
-                                            marginTop: '0px',
-                                            marginBottom: '0px',
-                                        }}
-                                        level={3}
+                                        type='link'
+                                        size='small'
                                     >
-                                        {data?.result?.full_name ? data.result?.full_name : ''}
-                                    </Typography.Title>
-                                }
-                                description={
-                                    data
-                                        ? `Member since ${formatDate(data?.result.join_date)} * ${
-                                              data?.result.address?.label
-                                          }`
-                                        : ''
-                                }
-                            />
+                                        <Avatar
+                                            size={100}
+                                            icon={<UserOutlined />}
+                                            src={
+                                                data?.result?.profile_img ??
+                                                'https://api.dicebear.com/7.x/miniavs/svg?seed=8'
+                                            }
+                                            style={{
+                                                textAlign: 'center',
+                                                marginBottom: '10px',
+                                                border: '3px solid white',
+                                                borderRadius: '50%',
+                                                marginTop: '-60px',
+                                            }}
+                                        />
+                                    </a>
+                                </Col>
+                                <Col
+                                    xs={{ span: 24 }}
+                                    sm={{ span: 10 }}
+                                    md={{ span: 7 }}
+                                    lg={{ span: 10, pull: 2 }}
+                                    xl={{ span: 6, pull: 1 }}
+                                >
+                                    {data ? (
+                                        <div style={{ textAlign: 'center' }}>
+                                            <Typography.Title
+                                                style={{
+                                                    // marginTop: '10px',
+                                                    marginBottom: '0px',
+                                                }}
+                                                level={3}
+                                            >
+                                                {data?.result?.full_name ? data.result?.full_name : ''}
+                                            </Typography.Title>
+                                            {`Member since ${formatDate(data?.result.join_date)}
+                                                    ${
+                                                        data?.result.address?.label
+                                                            ? `* ${data?.result.address?.label}`
+                                                            : ''
+                                                    }`}
+                                        </div>
+                                    ) : (
+                                        ''
+                                    )}
+                                </Col>
+                            </Row>
                         </Skeleton>
-
-                        <Row style={{ marginLeft: '10px' }}>
-                            <Tooltip title="Edit Your Profile">
-                                <Button icon={<EditOutlined />} onClick={() => setIsUpdateModalOpen(true)} />
-                            </Tooltip>
-                            <Tooltip title="Show Your Events">
-                                <Button
-                                    icon={<CalendarOutlined />}
-                                    onClick={() => {
-                                        navigate(`/home/profile/events`);
-                                    }}
-                                />
-                            </Tooltip>
-                        </Row>
                     </div>
 
                     <Row
@@ -190,7 +247,7 @@ const ShowAttendeProfile = () => {
                                                 }}
                                             >
                                                 <Dropdown
-                                                    placement="bottomRight"
+                                                    placement='bottomRight'
                                                     overlay={
                                                         <Menu>
                                                             {data?.result.contacts?.map((contact) => (
@@ -204,15 +261,21 @@ const ShowAttendeProfile = () => {
                                                                                           contact.contact_name
                                                                                       )
                                                                             }
-                                                                            target="_blank"
-                                                                            rel="noopener noreferrer"
+                                                                            target='_blank'
+                                                                            rel='noopener noreferrer'
                                                                         >
                                                                             {contact.contact_name === 'WhatsApp' && (
                                                                                 <WhatsAppOutlined
-                                                                                    style={{
-                                                                                        fontSize: '24px',
-                                                                                        color: '#25D366',
-                                                                                    }}
+                                                                                    style={getIconStyle(
+                                                                                        contact.contact_name
+                                                                                    )}
+                                                                                />
+                                                                            )}
+                                                                            {contact.contact_name === 'Instagram' && (
+                                                                                <InstagramOutlined
+                                                                                    style={getIconStyle(
+                                                                                        contact.contact_name
+                                                                                    )}
                                                                                 />
                                                                             )}
                                                                             {contact.contact_name === 'LinkedIn' && (
@@ -225,32 +288,31 @@ const ShowAttendeProfile = () => {
                                                                             )}
                                                                             {contact.contact_name === 'Facebook' && (
                                                                                 <FacebookOutlined
-                                                                                    style={{
-                                                                                        fontSize: '24px',
-                                                                                        color: '#3b5998',
-                                                                                    }}
+                                                                                    style={getIconStyle(
+                                                                                        contact.contact_name
+                                                                                    )}
                                                                                 />
                                                                             )}
                                                                             {contact.contact_name === 'Twitter' && (
                                                                                 <TwitterOutlined
-                                                                                    style={{
-                                                                                        fontSize: '24px',
-                                                                                        color: '#1DA1F2',
-                                                                                    }}
+                                                                                    style={getIconStyle(
+                                                                                        contact.contact_name
+                                                                                    )}
                                                                                 />
                                                                             )}
                                                                             {contact.contact_name === 'Email' && (
                                                                                 <MailOutlined
-                                                                                    style={{
-                                                                                        fontSize: '24px',
-                                                                                        color: 'black',
-                                                                                    }}
+                                                                                    style={getIconStyle(
+                                                                                        contact.contact_name
+                                                                                    )}
                                                                                 />
                                                                             )}
                                                                             {contact.contact_name ===
                                                                                 'Phone Number' && (
                                                                                 <PhoneOutlined
-                                                                                    style={{ fontSize: '24px' }}
+                                                                                    style={getIconStyle(
+                                                                                        contact.contact_name
+                                                                                    )}
                                                                                     onClick={() =>
                                                                                         (window.location.href = `tel:${contact.value}`)
                                                                                     }
@@ -264,9 +326,9 @@ const ShowAttendeProfile = () => {
                                                     }
                                                     trigger={['click']}
                                                 >
-                                                    <Tooltip title="Contact Info">
+                                                    <Tooltip title='Contact Info'>
                                                         <Button
-                                                            type="primary"
+                                                            type='primary'
                                                             icon={<ContactsOutlined />}
                                                             onClick={(e) => e.preventDefault()}
                                                         />
@@ -303,13 +365,13 @@ const ShowAttendeProfile = () => {
                                     paddingBottom: '0px',
                                     margin: '0px',
                                 }}
-                                size="small"
-                                type="inner"
+                                size='small'
+                                type='inner'
                             >
                                 <div style={{ textAlign: 'center' }}>
                                     <div>
-                                        <Row gutter={20}>
-                                            <Col style={{ padding: '0px' }} span={12}>
+                                        <Row gutter={[20, 10]}>
+                                            <Col style={{ paddingBottom: '10px' }} span={12}>
                                                 <Link
                                                     to={`organizations`}
                                                     style={{ textDecoration: 'none', display: 'inline-block' }}
@@ -341,7 +403,7 @@ const ShowAttendeProfile = () => {
                                                     </div>
                                                 </Link>
                                             </Col>
-                                            <Col style={{ padding: '0px' }} span={12}>
+                                            <Col style={{ paddingBottom: '10px' }} span={12}>
                                                 <Statistic
                                                     title={
                                                         <div>
@@ -349,6 +411,7 @@ const ShowAttendeProfile = () => {
                                                         </div>
                                                     }
                                                     value={' '}
+                                                    valueStyle={{ fontSize: '0px' }}
                                                     prefix={
                                                         <Avatar.Group>
                                                             {badges.map((badge) => (
@@ -376,8 +439,8 @@ const ShowAttendeProfile = () => {
                                             </Col>
                                         </Row>
 
-                                        <Row gutter={20}>
-                                            <Col style={{ padding: '0px' }} span={12}>
+                                        <Row gutter={[20, 10]}>
+                                            <Col style={{ paddingBottom: '10px' }} span={12}>
                                                 <Statistic
                                                     title={
                                                         <div>
@@ -395,7 +458,7 @@ const ShowAttendeProfile = () => {
                                                 />
                                             </Col>
 
-                                            <Col style={{ padding: '0px' }} span={12}>
+                                            <Col style={{ paddingBottom: '10px' }} span={12}>
                                                 <Statistic
                                                     title={
                                                         <div>
@@ -422,14 +485,20 @@ const ShowAttendeProfile = () => {
             </Card>
 
             <Modal
-                title="Edit Profile"
+                title='Edit Profile'
                 open={isUpdateModalOpen}
                 onOk={handleOk}
                 onCancel={handleCancel}
                 width={750}
                 footer={null}
             >
-                <UpdateProfileModal data={data} modalOk={handleOk} modalCancel={handleCancel} />
+                <UpdateProfileModal
+                    destroyOnClose
+                    key={updateModalKey}
+                    data={data}
+                    modalOk={handleOk}
+                    modalCancel={handleCancel}
+                />
             </Modal>
         </div>
     );
@@ -479,3 +548,22 @@ function getContactLink(contactName) {
             return '#';
     }
 }
+
+const getIconStyle = (contactName) => {
+    switch (contactName) {
+        case 'WhatsApp':
+            return { color: '#25D366', fontSize: '24px' };
+        case 'Instagram':
+            return { color: '#E4405F', fontSize: '24px' };
+        case 'LinkedIn':
+            return { color: '#0077B5', fontSize: '24px' };
+        case 'Facebook':
+            return { color: '#3b5998', fontSize: '24px' };
+        case 'Twitter':
+            return { color: '#1DA1F2', fontSize: '24px' };
+        case 'Email':
+            return { color: 'black', fontSize: '24px' };
+        default:
+            return { fontSize: '24px' };
+    }
+};

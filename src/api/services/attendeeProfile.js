@@ -7,30 +7,12 @@ export const attendeeProfile = apiSlice.injectEndpoints({
                 url: 'attendee/my-profile',
                 method: 'GET',
             }),
-            // transformResponse: (responseData) => {
-            //   Cookies.set('accessToken', responseData?.accessToken, {
-            //     expires: 12,
-            //   });
-            //   Cookies.set('refreshToken', responseData?.accessToken, {
-            //     expires: 12,
-            //   });
-            //   return responseData;
-            // },
         }),
         viewAttendeeProfile: builder.query({
             query: (id) => ({
                 url: `attendee/profile/${id}`,
                 method: 'GET',
             }),
-            // transformResponse: (responseData) => {
-            //   Cookies.set('accessToken', responseData?.accessToken, {
-            //     expires: 12,
-            //   });
-            //   Cookies.set('refreshToken', responseData?.accessToken, {
-            //     expires: 12,
-            //   });
-            //   return responseData;
-            // },
         }),
 
         updateMyProfile: builder.mutation({
@@ -38,6 +20,21 @@ export const attendeeProfile = apiSlice.injectEndpoints({
                 url: 'attendee/update-profile',
                 method: 'POST',
                 body: credentials,
+            }),
+        }),
+
+        updateProfilePic: builder.mutation({
+            query: (body) => ({
+                url: 'attendee/update-profile/profile-image',
+                method: 'POST',
+                body: body,
+            }),
+        }),
+        updateCoverPic: builder.mutation({
+            query: (body) => ({
+                url: 'attendee/update-profile/cover-image',
+                method: 'POST',
+                body: body,
             }),
         }),
 
@@ -54,5 +51,7 @@ export const {
     useLazyViewMyProfileQuery,
     useLazyViewAttendeeProfileQuery,
     useUpdateMyProfileMutation,
+    useUpdateProfilePicMutation,
+    useUpdateCoverPicMutation,
     useShowAttendeeEventsQuery,
 } = attendeeProfile;
