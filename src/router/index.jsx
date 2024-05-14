@@ -28,6 +28,7 @@ import FollowersList from '../features/org profiles/FollowersList';
 import ShowFollowingOrgsList from '../features/Attendees Profiles/ShowFollowingOrgsList';
 import TicketsBalancePage from '../features/Ticketing Packages/TicketsBalancePage';
 import ResultSuccessPage from '../features/Ticketing Packages/ResultSuccessPage';
+import OrgAttendees from '../features/org profiles/OrgAttendees';
 
 export const router = createBrowserRouter([
     {
@@ -89,15 +90,19 @@ export const router = createBrowserRouter([
                     },
                 ],
             },
+
             {
                 path: '/org/blocklist',
                 element: <BlockedUsersPage />,
             },
-
             { path: '/org/:orgId', element: <ProfilePage /> },
             {
                 path: '/org/:orgId/followers-list',
                 element: <FollowersList />,
+            },
+            {
+                path: '/org/attendees',
+                element: <OrgAttendees />,
             },
             { path: '/org/:orgId/config', element: <ConfigOrgPage /> },
 

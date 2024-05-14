@@ -16,6 +16,9 @@ import {
     CalendarOutlined,
     EllipsisOutlined,
     InstagramOutlined,
+    FileImageOutlined,
+    DeleteOutlined,
+    EyeOutlined,
 } from '@ant-design/icons';
 import {
     Avatar,
@@ -136,11 +139,7 @@ const ShowAttendeProfile = () => {
         fetchAttendeeProfile(id);
         if (attendeeProfile) {
             if (attendeeProfile?.result?.user_id === user?.sub) {
-                // navigate('/home/profile');
-
-                // delete these lines
-                setData(attendeeProfile);
-                console.log(attendeeProfile);
+                navigate('/home/profile');
             } else {
                 setData(attendeeProfile);
             }
@@ -159,6 +158,18 @@ const ShowAttendeProfile = () => {
                         {data?.result?.cover_img ? (
                             <Image
                                 width={'100%'}
+                                height={'100%'}
+                                preview={{
+                                    mask: (
+                                        <>
+                                            <Space>
+                                                <Button icon={<EyeOutlined />} type='primary'>
+                                                    Show
+                                                </Button>
+                                            </Space>
+                                        </>
+                                    ),
+                                }}
                                 src={data?.result?.cover_img}
                                 fallback={
                                     <Empty
@@ -185,6 +196,37 @@ const ShowAttendeProfile = () => {
                             }}
                         >
                             <Row justify={{ md: 'start', sm: 'start', xs: 'center' }}>
+                                <Col span={24}>
+                                    {id && user?.role_id == 2 && (
+                                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                            <Dropdown
+                                                placement='bottomRight'
+                                                //TODO replace this
+                                                overlay={
+                                                    <Menu
+                                                        onClick={
+                                                            isBlocked?.result
+                                                                ? confirmUnblockAttendee
+                                                                : confirmBlockAttendee
+                                                        }
+                                                    >
+                                                        <Menu.Item key='block' style={{ color: 'red' }}>
+                                                            {isBlocked?.result ? 'Unblock User' : 'Block User'}
+                                                        </Menu.Item>
+                                                    </Menu>
+                                                }
+                                                trigger={['click']}
+                                            >
+                                                <Tooltip title='Block Attendee'>
+                                                    <Button
+                                                        icon={<EllipsisOutlined />}
+                                                        onClick={(e) => e.preventDefault()}
+                                                    />
+                                                </Tooltip>
+                                            </Dropdown>
+                                        </div>
+                                    )}
+                                </Col>
                                 <Col xs={{ span: 24 }} sm={{ span: 5 }} md={{ span: 4 }}>
                                     <a
                                         style={{ display: 'flex', justifyContent: 'center' }}
@@ -242,12 +284,14 @@ const ShowAttendeProfile = () => {
                                             >
                                                 {data?.result?.full_name ? data.result?.full_name : ''}
                                             </Typography.Title>
-                                            {`Member since ${formatDate(data?.result.join_date)}
+                                            <Typography.Text type='secondary'>
+                                                {`Member since ${formatDate(data?.result.join_date)}
                                                     ${
                                                         data?.result.address?.label
                                                             ? `* ${data?.result.address?.label}`
                                                             : ''
                                                     }`}
+                                            </Typography.Text>
                                         </div>
                                     ) : (
                                         ''
@@ -255,33 +299,6 @@ const ShowAttendeProfile = () => {
                                 </Col>
                             </Row>
                         </Skeleton>
-
-                        {id && user?.role_id == 2 && (
-                            <Row style={{ marginLeft: '10px' }}>
-                                {user?.role_id == 2 && (
-                                    <Dropdown
-                                        placement='bottomRight'
-                                        //TODO replace this
-                                        overlay={
-                                            <Menu
-                                                onClick={
-                                                    isBlocked?.result ? confirmUnblockAttendee : confirmBlockAttendee
-                                                }
-                                            >
-                                                <Menu.Item key='block' style={{ color: 'red' }}>
-                                                    {isBlocked?.result ? 'Unblock User' : 'Block User'}
-                                                </Menu.Item>
-                                            </Menu>
-                                        }
-                                        trigger={['click']}
-                                    >
-                                        <Tooltip title='Block Attendee'>
-                                            <Button icon={<EllipsisOutlined />} onClick={(e) => e.preventDefault()} />
-                                        </Tooltip>
-                                    </Dropdown>
-                                )}
-                            </Row>
-                        )}
                     </div>
 
                     <Row

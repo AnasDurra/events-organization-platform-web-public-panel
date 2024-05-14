@@ -183,12 +183,14 @@ const ShowAttendeProfile = () => {
                                             >
                                                 {data?.result?.full_name ? data.result?.full_name : ''}
                                             </Typography.Title>
-                                            {`Member since ${formatDate(data?.result.join_date)}
+                                            <Typography.Text type='secondary'>
+                                                {`Member since ${formatDate(data?.result.join_date)}
                                                     ${
                                                         data?.result.address?.label
                                                             ? `* ${data?.result.address?.label}`
                                                             : ''
                                                     }`}
+                                            </Typography.Text>
                                         </div>
                                     ) : (
                                         ''
@@ -373,7 +375,7 @@ const ShowAttendeProfile = () => {
                                         <Row gutter={[20, 10]}>
                                             <Col style={{ paddingBottom: '10px' }} span={12}>
                                                 <Link
-                                                    to={`organizations`}
+                                                    to={'organizations'}
                                                     style={{ textDecoration: 'none', display: 'inline-block' }}
                                                 >
                                                     <div
@@ -441,21 +443,37 @@ const ShowAttendeProfile = () => {
 
                                         <Row gutter={[20, 10]}>
                                             <Col style={{ paddingBottom: '10px' }} span={12}>
-                                                <Statistic
-                                                    title={
-                                                        <div>
-                                                            <h3>Events</h3>
-                                                        </div>
-                                                    }
-                                                    value={1128}
-                                                    prefix={
-                                                        <CheckOutlined
-                                                            style={{
-                                                                fontSize: '20px',
-                                                            }}
+                                                <Link
+                                                    to={'events'}
+                                                    style={{ textDecoration: 'none', display: 'inline-block' }}
+                                                >
+                                                    <div
+                                                        onMouseEnter={(e) =>
+                                                            (e.currentTarget.style.transform = 'scale(1.06)')
+                                                        }
+                                                        onMouseLeave={(e) =>
+                                                            (e.currentTarget.style.transform = 'scale(1)')
+                                                        }
+                                                        style={{ transition: 'transform 0.2s' }}
+                                                    >
+                                                        {' '}
+                                                        <Statistic
+                                                            title={
+                                                                <div>
+                                                                    <h3>Events</h3>
+                                                                </div>
+                                                            }
+                                                            value={1128}
+                                                            prefix={
+                                                                <CheckOutlined
+                                                                    style={{
+                                                                        fontSize: '20px',
+                                                                    }}
+                                                                />
+                                                            }
                                                         />
-                                                    }
-                                                />
+                                                    </div>
+                                                </Link>
                                             </Col>
 
                                             <Col style={{ paddingBottom: '10px' }} span={12}>

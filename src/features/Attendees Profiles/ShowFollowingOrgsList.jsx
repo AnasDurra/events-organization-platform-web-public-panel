@@ -1,5 +1,5 @@
-import { EllipsisOutlined } from '@ant-design/icons';
-import { Card, Col, Divider, Dropdown, Menu, Row, Spin, Typography } from 'antd';
+import { ArrowLeftOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Divider, Dropdown, Menu, Row, Spin, Typography } from 'antd';
 import Search from 'antd/es/input/Search';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -63,24 +63,27 @@ const ShowFollowingOrgsList = () => {
 
     const searchMenu = (
         <Menu onClick={handleSearchTypeSelect}>
-            <Menu.Item key="name">Search by Name</Menu.Item>
+            <Menu.Item key='name'>Search by Name</Menu.Item>
         </Menu>
     );
 
     useEffect(() => {
         console.log(data);
         setFilteredOrgs(data?.result);
+        console.log(11);
     }, []);
 
     return (
         <div>
+            <Button size='large' icon={<ArrowLeftOutlined />} type='text' onClick={() => navigate(-1)} />
+
             <Typography.Title level={2} style={{ marginBottom: '20px', textAlign: 'center' }}>
                 Following Organizations
             </Typography.Title>
-            <Spin size="large" spinning={isLoading}>
+            <Spin size='large' spinning={isLoading}>
                 <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
                     <Dropdown overlay={searchMenu} trigger={['click']}>
-                        <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
+                        <a className='ant-dropdown-link' onClick={(e) => e.preventDefault()}>
                             <EllipsisOutlined
                                 style={{
                                     fontSize: '24px',
@@ -98,8 +101,8 @@ const ShowFollowingOrgsList = () => {
                         <Search
                             placeholder={`Search by ${searchType}`}
                             allowClear
-                            enterButton="Search"
-                            size="large"
+                            enterButton='Search'
+                            size='large'
                             onSearch={handleSearch}
                         />
                     )}
@@ -117,7 +120,7 @@ const ShowFollowingOrgsList = () => {
                             <Card
                                 hoverable
                                 style={{ width: '100%', height: '100%' }}
-                                cover={<img alt="organization cover" src={org?.organization?.cover_image} />}
+                                cover={<img alt='organization cover' src={org?.organization?.cover_image} />}
                                 onClick={() => {
                                     navigate(`/org/${org?.organization?.id}`);
                                 }}
@@ -128,9 +131,9 @@ const ShowFollowingOrgsList = () => {
                                         <div>
                                             <Text>{org.organization.bio}</Text>
                                             <br />
-                                            <Text type="secondary">{org.organization.description}</Text>
+                                            <Text type='secondary'>{org.organization.description}</Text>
                                             <Divider style={{ margin: '10px 0px' }} />
-                                            <Text type="secondary" style={{ fontSize: '12px' }}>
+                                            <Text type='secondary' style={{ fontSize: '12px' }}>
                                                 Following since {moment(org.following_date).format('MMMM D, YYYY')}
                                             </Text>
                                         </div>
