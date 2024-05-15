@@ -47,8 +47,8 @@ const ShowEventAttendees = () => {
 
     const searchMenu = (
         <Menu onClick={handleSearchTypeSelect}>
-            <Menu.Item key="name">Search by Name</Menu.Item>
-            <Menu.Item key="status">Search by Status</Menu.Item>
+            <Menu.Item key='name'>Search by Name</Menu.Item>
+            <Menu.Item key='status'>Search by Status</Menu.Item>
         </Menu>
     );
 
@@ -61,14 +61,14 @@ const ShowEventAttendees = () => {
                 style={{ position: 'absolute', top: '20px', left: '20px', fontSize: '24px', cursor: 'pointer' }}
                 onClick={handleGoBack}
             />
-            <Spin size="large" spinning={isLoading}>
+            <Spin size='large' spinning={isLoading}>
                 <Typography.Title level={2} style={{ marginBottom: '20px', textAlign: 'center' }}>
                     Attendees
                 </Typography.Title>
 
                 <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
                     <Dropdown overlay={searchMenu} trigger={['click']}>
-                        <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
+                        <a className='ant-dropdown-link' onClick={(e) => e.preventDefault()}>
                             <EllipsisOutlined
                                 style={{
                                     fontSize: '24px',
@@ -86,8 +86,8 @@ const ShowEventAttendees = () => {
                         <Search
                             placeholder={`Search by ${searchType === 'name' ? 'name' : 'status'}`}
                             allowClear
-                            enterButton="Search"
-                            size="large"
+                            enterButton='Search'
+                            size='large'
                             onSearch={handleSearch}
                         />
                     )}
@@ -96,7 +96,7 @@ const ShowEventAttendees = () => {
                             <Select
                                 placeholder={`Search by ${searchType === 'name' ? 'name' : 'status'}`}
                                 allowClear
-                                size="large"
+                                size='large'
                                 style={{ width: '100%' }}
                                 options={[
                                     {
@@ -115,7 +115,7 @@ const ShowEventAttendees = () => {
                                 onChange={handleSearch}
                             />
                             <Button
-                                size="large"
+                                size='large'
                                 style={{
                                     borderTopLeftRadius: '0',
                                     borderBottomLeftRadius: '0',
@@ -141,11 +141,11 @@ const ShowEventAttendees = () => {
                     </Typography.Text>
                 </div>
                 <List
-                    itemLayout="horizontal"
+                    itemLayout='horizontal'
                     dataSource={filteredAttendees}
                     renderItem={(attendee, index) => (
                         <a
-                            href="#"
+                            href='#'
                             onClick={(e) => {
                                 e.preventDefault();
                                 handleClick(attendee.attendee.id);
@@ -162,7 +162,7 @@ const ShowEventAttendees = () => {
                                     padding: '12px 0',
                                     borderBottom: '1px solid #f0f0f0',
                                     transition: 'background-color 0.3s',
-                                    backgroundColor: hoveredIndex === index ? '#f5f5f5' : 'inherit',
+                                    backgroundColor: hoveredIndex === index ? '#f0f0f0' : 'inherit',
                                 }}
                             >
                                 <List.Item.Meta
@@ -179,7 +179,7 @@ const ShowEventAttendees = () => {
                                             >{`${attendee.attendee.firstName} ${attendee.attendee.lastName}`}</Typography.Text>
                                             {attendee.status === 'accepted' && (
                                                 <Badge
-                                                    status="success"
+                                                    status='success'
                                                     text={
                                                         <Typography.Text
                                                             style={{
@@ -202,7 +202,7 @@ const ShowEventAttendees = () => {
                                             )}
                                             {attendee.status === 'rejected' && (
                                                 <Badge
-                                                    status="error"
+                                                    status='error'
                                                     text={
                                                         <Typography.Text
                                                             style={{
@@ -225,7 +225,7 @@ const ShowEventAttendees = () => {
                                             )}
                                             {attendee.status === 'waiting' && (
                                                 <Badge
-                                                    status="default"
+                                                    status='default'
                                                     text={
                                                         <Typography.Text
                                                             style={{
@@ -252,7 +252,7 @@ const ShowEventAttendees = () => {
                                             <Typography.Text style={{ marginBottom: '4px', display: 'block' }}>
                                                 {attendee.attendee.bio}
                                             </Typography.Text>
-                                            <Typography.Text type="secondary">
+                                            <Typography.Text type='secondary'>
                                                 Joined: {moment(attendee.createdAt).format('MMM DD, YYYY')}
                                             </Typography.Text>
                                         </>

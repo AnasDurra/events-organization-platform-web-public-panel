@@ -29,6 +29,7 @@ import ShowFollowingOrgsList from '../features/Attendees Profiles/ShowFollowingO
 import TicketsBalancePage from '../features/Ticketing Packages/TicketsBalancePage';
 import ResultSuccessPage from '../features/Ticketing Packages/ResultSuccessPage';
 import OrgAttendees from '../features/org profiles/OrgAttendees';
+import OrgEvents from '../features/org profiles/OrgEvents';
 
 export const router = createBrowserRouter([
     {
@@ -90,25 +91,6 @@ export const router = createBrowserRouter([
                     },
                 ],
             },
-
-            {
-                path: '/org/blocklist',
-                element: <BlockedUsersPage />,
-            },
-            { path: '/org/:orgId', element: <ProfilePage /> },
-            {
-                path: '/org/:orgId/followers-list',
-                element: <FollowersList />,
-            },
-            {
-                path: '/org/attendees',
-                element: <OrgAttendees />,
-            },
-            { path: '/org/:orgId/config', element: <ConfigOrgPage /> },
-
-            { path: '/members', element: <TeamPage /> },
-
-            { path: '/forms', element: <ViewFormsPage /> },
         ],
     },
     {
@@ -162,6 +144,24 @@ export const router = createBrowserRouter([
                 path: 'profile',
                 element: <ShowMyProfile />,
             },
+        ],
+    },
+
+    {
+        path: 'org',
+        element: <HomeLayout />,
+        children: [
+            { index: true, element: <HomePage /> }, // TODO Edit this
+            { path: ':orgId', element: <ProfilePage /> },
+            { path: 'blocklist', element: <BlockedUsersPage /> },
+            { path: ':orgId/followers-list', element: <FollowersList /> },
+            { path: ':orgId/config', element: <ConfigOrgPage /> },
+
+            { path: 'members', element: <TeamPage /> },
+
+            { path: 'forms', element: <ViewFormsPage /> },
+            { path: 'attendees', element: <OrgAttendees /> },
+            { path: 'our-events', element: <OrgEvents /> },
         ],
     },
 ]);

@@ -23,6 +23,7 @@ import { getLoggedInUserV2 } from '../../api/services/auth';
 import { useGetAttendeeBalanceQuery } from '../Ticketing Packages/TicketingPackagesSlice';
 import './Landing.css';
 import TicketsCard from './TicketsCard';
+import { IoCreateSharp } from 'react-icons/io5';
 
 const { useToken } = theme;
 
@@ -33,6 +34,11 @@ export default function HomeLayout() {
     const { data: { result: balance } = { result: {} }, isLoading: isBalanceLoading } = useGetAttendeeBalanceQuery(
         getLoggedInUserV2()?.attendee_id
     );
+    const user = getLoggedInUserV2();
+
+    useEffect(() => {
+        console.log(user);
+    }, [user]);
 
     const menu = (
         <Menu style={{ borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', width: '180px' }}>
@@ -45,26 +51,28 @@ export default function HomeLayout() {
                     transition: 'background-color 0.3s',
                 }}
                 onClick={() => {
-                    navigate('profile');
+                    user?.user_role == 3 ? navigate('profile') : navigate(`/org/${user?.user_id}`);
                 }}
             >
                 <span style={{ display: 'flex', alignItems: 'center' }}>
                     <UserOutlined style={{ marginRight: '8px' }} /> My Profile
                 </span>
             </Menu.Item>
-            <Menu.Item
-                key='events'
-                style={{
-                    padding: '12px 20px',
-                    fontSize: '16px',
-                    fontWeight: '500',
-                    transition: 'background-color 0.3s',
-                }}
-            >
-                <span style={{ display: 'flex', alignItems: 'center' }}>
-                    <CalendarOutlined style={{ marginRight: '8px' }} /> My Events
-                </span>
-            </Menu.Item>
+            {user?.user_role == 3 && (
+                <Menu.Item
+                    key='events'
+                    style={{
+                        padding: '12px 20px',
+                        fontSize: '16px',
+                        fontWeight: '500',
+                        transition: 'background-color 0.3s',
+                    }}
+                >
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                        <CalendarOutlined style={{ marginRight: '8px' }} /> My Events
+                    </span>
+                </Menu.Item>
+            )}
             <Menu.Divider />
             <Menu.Item
                 key='logout'
@@ -84,15 +92,15 @@ export default function HomeLayout() {
     );
 
     useEffect(() => {
-        if (navIndex == 0) {
-            navigate('/home');
-        } else if (navIndex == 1) {
-            navigate('popular');
-        } else if (navIndex == 2) {
-            navigate('explore');
-        } else if (navIndex == 3) {
-            //TODO go to  profile
-        }
+        // if (navIndex == 0) {
+        //     navigate('/home');
+        // } else if (navIndex == 1) {
+        //     navigate('popular');
+        // } else if (navIndex == 2) {
+        //     navigate('explore');
+        // } else if (navIndex == 3) {
+        //     //TODO go to  profile
+        // }
     }, [navIndex]);
 
     return (
@@ -107,15 +115,26 @@ export default function HomeLayout() {
                     </Col>
                     <Col xs={{ span: 16 }} className='h-full pr-2'>
                         <div className='w-full flex  mx-2 h-full items-center justify-end'>
-                            <div
-                                onClick={() => navigate('tickets')}
-                                className='flex items-center mr-2 space-x-2 px-2 bg-gray-400 shadow-sm shadow-gray-300 rounded-3xl h-[4svh] shadow-lg hover:shadow-sm hover:cursor-pointer overflow-hidden'
-                                style={{ transition: 'transform 0.3s', overflow: 'hidden' }}
-                                onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')}
-                                onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
-                            >
-                                <TicketsCard ticketsCount={balance?.balance} />
-                            </div>
+                            {user?.user_role == 2 ? (
+                                <Button
+                                    type='text'
+                                    onClick={() => navigate('/event/create')}
+                                    style={{ color: '#fff', fontSize: '24px' }}
+                                    icon={<IoCreateSharp />}
+                                    onMouseEnter={(e) => (e.target.style.transform = 'scale(1.2)')}
+                                    onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
+                                />
+                            ) : (
+                                <div
+                                    onClick={() => navigate('tickets')}
+                                    className='flex items-center mr-2 space-x-2 px-2 bg-gray-400 shadow-sm shadow-gray-300 rounded-3xl h-[4svh] shadow-lg hover:shadow-sm hover:cursor-pointer overflow-hidden'
+                                    style={{ transition: 'transform 0.3s', overflow: 'hidden' }}
+                                    onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')}
+                                    onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
+                                >
+                                    <TicketsCard ticketsCount={balance?.balance} />
+                                </div>
+                            )}
 
                             <Badge count={5} size='small'>
                                 <Button

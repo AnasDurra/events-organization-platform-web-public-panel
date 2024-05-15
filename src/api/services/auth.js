@@ -28,6 +28,7 @@ export const auth = apiSlice.injectEndpoints({
                 body: credentials,
             }),
             transformResponse: (responseData) => {
+                console.log(responseData?.result);
                 Cookies.set('user', JSON.stringify(responseData?.result), {
                     expires: 12,
                 });

@@ -28,7 +28,7 @@ import {
     UserOutlined,
 } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import ShowMap from './ShowMap';
 
 import { useShowQuery } from '../../api/services/events';
@@ -42,7 +42,10 @@ const ShowEvent = () => {
 
     const { data: eventData, error, isLoading: eventDataIsLoading, refetch, isFetching } = useShowQuery(id);
 
-    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const [searchParams] = useSearchParams();
+    const isEditing = searchParams.get('edit');
+
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(isEditing ?? false);
     const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
 
     const handleCloseRegistrationModal = () => setIsRegistrationModalOpen(false);
@@ -88,20 +91,12 @@ const ShowEvent = () => {
                 onClose={handleCloseRegistrationModal}
             />
 
-            <Skeleton
-                loading={eventDataIsLoading}
-                active
-                round
-                paragraph={{ rows: 10 }}
-            >
+            <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}>
                 <Card
                     bodyStyle={{ padding: '10px 20px' }}
                     cover={
                         <>
-                            <Image
-                                height={250}
-                                src='https://picsum.photos/1000/300'
-                            />
+                            <Image height={250} src='https://picsum.photos/1000/300' />
                         </>
                     }
                 >
@@ -113,31 +108,17 @@ const ShowEvent = () => {
                                     justifyContent: 'space-between',
                                 }}
                             >
-                                <Space
-                                    size={0}
-                                    direction='vertical'
-                                >
+                                <Space size={0} direction='vertical'>
                                     <Space>
-                                        <Typography.Title
-                                            style={{ marginTop: '10px' }}
-                                            level={4}
-                                        >
+                                        <Typography.Title style={{ marginTop: '10px' }} level={4}>
                                             {eventData?.result?.title}
                                         </Typography.Title>
-                                        <Typography.Title
-                                            style={{ marginTop: '10px' }}
-                                            level={5}
-                                            disabled
-                                        >
+                                        <Typography.Title style={{ marginTop: '10px' }} level={5} disabled>
                                             ({eventData?.result?.event_type})
                                         </Typography.Title>
                                     </Space>
                                     <Space>
-                                        <Typography.Text
-                                            level={5}
-                                            disabled
-                                            style={{ marginTop: '0px' }}
-                                        >
+                                        <Typography.Text level={5} disabled style={{ marginTop: '0px' }}>
                                             {(() => {
                                                 const registrationStartDate = new Date(
                                                     eventData?.result?.registration_start_date
@@ -154,21 +135,14 @@ const ShowEvent = () => {
                                                 return `${differenceInDays} days ago`;
                                             })()}
                                         </Typography.Text>
-                                        <Typography.Text
-                                            level={5}
-                                            underline
-                                            style={{ marginTop: '0px' }}
-                                        >
+                                        <Typography.Text level={5} underline style={{ marginTop: '0px' }}>
                                             by @<a href='@organizer120'>{eventData?.result?.organization?.name}</a>
                                         </Typography.Text>
                                     </Space>
                                 </Space>
                                 <div style={{ textAlign: 'end' }}>
                                     <Tooltip title='Edit Event'>
-                                        <Button
-                                            icon={<EditOutlined />}
-                                            onClick={() => setIsUpdateModalOpen(true)}
-                                        />
+                                        <Button icon={<EditOutlined />} onClick={() => setIsUpdateModalOpen(true)} />
                                     </Tooltip>
                                     <Tooltip title='Show Attendees'>
                                         <Button
@@ -180,10 +154,7 @@ const ShowEvent = () => {
                             </div>
                         </Col>
 
-                        <Col
-                            xs={24}
-                            md={12}
-                        >
+                        <Col xs={24} md={12}>
                             <Table
                                 style={{
                                     height: '100%',
@@ -197,10 +168,7 @@ const ShowEvent = () => {
                                 pagination={false}
                             />
                         </Col>
-                        <Col
-                            xs={24}
-                            md={12}
-                        >
+                        <Col xs={24} md={12}>
                             <Descriptions
                                 bordered
                                 column={1}
@@ -249,11 +217,7 @@ const ShowEvent = () => {
 
                         <Col span={24}>
                             <Divider />
-                            <Typography.Title
-                                style={{ margin: '0px' }}
-                                level={3}
-                                strong
-                            >
+                            <Typography.Title style={{ margin: '0px' }} level={3} strong>
                                 Event Overview
                             </Typography.Title>
                         </Col>
@@ -266,10 +230,7 @@ const ShowEvent = () => {
                                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                 }}
                             >
-                                <Space
-                                    direction='vertical'
-                                    wrap
-                                >
+                                <Space direction='vertical' wrap>
                                     <Typography.Text>{eventData?.result?.description}</Typography.Text>
                                 </Space>
                             </Card>
@@ -277,18 +238,11 @@ const ShowEvent = () => {
 
                         <Col span={24}>
                             <Divider />
-                            <Typography.Title
-                                style={{ margin: '0px' }}
-                                level={3}
-                                strong
-                            >
+                            <Typography.Title style={{ margin: '0px' }} level={3} strong>
                                 Event Detials
                             </Typography.Title>
                         </Col>
-                        <Col
-                            xs={24}
-                            lg={12}
-                        >
+                        <Col xs={24} lg={12}>
                             <div
                                 style={{
                                     display: 'flex',
@@ -296,10 +250,7 @@ const ShowEvent = () => {
                                     width: '100%',
                                 }}
                             >
-                                <Row
-                                    style={{ flex: 1 }}
-                                    gutter={[20, 10]}
-                                >
+                                <Row style={{ flex: 1 }} gutter={[20, 10]}>
                                     <Col span={24}>
                                         <Card
                                             type='inner'
@@ -311,10 +262,7 @@ const ShowEvent = () => {
                                                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                             }}
                                         >
-                                            <Space
-                                                direction='vertical'
-                                                size={30}
-                                            >
+                                            <Space direction='vertical' size={30}>
                                                 <Space wrap>
                                                     <TagsOutlined />
                                                     <Typography.Text strong>Event Tags:</Typography.Text>
@@ -365,11 +313,7 @@ const ShowEvent = () => {
                                                 boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                             }}
                                         >
-                                            <Space
-                                                style={{ width: '100%' }}
-                                                direction='vertical'
-                                                size={10}
-                                            >
+                                            <Space style={{ width: '100%' }} direction='vertical' size={10}>
                                                 <Space>
                                                     <EnvironmentOutlined />
                                                     <Typography.Text strong>Event Address:</Typography.Text>
@@ -405,10 +349,7 @@ const ShowEvent = () => {
                                 </Row>
                             </div>
                         </Col>
-                        <Col
-                            xs={24}
-                            lg={12}
-                        >
+                        <Col xs={24} lg={12}>
                             <Card
                                 type='inner'
                                 style={{
@@ -418,11 +359,7 @@ const ShowEvent = () => {
                                     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                 }}
                             >
-                                <Space
-                                    direction='vertical'
-                                    style={{ width: '100%' }}
-                                    size={20}
-                                >
+                                <Space direction='vertical' style={{ width: '100%' }} size={20}>
                                     <Space>
                                         <ScheduleOutlined />
                                         <Typography.Text
@@ -520,55 +457,6 @@ const ShowEvent = () => {
 };
 
 export default ShowEvent;
-const fakeData = [
-    {
-        day_date: '2024-04-01',
-        slots: [
-            {
-                label: 'intro',
-                start_time: '2024-04-01 10:00:00',
-                end_time: '2024-04-01 12:00:00',
-                slot_status: {
-                    value: '1',
-                    status: 'Pending',
-                },
-            },
-            {
-                label: 'intro 2',
-                start_time: '2024-04-01 16:00:00',
-                end_time: '2024-04-01 22:00:00',
-                slot_status: {
-                    value: '1',
-                    status: 'Pending',
-                },
-            },
-        ],
-    },
-    {
-        day_date: '2024-04-02',
-        slots: [
-            {
-                label: 'intro',
-                start_time: '2024-04-01 12:00:00',
-                end_time: '2024-04-01 14:00:00',
-                slot_status: {
-                    value: '1',
-                    status: 'Pending',
-                },
-            },
-            {
-                label: 'intro 2',
-                start_time: '2024-04-01 13:00:00',
-                end_time: '2024-04-01 19:00:00',
-                slot_status: {
-                    value: '1',
-                    status: 'Pending',
-                },
-            },
-        ],
-    },
-    // More fake data entries...
-];
 
 function formatDate(dateTimeString) {
     const date = new Date(dateTimeString);

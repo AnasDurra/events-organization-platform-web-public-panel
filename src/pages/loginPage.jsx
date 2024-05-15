@@ -22,6 +22,7 @@ export default function RegisterAttendee() {
         const data = {
             username: values.username,
             password: values.password,
+            role_id: 2, // TODO Edit this
         };
         console.log(data);
 
