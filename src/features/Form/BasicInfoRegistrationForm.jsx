@@ -1,5 +1,4 @@
 import { Col, DatePicker, Input, Row, Typography, Upload, message, Form, Image } from 'antd';
-import ImgCrop from 'antd-img-crop';
 import Password from 'antd/es/input/Password';
 import Link from 'antd/es/typography/Link';
 import { useState } from 'react';
