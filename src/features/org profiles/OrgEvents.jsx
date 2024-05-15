@@ -14,8 +14,8 @@ import {
     Dropdown,
     DatePicker,
 } from 'antd';
-import { EditOutlined, EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
-import { DeleteOutline } from '@material-ui/icons';
+import { DeleteOutlined, EditOutlined, EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
+
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 
@@ -231,8 +231,8 @@ const OrgEvents = () => {
                                         onClick={(e) => handleClick(e, 'edit')}
                                         key='edit'
                                     />,
-                                    <DeleteOutline
-                                        style={{ ...iconStyle, color: 'red', fontSize: '18px' }}
+                                    <DeleteOutlined
+                                        style={{ ...iconStyle, color: 'red', fontSize: '16px' }}
                                         onMouseEnter={handleMouseEnter}
                                         onMouseLeave={handleMouseLeave}
                                         onClick={(e) => handleClick(e, 'remove')}

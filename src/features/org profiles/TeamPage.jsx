@@ -1,15 +1,6 @@
 import React from 'react';
 import { Card, Col, Row, Avatar, Button, Space, Input } from 'antd';
-import {
-    CheckCircleFilled,
-    CloseCircleFilled,
-    DeleteFilled,
-    EditOutlined,
-    EllipsisOutlined,
-    PlusOutlined,
-} from '@ant-design/icons';
-import { IoIosCloseCircle } from 'react-icons/io';
-import { DeleteOutline } from '@material-ui/icons';
+import { CheckCircleFilled, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 
 const employees = [
     {
@@ -162,7 +153,7 @@ const TeamPage = () => (
                                 onClick={(e) => handleClick(e, 'edit')}
                                 key='edit'
                             />,
-                            <DeleteOutline
+                            <DeleteOutlined
                                 style={{ ...iconStyle, color: 'red', fontSize: '18px' }}
                                 onMouseEnter={handleMouseEnter}
                                 onMouseLeave={handleMouseLeave}
