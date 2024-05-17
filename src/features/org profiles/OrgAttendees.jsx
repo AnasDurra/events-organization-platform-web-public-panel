@@ -19,6 +19,7 @@ const OrgAttendees = () => {
                     id: '4',
                     firstName: 'hadi',
                     lastName: 'ba',
+                    profile_image: 'https://randomuser.me/api/portraits/men/3.jpg',
                     events: [
                         {
                             id: '2',
@@ -54,6 +55,7 @@ const OrgAttendees = () => {
                     id: '19',
                     firstName: 'Anas',
                     lastName: 'Rish',
+                    profile_image: 'https://randomuser.me/api/portraits/men/2.jpg',
                     events: [
                         {
                             id: '2',
@@ -116,10 +118,21 @@ const OrgAttendees = () => {
                         key: 'name',
                         render: (text, record) => (
                             <span
-                                style={{ fontWeight: 'bold', cursor: 'pointer' }}
+                                style={{ fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                                 onClick={() => navigate(`/attendee-profile/${record.id}`)}
                                 className='hoverable-name'
                             >
+                                <img
+                                    src={record.profile_image}
+                                    // alt={`${record.firstName} ${record.lastName}`}
+                                    style={{
+                                        width: '42px',
+                                        height: '42px',
+                                        borderRadius: '50%',
+                                        marginRight: '12px',
+                                        objectFit: 'cover',
+                                    }}
+                                />
                                 {`${record.firstName} ${record.lastName}`}
                             </span>
                         ),

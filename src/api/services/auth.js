@@ -42,12 +42,21 @@ export const auth = apiSlice.injectEndpoints({
             },
         }),
 
-        // logout: builder.mutation({
-        //   query: () => ({
-        //     url: 'auth/logout',
-        //     method: 'POST',
-        //   }),
-        // }),
+        logout: builder.mutation({
+            query: () => ({
+                url: 'auth/logout',
+                method: 'POST',
+            }),
+            transformResponse: (responseData) => {
+                console.log('hello ', responseData);
+                if (responseData?.statusCode == 200) {
+                    Cookies.remove('user', { path: '/' });
+                    Cookies.remove('accessToken', { path: '/' });
+                    Cookies.remove('refreshToken', { path: '/' });
+                }
+                return responseData;
+            },
+        }),
 
         refresh: builder.query({
             query: (refresh_token) => ({
@@ -75,7 +84,10 @@ export const getLoggedInUser = () => {
 };
 
 export const getLoggedInUserV2 = () => {
-    return JSON.parse(Cookies.get('user'));
+    if (Cookies.get('user')) {
+        return JSON.parse(Cookies.get('user'));
+    }
+    return null;
 };
 
 export const { useLoginMutation, useLogoutMutation, useSignupMutation, useUserMenuQuery } = auth;

@@ -57,10 +57,10 @@ const ShowEventAttendees = () => {
     }, [data]);
     return (
         <div style={{ padding: '20px', width: '100%', margin: '0 auto' }}>
-            <LeftOutlined
-                style={{ position: 'absolute', top: '20px', left: '20px', fontSize: '24px', cursor: 'pointer' }}
-                onClick={handleGoBack}
-            />
+            <Button type='text' size='large' style={{ padding: '0px' }}>
+                <LeftOutlined onClick={handleGoBack} />
+            </Button>
+
             <Spin size='large' spinning={isLoading}>
                 <Typography.Title level={2} style={{ marginBottom: '20px', textAlign: 'center' }}>
                     Attendees

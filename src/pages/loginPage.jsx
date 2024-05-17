@@ -38,7 +38,7 @@ export default function RegisterAttendee() {
                 if (res.result.user_role == 3) {
                     navigate(`/home`);
                 } else if (res.result.user_role == 2) {
-                    navigate(`/org`);
+                    navigate(`/org/our-events`);
                 }
                 // TODO handle admin navigation
                 else if (res.result.user_role == 1) {

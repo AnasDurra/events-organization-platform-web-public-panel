@@ -253,7 +253,7 @@ const OrgEvents = () => {
                                         position: 'absolute',
                                         top: -1,
                                         left: 0,
-                                        zIndex: 1,
+                                        zIndex: 0,
                                         backgroundColor: 'rgba(0, 0, 0, 0.3)',
                                         padding: '5px',
                                         borderRadius: '5px',

@@ -10,11 +10,7 @@ export default function PackageCard({ name, price, tickets, onClick, onBuyClick 
             title={<div className='text-center'>{name}</div>}
             onClick={onClick}
             actions={[
-                <div
-                    onClick={onBuyClick}
-                    key={'buy-bt'}
-                    className='font-bold text-lg text-white'
-                >
+                <div onClick={onBuyClick} key={'buy-bt'} className='font-bold text-lg text-white'>
                     BUY
                 </div>,
             ]}
@@ -32,19 +28,13 @@ export default function PackageCard({ name, price, tickets, onClick, onBuyClick 
                         <Divider />
                         <Row justify={'center'}>
                             <Col span={8}>Price</Col>
-                            <Col
-                                span={8}
-                                className='text-black text-center'
-                            >
+                            <Col span={8} className='text-black text-center'>
                                 {price}$
                             </Col>
                         </Row>
                         <Row justify={'center'}>
                             <Col span={8}>Tickets</Col>
-                            <Col
-                                span={8}
-                                className='text-black text-center'
-                            >
+                            <Col span={8} className='text-black text-center'>
                                 {tickets}
                             </Col>
                         </Row>

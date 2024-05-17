@@ -7,14 +7,16 @@ import './index.css';
 import { router } from './router/index.jsx';
 import { store } from './store.js';
 import { NotificationProvider } from './utils/NotificationContext.jsx';
+import { getLoggedInUserV2 } from './api/services/auth.js';
 
+const user = getLoggedInUserV2();
 const theme = {
     token: {
-        colorPrimary: '#00474f',
+        colorPrimary: user?.user_role == 2 ? '#022140' : '#00474f',
     },
     components: {
         Layout: {
-            headerBg: '#00474f',
+            headerBg: user?.user_role == 2 ? '#265077' : '#00474f',
         },
     },
     cssVar: true,

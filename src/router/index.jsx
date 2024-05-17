@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import AppLayout from '../AppLayout';
+import OrganizerLayout from '../features/org profiles/Layout/OrganizerLayout';
 import RegisterAttendee from '../features/Attendees Profiles/RegisterAttendee';
 import ShowAttendeProfile from '../features/Attendees Profiles/ShowAttendeProfile';
 import ShowMyProfile from '../features/Attendees Profiles/ShowMyProfile';
@@ -30,6 +30,9 @@ import TicketsBalancePage from '../features/Ticketing Packages/TicketsBalancePag
 import ResultSuccessPage from '../features/Ticketing Packages/ResultSuccessPage';
 import OrgAttendees from '../features/org profiles/OrgAttendees';
 import OrgEvents from '../features/org profiles/OrgEvents';
+import { getLoggedInUserV2 } from '../api/services/auth';
+
+const user = getLoggedInUserV2();
 
 export const router = createBrowserRouter([
     {
@@ -50,7 +53,7 @@ export const router = createBrowserRouter([
     },
     {
         path: '/',
-        element: <AppLayout />,
+        element: user?.user_role == 2 ? <OrganizerLayout /> : <HomeLayout />,
         errorElement: <ErrorPage />,
         children: [
             {
@@ -149,7 +152,7 @@ export const router = createBrowserRouter([
 
     {
         path: 'org',
-        element: <HomeLayout />,
+        element: <OrganizerLayout />,
         children: [
             { index: true, element: <HomePage /> }, // TODO Edit this
             { path: ':orgId', element: <ProfilePage /> },
