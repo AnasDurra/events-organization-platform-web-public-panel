@@ -17,6 +17,7 @@ import {
 import { DeleteOutlined, EditOutlined, EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
 
 import moment from 'moment';
+import useEventHandlers from '../Manage Events (org)/utils/eventHandlers';
 import { useNavigate } from 'react-router-dom';
 
 const OrgEvents = () => {
@@ -58,8 +59,7 @@ const OrgEvents = () => {
     const navigate = useNavigate();
     const [filteredEvents, setFilteredEvents] = useState(events?.result);
     const [searchType, setSearchType] = useState('name');
-    const [selectedRange, setSelectedRange] = useState(null);
-
+    const { handleDeleteEvent } = useEventHandlers();
     const iconStyle = { transition: 'transform 0.3s', cursor: 'pointer' };
 
     const handleMouseEnter = (e) => {
@@ -70,23 +70,17 @@ const OrgEvents = () => {
         e.currentTarget.style.transform = 'scale(1)';
     };
 
-    const handleClick = (e, action) => {
+    const handleClick = (e, action, eventId) => {
         e.stopPropagation();
         if (action === 'edit') {
             navigate(`/event/show/${event.event_id}/?edit=true`);
+        } else if (action === 'remove') {
+            handleDeleteEvent(eventId);
         }
     };
 
     const handleSearchTypeSelect = ({ key }) => {
         setSearchType(key);
-    };
-
-    const handleDateChange = (dates, dateStrings) => {
-        if (dateStrings[0] == '' || dateStrings[1] == '') {
-            setSelectedRange(null);
-        } else {
-            setSelectedRange(dateStrings);
-        }
     };
 
     const searchMenu = (
@@ -158,7 +152,6 @@ const OrgEvents = () => {
                                     style={{ width: '100%' }}
                                     // disabled={filteredEvents?.length === 0}
                                     onChange={(dates, dateStrings) => {
-                                        handleDateChange(dates, dateStrings);
                                         handleSearch(dates);
                                     }}
                                 />
@@ -235,7 +228,7 @@ const OrgEvents = () => {
                                         style={{ ...iconStyle, color: 'red', fontSize: '16px' }}
                                         onMouseEnter={handleMouseEnter}
                                         onMouseLeave={handleMouseLeave}
-                                        onClick={(e) => handleClick(e, 'remove')}
+                                        onClick={(e) => handleClick(e, 'remove', event.event_id)}
                                         key='remove'
                                     />,
                                 ]}

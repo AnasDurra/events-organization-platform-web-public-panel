@@ -43,6 +43,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { getLoggedInUser } from '../../api/services/auth';
 import { useNotification } from '../../utils/NotificationContext';
+import LastThreeEvents from './components/LastThreeEvents';
 
 const ShowAttendeProfile = () => {
     const { openNotification } = useNotification();
@@ -70,6 +71,26 @@ const ShowAttendeProfile = () => {
         setData(myProfile);
         console.log(myProfile);
     }, [myProfile]);
+
+    // Sample data for events
+    const events = [
+        {
+            id: '30',
+            title: 'GPT: The New Generation of AI',
+            cover_picture_url: 'https://picsum.photos/300/200?random=1',
+            registration_end_date: '2024-01-03 21:00:00',
+            organization: { name: 'ORG1' },
+            description: 'Here is the description of the event',
+        },
+        {
+            id: '25',
+            title: 'The Future of AI',
+            cover_picture_url: 'https://picsum.photos/300/200?random=2',
+            registration_end_date: '2024-04-10 09:30:00',
+            organization: { name: 'ORG1' },
+            description: 'This is an event about artificial intelligence',
+        },
+    ];
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Card
@@ -497,6 +518,12 @@ const ShowAttendeProfile = () => {
                                     </div>
                                 </div>
                             </Card>
+                        </Col>
+                        <Col span={24} style={{ marginTop: '3em' }}>
+                            <Typography.Title level={3} className='last-three-events-title'>
+                                Last 3 Events Attended
+                            </Typography.Title>
+                            <LastThreeEvents events={events} />
                         </Col>
                     </Row>
                 </Spin>

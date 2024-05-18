@@ -49,6 +49,7 @@ import UpdateProfileModal from './UpdateProfileModal';
 
 import { getLoggedInUser } from '../../api/services/auth';
 import { useNotification } from '../../utils/NotificationContext';
+import LastThreeEvents from './components/LastThreeEvents';
 
 const ShowAttendeProfile = () => {
     const [user, setUser] = useState(null);
@@ -64,17 +65,6 @@ const ShowAttendeProfile = () => {
     const [fetchIsBlocked, { data: isBlocked, isLoading: isBlockedIsLoading }] = useLazyIsBlockedQuery(id);
 
     const [data, setData] = useState(null);
-
-    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-
-    const handleOk = () => {
-        fetchAttendeeProfile(id);
-        setData(null);
-        setIsUpdateModalOpen(false);
-    };
-    const handleCancel = () => {
-        setIsUpdateModalOpen(false);
-    };
 
     const confirmBlockAttendee = () => {
         Modal.confirm({
@@ -146,6 +136,25 @@ const ShowAttendeProfile = () => {
         }
     }, [attendeeProfile, id]);
 
+    // Sample data for events
+    const events = [
+        {
+            id: '30',
+            title: 'GPT: The New Generation of AI',
+            cover_picture_url: 'https://picsum.photos/300/200?random=1',
+            registration_end_date: '2024-01-03 21:00:00',
+            organization: { name: 'ORG1' },
+            description: 'Here is the description of the event',
+        },
+        {
+            id: '25',
+            title: 'The Future of AI',
+            cover_picture_url: 'https://picsum.photos/300/200?random=2',
+            registration_end_date: '2024-04-10 09:30:00',
+            organization: { name: 'ORG1' },
+            description: 'This is an event about artificial intelligence',
+        },
+    ];
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Card
@@ -584,6 +593,12 @@ const ShowAttendeProfile = () => {
                             </Card>
                         </Col>
                     </Row>
+                    <Col span={24} style={{ marginTop: '3em' }}>
+                        <Typography.Title level={3} className='last-three-events-title'>
+                            Last 3 Events Attended
+                        </Typography.Title>
+                        <LastThreeEvents events={events} />
+                    </Col>
                 </Spin>
             </Card>
         </div>

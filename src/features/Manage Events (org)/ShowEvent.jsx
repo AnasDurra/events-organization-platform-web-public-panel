@@ -4,8 +4,10 @@ import {
     Col,
     Descriptions,
     Divider,
+    Dropdown,
     Image,
     List,
+    Menu,
     Modal,
     Row,
     Skeleton,
@@ -26,6 +28,8 @@ import {
     ScheduleOutlined,
     TagsOutlined,
     UserOutlined,
+    DeleteOutlined,
+    MoreOutlined,
 } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
@@ -36,11 +40,15 @@ import UpdateEventModal from './UpdateEventModal';
 
 import { useNavigate } from 'react-router-dom';
 import RegistrationModal from './registration/RegistrationModal';
+import { Icon } from '@iconify/react';
+import useEventHandlers from './utils/eventHandlers';
+
 const ShowEvent = () => {
     const { id } = useParams();
     const navigate = useNavigate();
 
     const { data: eventData, error, isLoading: eventDataIsLoading, refetch, isFetching } = useShowQuery(id);
+    const { handleDeleteEvent } = useEventHandlers();
 
     const [searchParams] = useSearchParams();
     const isEditing = searchParams.get('edit');
@@ -150,6 +158,33 @@ const ShowEvent = () => {
                                             onClick={() => navigate(`/event/show/${id}/attendees`)}
                                         />
                                     </Tooltip>
+                                    <Dropdown
+                                        overlay={
+                                            <Menu>
+                                                <Menu.Item
+                                                    key='delete'
+                                                    icon={
+                                                        <Icon
+                                                            icon='line-md:remove'
+                                                            style={{
+                                                                fontSize: '24px',
+                                                                fontWeight: 'bold',
+                                                                color: ` #ff0000`,
+                                                            }}
+                                                        />
+                                                    }
+                                                    onClick={() => {
+                                                        handleDeleteEvent(eventData?.result?.id);
+                                                    }}
+                                                >
+                                                    Delete Event
+                                                </Menu.Item>
+                                            </Menu>
+                                        }
+                                        trigger={['click']}
+                                    >
+                                        <Button icon={<MoreOutlined />} />
+                                    </Dropdown>
                                 </div>
                             </div>
                         </Col>

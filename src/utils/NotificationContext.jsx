@@ -19,7 +19,7 @@ export const NotificationProvider = ({ children }) => {
             message: message,
             description: description ?? null,
             placement: placement,
-            duration: 4, // Adjust as needed
+            duration: 4,
         };
 
         switch (type) {

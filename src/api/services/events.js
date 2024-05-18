@@ -17,13 +17,20 @@ export const events = apiSlice.injectEndpoints({
             }),
             providesTags: ['event'],
         }),
+        delete: builder.mutation({
+            query: (id) => ({
+                url: `event/${id}`,
+                method: 'DELETE',
+            }),
+            providesTags: ['event'],
+        }),
         updateDetails: builder.mutation({
             query: ({ id, body }) => ({
                 url: `event/update/${id}`,
                 method: 'POST',
                 body: body,
             }),
-            invalidatesTags:['event']
+            invalidatesTags: ['event'],
         }),
         updateTags: builder.mutation({
             query: ({ id, body }) => ({
@@ -58,6 +65,7 @@ export const events = apiSlice.injectEndpoints({
 export const {
     useCreateMutation,
     useShowQuery,
+    useDeleteMutation,
     useUpdateDetailsMutation,
     useUpdateTagsMutation,
     useUpdateAgeGroupsMutation,

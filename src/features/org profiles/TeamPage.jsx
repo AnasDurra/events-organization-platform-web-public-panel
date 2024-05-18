@@ -52,7 +52,6 @@ const employees = [
         phone: '780-689-3483',
         image: 'https://randomuser.me/api/portraits/men/4.jpg',
     },
-    // Add more employees as needed
 ];
 
 const iconStyle = { transition: 'transform 0.3s', cursor: 'pointer' };
@@ -66,7 +65,7 @@ const handleMouseLeave = (e) => {
 
 const handleClick = (e, action) => {
     e.stopPropagation();
-    //TODO Excute baased on the action
+    //TODO excute baased on the action
 };
 
 const TeamPage = () => (

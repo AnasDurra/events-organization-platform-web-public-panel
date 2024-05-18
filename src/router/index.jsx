@@ -154,7 +154,7 @@ export const router = createBrowserRouter([
         path: 'org',
         element: <OrganizerLayout />,
         children: [
-            { index: true, element: <HomePage /> }, // TODO Edit this
+            // { index: true, element: <HomePage /> }, // TODO Edit this
             { path: ':orgId', element: <ProfilePage /> },
             { path: 'blocklist', element: <BlockedUsersPage /> },
             { path: ':orgId/followers-list', element: <FollowersList /> },
