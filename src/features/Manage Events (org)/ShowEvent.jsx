@@ -51,15 +51,12 @@ const ShowEvent = () => {
     const { id } = useParams();
     const [searchParams] = useSearchParams();
     const showChat = searchParams.get('showChat');
-    console.log(showChat);
+    const isEditing = searchParams.get('edit');
 
     const [user, setUser] = useState(null);
 
     const { data: eventData, error, isLoading: eventDataIsLoading, refetch, isFetching } = useShowQuery(id);
     const { handleDeleteEvent } = useEventHandlers();
-
-    const [searchParams] = useSearchParams();
-    const isEditing = searchParams.get('edit');
 
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(isEditing ?? false);
     const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
