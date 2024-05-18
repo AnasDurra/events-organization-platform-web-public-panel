@@ -6,7 +6,7 @@ import { message } from 'antd';
 
 import image1 from '../features/Attendees Profiles/assets/Hybrid-illu.png';
 import '../features/Attendees Profiles/styles/styles.css';
-import { useLoginMutation } from '../api/services/auth';
+import { getLoggedInUserV2, useLoginMutation } from '../api/services/auth';
 import { useEffect, useState } from 'react';
 import FormWelcomeTitle from '../features/Form/FormWelcomeTitle';
 import { useNotification } from '../utils/NotificationContext';
@@ -22,6 +22,7 @@ export default function RegisterAttendee() {
         const data = {
             username: values.username,
             password: values.password,
+            role_id: 3,
         };
         console.log(data);
 
@@ -61,15 +62,20 @@ export default function RegisterAttendee() {
         >
             <Card>
                 <Space
-                    direction="horizontal"
+                    direction='horizontal'
                     style={{
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'flex-start',
                     }}
                 >
-                    <div className="registerImage">
-                        <Image width={320} height={800} src={image1} preview={false} />
+                    <div className='registerImage'>
+                        <Image
+                            width={320}
+                            height={800}
+                            src={image1}
+                            preview={false}
+                        />
                     </div>
                     <div>
                         <Card
@@ -86,8 +92,7 @@ export default function RegisterAttendee() {
                                         <>
                                             New to Evento?{' '}
                                             <Link
-                                            
-                                                href="/register"
+                                                href='/register'
                                                 style={{
                                                     color: 'blue',
                                                     fontWeight: 'bold',
@@ -101,14 +106,14 @@ export default function RegisterAttendee() {
                                 />
                                 <Form
                                     onFinish={onFinish}
-                                    autoComplete="off"
-                                    layout="vertical"
+                                    autoComplete='off'
+                                    layout='vertical'
                                     style={{ maxWidth: 550 }}
-                                    className="my-custom-form"
+                                    className='my-custom-form'
                                 >
                                     <Form.Item
-                                        label="Username"
-                                        name="username"
+                                        label='Username'
+                                        name='username'
                                         rules={[
                                             {
                                                 required: true,
@@ -128,8 +133,8 @@ export default function RegisterAttendee() {
                                     </Form.Item>
 
                                     <Form.Item
-                                        label="Password"
-                                        name="password"
+                                        label='Password'
+                                        name='password'
                                         rules={[
                                             {
                                                 required: true,
@@ -151,7 +156,7 @@ export default function RegisterAttendee() {
                                             // },
                                         ]}
                                     >
-                                        <Password type="Password" />
+                                        <Password type='Password' />
                                     </Form.Item>
                                     <Form.Item style={{ marginTop: '2em' }}>
                                         <Typography.Paragraph
@@ -162,7 +167,7 @@ export default function RegisterAttendee() {
                                         >
                                             By continuing past this page, you agree to the{' '}
                                             <Link
-                                                href="terms-of-use"
+                                                href='terms-of-use'
                                                 style={{
                                                     fontSize: '12px',
                                                     color: 'blue',
@@ -173,7 +178,7 @@ export default function RegisterAttendee() {
                                             </Link>{' '}
                                             and understand that information will be used as described in our{' '}
                                             <Link
-                                                href="privacy-policy"
+                                                href='privacy-policy'
                                                 style={{
                                                     fontSize: '12px',
                                                     color: 'blue',
@@ -191,7 +196,11 @@ export default function RegisterAttendee() {
                                             justifyContent: 'flex-end',
                                         }}
                                     >
-                                        <Button htmlType="submit" type="primary" style={{ width: '100%' }}>
+                                        <Button
+                                            htmlType='submit'
+                                            type='primary'
+                                            style={{ width: '100%' }}
+                                        >
                                             Login
                                         </Button>
                                     </Form.Item>

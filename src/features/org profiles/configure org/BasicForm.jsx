@@ -9,10 +9,10 @@ export default function BasicForm({ form, orgData, onFinish }) {
             name='basic'
             form={form}
             wrapperCol={{
-                span: 10,
+                span: 20,
             }}
             labelCol={{
-                span: 5,
+                span: 4,
             }}
             labelAlign='left'
             initialValues={{

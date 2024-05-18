@@ -11,12 +11,12 @@ export default function MembersList({ org }) {
 
     return (
         <>
-            <Row>
+            <Row className='w-full'>
                 <Col
                     xs={{ span: 24 }}
                     sm={{ span: 24 }}
-                    xl={{ span: 16 }}
-                    span={16}
+                    xl={{ span: 24 }}
+                    span={24}
                 >
                     <List
                         footer={

@@ -1,17 +1,17 @@
 import { Form, Skeleton, Tabs } from 'antd';
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import AddressesForm from './configure org/AddressesForm';
-import BasicForm from './configure org/BasicForm';
-import ContactInfoForm from './configure org/ContactInfoForm';
-import Header from './configure org/Header';
-import MembersList from './configure org/MembersList';
+import AddressesForm from './AddressesForm';
+import BasicForm from './BasicForm';
+import ContactInfoForm from './ContactInfoForm';
+import Header from './Header';
+import MembersList from './MembersList';
 import {
     useAddOrgAddressMutation,
     useConfigureOrgMutation,
     useGetOrgQuery,
     useRemoveOrgAddressMutation,
-} from './orgSlice';
+} from '../orgSlice';
 
 export default function ConfigOrgPage() {
     let { orgId = 1 } = useParams();
@@ -100,8 +100,8 @@ export default function ConfigOrgPage() {
     ];
 
     return (
-        <div className='grid grid-cols-12'>
-            <div className='sm:col-start-4 sm:col-span-12  col-span-12'>
+        <div className='grid grid-cols-12 w-full'>
+            <div className='col-span-12 md:col-start-3 md:col-span-8  '>
                 <Header />
                 <Skeleton loading={isGetOrgLoading}>
                     <Tabs
