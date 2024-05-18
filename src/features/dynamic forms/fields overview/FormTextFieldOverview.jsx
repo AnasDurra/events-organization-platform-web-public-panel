@@ -7,7 +7,7 @@ import { WiStars } from 'react-icons/wi';
 export default function FormTextFieldOverview({ isDragging, field, groupIndex, fieldIndex }) {
     return (
         <div
-            className='bg-gray-100 w-full px-4 border-2 border-zinc-200'
+            className='bg-gray-100 w-full px-4 border-4 border-zinc-200 rounded-3xl'
             style={{
                 opacity: isDragging ? 0.5 : 1,
             }}

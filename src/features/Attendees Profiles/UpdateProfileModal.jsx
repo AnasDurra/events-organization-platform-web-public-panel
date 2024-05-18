@@ -1,6 +1,7 @@
 import {
     CameraOutlined,
     EllipsisOutlined,
+    EyeOutlined,
     FacebookOutlined,
     LinkedinOutlined,
     MailOutlined,
@@ -19,6 +20,7 @@ import {
     Col,
     DatePicker,
     Dropdown,
+    Empty,
     Form,
     Image,
     Menu,
@@ -35,52 +37,38 @@ import {
 import Input from 'antd/es/input/Input';
 import TextArea from 'antd/es/input/TextArea';
 import ImgCrop from 'antd-img-crop';
+import { useForm } from 'antd/es/form/Form';
 
 import { useEffect, useState } from 'react';
 import { useConfigurationListsQuery } from '../../api/services/lists';
 
-import { useUpdateMyProfileMutation } from '../../api/services/attendeeProfile';
+import {
+    useUpdateMyProfileMutation,
+    useUpdateProfilePicMutation,
+    useUpdateCoverPicMutation,
+} from '../../api/services/attendeeProfile';
 
 import moment from 'moment';
-// import dayjs from "dayjs";
 
-import { useForm } from 'antd/es/form/Form';
 const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
     const [updateMyProfileMutation, { isLoading }] = useUpdateMyProfileMutation();
+    const [updateProfilePicMutation] = useUpdateProfilePicMutation();
+    const [updateCoverPicMutation] = useUpdateCoverPicMutation();
+
     const { data: listsData, isLoading: listsIsLoading } = useConfigurationListsQuery();
 
     const [form] = useForm();
     const [contactForm] = useForm();
 
-    const [avatarImageFile, setAvatarImageFile] = useState(null);
-    const [avatarImageSrc, setAvatarImageSrc] = useState('');
-    const [coverImageFile, setCoverImageFile] = useState(null);
-    const [coverImageSrc, setCoverImageSrc] = useState('');
+    const [avatarImageFile, setAvatarImageFile] = useState([]);
+    const [coverImageFile, setCoverImageFile] = useState([]);
 
-    function getFileUrl(file, type, callback) {
-        const reader = new FileReader();
-
-        reader.onload = function (event) {
-            const url = event.target.result;
-            callback(url);
-        };
-
+    const handleImageChange = ({ fileList: newFileList }, type) => {
         if (type === 'avatar') {
-            setAvatarImageFile(file);
+            setAvatarImageFile(newFileList);
         } else if (type === 'cover') {
-            setCoverImageFile(file);
+            setCoverImageFile(newFileList);
         }
-        reader.readAsDataURL(file);
-    }
-
-    const handleFileChange = (file, type) => {
-        getFileUrl(file, type, (url) => {
-            if (type === 'avatar') {
-                setAvatarImageSrc(url);
-            } else if (type === 'cover') {
-                setCoverImageSrc(url);
-            }
-        });
     };
 
     const onFinish = (values) => {
@@ -108,15 +96,65 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
             contacts: values.contacts ?? null,
         };
 
-        // console.log(dataToSend);
+        console.log(dataToSend);
 
         updateMyProfileMutation(dataToSend)
             .unwrap()
             .then((res) => {
                 if (res.statusCode === 200) {
-                    console.log(res);
-                    message.success('Updated Successfully !');
-                    modalOk();
+                    let formdata = new FormData();
+                    if (avatarImageFile[0]) {
+                        formdata.append('profile_img', avatarImageFile[0]?.originFileObj);
+                        updateProfilePicMutation(formdata)
+                            .unwrap()
+                            .then(() => {
+                                if (coverImageFile[0]) {
+                                    formdata = new FormData();
+                                    formdata.append('cover_img', coverImageFile[0]?.originFileObj);
+                                    updateCoverPicMutation(formdata)
+                                        .unwrap()
+                                        .then(() => {
+                                            message.success('Updated Successfully !');
+                                            modalOk();
+                                        })
+                                        .catch((error) => {
+                                            console.error('Error:', error);
+                                            error.data.result.response.message.forEach((value) => {
+                                                message.error(value);
+                                            });
+                                        });
+                                } else {
+                                    message.success('Updated Successfully !');
+                                    modalOk();
+                                }
+                            })
+                            .catch((error) => {
+                                console.error('Error:', error);
+                                error.data.result.response.message.forEach((value) => {
+                                    message.error(value);
+                                });
+                            });
+                    } else {
+                        if (coverImageFile[0]) {
+                            console.log(22);
+                            formdata.append('cover_img', coverImageFile[0]?.originFileObj);
+                            updateCoverPicMutation(formdata)
+                                .unwrap()
+                                .then(() => {
+                                    message.success('Updated Successfully !');
+                                    modalOk();
+                                })
+                                .catch((error) => {
+                                    console.error('Error:', error);
+                                    error.data.result.response.message.forEach((value) => {
+                                        message.error(value);
+                                    });
+                                });
+                        } else {
+                            message.success('Updated Successfully !');
+                            modalOk();
+                        }
+                    }
                 }
             })
             .catch((error) => {
@@ -126,9 +164,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                 });
             });
     };
-    useEffect(() => {
-        console.log(listsData);
-    }, [listsData]);
+
     return (
         <Spin spinning={isLoading || listsIsLoading}>
             <Card style={{ width: '100%' }}>
@@ -136,319 +172,354 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                     <Row
                         style={{
                             display: 'flex',
-                            justifyContent: 'space-evenly',
-                            maxHeight: '40em',
-                            overflow: 'auto',
+                            // justifyContent: 'space-around',
                         }}
-                        gutter={10}
+                        gutter={20}
                     >
-                        <Col xs={24} sm={24}>
-                            <Popover
-                                content={
-                                    <ImgCrop
-                                        aspect={3 / 1}
-                                        onModalOk={(file) => {
-                                            handleFileChange(file, 'cover');
-                                        }}
-                                        rotationSlider
-                                    >
-                                        <Upload
-                                            name="cover"
-                                            maxCount={1}
-                                            showUploadList={false}
-                                            onChange={(file) => {
-                                                handleFileChange(file, 'cover');
-                                            }}
-                                        >
-                                            <Button type="text">
-                                                <UploadOutlined /> Change Cover
-                                            </Button>
-                                        </Upload>
-                                    </ImgCrop>
-                                }
-                                trigger="click"
-                                placement="bottomRight"
-                            >
+                        <Col span={24}>
+                            {data?.result?.cover_img || coverImageFile?.length != 0 ? (
                                 <Image
+                                    width={'100%'}
                                     style={{
-                                        minHeight: '150px',
-                                        // maxHeight: "150px",
                                         borderRadius: '15px',
                                     }}
-                                    src={data?.cover_img ?? coverImageSrc}
-                                    // alt="Cover Image"
-                                    preview={false}
-                                />
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'flex-end',
+                                    src={
+                                        coverImageFile?.length != 0
+                                            ? URL.createObjectURL(coverImageFile[0].originFileObj)
+                                            : data?.result?.cover_img
+                                            ? data?.result?.cover_img
+                                            : null
+                                    }
+                                    preview={{
+                                        mask: (
+                                            <Button
+                                                type='primary'
+                                                shape='round'
+                                                size='middle'
+                                                icon={<EyeOutlined />}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: '50%',
+                                                    left: '50%',
+                                                    transform: 'translate(-50%, -50%)',
+                                                }}
+                                            >
+                                                Preview
+                                            </Button>
+                                        ),
                                     }}
-                                >
-                                    <CameraOutlined
-                                        style={{
-                                            fontSize: '18px',
-                                            color: '#00000',
-                                            backgroundColor: '#E6E6E6',
-                                            borderRadius: '50%',
-                                            padding: '3px',
-                                        }}
-                                    />
-                                </div>
-                            </Popover>
-                        </Col>
+                                />
+                            ) : (
+                                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No cover picture available' />
+                            )}
 
-                        <Col xs={24} sm={6}>
                             <div
                                 style={{
                                     display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    marginTop: '-70px',
+                                    justifyContent: 'flex-end',
+                                    padding: '0px',
+                                    transform: 'translate(0%, -60%)',
                                 }}
                             >
-                                <Popover
-                                    content={
-                                        <ImgCrop
-                                            onModalOk={(file) => {
-                                                handleFileChange(file, 'avatar');
-                                            }}
-                                            rotationSlider
-                                        >
-                                            <Upload
-                                                name="avatar"
-                                                maxCount={1}
-                                                showUploadList={false}
-                                                onChange={(file) => {
-                                                    handleFileChange(file, 'avatar');
-                                                }}
-                                            >
-                                                <Button type="text">
-                                                    <UploadOutlined /> Change Avatar
-                                                </Button>
-                                            </Upload>
-                                        </ImgCrop>
-                                    }
-                                    trigger="click"
-                                    placement="bottom"
+                                <ImgCrop
+                                    showReset
+                                    rotationSlider
+                                    aspect={3 / 1}
+                                    onModalOk={(file) => {
+                                        handleImageChange(file, 'cover');
+                                    }}
                                 >
-                                    <Space>
-                                        <Avatar
-                                            size={100}
-                                            icon={<UserOutlined />}
-                                            src={
-                                                avatarImageSrc
-                                                    ? avatarImageSrc
-                                                    : data?.result.profile_img
-                                                    ? data?.result.profile_img
-                                                    : 'https://api.dicebear.com/7.x/miniavs/svg?seed=8'
-                                            }
-                                            style={{
-                                                textAlign: 'center',
-                                                marginBottom: '10px',
-                                                border: '3px solid white',
-                                                borderRadius: '50%',
-                                            }}
-                                        />
-                                        <div
-                                            style={{
-                                                marginBottom: '-40px',
-                                                paddingTop: '35px',
-                                            }}
-                                        >
+                                    <Upload
+                                        name='cover'
+                                        fileList={coverImageFile}
+                                        maxCount={1}
+                                        showUploadList={false}
+                                        onChange={(file) => {
+                                            handleImageChange(file, 'cover');
+                                        }}
+                                        customRequest={({ onSuccess }) => onSuccess('ok')}
+                                    >
+                                        <Button style={{ padding: '0px' }} type='text'>
                                             <CameraOutlined
                                                 style={{
-                                                    fontSize: '18px',
+                                                    fontSize: '24px',
                                                     color: '#00000',
-                                                    marginLeft: '-27px',
                                                     backgroundColor: '#E6E6E6',
                                                     borderRadius: '50%',
                                                     padding: '3px',
                                                 }}
                                             />
-                                        </div>
-                                    </Space>
-                                </Popover>
+                                        </Button>
+                                    </Upload>
+                                </ImgCrop>
                             </div>
                         </Col>
-                        <Col xs={24} sm={18}>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    width: '100%',
-                                }}
-                            >
-                                <Typography.Title style={{ marginTop: '0px' }} level={3}>
-                                    {data?.result.full_name ?? ''}
-                                </Typography.Title>
 
-                                <Space size={10}>
-                                    {data?.result.contacts?.map((contact) => (
-                                        <Tooltip title={contact.contact_name} key={contact.id}>
-                                            <a
-                                                href={getContactLink(contact.contact_name)}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
+                        <Col span={24}>
+                            <Row gutter={20}>
+                                <Col xs={8} sm={6} md={5}>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            marginTop: '-70px',
+                                        }}
+                                    >
+                                        <Space>
+                                            <Image
+                                                width={100}
+                                                height={100}
+                                                style={{
+                                                    textAlign: 'center',
+                                                    marginBottom: '10px',
+                                                    border: '3px solid white',
+                                                    borderRadius: '50%',
+                                                }}
+                                                src={
+                                                    avatarImageFile?.length != 0
+                                                        ? URL.createObjectURL(avatarImageFile[0].originFileObj)
+                                                        : data?.result?.profile_img
+                                                        ? data?.result?.profile_img
+                                                        : null
+                                                }
+                                                fallback={<UserOutlined style={{ fontSize: '100px', color: '#ccc' }} />}
+                                                preview={{
+                                                    mask: (
+                                                        <Button
+                                                            type='primary'
+                                                            shape='round'
+                                                            size='middle'
+                                                            icon={<EyeOutlined />}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                top: '50%',
+                                                                left: '50%',
+                                                                transform: 'translate(-50%, -50%)',
+                                                            }}
+                                                        >
+                                                            Preview
+                                                        </Button>
+                                                    ),
+                                                }}
+                                            />
+                                            <div
+                                                style={{
+                                                    marginBottom: '-40px',
+                                                    paddingTop: '35px',
+                                                    marginTop: '-15px',
+                                                    marginLeft: '-2.5em',
+                                                }}
                                             >
-                                                {contact.contact_name === 'WhatsApp' && (
-                                                    <WhatsAppOutlined
-                                                        style={{
-                                                            fontSize: '24px',
-                                                            color: '#25D366',
+                                                <ImgCrop showReset rotationSlider aspect={4 / 3}>
+                                                    <Upload
+                                                        fileList={avatarImageFile}
+                                                        maxCount={1}
+                                                        showUploadList={false}
+                                                        onChange={(file) => {
+                                                            handleImageChange(file, 'avatar');
                                                         }}
-                                                    />
-                                                )}
-                                                {contact.contact_name === 'LinkedIn' && (
-                                                    <LinkedinOutlined
-                                                        style={{
-                                                            fontSize: '24px',
-                                                            color: '#0077B5',
-                                                        }}
-                                                    />
-                                                )}
-                                                {contact.contact_name === 'Facebook' && (
-                                                    <FacebookOutlined
-                                                        style={{
-                                                            fontSize: '24px',
-                                                            color: '#3b5998',
-                                                        }}
-                                                    />
-                                                )}
-                                                {contact.contact_name === 'Twitter' && (
-                                                    <TwitterOutlined
-                                                        style={{
-                                                            fontSize: '24px',
-                                                            color: '#1DA1F2',
-                                                        }}
-                                                    />
-                                                )}
-                                                {contact.contact_name === 'Email' && (
-                                                    <MailOutlined
-                                                        style={{
-                                                            fontSize: '24px',
-                                                            color: 'black',
-                                                        }}
-                                                    />
-                                                )}
-                                                {contact.contact_name === 'Phone Number' && (
-                                                    <PhoneOutlined
-                                                        style={{ fontSize: '24px' }}
-                                                        onClick={() => (window.location.href = `tel:${contact.value}`)}
-                                                    />
-                                                )}
-                                            </a>
-                                        </Tooltip>
-                                    ))}
-                                </Space>
+                                                        customRequest={({ onSuccess }) => onSuccess('ok')}
+                                                    >
+                                                        <Button style={{ padding: '0px' }} type='text'>
+                                                            <CameraOutlined
+                                                                style={{
+                                                                    fontSize: '20px',
+                                                                    color: '#00000',
+                                                                    backgroundColor: '#E6E6E6',
+                                                                    borderRadius: '50%',
+                                                                    padding: '3px',
+                                                                }}
+                                                            />
+                                                        </Button>
+                                                    </Upload>
+                                                </ImgCrop>
+                                            </div>
+                                        </Space>
+                                    </div>
+                                </Col>
+                                <Col xs={16} sm={18} md={19}>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <Typography.Title style={{ marginTop: '0px' }} level={3}>
+                                            {data?.result?.full_name ?? ''}
+                                        </Typography.Title>
+
+                                        <Space size={10}>
+                                            {data?.result.contacts?.map((contact) => (
+                                                <Tooltip title={contact.contact_name} key={contact.id}>
+                                                    <a
+                                                        href={getContactLink(contact.contact_name)}
+                                                        target='_blank'
+                                                        rel='noopener noreferrer'
+                                                    >
+                                                        {contact.contact_name === 'WhatsApp' && (
+                                                            <WhatsAppOutlined
+                                                                style={{
+                                                                    fontSize: '24px',
+                                                                    color: '#25D366',
+                                                                }}
+                                                            />
+                                                        )}
+                                                        {contact.contact_name === 'LinkedIn' && (
+                                                            <LinkedinOutlined
+                                                                style={{
+                                                                    fontSize: '24px',
+                                                                    color: '#0077B5',
+                                                                }}
+                                                            />
+                                                        )}
+                                                        {contact.contact_name === 'Facebook' && (
+                                                            <FacebookOutlined
+                                                                style={{
+                                                                    fontSize: '24px',
+                                                                    color: '#3b5998',
+                                                                }}
+                                                            />
+                                                        )}
+                                                        {contact.contact_name === 'Twitter' && (
+                                                            <TwitterOutlined
+                                                                style={{
+                                                                    fontSize: '24px',
+                                                                    color: '#1DA1F2',
+                                                                }}
+                                                            />
+                                                        )}
+                                                        {contact.contact_name === 'Email' && (
+                                                            <MailOutlined
+                                                                style={{
+                                                                    fontSize: '24px',
+                                                                    color: 'black',
+                                                                }}
+                                                            />
+                                                        )}
+                                                        {contact.contact_name === 'Phone Number' && (
+                                                            <PhoneOutlined
+                                                                style={{ fontSize: '24px' }}
+                                                                onClick={() =>
+                                                                    (window.location.href = `tel:${contact.value}`)
+                                                                }
+                                                            />
+                                                        )}
+                                                    </a>
+                                                </Tooltip>
+                                            ))}
+                                        </Space>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Col>
+
+                        <Col span={24}>
+                            <Form
+                                onFinish={onFinish}
+                                form={form}
+                                autoComplete='off'
+                                layout='vertical'
+                                style={{
+                                    marginTop: '1em',
+                                }}
+                                className='my-custom-form'
+                            >
+                                <Form.Item initialValue={data?.result.bio ?? ''} label='Bio' name='bio'>
+                                    <TextArea placeholder='Tell us about yourself...' allowClear />
+                                </Form.Item>
+                                <Form.Item
+                                    label='Birth Date'
+                                    name='birth_date'
+                                    initialValue={
+                                        data?.result.birth_date ? moment(data?.result.birth_date, 'DD-MM-YYYY') : null
+                                    }
+                                >
+                                    <DatePicker format={'DD-MM-YYYY'} style={{ width: '100%' }} />
+                                </Form.Item>
+
+                                <Form.Item label='Job' name='job_id' initialValue={data?.result.job?.value ?? null}>
+                                    <Select
+                                        loading={listsIsLoading}
+                                        showSearch
+                                        placeholder='Select your job'
+                                        options={listsData?.result.jobs}
+                                    />
+                                </Form.Item>
+
+                                <Form.Item
+                                    label='Address'
+                                    name='address_id'
+                                    initialValue={data?.result.job?.value ?? null}
+                                >
+                                    <Select
+                                        loading={listsIsLoading}
+                                        showSearch
+                                        placeholder='Select your address'
+                                        options={listsData?.result.addresses}
+                                    />
+                                </Form.Item>
+
                                 <Form
-                                    onFinish={onFinish}
-                                    form={form}
-                                    autoComplete="off"
-                                    layout="vertical"
+                                    form={contactForm}
+                                    autoComplete='off'
+                                    layout='vertical'
                                     style={{
                                         marginTop: '1em',
                                     }}
-                                    className="my-custom-form"
+                                    className='my-custom-form'
                                 >
-                                    <Form.Item initialValue={data?.result.bio ?? ''} label="Bio" name="bio">
-                                        <TextArea placeholder="Tell us about yourself..." allowClear />
-                                    </Form.Item>
-                                    <Form.Item
-                                        label="Birth Date"
-                                        name="birth_date"
-                                        initialValue={
-                                            data?.result.birth_date
-                                                ? moment(data?.result.birth_date, 'DD-MM-YYYY')
-                                                : null
-                                        }
-                                    >
-                                        <DatePicker format={'DD-MM-YYYY'} style={{ width: '100%' }} />
-                                    </Form.Item>
-
-                                    <Form.Item label="Job" name="job_id" initialValue={data?.result.job?.value ?? null}>
-                                        <Select
-                                            loading={listsIsLoading}
-                                            showSearch
-                                            placeholder="Select your job"
-                                            options={listsData?.result.jobs}
-                                        />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        label="Address"
-                                        name="address_id"
-                                        initialValue={data?.result.job?.value ?? null}
-                                    >
-                                        <Select
-                                            loading={listsIsLoading}
-                                            showSearch
-                                            placeholder="Select your address"
-                                            options={listsData?.result.addresses}
-                                        />
-                                    </Form.Item>
-
-                                    <Form
-                                        form={contactForm}
-                                        autoComplete="off"
-                                        layout="vertical"
-                                        style={{
-                                            marginTop: '1em',
-                                        }}
-                                        className="my-custom-form"
-                                    >
-                                        <Form.Item>
-                                            {listsData?.result.contacts?.map((contact) => (
-                                                <Form.Item
-                                                    key={contact.label}
-                                                    name={contact.value}
-                                                    label={contact.label}
-                                                    initialValue={
-                                                        data?.result.contacts?.find(
-                                                            (userContact) => userContact.contact_name === contact.label
-                                                        )?.contact_link || null
-                                                    }
-                                                    normalize={(value) => {
-                                                        return value === '' ? null : value;
-                                                    }}
-                                                >
-                                                    <Input
-                                                        placeholder={
-                                                            contact.label === 'Email' ||
-                                                            contact.label === 'Phone Number'
-                                                                ? contact.label
-                                                                : `${contact.label} Profile URL`
-                                                        }
-                                                    />
-                                                </Form.Item>
-                                            ))}
-                                        </Form.Item>
-                                    </Form>
-
                                     <Form.Item>
-                                        <Space
-                                            style={{
-                                                display: 'flex',
-                                                justifyContent: 'flex-end',
-                                            }}
-                                        >
-                                            <Button
-                                                onClick={() => {
-                                                    form.resetFields();
-                                                    contactForm.resetFields();
-                                                    modalCancel();
+                                        {listsData?.result.contacts?.map((contact) => (
+                                            <Form.Item
+                                                key={contact.label}
+                                                name={contact.value}
+                                                label={contact.label}
+                                                initialValue={
+                                                    data?.result.contacts?.find(
+                                                        (userContact) => userContact.contact_name === contact.label
+                                                    )?.contact_link || null
+                                                }
+                                                normalize={(value) => {
+                                                    return value === '' ? null : value;
                                                 }}
-                                                type="default"
                                             >
-                                                Cancel
-                                            </Button>
-                                            <Button loading={isLoading} type="primary" htmlType="submit">
-                                                Submit
-                                            </Button>
-                                        </Space>
+                                                <Input
+                                                    placeholder={
+                                                        contact.label === 'Email' || contact.label === 'Phone Number'
+                                                            ? contact.label
+                                                            : `${contact.label} Profile URL`
+                                                    }
+                                                />
+                                            </Form.Item>
+                                        ))}
                                     </Form.Item>
                                 </Form>
-                            </div>
+
+                                <Form.Item>
+                                    <Space
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'flex-end',
+                                        }}
+                                    >
+                                        <Button
+                                            onClick={() => {
+                                                form.resetFields();
+                                                contactForm.resetFields();
+                                                modalCancel();
+                                            }}
+                                            type='default'
+                                        >
+                                            Cancel
+                                        </Button>
+                                        <Button loading={isLoading} type='primary' htmlType='submit'>
+                                            Submit
+                                        </Button>
+                                    </Space>
+                                </Form.Item>
+                            </Form>
                         </Col>
                     </Row>
                 </div>

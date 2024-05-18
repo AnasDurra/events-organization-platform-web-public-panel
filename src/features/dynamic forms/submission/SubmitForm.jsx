@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import FormGroup from './FormGroup';
 import { Typography, Form, Button, Badge, Spin } from 'antd';
 import './SubmitForm.css';
 import { useGetFormQuery, useSubmitFormMutation } from '../dynamicFormsSlice';
 import dayjs from 'dayjs';
+import { useNotification } from '../../../utils/NotificationContext';
 
-export default function SubmitForm() {
-    let { form_id, event_id } = useParams();
+export default function SubmitForm({ prop_event_id, prop_form_id }) {
+    const navigate = useNavigate();
+    const { openNotification } = useNotification();
+
+    let { form_id = prop_form_id, event_id = prop_event_id } = useParams();
     const {
         data: { result: DBform } = { result: {} },
         isSuccess: isFetchFormSuccess,
@@ -42,8 +46,6 @@ export default function SubmitForm() {
     const handleFormFinish = (fields) => {
         const obj = {
             event_id: parseInt(event_id),
-            //TODO from user object
-            attendee_id: parseInt(1),
             form_id: parseInt(form_id),
             fields: fields.groups.flatMap((group) =>
                 group.fields
@@ -56,7 +58,11 @@ export default function SubmitForm() {
             ),
         };
 
-        submitForm(obj);
+        submitForm(obj).then((res) => {
+            if (res.error) {
+                openNotification('warning', res?.error?.data?.message);
+            } else navigate(-1);
+        });
     };
 
     return (

@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 
 export default function FormDateField({ field, groupIndex, fieldIndex }) {
     return (
-        <div className='bg-gray-100/50 w-full px-4 border-2 rounded-lg border-zinc-200'>
+        <div className='bg-gray-100/50 px-4 border-2 rounded-lg border-zinc-200'>
             <Space.Compact
                 direction='vertical'
                 className='w-full'
@@ -24,13 +24,13 @@ export default function FormDateField({ field, groupIndex, fieldIndex }) {
 
                 <Form.Item
                     name={['groups', groupIndex, 'fields', fieldIndex, 'value']}
-                    rules={[{ required: field?.required }]}
+                    rules={[{ required: field?.required, message: 'Required Field'}]}
                 >
                     <DatePicker
                         placeholder='select date'
                         className='sm:w-[50%] w-full'
-                        size='small'
-                        variant='filled'
+                        size='medium'
+                        variant='borderless'
                     />
                 </Form.Item>
             </Space.Compact>

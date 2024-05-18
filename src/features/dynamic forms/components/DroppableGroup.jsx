@@ -42,7 +42,7 @@ export default function DroppableGroup({
     };
 
     return (
-        <div className='w-full bg-gray-50 bg-slate-100 p-4 my-2 rounded-lg relative '>
+        <div className='w-full bg-gray-50 bg-slate-100 p-4 my-2 rounded-2xl relative border-2 border-slate-500'>
             <Popconfirm
                 title='Delete this group?'
                 onConfirm={handleDeleteGroup}
@@ -53,40 +53,45 @@ export default function DroppableGroup({
                 <IoMdClose className='absolute hover:cursor-default hover:text-red-600	' />
             </Popconfirm>
 
-            <Divider>Group </Divider>
+            <div className='flex flex-col items-center'>
+                <Divider>Group </Divider>
 
-            <Form.Item
-            className='w-[70%]'
-                name={['groups', groupIndex, 'name']}
-                label={'name'}
-                wrapperCol={{ span: 12 }}
-                labelCol={{ span: 8 }}
-            >
-                <Input
-                    //className='bg-gray-50/75'
-                    placeholder='group name'
-                    size='small'
-                    variant='filled'
-                    onChange={handleNameInputChange}
-                />
-            </Form.Item>
-            <Form.Item
-                className='w-[70%]'
-                name={['groups', groupIndex, 'description']}
-                label={'description'}
-                required={false}
-                wrapperCol={{ span: 16 }}
-                labelCol={{ span: 8 }}
-            >
-                <Input.TextArea
-                    rows={2}
-                    //className='bg-gray-50/75'
-                    placeholder='group description'
-                    size='small'
-                    variant='filled'
-                    onChange={handleDescriptionInputChange}
-                />
-            </Form.Item>
+                <Form.Item
+                    className='w-[80%]'
+                    name={['groups', groupIndex, 'name']}
+                    label={'name'}
+                    wrapperCol={{ span: 16 }}
+                    labelCol={{ span: 8 }}
+                >
+                    <Input
+                        className='w-full'
+                        //className='bg-gray-50/75'
+                        placeholder='group name'
+                        size='small'
+                        variant='filled'
+                        //[]  onChange={handleNameInputChange}
+                        onBlur={handleNameInputChange}
+                    />
+                </Form.Item>
+                <Form.Item
+                    className='w-[80%]'
+                    name={['groups', groupIndex, 'description']}
+                    label={'description'}
+                    required={false}
+                    wrapperCol={{ span: 16 }}
+                    labelCol={{ span: 8 }}
+                >
+                    <Input.TextArea
+                        rows={2}
+                        //className='bg-gray-50/75'
+                        placeholder='group description'
+                        size='small'
+                        variant='filled'
+                        onBlur={handleDescriptionInputChange}
+                        //    onChange={handleDescriptionInputChange}
+                    />
+                </Form.Item>
+            </div>
 
             <Divider style={{ marginTop: 0 }}> Fields</Divider>
 
@@ -96,7 +101,7 @@ export default function DroppableGroup({
             >
                 {(provided, snapshot) => (
                     <div
-                        className='h-full w-full px-2 pb-2'
+                        className='h-full px-2 pb-2 flex flex-col items-center'
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                     >
@@ -116,9 +121,9 @@ export default function DroppableGroup({
                                             opacity: selectedField?.id !== field.id && selectedField ? 0.5 : 1,
                                         }}
                                         className={
-                                            'relative bg-white my-2 ' +
+                                            'relative bg-transparent w-[90%] rounded-3xl my-2 ' +
                                             (selectedField?.id === field.id
-                                                ? 'border-8 border-slate-500 animate-pulse'
+                                                ? 'border-4 border-slate-500 animate-pulse'
                                                 : '')
                                         }
                                         onClick={() => handleClickField(field)}
@@ -155,7 +160,7 @@ export default function DroppableGroup({
                                             />
                                         ) : null}
                                         {hoveredField === field.id && (
-                                            <div className='absolute top-0 left-0 bg-pink-950 bg-opacity-30 text-gray-800 py-2 w-full h-[50%] flex justify-center items-center cursor-pointer'>
+                                            <div className='absolute top-0 left-0 bg-pink-950 bg-opacity-30 text-gray-800 py-2 w-full h-[100%] flex justify-center items-center cursor-pointer rounded-3xl'>
                                                 <span className='text-white font-semibold'>
                                                     {selectedField?.id === field.id
                                                         ? 'Click to unselect'

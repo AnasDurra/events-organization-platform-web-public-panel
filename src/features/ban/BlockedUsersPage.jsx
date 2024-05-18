@@ -87,7 +87,7 @@ const BlockedUsersPage = () => {
 
     const searchMenu = (
         <Menu onClick={handleSearchTypeSelect}>
-            <Menu.Item key="name">Search by Name</Menu.Item>
+            <Menu.Item key='name'>Search by Name</Menu.Item>
         </Menu>
     );
 
@@ -98,14 +98,14 @@ const BlockedUsersPage = () => {
 
     return (
         <div style={{ padding: '20px' }}>
-            <Spin size="large" spinning={blockIsLoading || unBlockIsLoading || blockListIsLoading || isFetching}>
+            <Spin size='large' spinning={blockIsLoading || unBlockIsLoading || blockListIsLoading || isFetching}>
                 <Typography.Title level={2} style={{ marginBottom: '20px', textAlign: 'center' }}>
                     Blocked Users
                 </Typography.Title>
 
                 <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
                     <Dropdown overlay={searchMenu} trigger={['click']}>
-                        <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
+                        <a className='ant-dropdown-link' onClick={(e) => e.preventDefault()}>
                             <EllipsisOutlined
                                 style={{
                                     fontSize: '24px',
@@ -123,8 +123,8 @@ const BlockedUsersPage = () => {
                         <Search
                             placeholder={`Search by ${searchType}`}
                             allowClear
-                            enterButton="Search"
-                            size="large"
+                            enterButton='Search'
+                            size='large'
                             onSearch={handleSearch}
                         />
                     )}
@@ -137,7 +137,7 @@ const BlockedUsersPage = () => {
                     <Text style={{ fontSize: '14px', color: '#1890ff' }}>{data?.result?.length}</Text>
                 </div>
                 <List
-                    itemLayout="horizontal"
+                    itemLayout='horizontal'
                     dataSource={filteredAttendees}
                     renderItem={(item, index) => (
                         <div
@@ -158,14 +158,14 @@ const BlockedUsersPage = () => {
                                         padding: '12px 0',
                                         borderBottom: '1px solid #f0f0f0',
                                         transition: 'background-color 0.3s',
-                                        backgroundColor: hoveredIndex === index ? '#f5f5f5' : 'inherit',
+                                        backgroundColor: hoveredIndex === index ? '#f0f0f0' : 'inherit',
                                     }}
                                     actions={[
                                         <Button
-                                            type="dashed"
+                                            type='dashed'
                                             danger
                                             icon={<UnlockOutlined />}
-                                            key="unblock"
+                                            key='unblock'
                                             onClick={(e) => {
                                                 item?.isBlocked
                                                     ? confirmUnblockAttendee(e, item?.attendee)
@@ -175,7 +175,7 @@ const BlockedUsersPage = () => {
                                             {item?.result?.isBlocked ? 'Unblock' : 'Block'}
                                         </Button>,
 
-                                        <RightOutlined style={{ fontSize: '16px' }} key="navigate" />,
+                                        <RightOutlined style={{ fontSize: '16px' }} key='navigate' />,
                                     ]}
                                 >
                                     <List.Item.Meta
@@ -183,7 +183,7 @@ const BlockedUsersPage = () => {
                                             <div>
                                                 <Text strong>{item?.attendee?.full_name}</Text>{' '}
                                                 <Badge
-                                                    status="error"
+                                                    status='error'
                                                     text={
                                                         <Typography.Text
                                                             style={{
@@ -206,9 +206,9 @@ const BlockedUsersPage = () => {
                                             </div>
                                         }
                                         description={
-                                            <Space direction="vertical">
+                                            <Space direction='vertical'>
                                                 <Text>{item?.attendee?.job?.label}</Text>
-                                                <Text type="secondary">
+                                                <Text type='secondary'>
                                                     Blocked by {item?.blocked_by?.username} on{' '}
                                                     {moment(item?.blocking_date).format('MMMM D, YYYY, h:mm A')}
                                                 </Text>

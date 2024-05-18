@@ -1,20 +1,16 @@
-import { ContainerOutlined, SolutionOutlined } from '@ant-design/icons';
-import { Layout, Menu, Spin } from 'antd';
+import { Button, Image, Layout, Menu } from 'antd';
 import React, { useEffect, useState } from 'react';
-const { Sider: AntDSider } = Layout;
 import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+const { Sider: AntDSider } = Layout;
 
-export default function Sider({ isSiderOpen, userMenu, userMenuIsLoading }) {
+import './menuStyles.css';
+
+export default function Sider({ isSiderOpen, setIsSiderOpen, userMenu, userMenuIsLoading }) {
     const navigate = useNavigate();
 
-    function getItem(label, key, icon, children) {
-        return {
-            key,
-            icon,
-            children,
-            label,
-        };
-    }
+    const [collapsed, setCollapsed] = useState(false);
+
     const [items, setItems] = useState([]);
 
     const handleMenuClick = (item) => {
@@ -23,16 +19,23 @@ export default function Sider({ isSiderOpen, userMenu, userMenuIsLoading }) {
 
     useEffect(() => {
         if (userMenu) {
-            const formattedMenuItems = [];
-
-            userMenu?.forEach((item) => {
+            const formattedMenuItems = userMenu.map((item) => {
                 if (item.sub_menu) {
                     const children = item.sub_menu.map((subItem) => {
-                        return getItem(subItem.name, subItem.url, subItem.icon, null);
+                        return getItem(subItem.name, subItem.url, null, null);
                     });
-                    formattedMenuItems.push(getItem(item.name, item.url, item.icon, children));
+                    return getItem(item.name, item.url, null, children);
                 } else {
-                    formattedMenuItems.push(getItem(item.name, item.url, item.icon, null));
+                    return getItem(
+                        item.name,
+                        item.url,
+                        <Icon
+                            icon={`${item.icon}`}
+                            style={{ fontSize: '24px', marginRight: '5px', color: '#2B3856' }}
+                        ></Icon>,
+
+                        null
+                    );
                 }
             });
 
@@ -41,10 +44,34 @@ export default function Sider({ isSiderOpen, userMenu, userMenuIsLoading }) {
     }, [userMenu]);
 
     return (
-        <AntDSider collapsedWidth="0" trigger={null} collapsed={!isSiderOpen} className="h-[90vh] overflow-y-auto">
-            <Spin spinning={userMenuIsLoading}>
-                <Menu mode="inline" items={items} onClick={handleMenuClick} className="min-h-[90vh]" />
-            </Spin>
+        <AntDSider
+            collapsedWidth={80}
+            style={{ backgroundColor: 'transparent' }}
+            collapsible={isSiderOpen}
+            defaultCollapsed={!isSiderOpen}
+            collapsed={!isSiderOpen ? true : collapsed}
+            onCollapse={() => {
+                setCollapsed(!collapsed);
+            }}
+            className='hidden md:block'
+        >
+            <Menu
+                mode='inline'
+                items={items}
+                onClick={handleMenuClick}
+                defaultSelectedKeys={1}
+                style={{ backgroundColor: 'transparent', height: '85vh' }}
+                className='custom-menu'
+            />
         </AntDSider>
     );
+}
+
+function getItem(label, key, icon, children) {
+    return {
+        key,
+        icon,
+        children,
+        label,
+    };
 }

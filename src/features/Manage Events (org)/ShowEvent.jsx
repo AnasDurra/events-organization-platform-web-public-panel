@@ -4,8 +4,10 @@ import {
     Col,
     Descriptions,
     Divider,
+    Dropdown,
     Image,
     List,
+    Menu,
     Modal,
     Row,
     Skeleton,
@@ -27,6 +29,8 @@ import {
     ScheduleOutlined,
     TagsOutlined,
     UserOutlined,
+    DeleteOutlined,
+    MoreOutlined,
 } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
@@ -38,6 +42,10 @@ import UpdateEventModal from './UpdateEventModal';
 import { useNavigate } from 'react-router-dom';
 import { getLoggedInUser } from '../../api/services/auth';
 import EventChat from '../chat/EventChat';
+import RegistrationModal from './registration/RegistrationModal';
+import { Icon } from '@iconify/react';
+import useEventHandlers from './utils/eventHandlers';
+
 const ShowEvent = () => {
     const navigate = useNavigate();
     const { id } = useParams();
@@ -48,9 +56,19 @@ const ShowEvent = () => {
     const [user, setUser] = useState(null);
 
     const { data: eventData, error, isLoading: eventDataIsLoading, refetch, isFetching } = useShowQuery(id);
+    const { handleDeleteEvent } = useEventHandlers();
 
-    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const [searchParams] = useSearchParams();
+    const isEditing = searchParams.get('edit');
 
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(isEditing ?? false);
+    const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
+
+    const handleCloseRegistrationModal = () => setIsRegistrationModalOpen(false);
+    const handleOpenRegistrationModal = () => setIsRegistrationModalOpen(true);
+    const handleRegisterClicked = () => {
+        handleOpenRegistrationModal();
+    };
     const dataSource = [
         {
             key: '1',
@@ -78,10 +96,6 @@ const ShowEvent = () => {
         },
     ];
 
-    const handleRegisterClicked = () => {
-        message.success('registered successfully');
-    };
-
     useEffect(() => {
         console.log(eventData);
     }, [eventData]);
@@ -93,15 +107,19 @@ const ShowEvent = () => {
     }, []);
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-            {/* <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}> */}
+            <RegistrationModal
+                isOpen={isRegistrationModalOpen}
+                event={eventData}
+                onClose={handleCloseRegistrationModal}
+            />
 
-            <Skeleton loading={false} active round paragraph={{ rows: 10 }}>
+            <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}>
                 <Card
                     style={{ width: '100%' }}
                     bodyStyle={{ padding: '10px 20px' }}
                     cover={
                         <>
-                            <Image height={250} src="https://picsum.photos/1000/300" />
+                            <Image height={250} src='https://picsum.photos/1000/300' />
                         </>
                     }
                 >
@@ -113,7 +131,7 @@ const ShowEvent = () => {
                                     justifyContent: 'space-between',
                                 }}
                             >
-                                <Space size={0} direction="vertical">
+                                <Space size={0} direction='vertical'>
                                     <Space>
                                         <Typography.Title style={{ marginTop: '10px' }} level={4}>
                                             {eventData?.result?.title}
@@ -150,18 +168,45 @@ const ShowEvent = () => {
                                 </Space>
                                 {user?.role_id == 2 && user?.organization_id == eventData?.result?.organization?.id && (
                                     <div style={{ textAlign: 'end' }}>
-                                        <Tooltip title="Edit Event">
+                                        <Tooltip title='Edit Event'>
                                             <Button
                                                 icon={<EditOutlined />}
                                                 onClick={() => setIsUpdateModalOpen(true)}
                                             />
                                         </Tooltip>
-                                        <Tooltip title="Show Attendees">
+                                        <Tooltip title='Show Attendees'>
                                             <Button
                                                 icon={<TeamOutlined />}
                                                 onClick={() => navigate(`/event/show/${id}/attendees`)}
                                             />
                                         </Tooltip>
+                                        <Dropdown
+                                            overlay={
+                                                <Menu>
+                                                    <Menu.Item
+                                                        key='delete'
+                                                        icon={
+                                                            <Icon
+                                                                icon='line-md:remove'
+                                                                style={{
+                                                                    fontSize: '24px',
+                                                                    fontWeight: 'bold',
+                                                                    color: ` #ff0000`,
+                                                                }}
+                                                            />
+                                                        }
+                                                        onClick={() => {
+                                                            handleDeleteEvent(eventData?.result?.id);
+                                                        }}
+                                                    >
+                                                        Delete Event
+                                                    </Menu.Item>
+                                                </Menu>
+                                            }
+                                            trigger={['click']}
+                                        >
+                                            <Button icon={<MoreOutlined />} />
+                                        </Dropdown>
                                     </div>
                                 )}
                             </div>
@@ -197,7 +242,7 @@ const ShowEvent = () => {
                                                             width: '100%',
                                                         }}
                                                     >
-                                                        <Descriptions.Item label="Registration Start Date">
+                                                        <Descriptions.Item label='Registration Start Date'>
                                                             {eventData?.result?.registration_start_date
                                                                 ? new Date(
                                                                       eventData.result.registration_start_date
@@ -208,7 +253,7 @@ const ShowEvent = () => {
                                                                   })
                                                                 : 'N/A'}
                                                         </Descriptions.Item>
-                                                        <Descriptions.Item label="Registration End Date">
+                                                        <Descriptions.Item label='Registration End Date'>
                                                             {eventData?.result?.registration_end_date
                                                                 ? new Date(
                                                                       eventData.result.registration_end_date
@@ -221,7 +266,7 @@ const ShowEvent = () => {
                                                         </Descriptions.Item>
                                                     </Descriptions>
                                                     <Button
-                                                        size="large"
+                                                        size='large'
                                                         onClick={handleRegisterClicked}
                                                         style={{
                                                             width: '100%',
@@ -256,7 +301,7 @@ const ShowEvent = () => {
                                                             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                                         }}
                                                     >
-                                                        <Space direction="vertical" wrap>
+                                                        <Space direction='vertical' wrap>
                                                             <Typography.Text>
                                                                 {eventData?.result?.description}
                                                             </Typography.Text>
@@ -281,7 +326,7 @@ const ShowEvent = () => {
                                                         <Row style={{ flex: 1 }} gutter={[20, 10]}>
                                                             <Col span={24}>
                                                                 <Card
-                                                                    type="inner"
+                                                                    type='inner'
                                                                     style={{
                                                                         width: '100%',
                                                                         height: '100%',
@@ -290,7 +335,7 @@ const ShowEvent = () => {
                                                                         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                                                     }}
                                                                 >
-                                                                    <Space direction="vertical" size={30}>
+                                                                    <Space direction='vertical' size={30}>
                                                                         <Space wrap>
                                                                             <TagsOutlined />
                                                                             <Typography.Text strong>
@@ -351,7 +396,7 @@ const ShowEvent = () => {
                                                             </Col>
                                                             <Col span={24}>
                                                                 <Card
-                                                                    type="inner"
+                                                                    type='inner'
                                                                     style={{
                                                                         height: '100%',
                                                                         padding: '10px',
@@ -361,7 +406,7 @@ const ShowEvent = () => {
                                                                 >
                                                                     <Space
                                                                         style={{ width: '100%' }}
-                                                                        direction="vertical"
+                                                                        direction='vertical'
                                                                         size={10}
                                                                     >
                                                                         <Space>
@@ -412,7 +457,7 @@ const ShowEvent = () => {
                                                 </Col>
                                                 <Col xs={24} lg={12}>
                                                     <Card
-                                                        type="inner"
+                                                        type='inner'
                                                         style={{
                                                             height: '100%',
                                                             padding: '10px',
@@ -420,7 +465,7 @@ const ShowEvent = () => {
                                                             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                                         }}
                                                     >
-                                                        <Space direction="vertical" style={{ width: '100%' }} size={20}>
+                                                        <Space direction='vertical' style={{ width: '100%' }} size={20}>
                                                             <Space>
                                                                 <ScheduleOutlined />
                                                                 <Typography.Text
@@ -436,7 +481,7 @@ const ShowEvent = () => {
                                                             <Divider style={{ margin: '0px' }} />
                                                             {eventData?.result?.days?.map((dateObj, index) => (
                                                                 <Space
-                                                                    direction="vertical"
+                                                                    direction='vertical'
                                                                     style={{
                                                                         width: '100%',
                                                                     }}

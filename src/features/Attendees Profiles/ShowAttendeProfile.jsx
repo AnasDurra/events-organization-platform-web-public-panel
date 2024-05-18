@@ -15,6 +15,10 @@ import {
     WhatsAppOutlined,
     CalendarOutlined,
     EllipsisOutlined,
+    InstagramOutlined,
+    FileImageOutlined,
+    DeleteOutlined,
+    EyeOutlined,
 } from '@ant-design/icons';
 import {
     Avatar,
@@ -22,6 +26,7 @@ import {
     Card,
     Col,
     Dropdown,
+    Empty,
     Image,
     Menu,
     Modal,
@@ -44,34 +49,22 @@ import UpdateProfileModal from './UpdateProfileModal';
 
 import { getLoggedInUser } from '../../api/services/auth';
 import { useNotification } from '../../utils/NotificationContext';
+import LastThreeEvents from './components/LastThreeEvents';
 
 const ShowAttendeProfile = () => {
     const [user, setUser] = useState(null);
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const { openNotification } = useNotification();
 
-    const [fetchAttendeeProfile, { data: attendeeProfile, isLoading: attendeeProfileIsLoading }] =
-        useLazyViewAttendeeProfileQuery(id);
+    const [fetchAttendeeProfile, { data: attendeeProfile, isLoading }] = useLazyViewAttendeeProfileQuery(id);
 
     const [blockMutation, { isLoading: blockIsLoading }] = useBlockUserMutation();
     const [unBlockMutation, { isLoading: unBlockIsLoading }] = useUnBlockUserMutation();
     const [fetchIsBlocked, { data: isBlocked, isLoading: isBlockedIsLoading }] = useLazyIsBlockedQuery(id);
 
     const [data, setData] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-
-    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-
-    const handleOk = () => {
-        fetchAttendeeProfile(id);
-        setIsLoading(true);
-        setData(null);
-        setIsUpdateModalOpen(false);
-    };
-    const handleCancel = () => {
-        setIsUpdateModalOpen(false);
-    };
 
     const confirmBlockAttendee = () => {
         Modal.confirm({
@@ -135,28 +128,73 @@ const ShowAttendeProfile = () => {
     useEffect(() => {
         fetchAttendeeProfile(id);
         if (attendeeProfile) {
-            setData(attendeeProfile);
-            setIsLoading(attendeeProfileIsLoading);
+            if (attendeeProfile?.result?.user_id === user?.sub) {
+                navigate('/home/profile');
+            } else {
+                setData(attendeeProfile);
+            }
         }
     }, [attendeeProfile, id]);
 
-    // TODO back it to later
-    // useEffect(() => {
-    //     console.log(attendeeProfile?.result.id, user?.id);
-    //     if (attendeeProfile?.result.id === user?.id) {
-    //         navigate('/attendee/my-profile');
-    //     }
-    // }, [user, attendeeProfile]);
+    // Sample data for events
+    const events = [
+        {
+            id: '30',
+            title: 'GPT: The New Generation of AI',
+            cover_picture_url: 'https://picsum.photos/300/200?random=1',
+            registration_end_date: '2024-01-03 21:00:00',
+            organization: { name: 'ORG1' },
+            description: 'Here is the description of the event',
+        },
+        {
+            id: '25',
+            title: 'The Future of AI',
+            cover_picture_url: 'https://picsum.photos/300/200?random=2',
+            registration_end_date: '2024-04-10 09:30:00',
+            organization: { name: 'ORG1' },
+            description: 'This is an event about artificial intelligence',
+        },
+    ];
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Card
+                bodyStyle={{ paddingTop: '0px', paddingRight: '10px' }}
                 style={{
                     width: '90%',
                 }}
-                cover={<Image height={250} alt="example" src={data?.cover_img ?? 'https://picsum.photos/1000/300'} />}
+                cover={
+                    <div>
+                        {data?.result?.cover_img ? (
+                            <Image
+                                width={'100%'}
+                                height={'100%'}
+                                preview={{
+                                    mask: (
+                                        <>
+                                            <Space>
+                                                <Button icon={<EyeOutlined />} type='primary'>
+                                                    Show
+                                                </Button>
+                                            </Space>
+                                        </>
+                                    ),
+                                }}
+                                src={data?.result?.cover_img}
+                                fallback={
+                                    <Empty
+                                        image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                        description='No cover picture available'
+                                    />
+                                }
+                            />
+                        ) : (
+                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No cover picture available' />
+                        )}
+                    </div>
+                }
             >
-                <Spin size="large" spinning={unBlockIsLoading || blockIsLoading || isBlockedIsLoading}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Spin size='large' spinning={unBlockIsLoading || blockIsLoading || isBlockedIsLoading}>
+                    <div>
                         <Skeleton
                             loading={isLoading}
                             active
@@ -166,68 +204,110 @@ const ShowAttendeProfile = () => {
                                 width: '90%',
                             }}
                         >
-                            <Meta
-                                avatar={
-                                    <Avatar
-                                        size={100}
-                                        icon={<UserOutlined />}
-                                        src={'https://api.dicebear.com/7.x/miniavs/svg?seed=8'}
-                                        style={{
-                                            textAlign: 'center',
-                                            marginBottom: '10px',
-                                            border: '3px solid white',
-                                            borderRadius: '50%',
-                                            marginTop: '-70px',
-                                        }}
-                                    />
-                                }
-                                title={
-                                    <Typography.Title
-                                        style={{
-                                            marginTop: '0px',
-                                            marginBottom: '0px',
-                                        }}
-                                        level={3}
-                                    >
-                                        {data?.result?.full_name ? data.result?.full_name : ''}
-                                    </Typography.Title>
-                                }
-                                description={
-                                    data
-                                        ? `Member since ${formatDate(data?.result.join_date)} * ${
-                                              data?.result.address?.label
-                                          }`
-                                        : ''
-                                }
-                            />
-                        </Skeleton>
-
-                        {id && user?.role_id == 2 && (
-                            <Row style={{ marginLeft: '10px' }}>
-                                {user?.role_id == 2 && (
-                                    <Dropdown
-                                        placement="bottomRight"
-                                        //TODO replace this
-                                        overlay={
-                                            <Menu
-                                                onClick={
-                                                    isBlocked?.result ? confirmUnblockAttendee : confirmBlockAttendee
+                            <Row justify={{ md: 'start', sm: 'start', xs: 'center' }}>
+                                <Col span={24}>
+                                    {id && user?.role_id == 2 && (
+                                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                            <Dropdown
+                                                placement='bottomRight'
+                                                //TODO replace this
+                                                overlay={
+                                                    <Menu
+                                                        onClick={
+                                                            isBlocked?.result
+                                                                ? confirmUnblockAttendee
+                                                                : confirmBlockAttendee
+                                                        }
+                                                    >
+                                                        <Menu.Item key='block' style={{ color: 'red' }}>
+                                                            {isBlocked?.result ? 'Unblock User' : 'Block User'}
+                                                        </Menu.Item>
+                                                    </Menu>
                                                 }
+                                                trigger={['click']}
                                             >
-                                                <Menu.Item key="block" style={{ color: 'red' }}>
-                                                    {isBlocked?.result ? 'Unblock User' : 'Block User'}
-                                                </Menu.Item>
-                                            </Menu>
-                                        }
-                                        trigger={['click']}
+                                                <Tooltip title='Block Attendee'>
+                                                    <Button
+                                                        icon={<EllipsisOutlined />}
+                                                        onClick={(e) => e.preventDefault()}
+                                                    />
+                                                </Tooltip>
+                                            </Dropdown>
+                                        </div>
+                                    )}
+                                </Col>
+                                <Col xs={{ span: 24 }} sm={{ span: 5 }} md={{ span: 4 }}>
+                                    <a
+                                        style={{ display: 'flex', justifyContent: 'center' }}
+                                        onClick={() => {
+                                            Modal.info({
+                                                title: 'Avatar Picture',
+                                                content: (
+                                                    <img
+                                                        alt='Preview'
+                                                        style={{ width: '100%' }}
+                                                        src={
+                                                            data?.result?.profile_img ??
+                                                            'https://api.dicebear.com/7.x/miniavs/svg?seed=8'
+                                                        }
+                                                    />
+                                                ),
+                                                okText: 'Close',
+                                            });
+                                        }}
+                                        type='link'
+                                        size='small'
                                     >
-                                        <Tooltip title="Block Attendee">
-                                            <Button icon={<EllipsisOutlined />} onClick={(e) => e.preventDefault()} />
-                                        </Tooltip>
-                                    </Dropdown>
-                                )}
+                                        <Avatar
+                                            size={100}
+                                            icon={<UserOutlined />}
+                                            src={
+                                                data?.result?.profile_img ??
+                                                'https://api.dicebear.com/7.x/miniavs/svg?seed=8'
+                                            }
+                                            style={{
+                                                textAlign: 'center',
+                                                marginBottom: '10px',
+                                                border: '3px solid white',
+                                                borderRadius: '50%',
+                                                marginTop: '-60px',
+                                            }}
+                                        />
+                                    </a>
+                                </Col>
+                                <Col
+                                    xs={{ span: 24 }}
+                                    sm={{ span: 10 }}
+                                    md={{ span: 7 }}
+                                    lg={{ span: 10, pull: 2 }}
+                                    xl={{ span: 6, pull: 1 }}
+                                >
+                                    {data ? (
+                                        <div style={{ textAlign: 'center' }}>
+                                            <Typography.Title
+                                                style={{
+                                                    // marginTop: '10px',
+                                                    marginBottom: '0px',
+                                                }}
+                                                level={3}
+                                            >
+                                                {data?.result?.full_name ? data.result?.full_name : ''}
+                                            </Typography.Title>
+                                            <Typography.Text type='secondary'>
+                                                {`Member since ${formatDate(data?.result.join_date)}
+                                                    ${
+                                                        data?.result.address?.label
+                                                            ? `* ${data?.result.address?.label}`
+                                                            : ''
+                                                    }`}
+                                            </Typography.Text>
+                                        </div>
+                                    ) : (
+                                        ''
+                                    )}
+                                </Col>
                             </Row>
-                        )}
+                        </Skeleton>
                     </div>
 
                     <Row
@@ -279,7 +359,7 @@ const ShowAttendeProfile = () => {
                                                 }}
                                             >
                                                 <Dropdown
-                                                    placement="bottomRight"
+                                                    placement='bottomRight'
                                                     overlay={
                                                         <Menu>
                                                             {data?.result.contacts?.map((contact) => (
@@ -293,15 +373,21 @@ const ShowAttendeProfile = () => {
                                                                                           contact.contact_name
                                                                                       )
                                                                             }
-                                                                            target="_blank"
-                                                                            rel="noopener noreferrer"
+                                                                            target='_blank'
+                                                                            rel='noopener noreferrer'
                                                                         >
                                                                             {contact.contact_name === 'WhatsApp' && (
                                                                                 <WhatsAppOutlined
-                                                                                    style={{
-                                                                                        fontSize: '24px',
-                                                                                        color: '#25D366',
-                                                                                    }}
+                                                                                    style={getIconStyle(
+                                                                                        contact.contact_name
+                                                                                    )}
+                                                                                />
+                                                                            )}
+                                                                            {contact.contact_name === 'Instagram' && (
+                                                                                <InstagramOutlined
+                                                                                    style={getIconStyle(
+                                                                                        contact.contact_name
+                                                                                    )}
                                                                                 />
                                                                             )}
                                                                             {contact.contact_name === 'LinkedIn' && (
@@ -314,32 +400,31 @@ const ShowAttendeProfile = () => {
                                                                             )}
                                                                             {contact.contact_name === 'Facebook' && (
                                                                                 <FacebookOutlined
-                                                                                    style={{
-                                                                                        fontSize: '24px',
-                                                                                        color: '#3b5998',
-                                                                                    }}
+                                                                                    style={getIconStyle(
+                                                                                        contact.contact_name
+                                                                                    )}
                                                                                 />
                                                                             )}
                                                                             {contact.contact_name === 'Twitter' && (
                                                                                 <TwitterOutlined
-                                                                                    style={{
-                                                                                        fontSize: '24px',
-                                                                                        color: '#1DA1F2',
-                                                                                    }}
+                                                                                    style={getIconStyle(
+                                                                                        contact.contact_name
+                                                                                    )}
                                                                                 />
                                                                             )}
                                                                             {contact.contact_name === 'Email' && (
                                                                                 <MailOutlined
-                                                                                    style={{
-                                                                                        fontSize: '24px',
-                                                                                        color: 'black',
-                                                                                    }}
+                                                                                    style={getIconStyle(
+                                                                                        contact.contact_name
+                                                                                    )}
                                                                                 />
                                                                             )}
                                                                             {contact.contact_name ===
                                                                                 'Phone Number' && (
                                                                                 <PhoneOutlined
-                                                                                    style={{ fontSize: '24px' }}
+                                                                                    style={getIconStyle(
+                                                                                        contact.contact_name
+                                                                                    )}
                                                                                     onClick={() =>
                                                                                         (window.location.href = `tel:${contact.value}`)
                                                                                     }
@@ -353,9 +438,9 @@ const ShowAttendeProfile = () => {
                                                     }
                                                     trigger={['click']}
                                                 >
-                                                    <Tooltip title="Contact Info">
+                                                    <Tooltip title='Contact Info'>
                                                         <Button
-                                                            type="primary"
+                                                            type='primary'
                                                             icon={<ContactsOutlined />}
                                                             onClick={(e) => e.preventDefault()}
                                                         />
@@ -392,13 +477,13 @@ const ShowAttendeProfile = () => {
                                     paddingBottom: '0px',
                                     margin: '0px',
                                 }}
-                                size="small"
-                                type="inner"
+                                size='small'
+                                type='inner'
                             >
                                 <div style={{ textAlign: 'center' }}>
                                     <div>
-                                        <Row gutter={20}>
-                                            <Col style={{ padding: '0px' }} span={12}>
+                                        <Row gutter={[20, 10]}>
+                                            <Col style={{ paddingBottom: '10px' }} span={12}>
                                                 <Link
                                                     to={`organizations`}
                                                     style={{ textDecoration: 'none', display: 'inline-block' }}
@@ -419,86 +504,8 @@ const ShowAttendeProfile = () => {
                                                                 </div>
                                                             }
                                                             value={1128}
-                                                            prefix={<UserOutlined style={{ fontSize: '20px' }} />}
-                                                        />
-                                                    </div>
-                                                </Link>
-                                            </Col>
-                                            <Col style={{ padding: '0px' }} span={12}>
-                                                <Link
-                                                    to={'/not-yet'}
-                                                    style={{ textDecoration: 'none', display: 'inline-block' }}
-                                                >
-                                                    <div
-                                                        onMouseEnter={(e) =>
-                                                            (e.currentTarget.style.transform = 'scale(1.06)')
-                                                        }
-                                                        onMouseLeave={(e) =>
-                                                            (e.currentTarget.style.transform = 'scale(1)')
-                                                        }
-                                                        style={{ transition: 'transform 0.2s' }}
-                                                    >
-                                                        <Statistic
-                                                            title={
-                                                                <div>
-                                                                    <h3>Badges</h3>
-                                                                </div>
-                                                            }
-                                                            value={' '}
                                                             prefix={
-                                                                <Avatar.Group>
-                                                                    {badges.map((badge) => (
-                                                                        <Tooltip title={badge.name} key={badge.id}>
-                                                                            <Avatar
-                                                                                size={35}
-                                                                                style={{
-                                                                                    backgroundColor: badge.bgcolor,
-                                                                                    marginRight: '3.5px',
-                                                                                }}
-                                                                            >
-                                                                                <span
-                                                                                    style={{
-                                                                                        marginRight: '5px',
-                                                                                    }}
-                                                                                >
-                                                                                    {badge.name}
-                                                                                </span>
-                                                                            </Avatar>
-                                                                        </Tooltip>
-                                                                    ))}
-                                                                </Avatar.Group>
-                                                            }
-                                                        />
-                                                    </div>
-                                                </Link>
-                                            </Col>
-                                        </Row>
-
-                                        <Row gutter={20}>
-                                            <Col style={{ padding: '0px' }} span={12}>
-                                                <Link
-                                                    to={'/not-yet'}
-                                                    style={{ textDecoration: 'none', display: 'inline-block' }}
-                                                >
-                                                    <div
-                                                        onMouseEnter={(e) =>
-                                                            (e.currentTarget.style.transform = 'scale(1.06)')
-                                                        }
-                                                        onMouseLeave={(e) =>
-                                                            (e.currentTarget.style.transform = 'scale(1)')
-                                                        }
-                                                        style={{ transition: 'transform 0.2s' }}
-                                                    >
-                                                        {' '}
-                                                        <Statistic
-                                                            title={
-                                                                <div>
-                                                                    <h3>Events</h3>
-                                                                </div>
-                                                            }
-                                                            value={1128}
-                                                            prefix={
-                                                                <CheckOutlined
+                                                                <UserOutlined
                                                                     style={{
                                                                         fontSize: '20px',
                                                                     }}
@@ -508,38 +515,77 @@ const ShowAttendeProfile = () => {
                                                     </div>
                                                 </Link>
                                             </Col>
+                                            <Col style={{ paddingBottom: '10px' }} span={12}>
+                                                <Statistic
+                                                    title={
+                                                        <div>
+                                                            <h3>Badges</h3>
+                                                        </div>
+                                                    }
+                                                    value={' '}
+                                                    valueStyle={{ fontSize: '0px' }}
+                                                    prefix={
+                                                        <Avatar.Group>
+                                                            {badges.map((badge) => (
+                                                                <Tooltip title={badge.name} key={badge.id}>
+                                                                    <Avatar
+                                                                        size={35}
+                                                                        style={{
+                                                                            backgroundColor: badge.bgcolor,
+                                                                            marginRight: '3.5px',
+                                                                        }}
+                                                                    >
+                                                                        <span
+                                                                            style={{
+                                                                                marginRight: '5px',
+                                                                            }}
+                                                                        >
+                                                                            {badge.name}
+                                                                        </span>
+                                                                    </Avatar>
+                                                                </Tooltip>
+                                                            ))}
+                                                        </Avatar.Group>
+                                                    }
+                                                />
+                                            </Col>
+                                        </Row>
 
-                                            <Col style={{ padding: '0px' }} span={12}>
-                                                <Link
-                                                    to={'/not-yet'}
-                                                    style={{ textDecoration: 'none', display: 'inline-block' }}
-                                                >
-                                                    <div
-                                                        onMouseEnter={(e) =>
-                                                            (e.currentTarget.style.transform = 'scale(1.06)')
-                                                        }
-                                                        onMouseLeave={(e) =>
-                                                            (e.currentTarget.style.transform = 'scale(1)')
-                                                        }
-                                                        style={{ transition: 'transform 0.2s' }}
-                                                    >
-                                                        <Statistic
-                                                            title={
-                                                                <div>
-                                                                    <h3>Level</h3>
-                                                                </div>
-                                                            }
-                                                            value={5}
-                                                            prefix={
-                                                                <StarFilled
-                                                                    style={{
-                                                                        color: '#FFD700',
-                                                                    }}
-                                                                />
-                                                            }
+                                        <Row gutter={[20, 10]}>
+                                            <Col style={{ paddingBottom: '10px' }} span={12}>
+                                                <Statistic
+                                                    title={
+                                                        <div>
+                                                            <h3>Events</h3>
+                                                        </div>
+                                                    }
+                                                    value={1128}
+                                                    prefix={
+                                                        <CheckOutlined
+                                                            style={{
+                                                                fontSize: '20px',
+                                                            }}
                                                         />
-                                                    </div>
-                                                </Link>
+                                                    }
+                                                />
+                                            </Col>
+
+                                            <Col style={{ paddingBottom: '10px' }} span={12}>
+                                                <Statistic
+                                                    title={
+                                                        <div>
+                                                            <h3>Level</h3>
+                                                        </div>
+                                                    }
+                                                    value={5}
+                                                    prefix={
+                                                        <StarFilled
+                                                            style={{
+                                                                color: '#FFD700',
+                                                            }}
+                                                        />
+                                                    }
+                                                />
                                             </Col>
                                         </Row>
                                     </div>
@@ -547,19 +593,14 @@ const ShowAttendeProfile = () => {
                             </Card>
                         </Col>
                     </Row>
+                    <Col span={24} style={{ marginTop: '3em' }}>
+                        <Typography.Title level={3} className='last-three-events-title'>
+                            Last 3 Events Attended
+                        </Typography.Title>
+                        <LastThreeEvents events={events} />
+                    </Col>
                 </Spin>
             </Card>
-
-            <Modal
-                title="Edit Profile"
-                open={isUpdateModalOpen}
-                onOk={handleOk}
-                onCancel={handleCancel}
-                width={750}
-                footer={null}
-            >
-                <UpdateProfileModal data={data} modalOk={handleOk} modalCancel={handleCancel} />
-            </Modal>
         </div>
     );
 };
@@ -608,3 +649,22 @@ function getContactLink(contactName) {
             return '#';
     }
 }
+
+const getIconStyle = (contactName) => {
+    switch (contactName) {
+        case 'WhatsApp':
+            return { color: '#25D366', fontSize: '24px' };
+        case 'Instagram':
+            return { color: '#E4405F', fontSize: '24px' };
+        case 'LinkedIn':
+            return { color: '#0077B5', fontSize: '24px' };
+        case 'Facebook':
+            return { color: '#3b5998', fontSize: '24px' };
+        case 'Twitter':
+            return { color: '#1DA1F2', fontSize: '24px' };
+        case 'Email':
+            return { color: 'black', fontSize: '24px' };
+        default:
+            return { fontSize: '24px' };
+    }
+};

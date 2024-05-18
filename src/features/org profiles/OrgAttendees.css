@@ -1,0 +1,61 @@
+.org-attendees-container {
+    padding: 20px;
+}
+
+.org-attendees-title {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 32px;
+    color: #333;
+}
+
+.org-attendees-search {
+    margin-bottom: 20px;
+}
+
+.org-attendees-table {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.org-attendees-table .ant-table {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.org-attendees-table .ant-table-thead > tr > th {
+    font-weight: bold;
+    background-color: #f0f0f0;
+    border-bottom: 2px solid #ddd;
+}
+
+.org-attendees-table .ant-table-tbody > tr > td {
+    border-bottom: 1px solid #ddd;
+}
+
+.org-attendees-table .ant-table-tbody > tr:hover > td {
+    background-color: #f5f5f5;
+}
+
+.event-item {
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.event-item:hover {
+    background-color: #eaf6ff;
+}
+.ant-table-thead .ant-table-cell {
+    background-color: #eaf6ff !important;
+}
+
+.hoverable-name {
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.hoverable-name:hover {
+    color: #1890ff;
+}

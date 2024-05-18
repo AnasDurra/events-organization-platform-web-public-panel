@@ -11,7 +11,7 @@ import Meta from 'antd/es/card/Meta';
 import Title from 'antd/es/typography/Title';
 import React, { useState } from 'react';
 import AddFormModal from './modals/AddFormModal';
-import { useGetFormsQuery } from './dynamicFormsSlice';
+import { useAddNewFormMutation, useGetFormsQuery } from './dynamicFormsSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 const { useToken } = theme;
 
@@ -34,25 +34,11 @@ export default function ViewFormsPage() {
 
     const { data: { result: forms } = { result: [] }, isLoading: isFetchFormsLoading } =
         useGetFormsQuery(organization_id);
+    const [addNewForm] = useAddNewFormMutation();
 
     return (
         <div className='h-full'>
-            <Row>
-                <Col
-                    xs={{ span: 24 }}
-                    sm={{ span: 24 }}
-                    md={{ span: 24 }}
-                    lg={{ span: 24 }}
-                    className='mt-2 text-center'
-                >
-                    <Title
-                        level={3}
-                        className='mb-0'
-                    >
-                        Forms
-                    </Title>
-                </Col>
-            </Row>
+           
             <Row className='my-4'>
                 <Col
                     xs={{ span: 12 }}
@@ -61,7 +47,7 @@ export default function ViewFormsPage() {
                     lg={{ span: 12 }}
                 >
                     <Button
-                        type='text'
+                        type='primary'
                         icon={<PlusOutlined />}
                         onClick={() => setIsAddModalOpen(true)}
                     >
@@ -77,7 +63,7 @@ export default function ViewFormsPage() {
                     <Input.Search placeholder='search' />
                 </Col>
             </Row>
-            <Spin spinning={isFetchFormsLoading}>
+            <Spin spinning={isFetchFormsLoading}  wrapperClassName='h-full'>
                 <Row
                     className='h-full'
                     gutter={[
@@ -164,6 +150,9 @@ export default function ViewFormsPage() {
             <AddFormModal
                 isOpen={isAddModalOpen}
                 onClose={() => setIsAddModalOpen(false)}
+                onSubmit={(fields) => {
+                    addNewForm(fields).then(() => setIsAddModalOpen(false));
+                }}
             />
         </div>
     );

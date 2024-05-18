@@ -11,10 +11,10 @@ export const auth = apiSlice.injectEndpoints({
                 body: credentials,
             }),
             transformResponse: (responseData) => {
-                Cookies.set('accessToken', responseData?.accessToken, {
+                Cookies.set('accessToken', responseData?.result?.access_token, {
                     expires: 12,
                 });
-                Cookies.set('refreshToken', responseData?.accessToken, {
+                Cookies.set('refreshToken', responseData?.result?.refresh_token, {
                     expires: 12,
                 });
                 return responseData;
@@ -28,7 +28,10 @@ export const auth = apiSlice.injectEndpoints({
                 body: credentials,
             }),
             transformResponse: (responseData) => {
-                console.log(responseData?.result?.accessToken);
+                console.log(responseData?.result);
+                Cookies.set('user', JSON.stringify(responseData?.result), {
+                    expires: 12,
+                });
                 Cookies.set('accessToken', responseData?.result?.access_token, {
                     expires: 12,
                 });
@@ -39,12 +42,21 @@ export const auth = apiSlice.injectEndpoints({
             },
         }),
 
-        // logout: builder.mutation({
-        //   query: () => ({
-        //     url: 'auth/logout',
-        //     method: 'POST',
-        //   }),
-        // }),
+        logout: builder.mutation({
+            query: () => ({
+                url: 'auth/logout',
+                method: 'POST',
+            }),
+            transformResponse: (responseData) => {
+                console.log('hello ', responseData);
+                if (responseData?.statusCode == 200) {
+                    Cookies.remove('user', { path: '/' });
+                    Cookies.remove('accessToken', { path: '/' });
+                    Cookies.remove('refreshToken', { path: '/' });
+                }
+                return responseData;
+            },
+        }),
 
         refresh: builder.query({
             query: (refresh_token) => ({
@@ -69,6 +81,13 @@ export const getLoggedInUser = () => {
     const decodedToken = jwtDecode(token);
 
     return decodedToken;
+};
+
+export const getLoggedInUserV2 = () => {
+    if (Cookies.get('user')) {
+        return JSON.parse(Cookies.get('user'));
+    }
+    return null;
 };
 
 export const { useLoginMutation, useLogoutMutation, useSignupMutation, useUserMenuQuery } = auth;

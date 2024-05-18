@@ -9,10 +9,11 @@ import { BsCalendarDate } from 'react-icons/bs';
 import { GoNumber } from 'react-icons/go';
 import { SidebarItemsIDs } from '../constants';
 import { Divider } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 
 export default function Sidebar() {
     return (
-        <div className='flex flex-col  items-center w-full  h-full '>
+        <div className='flex flex-col  items-center w-full  h-full'>
             <Divider>
                 <Title level={4}>Elements</Title>
             </Divider>

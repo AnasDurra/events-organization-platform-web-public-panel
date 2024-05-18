@@ -91,7 +91,7 @@ const FollowersList = () => {
 
     const searchMenu = (
         <Menu onClick={handleSearchTypeSelect}>
-            <Menu.Item key="name">Search by Name</Menu.Item>
+            <Menu.Item key='name'>Search by Name</Menu.Item>
         </Menu>
     );
 
@@ -102,15 +102,15 @@ const FollowersList = () => {
 
     return (
         <div style={{ padding: '20px' }}>
-            <Button size="large" icon={<ArrowLeftOutlined />} type="text" onClick={() => navigate(-1)} />
-            <Spin size="large" spinning={isLoading}>
+            <Button size='large' icon={<ArrowLeftOutlined />} type='text' onClick={() => navigate(-1)} />
+            <Spin size='large' spinning={isLoading}>
                 <Typography.Title level={2} style={{ marginBottom: '20px', textAlign: 'center' }}>
                     Followers
                 </Typography.Title>
 
                 <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
                     <Dropdown overlay={searchMenu} trigger={['click']}>
-                        <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
+                        <a className='ant-dropdown-link' onClick={(e) => e.preventDefault()}>
                             <EllipsisOutlined
                                 style={{
                                     fontSize: '24px',
@@ -128,8 +128,8 @@ const FollowersList = () => {
                         <Search
                             placeholder={`Search by ${searchType}`}
                             allowClear
-                            enterButton="Search"
-                            size="large"
+                            enterButton='Search'
+                            size='large'
                             onSearch={handleSearch}
                         />
                     )}
@@ -140,55 +140,44 @@ const FollowersList = () => {
                     <Text style={{ fontSize: '14px', color: '#1890ff' }}>{data?.result?.length}</Text>
                 </div>
                 <List
-                    itemLayout="horizontal"
+                    itemLayout='horizontal'
                     dataSource={filteredAttendees}
                     renderItem={(item, index) => (
-                        <div
-                            onMouseEnter={() => setHoveredIndex(index)}
-                            onMouseLeave={() => setHoveredIndex(null)}
-                            style={{
-                                display: 'block',
-                                textDecoration: 'none',
-                            }}
+                        <Link
+                            to={`/attendee-profile/${item?.attendee?.id}`}
+                            key={item?.attendee.id}
+                            style={{ textDecoration: 'none' }}
                         >
-                            <Link
-                                to={`/attendee-profile/${item?.attendee?.id}`}
-                                key={item?.attendee.id}
-                                style={{ textDecoration: 'none' }}
+                            <List.Item
+                                style={{
+                                    padding: '12px 0',
+                                    borderBottom: '1px solid #f0f0f0',
+                                    transition: 'background-color 0.3s',
+                                }}
+                                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f0f0f0')}
+                                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                                actions={[<RightOutlined style={{ fontSize: '16px' }} key='navigate' />]}
                             >
-                                <List.Item
-                                    style={{
-                                        padding: '12px 0',
-                                        borderBottom: '1px solid #f0f0f0',
-                                        transition: 'background-color 0.3s',
-                                        backgroundColor: hoveredIndex === index ? '#f5f5f5' : 'inherit',
-                                    }}
-                                    actions={[<RightOutlined style={{ fontSize: '16px' }} key="navigate" />]}
-                                >
-                                    <List.Item.Meta
-                                        // TODO replace this with original image
-                                        avatar={
-                                            <Avatar size={48} src="https://randomuser.me/api/portraits/men/10.jpg" />
-                                        }
-                                        title={
-                                            <div>
-                                                <Text strong>{item?.attendee?.full_name}</Text>
-                                            </div>
-                                        }
-                                        description={
-                                            <Space direction="vertical">
-                                                <Text>{item?.attendee?.bio ?? '-'}</Text>
-                                                <Text type="secondary">
-                                                    Following since{' '}
-                                                    {moment(item?.following_date).format('MMMM D, YYYY, h:mm A')}
-                                                </Text>
-                                            </Space>
-                                        }
-                                        style={{ cursor: 'pointer' }}
-                                    />
-                                </List.Item>
-                            </Link>
-                        </div>
+                                <List.Item.Meta
+                                    avatar={<Avatar size={48} src={item?.attendee?.profile_img} />}
+                                    title={
+                                        <div>
+                                            <Text strong>{item?.attendee?.full_name}</Text>
+                                        </div>
+                                    }
+                                    description={
+                                        <Space direction='vertical'>
+                                            <Text>{item?.attendee?.bio ?? '-'}</Text>
+                                            <Text type='secondary'>
+                                                Following since{' '}
+                                                {moment(item?.following_date).format('MMMM D, YYYY, h:mm A')}
+                                            </Text>
+                                        </Space>
+                                    }
+                                    style={{ cursor: 'pointer' }}
+                                />
+                            </List.Item>
+                        </Link>
                     )}
                 />
             </Spin>

@@ -1,35 +1,97 @@
-import { DeleteOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Image, InputNumber, List, Row, Select, Spin } from 'antd';
+import { Button, Col, Empty, Form, Image, Row, Select, Spin } from 'antd';
 import Title from 'antd/es/typography/Title';
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { useGetFormQuery, useQuerySubmissionsMutation } from '../dynamicFormsSlice';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useGetFormQuery, useQuerySubmissionsMutation, useUpdateSubmissionStatusMutation } from '../dynamicFormsSlice';
 import Filter from './Filter';
 import FormGroup from './FormGroup';
+import SubmissionsFloatingStatusList from './components/SubmissionsFloatingStatusList';
+import SubmissionsNavigator from './components/SubmissionsNavigator';
 import styles from './paper.module.css';
-
-const data = ['⏰ Pending | 100', ' ✅ Accepted | 40', '❌ Rejected | 30', '✍ Filtered out | 33'];
+import AttendeeBrief from './components/AttendeeBrief';
+import { useNotification } from '../../../utils/NotificationContext';
 
 export default function ViewFormSubmissions() {
+    let { form_id, event_id = 24 } = useParams();
+    const navigate = useNavigate();
+    const { openNotification } = useNotification();
+
+    const [querySubmissions, { isLoading: isQueryingLoading }] = useQuerySubmissionsMutation();
+    const { data: { result: DBform } = { result: {} }, isLoading: isFormLoading } = useGetFormQuery(form_id);
+    const [updateSubmissionStatus] = useUpdateSubmissionStatusMutation();
+
+    const [submissions, setSubmissions] = useState(null);
+    const [submissionsIdx, setSubmissionIdx] = useState(0);
+    const [submissionStatus, setSubmissionStatus] = useState('loading...');
+    const [submissionUser, setSubmissionUser] = useState(null);
     const [form] = Form.useForm();
-    const [querySubmissions] = useQuerySubmissionsMutation();
-    let { form_id, event_id } = useParams();
-    const {
-        data: { result: DBform } = { result: {} },
-        isSuccess: isFetchFormSuccess,
-        isLoading,
-        isError,
-    } = useGetFormQuery(form_id);
 
     const handleFilter = (fields) => {
-        querySubmissions({ event_id, ...fields }).then(() => {});
+        querySubmissions({ event_id: parseInt(event_id), ...fields }).then((response) => {
+            const mappedSubmission = mapSubmissions(response, DBform);
+
+            setSubmissions(mappedSubmission);
+        });
     };
+
+    const handleSubmissionStatusChange = (newStatus) => {
+        updateSubmissionStatus({
+            event_id: parseInt(event_id),
+            attendee_id: parseInt(submissionUser.id),
+            status: newStatus,
+        }).then((res) => {
+            console.log(res);
+            if (res.error) {
+                openNotification(
+                    'error',
+                    `failed to update status (${res?.error?.data?.result?.response?.message})`,
+                    undefined,
+                    'bottomLeft'
+                );
+            } else {
+                openNotification('success', `status updated successfully`);
+            }
+        });
+    };
+
+    const countStatusOccurrences = () => {
+        let counts = {
+            'pending': 0,
+            'accepted': 0,
+            'not registered': 0,
+            'rejected': 0,
+        };
+        submissions?.forEach((submission) => {
+            counts[submission.status]++;
+        });
+
+        return counts;
+    };
+
+    useEffect(() => {
+        if (DBform)
+            querySubmissions({ event_id: parseInt(event_id), groups: [] }).then((response) => {
+                const mappedSubmission = mapSubmissions(response, DBform);
+
+                setSubmissions(mappedSubmission);
+            });
+    }, [DBform]);
+
+    useEffect(() => {
+        if (Array.isArray(submissions) && submissionsIdx < submissions.length) {
+            form.setFieldsValue(submissions[submissionsIdx]);
+            setSubmissionStatus(submissions[submissionsIdx].status);
+            setSubmissionUser(submissions[submissionsIdx].attendee);
+        }
+    }, [form, submissions, submissionsIdx]);
+
+    console.log(submissionUser);
     return (
         <div className={`grid grid-cols-12 min-h-[100vh] ${styles.paper} `}>
-           
             <Spin
                 size='large'
-                spinning={isLoading}
+                spinning={isFormLoading}
                 fullscreen
                 tip={
                     <div className='m-2 flex flex-col justify-between h-full '>
@@ -41,16 +103,14 @@ export default function ViewFormSubmissions() {
             />
             <>
                 <div className='sm:col-span-2 sm:col-start-1  mt-20 ml-8 hidden lg:block '>
-                    <List
-                        //                    split={false}
-                        size='small'
-                        dataSource={data}
-                        renderItem={(item, index) => <List.Item> {item}</List.Item>}
-                        header={'Status'}
-                        className='bg-gray-200/75'
-                        bordered
-                        //  className='border-2 border-slate-500 p-4 rounded-lg text-center'
-                    />
+                    {submissions && (
+                        <SubmissionsFloatingStatusList
+                            pendingCount={countStatusOccurrences()?.pending}
+                            acceptedCount={countStatusOccurrences()?.accepted}
+                            rejectedCount={countStatusOccurrences()?.rejected}
+                            notRegisteredCount={countStatusOccurrences()?.['not registered']}
+                        />
+                    )}
                 </div>
                 <div className='col-span-12 sm:col-span-8 sm:col-start-3  h-full w-full'>
                     <Title
@@ -63,7 +123,7 @@ export default function ViewFormSubmissions() {
                     <div className='grid grid-cols-8'>
                         <div className='col-span-8 lg:col-span-6 lg:col-start-2   '>
                             <Row
-                                className='bg-gray-200/50 border-2 shadow shadow-lg border-slate-500 rounded-lg'
+                                className='bg-gray-200 border-2 shadow shadow-lg border-slate-500 rounded-lg'
                                 align={'middle'}
                                 justify={'space-between'}
                             >
@@ -73,88 +133,53 @@ export default function ViewFormSubmissions() {
                                     md={{ span: 10 }}
                                     lg={{ span: 6 }}
                                 >
-                                    <Row
-                                        justify={'space-evenly'}
-                                        align={'middle'}
-                                    >
-                                        <Col span={4}>
-                                            <Button
-                                                type='text'
-                                                icon={<LeftOutlined></LeftOutlined>}
-                                            ></Button>
-                                        </Col>
-                                        <Col
-                                            xs={{ span: 8 }}
-                                            sm={{ span: 8 }}
-                                            md={{ span: 8 }}
-                                            lg={{ span: 6 }}
-                                            className='p-2'
-                                        >
-                                            <InputNumber
-                                                style={{ width: '100%', textAlign: 'center' }}
-                                                size='small'
-                                                defaultValue={1}
-                                                controls={false}
-                                            />
-                                        </Col>
-                                        <Col span={6}>
-                                            <span> of 42</span>
-                                        </Col>
-                                        <Col span={4}>
-                                            <Button
-                                                type='text'
-                                                icon={<RightOutlined></RightOutlined>}
-                                            ></Button>
-                                        </Col>
-                                    </Row>
+                                    {!isQueryingLoading && submissions && (
+                                        <SubmissionsNavigator
+                                            submissionsCount={submissions?.length}
+                                            currentIndex={submissions?.length == 0 ? -1 : submissionsIdx}
+                                            onNext={() => setSubmissionIdx((submissionsIdx + 1) % submissions?.length)}
+                                            onPrevious={() =>
+                                                setSubmissionIdx(
+                                                    (submissionsIdx - 1 + submissions?.length) % submissions?.length
+                                                )
+                                            }
+                                            onChange={(newVal) => {
+                                                if (newVal <= submissions?.length && newVal >= 1)
+                                                    setSubmissionIdx(newVal - 1);
+                                            }}
+                                        />
+                                    )}
                                 </Col>
                                 <Col
-                                    xs={{ span: 14 }}
-                                    sm={{ span: 14 }}
-                                    md={{ span: 14 }}
-                                    lg={{ span: 10 }}
+                                    xs={{ span: 7 }}
+                                    sm={{ span: 7 }}
+                                    md={{ span: 7 }}
+                                    lg={{ span: 5 }}
                                 >
-                                    <Row
-                                        align={'middle'}
-                                        justify={'end'}
-                                        className='w-full'
-                                        gutter={{ xs: 40, sm: 40, md: 40, xl: 16 }}
-                                    >
-                                        <Col span={8}>
-                                            <Select
-                                                size='small'
-                                                variant='borderless'
-                                                showAction={true}
-                                                onChange={() => {}}
-                                                defaultValue={'jack'}
-                                                options={[
-                                                    {
-                                                        value: 'jack',
-                                                        label: 'pending',
-                                                    },
-                                                    {
-                                                        value: 'lucy',
-                                                        label: 'accepted',
-                                                    },
-                                                    {
-                                                        value: 'Yiminghe',
-                                                        label: 'rejected',
-                                                    },
-                                                    {
-                                                        value: 'disabled',
-                                                        label: 'Disabled',
-                                                        disabled: true,
-                                                    },
-                                                ]}
-                                            />
-                                        </Col>
-                                        <Col span={4}>
-                                            <Button
-                                                type='text'
-                                                icon={<DeleteOutlined></DeleteOutlined>}
-                                            ></Button>
-                                        </Col>
-                                    </Row>
+                                    {!isQueryingLoading && (
+                                        <Select
+                                            size='middle'
+                                            variant='borderless'
+                                            // showAction={true}
+                                            value={submissionStatus}
+                                            //   disabled={submissionStatus == 'not registered'}
+                                            onChange={handleSubmissionStatusChange}
+                                            options={[
+                                                {
+                                                    value: 'waiting',
+                                                    label: 'waiting',
+                                                },
+                                                {
+                                                    value: 'accepted',
+                                                    label: 'accepted',
+                                                },
+                                                {
+                                                    value: 'rejected',
+                                                    label: 'rejected',
+                                                },
+                                            ]}
+                                        />
+                                    )}
                                 </Col>
                             </Row>
 
@@ -173,45 +198,49 @@ export default function ViewFormSubmissions() {
                                     md={10}
                                     lg={8}
                                 >
-                                    <Row gutter={16}>
-                                        <Col span={6}>
-                                            <Image
-                                                className='rounded-lg'
-                                                src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-                                            />
-                                        </Col>
-                                        <Col span={16}>
-                                            <div className='flex flex-col items-start justify-center'>
-                                                <a>@username</a>
-                                                <span>submission time</span>
-                                            </div>
-                                        </Col>
-                                    </Row>
+                                    {submissionUser && (
+                                        <AttendeeBrief
+                                            username={submissionUser?.user?.username}
+                                            onClick={() => navigate(`/attendee-profile/${submissionUser.id}`)}
+                                        />
+                                    )}
                                 </Col>
                                 <Col>
-                                    <Button className='bg-gray-200/50'>History</Button>
+                                    <Button
+                                        disabled
+                                        className='bg-gray-200/50'
+                                    >
+                                        History
+                                    </Button>
                                 </Col>
                             </Row>
-                            <Form
-                                form={form}
-                                disabled
-                                requiredMark={'optional'}
-                                layout='vertical'
-                            >
-                                {DBform?.groups?.map((group, index) => (
-                                    <div key={group.id}>
-                                        <FormGroup
-                                            isCustomStyle
-                                            group={group}
-                                            groupsLength={DBform.groups?.length}
-                                            groupIndex={index}
-                                        />
-                                        <div className='text-gray-500 text-center'>
-                                            {`<${index + 1}/${DBform?.groups?.length}>`}
-                                        </div>
-                                    </div>
-                                ))}
-                            </Form>
+                            {submissions?.length == 0 ? (
+                                <Empty description='No Submissions' />
+                            ) : (
+                                <Form
+                                    name='submissions-form'
+                                    form={form}
+                                    disabled
+                                    requiredMark={'optional'}
+                                    layout='vertical'
+                                >
+                                    <Spin spinning={isQueryingLoading}>
+                                        {DBform?.groups?.map((group, index) => (
+                                            <div key={group.id}>
+                                                <FormGroup
+                                                    isCustomStyle
+                                                    group={group}
+                                                    groupsLength={DBform.groups?.length}
+                                                    groupIndex={index}
+                                                />
+                                                <div className='text-gray-500 text-center'>
+                                                    {`<${index + 1}/${DBform?.groups?.length}>`}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </Spin>
+                                </Form>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -220,132 +249,40 @@ export default function ViewFormSubmissions() {
     );
 }
 
-const fake_form = {
-    id: '3',
-    createdAt: '2024-04-06T14:14:26.087Z',
-    updatedAt: '2024-04-06T14:14:26.087Z',
-    deletedAt: null,
-    name: 'form name',
-    description: 'form desc',
-    groups: [
-        {
-            id: '6',
-            createdAt: '2024-04-06T14:14:26.087Z',
-            updatedAt: '2024-04-06T14:14:26.087Z',
-            deletedAt: null,
-            name: 'group1',
-            description: null,
-            position: 1,
-            fields: [
-                {
-                    id: '8',
-                    createdAt: '2024-04-06T14:14:26.087Z',
-                    updatedAt: '2024-04-06T14:14:26.087Z',
-                    deletedAt: null,
-                    name: 'field1',
-                    label: 'label1',
-                    required: false,
-                    position: 1,
-                    fieldTypeId: '1',
-                    options: [],
-                    fieldType: {
-                        id: '1',
-                        createdAt: '2024-04-03T19:25:49.918Z',
-                        updatedAt: '2024-04-03T19:25:49.918Z',
-                        deletedAt: null,
-                        name: 'TEXT',
-                        fieldTypeOperators: [],
-                    },
-                },
-                {
-                    id: '88',
-                    createdAt: '2024-04-06T14:14:26.087Z',
-                    updatedAt: '2024-04-06T14:14:26.087Z',
-                    deletedAt: null,
-                    name: 'field1',
-                    label: 'label1',
-                    required: false,
-                    position: 1,
-                    fieldTypeId: '3',
-                    options: [],
-                    fieldType: {
-                        id: '3',
-                        createdAt: '2024-04-03T19:25:49.918Z',
-                        updatedAt: '2024-04-03T19:25:49.918Z',
-                        deletedAt: null,
-                        name: 'DATE',
-                        fieldTypeOperators: [],
-                    },
-                },
-            ],
-        },
-        {
-            id: '7',
-            createdAt: '2024-04-06T14:14:26.087Z',
-            updatedAt: '2024-04-06T14:14:26.087Z',
-            deletedAt: null,
-            name: 'group2',
-            description: null,
-            position: 2,
-            fields: [
-                {
-                    id: '9',
-                    createdAt: '2024-04-06T14:14:26.097Z',
-                    updatedAt: '2024-04-06T14:14:26.097Z',
-                    deletedAt: null,
-                    name: 'field2',
-                    label: 'label2',
-                    required: false,
-                    position: 1,
-                    fieldTypeId: '4',
-                    options: [
-                        {
-                            id: '5',
-                            createdAt: '2024-04-06T14:14:26.103Z',
-                            updatedAt: '2024-04-06T14:14:26.103Z',
-                            deletedAt: null,
-                            name: 'op2',
-                            formFieldId: '9',
-                        },
-                        {
-                            id: '6',
-                            createdAt: '2024-04-06T14:14:26.105Z',
-                            updatedAt: '2024-04-06T14:14:26.105Z',
-                            deletedAt: null,
-                            name: 'op1',
-                            formFieldId: '9',
-                        },
-                    ],
-                    fieldType: {
-                        id: '4',
-                        createdAt: '2024-04-03T19:25:49.918Z',
-                        updatedAt: '2024-04-03T19:25:49.918Z',
-                        deletedAt: null,
-                        name: 'RADIO_BUTTON',
-                        fieldTypeOperators: [],
-                    },
-                },
-                {
-                    id: '10',
-                    createdAt: '2024-04-06T14:14:26.098Z',
-                    updatedAt: '2024-04-06T14:14:26.098Z',
-                    deletedAt: null,
-                    name: 'number field',
-                    label: 'label21',
-                    required: false,
-                    position: 2,
-                    fieldTypeId: '2',
-                    options: [],
-                    fieldType: {
-                        id: '2',
-                        createdAt: '2024-04-03T19:25:49.918Z',
-                        updatedAt: '2024-04-03T19:25:49.918Z',
-                        deletedAt: null,
-                        name: 'NUMBER',
-                        fieldTypeOperators: [],
-                    },
-                },
-            ],
-        },
-    ],
+const mapSubmissions = (response, DBform) => {
+    if (!DBform || !response || (DBform && !DBform.groups)) return;
+
+    const mappedSubmissions = [];
+
+    response?.data?.result?.forEach((submission) => {
+        const mappedSubmission = {
+            id: submission.id,
+            submission_date: submission.submission_date,
+            attendee: submission.attendee,
+            status: submission.status,
+        };
+
+        const groups = DBform?.groups?.map((group) => ({ fields: new Array(group.fields.length) }));
+
+        mappedSubmission.groups = groups?.map((group) => ({ ...group }));
+
+        submission.fields.forEach((field) => {
+            const groupIndex = DBform.groups?.findIndex((group) => group.fields.some((f) => f.id == field.field_id));
+
+            if (groupIndex != -1) {
+                const fieldIndex = DBform.groups[groupIndex].fields.findIndex((f) => f.id === field.field_id);
+
+                if (fieldIndex != -1) {
+                    if (field.value && moment(field.value, moment.ISO_8601, true).isValid()) {
+                        const updatedField = { ...field, value: moment(field.value) };
+                        mappedSubmission.groups[groupIndex].fields[fieldIndex] = updatedField;
+                    } else {
+                        mappedSubmission.groups[groupIndex].fields[fieldIndex] = field;
+                    }
+                }
+            }
+        });
+        mappedSubmissions.push(mappedSubmission);
+    });
+    return mappedSubmissions;
 };

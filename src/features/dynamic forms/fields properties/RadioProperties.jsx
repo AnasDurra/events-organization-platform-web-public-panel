@@ -10,7 +10,6 @@ import {
 } from '../dynamicFormsSlice';
 import { v4 as uuidv4 } from 'uuid';
 
-
 export default function RadioProperties({
     field,
     onNameChange,
@@ -94,7 +93,7 @@ export default function RadioProperties({
                 </Title>
                 <Input
                     id='tf-prop-name'
-                    onChange={handleNameInputChange}
+                    onBlur={handleNameInputChange}
                     defaultValue={field?.name}
                 />
             </Space.Compact>

@@ -21,12 +21,12 @@ export default function FormRadioField({ field, groupIndex, fieldIndex }) {
 
                 <Form.Item
                     name={['groups', groupIndex, 'fields', fieldIndex, 'option_id']}
-                    rules={[{ required: field?.required }]}
+                    rules={[{ required: field?.required, message: 'Required Field'}]}
                 >
                     <Radio.Group
                     // value={value}
                     //onChange={handleRadioChange}
-                    size='small'
+                    size='middle'
                     >
                         <Space direction='vertical'>
                             {field.options?.map((option, index) => (

@@ -26,6 +26,7 @@ export const handleReorderGroupItems = ({ form_id, currentGroups, source, destin
         },
         form_id,
         isNewPosition: true,
+        isNewGroup: false,
     });
 };
 
@@ -81,7 +82,7 @@ export const handleSidebarToForm = ({ form_id, currentGroups, source, destinatio
     }
 };
 
-export const handleMoveItemFromGroupToAnotherGroup = ({ currentGroups, source, destination, updateGroupField }) => {
+export const handleMoveItemFromGroupToAnotherGroup = ({form_id, currentGroups, source, destination, updateGroupField }) => {
     /*  let newGroups = [...currentGroups];
 
     const sourceGroup = newGroups.find((group) => group.id === source.droppableId);
@@ -100,11 +101,14 @@ export const handleMoveItemFromGroupToAnotherGroup = ({ currentGroups, source, d
     const destinationGroupIndex = destination.droppableId.split('-')[2];
 
     updateGroupField({
+        form_id,
         fields: {
             field_id: currentGroups[sourceGroupIndex].fields[source.index].id,
             position: destination.index + 1,
             group_id: currentGroups[destinationGroupIndex].id,
         },
+        isNewPosition: true,
+        isNewGroup: currentGroups[destinationGroupIndex].id,
     });
 };
 
@@ -136,7 +140,7 @@ export const onDragEnd = ({
         return handleReorderGroups({ form_id, currentGroups, source, destination, updateGroup });
     } else if (destination.droppableId !== source.droppableId && currentGroups[sourceGroupIndex] !== undefined) {
         console.log('group to group');
-        return handleMoveItemFromGroupToAnotherGroup({ currentGroups, source, destination, updateGroupField });
+        return handleMoveItemFromGroupToAnotherGroup({ form_id, currentGroups, source, destination, updateGroupField });
     } else if (destination.droppableId !== source.droppableId && (type === 'group-item' || type === 'group')) {
         console.log('sidebar to group');
         return handleSidebarToForm({ currentGroups, source, destination, addNewField, addNewGroup, form_id });
