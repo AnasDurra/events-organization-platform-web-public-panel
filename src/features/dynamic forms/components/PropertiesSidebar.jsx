@@ -23,6 +23,9 @@ export default function PropertiesSidebar({ field, onUpdateProperties, onDeleteF
     const handleOptionsChange = (newOptions) => {
         onUpdateProperties({ ...field, options: newOptions });
     };
+    const handleValidationRuleChange = (newValidationRuleWithVal) => {
+        onUpdateProperties({ ...field, validationRules: [newValidationRuleWithVal] });
+    };
 
     const debouncedHandleOptionsChange = debounce(handleOptionsChange, 1000);
 
@@ -71,6 +74,7 @@ export default function PropertiesSidebar({ field, onUpdateProperties, onDeleteF
                     onLabelChange={handleLabelChange}
                     onIsRequiredChange={handleIsRequiredChange}
                     onDelete={onDeleteField}
+                    onValidationRulesChange={handleValidationRuleChange}
                 />
             )}
         </div>

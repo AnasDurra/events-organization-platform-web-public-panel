@@ -17,23 +17,63 @@ import { Content, Footer, Header } from 'antd/es/layout/layout';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState } from 'react';
 import { IoMdNotificationsOutline } from 'react-icons/io';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { getLoggedInUserV2 } from '../../api/services/auth';
 import { useGetAttendeeBalanceQuery } from '../Ticketing Packages/TicketingPackagesSlice';
 import './Landing.css';
 import TicketsCard from './TicketsCard';
+import { GoNorthStar } from 'react-icons/go';
 import { IoCreateSharp } from 'react-icons/io5';
 
 const { useToken } = theme;
 
+const navigationItems = [
+    {
+        label: 'Home',
+        filledIcon: <HomeFilled />,
+        outlinedIcon: <HomeOutlined />,
+        path: '/home',
+    },
+    {
+        label: 'Following',
+        filledIcon: <GoNorthStar />,
+        outlinedIcon: <GoNorthStar />,
+        path: '/home/following',
+    },
+    {
+        label: 'Popular',
+        filledIcon: <FireFilled className='text-red-300 text-[1.2em]' />,
+        outlinedIcon: <FireFilled className='text-red-300 text-[1.2em]' />,
+        path: '/home/popular',
+        fire: true,
+    },
+    {
+        label: 'Explore',
+        filledIcon: <ExperimentFilled />,
+        outlinedIcon: <ExperimentOutlined />,
+        path: '/home/explore',
+    },
+];
+
 export default function HomeLayout() {
     const { token } = useToken();
     const navigate = useNavigate();
+    const location = useLocation();
     const [navIndex, setNavIndex] = useState(0);
     const { data: { result: balance } = { result: {} }, isLoading: isBalanceLoading } = useGetAttendeeBalanceQuery(
         getLoggedInUserV2()?.attendee_id
     );
+
+    const handleNavigationClick = (index) => {
+        setNavIndex(index);
+        navigate(navigationItems[index].path);
+    };
+
+    const getNavIndexByPath = (path) => {
+        const item = navigationItems.find((item) => item.path == path);
+        return item ? navigationItems.indexOf(item) : 0;
+    };
     const user = getLoggedInUserV2();
 
     const menu = (
@@ -88,16 +128,8 @@ export default function HomeLayout() {
     );
 
     useEffect(() => {
-        if (navIndex == 0) {
-            navigate('/home');
-        } else if (navIndex == 1) {
-            navigate('popular');
-        } else if (navIndex == 2) {
-            navigate('explore');
-        } else if (navIndex == 3) {
-            //TODO go to  profile
-        }
-    }, [navIndex]);
+        setNavIndex(getNavIndexByPath(location.pathname));
+    }, [location.pathname]);
 
     return (
         <Layout className='h-[100svh]'>
@@ -130,24 +162,11 @@ export default function HomeLayout() {
                                     onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
                                 />
                             </Badge>
-                            <Dropdown
-                                arrow
-                                overlay={menu}
-                                placement='bottomLeft'
-                                //  trigger={['click']}
-                            >
-                                <Link onClick={(e) => e.preventDefault()}>
-                                    {/* The image */}
-                                    <img
-                                        className='w-[2.5em] aspect-square rounded-full hidden md:block md:ml-4'
-                                        src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-                                        alt='Profile'
-                                        style={{ transition: 'transform 0.3s', padding: '1px' }}
-                                        onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')}
-                                        onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
-                                    />
-                                </Link>
-                            </Dropdown>
+                            <img
+                                className='w-[2.5em] aspect-square rounded-full hidden md:block md:ml-4'
+                                src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+                                onClick={() => navigate('profile')}
+                            />
                         </div>
                     </Col>
                 </Row>
@@ -160,39 +179,18 @@ export default function HomeLayout() {
                     width={'20%'}
                 >
                     <div className='flex flex-col h-full mt-4 p-4 space-y-2'>
-                        <SiderNavigationItem
-                            key={uuidv4()}
-                            filledIcon={<HomeFilled />}
-                            outLinedIcon={<HomeOutlined />}
-                            isActive={navIndex == 0}
-                            label={'Home'}
-                            onClick={() => {
-                                setNavIndex(0);
-                            }}
-                        />
-
-                        <SiderNavigationItem
-                            key={uuidv4()}
-                            filledIcon={<FireFilled className='text-red-300 text-[1.2em]' />}
-                            outLinedIcon={<FireOutlined className='text-red-300 text-[1.2em]' />}
-                            isActive={navIndex == 1}
-                            label={'Popular'}
-                            onClick={() => {
-                                setNavIndex(1);
-                            }}
-                            fire
-                        />
-
-                        <SiderNavigationItem
-                            key={uuidv4()}
-                            filledIcon={<ExperimentFilled />}
-                            outLinedIcon={<ExperimentOutlined />}
-                            isActive={navIndex == 2}
-                            label={'Explore'}
-                            onClick={() => {
-                                setNavIndex(2);
-                            }}
-                        />
+                        {navigationItems.map((item, index) => (
+                            <SiderNavigationItem
+                                key={uuidv4()}
+                                item={item}
+                                isActive={navIndex == index}
+                                onClick={() => handleNavigationClick(index)}
+                                label={item.label}
+                                filledIcon={item.filledIcon}
+                                outLinedIcon={item.outlinedIcon}
+                                fire={item.fire}
+                            />
+                        ))}
                     </div>
                 </Sider>
                 <div className='md:grid md:grid-cols-10 w-full'>
@@ -274,8 +272,8 @@ export default function HomeLayout() {
 function SiderNavigationItem({ label, outLinedIcon, filledIcon, isActive, onClick, fire }) {
     return (
         <div
-            className={`rounded-lg flex space-x-2 p-4 bg-[#00474f]/0 hover:bg-[#00474f]/30 hover:cursor-pointer ${
-                isActive ? 'bg-[#00474f]/30 ' : null
+            className={`rounded-lg flex items-center space-x-2 p-4 bg-[#00474f]/0 hover:bg-[#00474f]/30 hover:cursor-pointer ${
+                isActive ? (fire ? 'bg-red-300/30' : 'bg-[#00474f]/30 ') : null
             }
             ${fire ? '  hover:bg-red-300/30' : null}
             `}

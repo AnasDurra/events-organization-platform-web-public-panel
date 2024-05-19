@@ -80,7 +80,7 @@ function SidebarItemWithDrag({ title, icon, id }) {
                     <Draggable
                         key={`draggable-new-${title}`}
                         draggableId={`draggable-new-${title}`}
-                        index={id}
+                        index={parseInt(id)}
                     >
                         {(provided, snapshot) => (
                             <div

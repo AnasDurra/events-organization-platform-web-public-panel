@@ -73,6 +73,7 @@ export default function EditFormPage() {
             label: updatedField.label,
             required: updatedField.required,
             position: updatedField.position,
+            validationRules: updatedField.validationRules,
         };
 
         let currentFieldValues;

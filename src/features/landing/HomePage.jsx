@@ -16,9 +16,9 @@ export default function HomePage() {
             <Carousel
                 className='w-full'
                 infiniteLoop
-                //   autoPlay
+                autoPlay
                 emulateTouch
-                centerMode
+                //centerMode
                 showStatus={false}
                 showThumbs={false}
                 showArrows={false}

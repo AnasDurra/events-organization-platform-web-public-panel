@@ -6,7 +6,7 @@ import { message } from 'antd';
 
 import image1 from '../features/Attendees Profiles/assets/Hybrid-illu.png';
 import '../features/Attendees Profiles/styles/styles.css';
-import { useLoginMutation } from '../api/services/auth';
+import { getLoggedInUserV2, useLoginMutation } from '../api/services/auth';
 import { useEffect, useState } from 'react';
 import FormWelcomeTitle from '../features/Form/FormWelcomeTitle';
 import { useNotification } from '../utils/NotificationContext';
@@ -22,7 +22,7 @@ export default function RegisterAttendee() {
         const data = {
             username: values.username,
             password: values.password,
-            role_id: 2, // TODO Edit this
+            role_id: 3,
         };
         console.log(data);
 
@@ -70,7 +70,12 @@ export default function RegisterAttendee() {
                     }}
                 >
                     <div className='registerImage'>
-                        <Image width={320} height={800} src={image1} preview={false} />
+                        <Image
+                            width={320}
+                            height={800}
+                            src={image1}
+                            preview={false}
+                        />
                     </div>
                     <div>
                         <Card
@@ -191,7 +196,11 @@ export default function RegisterAttendee() {
                                             justifyContent: 'flex-end',
                                         }}
                                     >
-                                        <Button htmlType='submit' type='primary' style={{ width: '100%' }}>
+                                        <Button
+                                            htmlType='submit'
+                                            type='primary'
+                                            style={{ width: '100%' }}
+                                        >
                                             Login
                                         </Button>
                                     </Form.Item>

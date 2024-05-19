@@ -33,7 +33,6 @@ export default function ViewOrgsPage() {
         loadMoreData();
     }, []);
 
-    console.log(loadedOrgs);
 
     return (
         <div className='h-[100svh] w-full flex flex-col justify-start items-center'>

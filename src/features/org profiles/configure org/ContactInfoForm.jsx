@@ -9,10 +9,10 @@ export default function ContactInfoForm({ form, onFinish }) {
                 form={form}
                 name='contact_info'
                 wrapperCol={{
-                    span: 8,
+                    span: 20,
                 }}
                 labelCol={{
-                    span: 7,
+                    span: 4,
                 }}
                 labelAlign='left'
                 initialValues={{
@@ -96,7 +96,7 @@ export default function ContactInfoForm({ form, onFinish }) {
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={15}>
+                    <Col span={24}>
                         <Form.Item
                             labelCol={{ span: 0 }}
                             wrapperCol={{ span: 24 }}

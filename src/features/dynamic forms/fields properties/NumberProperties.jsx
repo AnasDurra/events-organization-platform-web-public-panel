@@ -1,8 +1,15 @@
 import React, { useEffect } from 'react';
-import { Input, Checkbox, Space, Button, Divider } from 'antd';
+import { Input, Checkbox, Space, Button, Divider, InputNumber } from 'antd';
 import Title from 'antd/es/typography/Title';
 
-export default function NumberProperties({ field, onNameChange, onLabelChange, onIsRequiredChange, onDelete }) {
+export default function NumberProperties({
+    field,
+    onNameChange,
+    onLabelChange,
+    onIsRequiredChange,
+    onDelete,
+    onValidationRulesChange,
+}) {
     const handleNameInputChange = (e) => {
         const newName = e.target.value;
         onNameChange(newName);
@@ -18,12 +25,18 @@ export default function NumberProperties({ field, onNameChange, onLabelChange, o
         onIsRequiredChange(newIsRequired);
     };
 
+    const handleValidationRulesChange = (ruleWithVal) => {
+        onValidationRulesChange(ruleWithVal)
+    };
+
     useEffect(() => {
         if (field) {
             document.getElementById('num-prop-name').value = field.name || '';
             document.getElementById('num-prop-label').value = field.label || '';
             document.getElementById('num-prop-isRequired').checked = !!field.isRequired;
+            //  document.getElementById('num-prop-rule-min').value = ;
         }
+        console.log(field);
     }, [field]);
 
     return (
@@ -67,6 +80,28 @@ export default function NumberProperties({ field, onNameChange, onLabelChange, o
                     onChange={handleLabelInputChange}
                 />
             </Space.Compact>
+
+            <Divider>Rules</Divider>
+            <div className='flex flex-col space-y-4'>
+                <div className='flex  items-start'>
+                    <div className='w-40 text-left'>minimum:</div>
+                    <InputNumber
+                        size='small'
+                        className='w-40'
+                        id='num-prop-rule-min'
+                        onBlur={(e) => handleValidationRulesChange({ rule: 'min', value: e.target.value })}
+                    />
+                </div>
+                <div className='flex justify-between items-start'>
+                    <div className='w-40 text-left'>maximum:</div>
+                    <InputNumber
+                        size='small'
+                        className='w-40'
+                    />
+                </div>
+            </div>
+
+            <Divider />
             <Space
                 align='center'
                 direction='vertical'

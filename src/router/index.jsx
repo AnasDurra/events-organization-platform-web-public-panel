@@ -9,7 +9,6 @@ import EditFormPage from '../features/dynamic forms/EditFormPage';
 import ViewFormsPage from '../features/dynamic forms/ViewFormsPage';
 import FormLayout from '../features/dynamic forms/components/FormLayout';
 import SubmitForm from '../features/dynamic forms/submission/SubmitForm';
-import ConfigOrgPage from '../features/org profiles/ConfigOrgPage';
 import ProfilePage from '../features/org profiles/ProfilePage';
 import TeamPage from '../features/org profiles/TeamPage';
 import ErrorPage from '../pages/error-page';
@@ -29,6 +28,8 @@ import ShowFollowingOrgsList from '../features/Attendees Profiles/ShowFollowingO
 import ChatsList from '../features/chat/ChatsList';
 import TicketsBalancePage from '../features/Ticketing Packages/TicketsBalancePage';
 import ResultSuccessPage from '../features/Ticketing Packages/ResultSuccessPage';
+import ConfigOrgPage from '../features/org profiles/configure org/ConfigOrgPage';
+import ViewFollowingPage from '../features/landing/ViewFollowingPage';
 import OrgAttendees from '../features/org profiles/OrgAttendees';
 import OrgEvents from '../features/org profiles/OrgEvents';
 import { getLoggedInUserV2 } from '../api/services/auth';
@@ -147,6 +148,10 @@ export const router = createBrowserRouter([
             {
                 path: 'profile',
                 element: <ShowMyProfile />,
+            },
+            {
+                path: 'following',
+                element: <ViewFollowingPage />,
             },
         ],
     },

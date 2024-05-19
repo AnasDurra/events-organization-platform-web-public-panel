@@ -5,10 +5,16 @@ import { apiSlice } from '../../api/apiSlice';
 export const feedsSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getSoonEvents: builder.query({
-            query: ({ page, pageSize }) => `/feed/soonEvents?page=${page}&pageSize=${pageSize}`,
+            query: ({ page, pageSize }) => `feed/soonEvents?page=${page}&pageSize=${pageSize}`,
         }),
         getOrganizationsSummary: builder.query({
-            query: ({ page, pageSize }) => `/feed/organizations?page=${page}&pageSize=${pageSize}`,
+            query: ({ page, pageSize }) => `feed/organizations?page=${page}&pageSize=${pageSize}`,
+        }),
+        getPopularEvents: builder.query({
+            query: ({ page, pageSize }) => `feed/popularEvents?page=${page}&pageSize=${pageSize}`,
+        }),
+        getFollowingEvents: builder.query({
+            query: ({ page, pageSize }) => `feed/followedEvents?page=${page}&pageSize=${pageSize}`,
         }),
 
         querySubmissions: builder.mutation({
@@ -54,5 +60,12 @@ export const feedsSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetSoonEventsQuery, useGetOrganizationsSummaryQuery, useLazyGetOrganizationsSummaryQuery } =
-    feedsSlice;
+export const {
+    useGetSoonEventsQuery,
+    useGetOrganizationsSummaryQuery,
+    useLazyGetOrganizationsSummaryQuery,
+    useGetPopularEventsQuery,
+    useLazyGetPopularEventsQuery,
+    useLazyGetFollowingEventsQuery,
+    useGetFollowingEventsQuery,
+} = feedsSlice;
