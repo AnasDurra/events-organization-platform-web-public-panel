@@ -1,6 +1,10 @@
-import React from 'react';
-import { Card, Col, Row, Avatar, Button, Space, Input } from 'antd';
+import React, { useState } from 'react';
+import { Card, Col, Row, Avatar, Button, Space, Input, Spin } from 'antd';
 import { CheckCircleFilled, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import ModalNewMember from './configure org/modal-new member';
+import { useGetOrgQuery } from './orgSlice';
+import { getLoggedInUserV2 } from '../../api/services/auth';
+import ModalEditMember from './configure org/modal-edit member';
 
 const employees = [
     {
@@ -63,118 +67,180 @@ const handleMouseLeave = (e) => {
     e.currentTarget.style.transform = 'scale(1)';
 };
 
-const handleClick = (e, action) => {
-    e.stopPropagation();
-    //TODO excute baased on the action
-};
+const TeamPage = () => {
+    const [isNewEmpModalOpen, setIsNewEmpModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
 
-const TeamPage = () => (
-    <div style={{ padding: '24px' }}>
-        <Row gutter={[20, 30]} justify='start'>
-            <Col span={24}>
-                <Input.Search
-                    // className='org-attendees-search'
-                    placeholder='Search by name'
-                    enterButton
-                    size='large'
-                    // onChange={(e) => handleSearch(e.target.value)}
-                />
-            </Col>
-            <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={6}>
-                <div
-                    style={{
-                        textAlign: 'center',
-                        boxShadow: 'none',
-                        padding: '20px',
-                    }}
+    const { data: { result: org } = { result: {} }, isLoading: isGetOrgLoading } = useGetOrgQuery(
+        getLoggedInUserV2().organization_id
+    );
+
+    const handleClick = (e, action, employee) => {
+        e.stopPropagation();
+        if (action == 'edit') {
+            setSelectedEmployee(employee);
+            setIsEditModalOpen(true);
+        }
+    };
+
+    return (
+        <div style={{ padding: '24px' }}>
+            <Spin spinning={isGetOrgLoading}>
+                <Row
+                    gutter={[20, 30]}
+                    justify='start'
                 >
-                    <Space
-                        size={15}
-                        style={{
-                            width: 130,
-                            height: 130,
-                            borderRadius: '50%',
-                            border: '2px solid #e8e8e8',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'column',
-                            margin: '0 auto 16px',
-                        }}
+                    <Col span={24}>
+                        <Input.Search
+                            // className='org-attendees-search'
+                            placeholder='Search by name'
+                            enterButton
+                            size='large'
+                            // onChange={(e) => handleSearch(e.target.value)}
+                        />
+                    </Col>
+                    <Col
+                        xs={24}
+                        sm={12}
+                        md={12}
+                        lg={8}
+                        xl={8}
+                        xxl={6}
                     >
-                        <div style={{ fontSize: '42px', lineHeight: '1' }}>{employees.length}</div>
-                        <div style={{ fontSize: '14px', lineHeight: '1' }}>EMPLOYEES</div>
-                    </Space>
-                    <Button block type='primary' icon={<PlusOutlined />}>
-                        New Employee
-                    </Button>
-                </div>
-            </Col>
-            {employees.map((employee) => (
-                <Col key={employee.id} xs={24} sm={12} md={12} lg={8} xl={8} xxl={6}>
-                    <Card
-                        onClick={() => {
-                            console.log('card clicked');
-                        }}
-                        size='small'
-                        style={{
-                            height: '100%',
-                            textAlign: 'center',
-                            transition: 'box-shadow 0.3s',
-                            boxShadow: '0 2px 2px rgba(0, 0, 0, 0.1)',
-                        }}
-                        hoverable
-                        cover={
-                            <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '8px' }}>
-                                <Avatar size={150} alt={employee.name} src={employee.image} />
-                            </div>
-                        }
-                        actions={[
-                            <CheckCircleFilled
-                                style={iconStyle}
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
-                                onClick={(e) => handleClick(e, 'active')}
-                                key='activate'
-                            />,
-                            // TODO For deactivate user
-                            // <CloseCircleFilled
-                            // style={iconStyle}
-                            // onMouseEnter={handleMouseEnter}
-                            // onClick={(e)=>handleClick(e,"disactive")}
-                            // onMouseLeave={handleMouseLeave}
-                            //     key='Deactivate'
-                            // />,
-                            <EditOutlined
-                                style={iconStyle}
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
-                                onClick={(e) => handleClick(e, 'edit')}
-                                key='edit'
-                            />,
-                            <DeleteOutlined
-                                style={{ ...iconStyle, color: 'red', fontSize: '18px' }}
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
-                                onClick={(e) => handleClick(e, 'remove')}
-                                key='remove'
-                            />,
-                        ]}
-                        onMouseOver={(e) => {
-                            e.currentTarget.style.boxShadow =
-                                '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 15px 20px rgba(0, 71, 79, 0.2)';
-                        }}
-                        onMouseOut={(e) => {
-                            e.currentTarget.style.boxShadow = '0 2px 2px rgba(0, 0, 0, 0.1)';
-                        }}
-                    >
-                        <Card.Meta title={employee.name} description={employee.title} />
-                        <p style={{ marginTop: '8px' }}>{employee.phone}</p>
-                    </Card>
-                </Col>
-            ))}
-        </Row>
-    </div>
-);
+                        <div
+                            style={{
+                                textAlign: 'center',
+                                boxShadow: 'none',
+                                padding: '20px',
+                            }}
+                        >
+                            <Space
+                                size={15}
+                                style={{
+                                    width: 130,
+                                    height: 130,
+                                    borderRadius: '50%',
+                                    border: '2px solid #e8e8e8',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    flexDirection: 'column',
+                                    margin: '0 auto 16px',
+                                }}
+                            >
+                                <div style={{ fontSize: '42px', lineHeight: '1' }}>{employees.length}</div>
+                                <div style={{ fontSize: '14px', lineHeight: '1' }}>EMPLOYEES</div>
+                            </Space>
+                            <Button
+                                block
+                                type='primary'
+                                icon={<PlusOutlined />}
+                                onClick={() => setIsNewEmpModalOpen(true)}
+                            >
+                                New Employee
+                            </Button>
+                        </div>
+                    </Col>
+                    {org?.employees?.map((employee) => (
+                        <Col
+                            key={employee.id}
+                            xs={24}
+                            sm={12}
+                            md={12}
+                            lg={8}
+                            xl={8}
+                            xxl={6}
+                        >
+                            <Card
+                                onClick={() => {
+                                    console.log('card clicked');
+                                }}
+                                size='small'
+                                style={{
+                                    height: '100%',
+                                    textAlign: 'center',
+                                    transition: 'box-shadow 0.3s',
+                                    boxShadow: '0 2px 2px rgba(0, 0, 0, 0.1)',
+                                }}
+                                hoverable
+                                cover={
+                                    <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '8px' }}>
+                                        <Avatar
+                                            size={150}
+                                            alt={
+                                                employee?.user?.employee?.first_name +
+                                                employee?.user?.employee?.last_name
+                                            }
+                                            src={employee?.user?.employee?.profile_picture}
+                                        />
+                                    </div>
+                                }
+                                actions={[
+                                    <CheckCircleFilled
+                                        style={iconStyle}
+                                        onMouseEnter={handleMouseEnter}
+                                        onMouseLeave={handleMouseLeave}
+                                        onClick={(e) => handleClick(e, 'active')}
+                                        key='activate'
+                                    />,
+                                    // TODO For deactivate user
+                                    // <CloseCircleFilled
+                                    // style={iconStyle}
+                                    // onMouseEnter={handleMouseEnter}
+                                    // onClick={(e)=>handleClick(e,"disactive")}
+                                    // onMouseLeave={handleMouseLeave}
+                                    //     key='Deactivate'
+                                    // />,
+                                    <EditOutlined
+                                        style={iconStyle}
+                                        onMouseEnter={handleMouseEnter}
+                                        onMouseLeave={handleMouseLeave}
+                                        onClick={(e) => handleClick(e, 'edit', employee)}
+                                        key='edit'
+                                    />,
+                                    <DeleteOutlined
+                                        style={{ ...iconStyle, color: 'red', fontSize: '18px' }}
+                                        onMouseEnter={handleMouseEnter}
+                                        onMouseLeave={handleMouseLeave}
+                                        onClick={(e) => handleClick(e, 'remove')}
+                                        key='remove'
+                                    />,
+                                ]}
+                                onMouseOver={(e) => {
+                                    e.currentTarget.style.boxShadow =
+                                        '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 15px 20px rgba(0, 71, 79, 0.2)';
+                                }}
+                                onMouseOut={(e) => {
+                                    e.currentTarget.style.boxShadow = '0 2px 2px rgba(0, 0, 0, 0.1)';
+                                }}
+                            >
+                                <Card.Meta
+                                    title={employee?.user?.employee?.first_name + employee?.user?.employee?.last_name}
+                                    description={employee?.user?.username}
+                                />
+                                <p style={{ marginTop: '8px' }}>{employee?.user?.employee?.phone_number}</p>
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
+            </Spin>
+
+            <ModalNewMember
+                isOpen={isNewEmpModalOpen}
+                onOk={() => setIsNewEmpModalOpen(false)}
+                onCancel={() => setIsNewEmpModalOpen(false)}
+            />
+
+            <ModalEditMember
+                orgId={getLoggedInUserV2().organization_id}
+                employee={selectedEmployee}
+                isOpen={isEditModalOpen}
+                onCancel={() => setIsEditModalOpen(false)}
+                onOk={() => setIsEditModalOpen(false)}
+            />
+        </div>
+    );
+};
 
 export default TeamPage;

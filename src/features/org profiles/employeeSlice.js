@@ -3,21 +3,11 @@ import { apiSlice } from '../../api/apiSlice';
 export const employeeSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         newEmployee: builder.mutation({
-            query: (data) => {
-                var bodyFormData = new FormData();
-
-                for (var key in data) {
-                    console.log(key);
-                    if (key == 'profile_picture') {
-                        bodyFormData.append('profile_picture', data[key].file);
-                    } else bodyFormData.append(key, JSON.stringify(data[key]));
-                }
-
+            query: (body) => {
                 return {
                     url: `employee`,
                     method: 'POST',
-                    formData: true,
-                    body: bodyFormData,
+                    body: body,
                 };
             },
             invalidatesTags: ['one-org'],
@@ -33,7 +23,11 @@ export const employeeSlice = apiSlice.injectEndpoints({
             },
             invalidatesTags: ['one-org'],
         }),
+
+        getPermissions: builder.query({
+            query: () => `/permissions`,
+        }),
     }),
 });
 
-export const { useNewEmployeeMutation, useEditEmployeeMutation } = employeeSlice;
+export const { useNewEmployeeMutation, useEditEmployeeMutation ,useGetPermissionsQuery} = employeeSlice;

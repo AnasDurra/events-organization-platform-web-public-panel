@@ -33,6 +33,7 @@ import ViewFollowingPage from '../features/landing/ViewFollowingPage';
 import OrgAttendees from '../features/org profiles/OrgAttendees';
 import OrgEvents from '../features/org profiles/OrgEvents';
 import { getLoggedInUserV2 } from '../api/services/auth';
+import OrgTicketsPage from '../features/Ticketing Packages/OrgTicketsPage';
 
 const user = getLoggedInUserV2();
 
@@ -171,6 +172,7 @@ export const router = createBrowserRouter([
             { path: 'forms', element: <ViewFormsPage /> },
             { path: 'attendees', element: <OrgAttendees /> },
             { path: 'our-events', element: <OrgEvents /> },
+            { path: 'tickets', element: <OrgTicketsPage /> },
         ],
     },
 ]);

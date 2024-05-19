@@ -1,12 +1,50 @@
 import { current } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 import { apiSlice } from '../../api/apiSlice';
+import dayjs from 'dayjs';
 
 export const feedsSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getSoonEvents: builder.query({
             query: ({ page, pageSize }) => `feed/soonEvents?page=${page}&pageSize=${pageSize}`,
         }),
+        getEvents: builder.query({
+            query: ({ page, pageSize, startDate, endDate, locationId, popularity }) => {
+                const params = {};
+
+                if (page) {
+                    params['page'] = page;
+                }
+                if (pageSize) {
+                    params['pageSize'] = pageSize;
+                }
+                if (startDate) {
+                    try {
+                        params['start_date'] = dayjs(startDate).format('YYYY-MM-DD');
+                    } catch (error) {
+                        console.error('Error formatting start date:', error);
+                    }
+                }
+                if (endDate) {
+                    try {
+                        params['end_date'] = dayjs(endDate).format('YYYY-MM-DD');
+                    } catch (error) {
+                        console.error('Error formatting start date:', error);
+                    }
+                }
+                if (locationId) {
+                    params['addresses'] = [locationId];
+                }
+                if (popularity != null) {
+                    params['most_popular'] = popularity;
+                }
+                console.log('params2: ', params);
+                const queryString = new URLSearchParams(params).toString();
+                console.log('qry: ', queryString);
+                return `feed/soonEvents?${queryString}`;
+            },
+        }),
+
         getOrganizationsSummary: builder.query({
             query: ({ page, pageSize }) => `feed/organizations?page=${page}&pageSize=${pageSize}`,
         }),
@@ -15,6 +53,9 @@ export const feedsSlice = apiSlice.injectEndpoints({
         }),
         getFollowingEvents: builder.query({
             query: ({ page, pageSize }) => `feed/followedEvents?page=${page}&pageSize=${pageSize}`,
+        }),
+        getAddresses: builder.query({
+            query: () => `address`,
         }),
 
         querySubmissions: builder.mutation({
@@ -62,10 +103,13 @@ export const feedsSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetSoonEventsQuery,
+    useGetEventsQuery,
+    useLazyGetEventsQuery,
     useGetOrganizationsSummaryQuery,
     useLazyGetOrganizationsSummaryQuery,
     useGetPopularEventsQuery,
     useLazyGetPopularEventsQuery,
     useLazyGetFollowingEventsQuery,
     useGetFollowingEventsQuery,
+    useGetAddressesQuery,
 } = feedsSlice;

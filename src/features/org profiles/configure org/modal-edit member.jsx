@@ -8,6 +8,7 @@ const dummyDate = '2022-01-01 00:00:00';
 export default function ModalEditMember({ isOpen, onOk, onCancel, employee, orgId }) {
     const [form] = Form.useForm();
     const [editEmployee] = useEditEmployeeMutation();
+
     useEffect(() => {
         console.log('employee', employee);
         form.resetFields();

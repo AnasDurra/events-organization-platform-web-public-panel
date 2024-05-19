@@ -1,13 +1,13 @@
-import { UploadOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Upload } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
-import Title from 'antd/es/typography/Title';
-import React from 'react';
-import { useNewEmployeeMutation } from '../employeeSlice';
+import { Button, Col, DatePicker, Form, Input, Modal, Row, Select } from 'antd';
 import moment from 'moment';
+import React from 'react';
+import { getLoggedInUserV2 } from '../../../api/services/auth';
+import { useGetPermissionsQuery, useNewEmployeeMutation } from '../employeeSlice';
 
-export default function ModalNewMember({ isOpen, onOk, onCancel, orgId }) {
-    const [createNewEmployee] = useNewEmployeeMutation();
+export default function ModalNewMember({ isOpen, onOk, onCancel }) {
+    const [createNewEmployee, { isLoading: isAddEmployeeLoading }] = useNewEmployeeMutation();
+    const { data: { result: permissions } = { result: [] }, isLoading: isPermissionsLoading } =
+        useGetPermissionsQuery();
     const [form] = Form.useForm();
     return (
         <Modal
@@ -20,11 +20,13 @@ export default function ModalNewMember({ isOpen, onOk, onCancel, orgId }) {
                 <Button
                     type='primary'
                     onClick={() => form.submit()}
+                    loading={isAddEmployeeLoading}
                 >
                     Add
                 </Button>
             }
         >
+            {console.log(getLoggedInUserV2())}
             <Form
                 form={form}
                 name='new-member'
@@ -44,7 +46,7 @@ export default function ModalNewMember({ isOpen, onOk, onCancel, orgId }) {
 
                     createNewEmployee({
                         ...fields,
-                        organization_id: parseInt(orgId),
+                        organization_id: parseInt(getLoggedInUserV2().organization_id),
                         birth_date: moment(fields.birth_date).format('YYYY-MM-DD'),
                     })
                         .unwrap()
@@ -144,6 +146,11 @@ export default function ModalNewMember({ isOpen, onOk, onCancel, orgId }) {
                         <Form.Item
                             label='birth date'
                             name='birth_date'
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
                         >
                             <DatePicker style={{ width: '100%' }} />
                         </Form.Item>
@@ -159,39 +166,13 @@ export default function ModalNewMember({ isOpen, onOk, onCancel, orgId }) {
                             ]}
                         >
                             <Select
+                                loading={isPermissionsLoading}
                                 mode='multiple'
-                                options={[
-                                    {
-                                        value: 'lucy',
-                                        label: 'Lucy',
-                                    },
-                                    {
-                                        value: 'suzy',
-                                        label: 'suzy',
-                                    },
-                                ]}
+                                options={permissions.map((perm) => ({
+                                    value: parseInt(perm.id),
+                                    label: perm.name,
+                                }))}
                             />
-                        </Form.Item>
-                    </Col>
-
-                    <Col span={12}>
-                        <Form.Item
-                            label='profile picture'
-                            name='profile_picture'
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                            style={{ width: '100%' }}
-                        >
-                            <Upload
-                                {...props}
-                                listType='picture-circle'
-                                maxCount={1}
-                            >
-                                <span style={{ padding: '1em' }}>Click to Upload</span>
-                            </Upload>
                         </Form.Item>
                     </Col>
                 </Row>
@@ -199,16 +180,3 @@ export default function ModalNewMember({ isOpen, onOk, onCancel, orgId }) {
         </Modal>
     );
 }
-
-const props = {
-    onChange(info) {
-        if (info.file.status !== 'uploading') {
-            console.log(info.file, info.fileList);
-        }
-        if (info.file.status === 'done') {
-            console.log('success');
-        } else if (info.file.status === 'error') {
-            console.log('fail');
-        }
-    },
-};

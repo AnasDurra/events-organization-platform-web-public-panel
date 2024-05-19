@@ -1,7 +1,10 @@
 import { Button, ConfigProvider, DatePicker, Dropdown, Input, Select, Space } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import './ExplorePage.css';
+import dayjs from 'dayjs';
+import { useGetAddressesQuery, useGetEventsQuery, useLazyGetEventsQuery } from './feedsSlice';
+import { key } from 'localforage';
 const dimensions = [
     [400, 300],
     [950, 300],
@@ -31,25 +34,144 @@ const datePickerProps = {
 };
 
 export default function ExplorePage() {
-    const [selectedDate, setSelectedDate] = useState('anyTime');
+    const [selectedDateIdentifier, setSelectedDateIdentifier] = useState('anyTime');
     const [customDateType, setCustomDateType] = useState('day');
-    const [popularity, setPopularity] = useState('popularity');
+    const [popularity, setPopularity] = useState(null);
     const [tickets, setTickets] = useState('tickets');
-    const [location, setLocation] = useState('location');
+    const [locationName, setLocationName] = useState('location');
+    const [locationId, setLocationId] = useState(null);
 
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(12);
+    const [startDate, setStartDate] = useState(null);
+    const [endDate, setEndDate] = useState(null);
+
+    const { data: { result: addresses } = { result: [] } } = useGetAddressesQuery();
+    const [getEvents, { data: { result: events } = { result: [] } }] = useLazyGetEventsQuery();
+
+    function getGroupedStatesWithCities(addresses) {
+        if (!addresses || !addresses.length) {
+            return []; // Return empty array for invalid input
+        }
+
+        const groupedStates = [];
+
+        for (const address of addresses) {
+            const {
+                state: { id: stateId, stateName },
+                city: { id: cityId, cityName },
+            } = address;
+
+            const existingState = groupedStates.find((state) => state.id === stateId);
+
+            if (existingState) {
+                existingState.cities.push({ cityId, cityName });
+            } else {
+                groupedStates.push({
+                    id: stateId,
+                    state: { id: stateId, stateName },
+                    cities: [{ cityId, cityName }],
+                });
+            }
+        }
+        return groupedStates;
+    }
+
+    const handleClearFilters = () => {
+        setStartDate(null);
+        setEndDate(null);
+        setLocationId(null);
+        setPopularity(null);
+        setSelectedDateIdentifier('anyTime');
+        setCustomDateType('day');
+        setLocationName('location');
+    };
+    useEffect(() => {
+        const prepareAdParams = () => {
+            const params = {};
+
+            if (startDate) {
+                try {
+                    params['startDate'] = dayjs(startDate).format('YYYY-MM-DD');
+                } catch (error) {
+                    console.error('Error formatting start date:', error);
+                }
+            }
+
+            if (endDate) {
+                try {
+                    params['endDate'] = dayjs(endDate).format('YYYY-MM-DD');
+                } catch (error) {
+                    console.error('Error formatting start date:', error);
+                }
+            }
+
+            if (locationId) {
+                params['locationId'] = locationId;
+            }
+            if (popularity != null) {
+                params['popularity'] = popularity;
+            }
+
+            params['page'] = page;
+            params['pageSize'] = pageSize;
+            console.log('params: ', params);
+            getEvents(params);
+        };
+
+        prepareAdParams();
+    }, [startDate, endDate, locationId, popularity]);
+
+    useEffect(() => {
+        console.log(getGroupedStatesWithCities(addresses));
+    }, [addresses]);
     const dateFilterItems = [
         {
             key: 'anytime',
-            label: <a onClick={() => setSelectedDate('anyTime')}>Any Time</a>,
+            label: (
+                <a
+                    onClick={() => {
+                        setSelectedDateIdentifier('anyTime');
+                        setStartDate(null);
+                        setEndDate(null);
+                    }}
+                >
+                    No filter
+                </a>
+            ),
             className: 'bg-transparent',
         },
         {
             key: 'thisWeek',
-            label: <a onClick={() => setSelectedDate('thisWeek')}>This Week</a>,
+            label: (
+                <a
+                    onClick={() => {
+                        setSelectedDateIdentifier('thisWeek');
+                        const start = dayjs().startOf('week');
+                        const end = dayjs().endOf('week');
+                        setStartDate(start);
+                        setEndDate(end);
+                    }}
+                >
+                    This Week
+                </a>
+            ),
         },
         {
             key: 'thisMonth',
-            label: <a onClick={() => setSelectedDate('thisMonth')}>This Month</a>,
+            label: (
+                <a
+                    onClick={() => {
+                        setSelectedDateIdentifier('thisMonth');
+                        const start = dayjs().startOf('month');
+                        const end = dayjs().endOf('month');
+                        setStartDate(start);
+                        setEndDate(end);
+                    }}
+                >
+                    This Month
+                </a>
+            ),
         },
         {
             key: 'date',
@@ -67,7 +189,7 @@ export default function ExplorePage() {
                         }}
                         onChange={(value) => {
                             setCustomDateType(value);
-                            setSelectedDate('date');
+                            setSelectedDateIdentifier('date');
                         }}
                     >
                         <Option value='year'>Year</Option>
@@ -76,13 +198,37 @@ export default function ExplorePage() {
                         <Option value='day'>Day</Option>
                     </Select>
                     {customDateType == 'year' ? (
-                        <DatePicker.YearPicker {...datePickerProps} />
+                        <DatePicker.YearPicker
+                            {...datePickerProps}
+                            onChange={(year) => {
+                                setStartDate(dayjs(year));
+                                setEndDate(dayjs(year).endOf('year'));
+                            }}
+                        />
                     ) : customDateType == 'month' ? (
-                        <DatePicker.MonthPicker {...datePickerProps} />
+                        <DatePicker.MonthPicker
+                            {...datePickerProps}
+                            onChange={(month) => {
+                                setStartDate(dayjs(month).startOf('month'));
+                                setEndDate(dayjs(month).endOf('month'));
+                            }}
+                        />
                     ) : customDateType == 'week' ? (
-                        <DatePicker.WeekPicker {...datePickerProps} />
+                        <DatePicker.WeekPicker
+                            {...datePickerProps}
+                            onChange={(week) => {
+                                setStartDate(dayjs(week).startOf('week'));
+                                setEndDate(dayjs(week).endOf('week'));
+                            }}
+                        />
                     ) : customDateType == 'day' ? (
-                        <DatePicker {...datePickerProps} />
+                        <DatePicker
+                            {...datePickerProps}
+                            onChange={(day) => {
+                                setStartDate(dayjs(day));
+                                setEndDate(dayjs(day).endOf('day'));
+                            }}
+                        />
                     ) : null}
                 </Space.Compact>
             ),
@@ -92,16 +238,16 @@ export default function ExplorePage() {
     const popularityFilterItems = [
         {
             key: 'popularity',
-            label: <a onClick={() => setPopularity('popularity')}>Popularity</a>,
+            label: <a onClick={() => setPopularity(null)}>No filter</a>,
             className: 'bg-transparent',
         },
         {
             key: 'mostPopular',
-            label: <a onClick={() => setPopularity('mostPopular')}>Most Popular</a>,
+            label: <a onClick={() => setPopularity(1)}>Most Popular</a>,
         },
         {
             key: 'leastPopular',
-            label: <a onClick={() => setPopularity('leastPopular')}>Least Popular</a>,
+            label: <a onClick={() => setPopularity(0)}>Least Popular</a>,
         },
     ];
 
@@ -124,24 +270,35 @@ export default function ExplorePage() {
     const locationFilterITems = [
         {
             key: 'location',
-            label: <a onClick={() => setLocation('location')}>location</a>,
+            label: (
+                <a
+                    onClick={() => {
+                        setLocationName('location');
+                        setLocationId(null);
+                    }}
+                >
+                    No filter
+                </a>
+            ),
             className: 'bg-transparent',
         },
-        {
-            key: 'city',
-            label: 'City',
-            className: 'bg-transparent',
-            children: [
-                {
-                    key: 'Damascus',
-                    label: <a onClick={() => setLocation('Damascus')}>Damascus</a>,
-                },
-                {
-                    key: 'Homs',
-                    label: <a onClick={() => setLocation('Homs')}>Homs</a>,
-                },
-            ],
-        },
+        ...getGroupedStatesWithCities(addresses).map((address) => ({
+            key: address.id,
+            label: <a>{address?.state?.stateName}</a>,
+            children: address.cities?.map((city) => ({
+                key: 'city-' + city.id,
+                label: (
+                    <a
+                        onClick={() => {
+                            setLocationName(city.cityName);
+                            setLocationId(address.id);
+                        }}
+                    >
+                        {city.cityName}
+                    </a>
+                ),
+            })),
+        })),
     ];
 
     return (
@@ -176,21 +333,21 @@ export default function ExplorePage() {
                             className='bg-transparent border-2 border-slate-300 rounded-3xl'
                         >
                             <button className='rounded-3xl bg-slate-200 p-2 px-4 text-center'>
-                                {selectedDate == 'anyTime'
+                                {selectedDateIdentifier == 'anyTime'
                                     ? 'Any Time'
-                                    : selectedDate == 'thisMonth'
+                                    : selectedDateIdentifier == 'thisMonth'
                                     ? 'This Month'
-                                    : selectedDate == 'thisWeek'
+                                    : selectedDateIdentifier == 'thisWeek'
                                     ? 'This Week'
-                                    : selectedDate == 'date'
+                                    : selectedDateIdentifier == 'date'
                                     ? customDateType == 'year'
-                                        ? 'Year x'
+                                        ? 'Year'
                                         : customDateType == 'month'
-                                        ? 'Month x'
+                                        ? 'Month'
                                         : customDateType == 'week'
-                                        ? 'Week x'
+                                        ? 'Week'
                                         : customDateType == 'day'
-                                        ? 'Day x'
+                                        ? 'Day'
                                         : null
                                     : null}
                             </button>
@@ -207,17 +364,17 @@ export default function ExplorePage() {
                             className='bg-transparent border-2 border-slate-300 rounded-3xl'
                         >
                             <button className='rounded-3xl bg-slate-200 p-2 px-4 text-center'>
-                                {popularity == 'popularity'
+                                {popularity == null
                                     ? 'Popularity'
-                                    : popularity == 'mostPopular'
+                                    : popularity == 1
                                     ? 'Most Popular'
-                                    : popularity == 'leastPopular'
+                                    : popularity == 0
                                     ? 'Least Popular'
                                     : null}
                             </button>
                         </Dropdown>
 
-                        <Dropdown
+                        {/* <Dropdown
                             menu={{ items: ticketFilterItems }}
                             placement='bottom'
                             openClassName='bg-slate-100 rounded-lg'
@@ -236,7 +393,7 @@ export default function ExplorePage() {
                                     ? 'Sold Out'
                                     : null}
                             </button>
-                        </Dropdown>
+                        </Dropdown> */}
 
                         <Dropdown
                             menu={{ items: locationFilterITems }}
@@ -249,9 +406,19 @@ export default function ExplorePage() {
                             className='bg-transparent border-2 border-slate-300 rounded-3xl'
                         >
                             <button className='rounded-3xl bg-slate-200 p-2 px-4 text-center'>
-                                {location === 'location' ? 'Location' : location}
+                                {locationId == null ? 'Location' : locationName}
                             </button>
                         </Dropdown>
+                        {(startDate != null || endDate != null || locationId != null || popularity != null) && (
+                            <div className='bg-transparent border-2 border-slate-300 rounded-3xl'>
+                                <button
+                                    className='rounded-3xl bg-slate-200 p-2 px-4 text-center'
+                                    onClick={handleClearFilters}
+                                >
+                                    clear filters
+                                </button>
+                            </div>
+                        )}
                     </div>
                     <Space.Compact className='w-full'>
                         <Input.Search
