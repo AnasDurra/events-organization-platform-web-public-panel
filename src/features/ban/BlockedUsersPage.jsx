@@ -92,7 +92,6 @@ const BlockedUsersPage = () => {
     );
 
     useEffect(() => {
-        console.log(data);
         setFilteredAttendees(data?.result);
     }, [data]);
 

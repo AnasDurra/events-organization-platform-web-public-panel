@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
-import OrganizerLayout from '../features/org profiles/Layout/OrganizerLayout';
+import OrganizerLayout from '../components/Layouts/OrganizerLayout';
 import RegisterAttendee from '../features/Attendees Profiles/RegisterAttendee';
 import ShowAttendeProfile from '../features/Attendees Profiles/ShowAttendeProfile';
 import ShowMyProfile from '../features/Attendees Profiles/ShowMyProfile';
@@ -19,7 +19,7 @@ import ShowAttendeeEvents from '../features/Attendees Profiles/ShowAttendeeEvent
 import ShowEventAttendees from '../features/Manage Events (org)/ShowEventAttendees';
 import BlockedUsersPage from '../features/ban/BlockedUsersPage';
 import NotFound from '../pages/notFound';
-import HomeLayout from '../features/landing/HomeLayout';
+import HomeLayout from '../components/Layouts/HomeLayout';
 import PopularPage from '../features/landing/PopularPage';
 import ExplorePage from '../features/landing/ExplorePage';
 import HomePage from '../features/landing/HomePage';
@@ -31,44 +31,38 @@ import TicketsBalancePage from '../features/Ticketing Packages/TicketsBalancePag
 import ResultSuccessPage from '../features/Ticketing Packages/ResultSuccessPage';
 import OrgAttendees from '../features/org profiles/OrgAttendees';
 import OrgEvents from '../features/org profiles/OrgEvents';
-import { getLoggedInUserV2 } from '../api/services/auth';
-
-const user = getLoggedInUserV2();
+import PublicLayout from '../components/Layouts/PublicLayout';
+import Roles from '../api/Roles';
+import BasicLayout from '../components/Layouts/BasicLayout';
 
 export const router = createBrowserRouter([
     {
-        path: '/not-found',
-        element: <NotFound />,
-    },
-    {
-        path: '/payment/success',
-        element: <ResultSuccessPage />,
-    },
-    {
-        path: '/login',
-        element: <LoginPage />,
-    },
-    {
-        path: '/register',
-        element: <RegisterAttendee />,
-    },
-    {
         path: '/',
-        element: user?.user_role == 2 ? <OrganizerLayout /> : <HomeLayout />,
-        errorElement: <ErrorPage />,
+        element: <BasicLayout />,
         children: [
             {
-                path: '/home/profile',
-                element: <ShowMyProfile />,
+                path: '/not-found',
+                element: <NotFound />,
             },
             {
-                path: '/home/profile/events',
-                element: <ShowAttendeeEvents />,
+                path: '/payment/success',
+                element: <ResultSuccessPage />,
             },
             {
-                path: '/home/profile/organizations',
-                element: <ShowFollowingOrgsList />,
+                path: '/login',
+                element: <LoginPage />,
             },
+            {
+                path: '/register',
+                element: <RegisterAttendee />,
+            },
+        ],
+    },
+
+    {
+        path: '/',
+        element: <PublicLayout />,
+        children: [
             {
                 path: '/attendee-profile/:id',
                 element: <ShowAttendeProfile />,
@@ -77,19 +71,10 @@ export const router = createBrowserRouter([
                 path: '/attendee-profile/:id/organizations',
                 element: <ShowFollowingOrgsList />,
             },
+            { path: 'org/:orgId/followers-list', element: <FollowersList /> },
             {
-                path: '/attendee/chats',
-                element: <ChatsList />,
-            },
-
-            {
-                path: '/event',
+                path: 'event',
                 children: [
-                    {
-                        path: 'create',
-                        element: <CreateEvent />,
-                    },
-
                     {
                         path: 'show/:id',
                         element: <ShowEvent />,
@@ -102,35 +87,10 @@ export const router = createBrowserRouter([
             },
         ],
     },
-    {
-        path: 'form/:form_id',
-        children: [
-            {
-                path: 'edit',
-                element: (
-                    <FormLayout>
-                        <EditFormPage />
-                    </FormLayout>
-                ),
-            },
-            {
-                path: 'event/:event_id/',
-                children: [
-                    {
-                        path: 'submit',
-                        element: <SubmitForm />,
-                    },
-                    {
-                        path: 'submissions',
-                        element: <ViewFormSubmissions />,
-                    },
-                ],
-            },
-        ],
-    },
+
     {
         path: 'home',
-        element: <HomeLayout />,
+        element: <HomeLayout roles={[Roles.ATTENDEE]} />,
         children: [
             { index: true, element: <HomePage /> },
             {
@@ -152,25 +112,78 @@ export const router = createBrowserRouter([
             {
                 path: 'profile',
                 element: <ShowMyProfile />,
+                children: [
+                    {
+                        path: 'events',
+                        element: <ShowAttendeeEvents />,
+                    },
+                    {
+                        path: 'organizations',
+                        element: <ShowFollowingOrgsList />,
+                    },
+                ],
+            },
+            {
+                path: 'chats',
+                element: <ChatsList />,
             },
         ],
     },
 
     {
         path: 'org',
-        element: <OrganizerLayout />,
+        element: <OrganizerLayout roles={[Roles.EMPLOYEE]} />,
         children: [
             // { index: true, element: <HomePage /> }, // TODO Edit this
             { path: ':orgId', element: <ProfilePage /> },
             { path: 'blocklist', element: <BlockedUsersPage /> },
-            { path: ':orgId/followers-list', element: <FollowersList /> },
+
             { path: ':orgId/config', element: <ConfigOrgPage /> },
-
             { path: 'members', element: <TeamPage /> },
-
-            { path: 'forms', element: <ViewFormsPage /> },
             { path: 'attendees', element: <OrgAttendees /> },
             { path: 'our-events', element: <OrgEvents /> },
+
+            {
+                path: 'forms',
+                element: <ViewFormsPage />,
+                children: [
+                    {
+                        path: ':form_id',
+                        children: [
+                            {
+                                path: 'edit',
+                                element: (
+                                    <FormLayout>
+                                        <EditFormPage />
+                                    </FormLayout>
+                                ),
+                            },
+                            {
+                                path: 'event/:event_id/',
+                                children: [
+                                    {
+                                        path: 'submit',
+                                        element: <SubmitForm />,
+                                    },
+                                    {
+                                        path: 'submissions',
+                                        element: <ViewFormSubmissions />,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                path: 'event',
+                children: [
+                    {
+                        path: 'create',
+                        element: <CreateEvent />,
+                    },
+                ],
+            },
         ],
     },
 ]);

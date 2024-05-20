@@ -73,6 +73,13 @@ export const auth = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+
+        checkAccessToken: builder.query({
+            query: () => ({
+                url: 'user/exchange',
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
@@ -90,4 +97,5 @@ export const getLoggedInUserV2 = () => {
     return null;
 };
 
-export const { useLoginMutation, useLogoutMutation, useSignupMutation, useUserMenuQuery } = auth;
+export const { useLoginMutation, useLogoutMutation, useSignupMutation, useUserMenuQuery, useCheckAccessTokenQuery } =
+    auth;

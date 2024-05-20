@@ -20,9 +20,9 @@ import { IoMdNotificationsOutline } from 'react-icons/io';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { getLoggedInUserV2 } from '../../api/services/auth';
-import { useGetAttendeeBalanceQuery } from '../Ticketing Packages/TicketingPackagesSlice';
+import { useGetAttendeeBalanceQuery } from '../../features/Ticketing Packages/TicketingPackagesSlice';
 import './Landing.css';
-import TicketsCard from './TicketsCard';
+import TicketsCard from '../../features/landing/TicketsCard';
 import { IoCreateSharp } from 'react-icons/io5';
 
 const { useToken } = theme;
