@@ -163,11 +163,11 @@ const ShowAttendeProfile = () => {
                     width: '90%',
                 }}
                 cover={
-                    <div>
+                    <div style={{ minHeight: '25vh' }}>
                         {data?.result?.cover_img ? (
                             <Image
                                 width={'100%'}
-                                height={'100%'}
+                                style={{ height: '100%', minHeight: '25vh' }}
                                 preview={{
                                     mask: (
                                         <>

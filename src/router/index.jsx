@@ -78,6 +78,11 @@ export const router = createBrowserRouter([
                 element: <ShowFollowingOrgsList />,
             },
             {
+                path: '/attendee/chats',
+                element: <ChatsList />,
+            },
+
+            {
                 path: '/event',
                 children: [
                     {

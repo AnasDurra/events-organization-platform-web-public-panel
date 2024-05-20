@@ -1,4 +1,4 @@
-import { Upload, message, Form, Select, DatePicker, Modal } from 'antd';
+import { Upload, message, Form, Select, DatePicker, Modal, Image } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { useEffect, useState } from 'react';
 import { useConfigurationListsQuery } from '../../api/services/lists';
@@ -57,6 +57,8 @@ const AdditionalInfoRegistrationForm = ({ form, imageFile, setImageFile }) => {
                                 {imageFile?.length != 0 ? '+Change Picture' : '+Upload'}
                             </Upload>
                         </ImgCrop>
+                        {console.log(URL.createObjectURL(imageFile[0]?.originFileObj))}
+                        {/* {imageFile && <Image height={250} src={URL.createObjectURL(imageFile[0]?.originFileObj)} />} */}
                     </div>
                 </Form.Item>
 

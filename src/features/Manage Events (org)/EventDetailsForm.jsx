@@ -1,6 +1,7 @@
 import {
     Button,
     Card,
+    Cascader,
     Checkbox,
     Col,
     Form,
@@ -133,7 +134,14 @@ const EventDetailsForm = ({
                         },
                     ]}
                 >
-                    <Select loading={listsIsLoading} allowClear mode='multiple' options={lists?.result.age_groups} />
+                    <Select
+                        mode='multiple'
+                        loading={listsIsLoading}
+                        allowClear
+                        options={lists?.result?.age_groups}
+                        showSearch
+                        filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
+                    />
                 </Form.Item>
 
                 <Form.Item
@@ -146,25 +154,36 @@ const EventDetailsForm = ({
                         },
                     ]}
                 >
-                    <Select loading={listsIsLoading} mode='tags' allowClear options={lists?.result.tags} />
+                    <Select
+                        mode='multiple'
+                        loading={listsIsLoading}
+                        allowClear
+                        options={lists?.result?.tags}
+                        showSearch
+                        filterOption={(input, option) => option.label.toLowerCase().includes(input.toLowerCase())}
+                    />
                 </Form.Item>
 
-                {/* <Form.Item label="Address" name="address_id">
-                                    <Cascader
-                                        options={[
-                                            {
-                                                value: "zhejiang",
-                                                label: "Zhejiang",
-                                                children: [
-                                                    {
-                                                        value: "hangzhou",
-                                                        label: "Hangzhou",
-                                                    },
-                                                ],
-                                            },
-                                        ]}
-                                    />
-                                </Form.Item> */}
+                {/* <Form.Item label='Address' name='address_id'>
+                    <Cascader
+                        options={[
+                            {
+                                value: 'zhejiang',
+                                label: 'Damascus',
+                                children: [
+                                    {
+                                        value: 'hangzhou',
+                                        label: 'Muhajirin',
+                                    },
+                                    {
+                                        value: 'syrghaya',
+                                        label: 'Sirghaya',
+                                    },
+                                ],
+                            },
+                        ]}
+                    />
+                </Form.Item> */}
 
                 <Form.Item
                     label='Address'

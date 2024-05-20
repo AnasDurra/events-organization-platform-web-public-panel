@@ -87,17 +87,17 @@ export default function HomeLayout() {
         </Menu>
     );
 
-    useEffect(() => {
-        if (navIndex == 0) {
-            navigate('/home');
-        } else if (navIndex == 1) {
-            navigate('popular');
-        } else if (navIndex == 2) {
-            navigate('explore');
-        } else if (navIndex == 3) {
-            //TODO go to  profile
-        }
-    }, [navIndex]);
+    // useEffect(() => {
+    //     if (navIndex == 0) {
+    //         navigate('/home');
+    //     } else if (navIndex == 1) {
+    //         navigate('popular');
+    //     } else if (navIndex == 2) {
+    //         navigate('explore');
+    //     } else if (navIndex == 3) {
+    //         //TODO go to  profile
+    //     }
+    // }, [navIndex]);
 
     return (
         <Layout className='h-[100svh]'>
