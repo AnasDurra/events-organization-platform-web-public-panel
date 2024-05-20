@@ -20,24 +20,30 @@ export default function Sider({ isSiderOpen, setIsSiderOpen, userMenu, userMenuI
     useEffect(() => {
         if (userMenu) {
             const formattedMenuItems = userMenu.map((item) => {
+                const itemIcon = (
+                    <Icon
+                        icon={`${item.icon}`}
+                        style={{ fontSize: '24px', marginRight: '5px', color: '#2B3856' }}
+                    ></Icon>
+                );
                 if (item.sub_menu) {
                     const children = item.sub_menu.map((subItem) => {
-                        return getItem(subItem.name, subItem.url, null, null);
+                        return getItem(
+                            subItem.name,
+                            subItem.url,
+                            <Icon
+                                icon={`${subItem.icon}`}
+                                style={{ fontSize: '24px', marginRight: '5px', color: '#2B3856' }}
+                            ></Icon>,
+                            null
+                        );
                     });
-                    return getItem(item.name, item.url, null, children);
+                    return getItem(item.name, item.url, itemIcon, children);
                 } else {
-                    return getItem(
-                        item.name,
-                        item.url,
-                        <Icon
-                            icon={`${item.icon}`}
-                            style={{ fontSize: '24px', marginRight: '5px', color: '#2B3856' }}
-                        ></Icon>,
-
-                        null
-                    );
+                    return getItem(item.name, item.url, itemIcon, null);
                 }
             });
+            console.log(formattedMenuItems);
 
             setItems(formattedMenuItems);
         }
