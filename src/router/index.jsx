@@ -34,6 +34,8 @@ import OrgAttendees from '../features/org profiles/OrgAttendees';
 import OrgEvents from '../features/org profiles/OrgEvents';
 import { getLoggedInUserV2 } from '../api/services/auth';
 import OrgTicketsPage from '../features/Ticketing Packages/OrgTicketsPage';
+import ViewCategoryPage from '../features/landing/ViewCategoryPage';
+import ViewAllCategoriesPage from '../features/landing/ViewAllCategoriesPage';
 
 const user = getLoggedInUserV2();
 
@@ -153,6 +155,36 @@ export const router = createBrowserRouter([
             {
                 path: 'following',
                 element: <ViewFollowingPage />,
+            },
+            {
+                path: 'event',
+                children: [
+                    {
+                        path: 'create',
+                        element: <CreateEvent />,
+                    },
+                    {
+                        path: 'show/:id',
+                        element: <ShowEvent />,
+                    },
+                    {
+                        path: 'show/:id/attendees',
+                        element: <ShowEventAttendees />,
+                    },
+                ],
+            },
+            {
+                path: 'tags',
+                children: [
+                    {
+                        index: true,
+                        element: <ViewAllCategoriesPage />,
+                    },
+                    {
+                        path: ':tag_name',
+                        element: <ViewCategoryPage />,
+                    },
+                ],
             },
         ],
     },

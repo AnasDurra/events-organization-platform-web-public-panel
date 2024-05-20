@@ -201,7 +201,7 @@ export default function ExplorePage() {
                         <DatePicker.YearPicker
                             {...datePickerProps}
                             onChange={(year) => {
-                                setStartDate(dayjs(year));
+                                setStartDate(dayjs(year).startOf('year'));
                                 setEndDate(dayjs(year).endOf('year'));
                             }}
                         />
@@ -243,11 +243,11 @@ export default function ExplorePage() {
         },
         {
             key: 'mostPopular',
-            label: <a onClick={() => setPopularity(1)}>Most Popular</a>,
+            label: <a onClick={() => setPopularity(true)}>Most Popular</a>,
         },
         {
             key: 'leastPopular',
-            label: <a onClick={() => setPopularity(0)}>Least Popular</a>,
+            label: <a onClick={() => setPopularity(false)}>Least Popular</a>,
         },
     ];
 
@@ -319,6 +319,7 @@ export default function ExplorePage() {
                 },
             }}
         >
+            {console.log('events: ', events)}
             <div className='flex flex-col '>
                 <div className='min-h-[20svh] md:min-h-[30svh] flex flex-col justify-start mt-6  md:mt-0 md:justify-center items-center px-2 md:px-8 space-y-10 md:space-y-10 '>
                     <div className='w-full flex space-x-2  md:space-x-4 '>

@@ -3,23 +3,40 @@ import { Avatar, Button, Card, Divider, Tag, theme } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import React from 'react';
 import { MdLocationOn } from 'react-icons/md';
+import dayjs from 'dayjs';
+import minMax from 'dayjs/plugin/minMax';
+import { useNavigate } from 'react-router-dom';
+dayjs.extend(minMax);
 
 const { useToken } = theme;
 
-export default function EventCardWithImage({ title, description, tags, organizationProfilePicture, eventImage }) {
+export default function EventCardWithImage({
+    id,
+    title,
+    description,
+    tags,
+    event_type,
+    organizationProfilePictureURL,
+    eventImageURL,
+    days,
+}) {
     const { token } = useToken();
+    const navigate = useNavigate();
 
     const cardCoverStyle = {
-        backgroundImage: `url(${eventImage})`,
+        backgroundImage: `url(${eventImageURL})`,
         borderColor: token.colorPrimary,
     };
 
+    const minDate = days.length > 0 ? dayjs.min(days.map((day) => dayjs(day.day_date))) : null;
+
+    const formattedDate = minDate ? minDate.format('DD MMM | HH:mm') : '';
+
     return (
         <div
-            className={`bg-red bg-white flex flex-col border-4  border-[${token.colorPrimary}] justify-between h-full rounded-xl transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105  duration-300`}
+            className={`bg-red bg-white flex flex-col border-0 border-[${token.colorPrimary}] justify-between h-full rounded-xl transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 duration-300`}
             style={{ borderColor: '#00474f' }}
         >
-            {console.log(token.colorPrimary)}
             <div>
                 <Card
                     className='w-full border-0 rounded-none rounded-t-xl pt-[0.1em]'
@@ -29,28 +46,39 @@ export default function EventCardWithImage({ title, description, tags, organizat
                             style={cardCoverStyle}
                         >
                             <div className='absolute inset-0 bg-black opacity-25 rounded-t-xl'></div>
-                            <div className='w-full px-4 flex justify-between items-start pt-2 flex-1'>
-                                <div className='flex items-center z-20'>14 sep | 11am</div>
-                                <div className='flex items-center z-20'>
-                                    <MdLocationOn />
-                                    <span>Damascus</span>
+                            <div className='flex flex-col w-full h-full justify-between'>
+                                <div className='w-full px-4 flex justify-between items-start pt-2 flex-1'>
+                                    <div className='flex items-center z-20'>{formattedDate}</div>{' '}
+                                    {/* Display formatted minimum date */}
+                                    <div className='flex items-center z-20'>
+                                        <MdLocationOn />
+                                        <span>Damascus</span>
+                                    </div>
+                                </div>
+
+                                <div className='flex flex-wrap justify-start  mx-2 my-2'>
+                                    {' '}
+                                    {/* Added justify-between for horizontal alignment */}
+                                    <Tag color='green'>form</Tag>
+                                    <Tag color='blue'>payment</Tag>
+                                    <Tag color='orange'>{event_type}</Tag>
                                 </div>
                             </div>
                         </div>
                     }
                 >
                     <Meta
-                        avatar={<Avatar src={organizationProfilePicture} />}
+                        avatar={<Avatar src={organizationProfilePictureURL} />}
                         title={title}
-                        description={<div className=' line-clamp-2'>{description}</div>}
+                        description={<div className='line-clamp-2'>{description}</div>}
                     />
                 </Card>
-                <div className='flex flex-wrap w-full my-2 p-4'>
+                <div className='flex flex-wrap w-full mx-2'>
                     {tags.map((tag, index) => (
                         <Tag
                             key={index}
                             className='my-1'
-                            color='blue'
+                            bordered={false}
                         >
                             {tag}
                         </Tag>
@@ -59,10 +87,11 @@ export default function EventCardWithImage({ title, description, tags, organizat
             </div>
             <div className='p-4'>
                 <Button
-                    className='w-full '
+                    className='w-full'
                     type='primary'
+                    onClick={() => navigate(`../event/show/${id}`)}
                 >
-                    BUY TICKETS
+                    REGISTER
                 </Button>
             </div>
         </div>

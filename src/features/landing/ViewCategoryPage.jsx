@@ -1,11 +1,13 @@
-import { Pagination, Spin } from 'antd';
-import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState } from 'react';
-import { URL } from '../../api/constants';
-import EventCardWithImage from './components/cards/EventCardWithImage';
 import { useLazyGetFollowingEventsQuery } from './feedsSlice';
+import Title from 'antd/es/typography/Title';
+import { Pagination, Spin } from 'antd';
+import EventCardWithImage from './components/cards/EventCardWithImage';
+import { useParams } from 'react-router-dom';
 
-export default function ViewFollowingPage() {
+export default function ViewCategoryPage() {
+    let { tag_name } = useParams();
+
     const [currentPage, setCurrentPage] = useState(1);
 
     const [getFollowingEvents, { data: { result: events } = { result: [] }, isFetching: isEventsLoading }] =
@@ -26,7 +28,7 @@ export default function ViewFollowingPage() {
                     level={3}
                     className='my-2 text-pretty'
                 >
-                    Events From Organizations You Follow
+                    {tag_name}
                 </Title>
             </div>
             <Spin
@@ -47,7 +49,9 @@ export default function ViewFollowingPage() {
                                 title={event.title}
                                 description={event.description}
                                 tags={event.tags.map((tag) => tag.tag.label)}
-                                organizationProfilePictureURL={URL + '/organization/mainPicture/'  +event.organization.main_picture}
+                                organizationProfilePictureURL={
+                                    URL + '/organization/mainPicture/' + event.organization.main_picture
+                                }
                                 eventImageURL={event.cover_picture_url}
                                 days={event.days}
                                 event_type={event.event_type}

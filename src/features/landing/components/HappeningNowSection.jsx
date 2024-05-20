@@ -16,15 +16,15 @@ export default function HappeningNowSection() {
         <div className='flex flex-col w-full p-4'>
             <div className='flex justify-between items-center'>
                 <Title level={3}>Happening now</Title>
-                <Button
+                <div
                     type='text'
-                    className='text-gray-500'
+                    className='text-gray-500 hover:cursor-pointer hover:shadow-2xl hover:animate-pulse px-2'
                 >
-                    view all
-                </Button>
+                    see more
+                </div>
             </div>
             <Skeleton loading={isLoading}>
-                {Array.isArray(events) && events.length > 0 ? <EventCard /> : <Empty description={'No Events!'}  />}
+                {Array.isArray(events) && events.length > 0 ? <EventCard /> : <Empty description={'No Events!'} />}
             </Skeleton>
         </div>
     );

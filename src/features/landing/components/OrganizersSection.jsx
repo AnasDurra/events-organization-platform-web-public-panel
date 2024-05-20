@@ -19,10 +19,10 @@ export default function OrganizersSection() {
             <div className='flex justify-between items-center'>
                 <Title level={3}>Organizers</Title>
                 <div
-                    className='text-gray-500 hover:cursor-pointer hover:shadow-2xl hover:animate-pulse'
+                    className='text-gray-500 hover:cursor-pointer hover:shadow-2xl hover:animate-pulse px-2'
                     onClick={() => navigate('orgs')}
                 >
-                    view all
+                    see more
                 </div>
             </div>
 

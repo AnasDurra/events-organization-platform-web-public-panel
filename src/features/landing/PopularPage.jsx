@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import EventRankCard from './components/cards/EventRankCard';
 import { Divider, Spin, theme } from 'antd';
-import CompactEventCard from './components/cards/CompactEventCard';
-import EventCardWithDate from './components/cards/EventCardWithDate';
+import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useLazyGetPopularEventsQuery } from './feedsSlice';
 import { v4 as uuidv4 } from 'uuid';
+import EventCardWithDate from './components/cards/EventCardWithDate';
+import { useLazyGetPopularEventsQuery } from './feedsSlice';
 
 const { useToken } = theme;
 

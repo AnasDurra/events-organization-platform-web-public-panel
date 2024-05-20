@@ -81,37 +81,37 @@ export default function HomePage() {
                 </div>
 
                 <div className='grid grid-cols-2 gap-4'>
-                    <div>
+                    <div className=' hover:cursor-pointer transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-105 duration-300'>
                         <CategoryCard
                             title={'Sport'}
                             emoji={'🤸'}
                         />
                     </div>
-                    <div>
+                    <div className=' hover:cursor-pointer transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-105 duration-300'>
                         <CategoryCard
                             title={'Tech'}
                             emoji={'🤖'}
                         />
                     </div>
-                    <div>
+                    <div className=' hover:cursor-pointer transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-105 duration-300'>
                         <CategoryCard
                             title={'Music'}
                             emoji={'🏟️'}
                         />
                     </div>
-                    <div>
+                    <div className=' hover:cursor-pointer transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-105 duration-300'>
                         <CategoryCard
                             title={'Gaming'}
                             emoji={'🎮'}
                         />
                     </div>
-                    <div>
+                    <div className=' hover:cursor-pointer transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-105 duration-300'>
                         <CategoryCard
                             title={'Educational'}
                             emoji={'🎓'}
                         />
                     </div>
-                    <div>
+                    <div className=' hover:cursor-pointer transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-105 duration-300'>
                         <CategoryCard
                             title={'Entertainment'}
                             emoji={'🌎'}

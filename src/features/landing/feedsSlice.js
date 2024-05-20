@@ -38,10 +38,8 @@ export const feedsSlice = apiSlice.injectEndpoints({
                 if (popularity != null) {
                     params['most_popular'] = popularity;
                 }
-                console.log('params2: ', params);
                 const queryString = new URLSearchParams(params).toString();
-                console.log('qry: ', queryString);
-                return `feed/soonEvents?${queryString}`;
+                return `feed/events?${queryString}`;
             },
         }),
 
