@@ -8,6 +8,9 @@ export const ticketingPackagesSlice = apiSlice.injectEndpoints({
         getAttendeeBalance: builder.query({
             query: (id) => `/payment/attendee/balance/${id}`,
         }),
+        getAttendeeTicketsHistory: builder.query({
+            query: (id) => `payment/attendee/${id}/ticketsHistory`,
+        }),
         checkout: builder.mutation({
             query: (body) => ({
                 url: '/payment/checkout',
@@ -18,4 +21,9 @@ export const ticketingPackagesSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetPackagesQuery, useGetAttendeeBalanceQuery,useCheckoutMutation } = ticketingPackagesSlice;
+export const {
+    useGetPackagesQuery,
+    useGetAttendeeBalanceQuery,
+    useCheckoutMutation,
+    useGetAttendeeTicketsHistoryQuery,
+} = ticketingPackagesSlice;

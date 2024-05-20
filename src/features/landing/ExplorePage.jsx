@@ -45,6 +45,7 @@ export default function ExplorePage() {
     const [pageSize, setPageSize] = useState(12);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [searchText, setSearchText] = useState(null);
 
     const { data: { result: addresses } = { result: [] } } = useGetAddressesQuery();
     const [getEvents, { data: { result: events } = { result: [] } }] = useLazyGetEventsQuery();
@@ -112,6 +113,9 @@ export default function ExplorePage() {
             if (popularity != null) {
                 params['popularity'] = popularity;
             }
+            if (searchText != null) {
+                params['search'] = searchText;
+            }
 
             params['page'] = page;
             params['pageSize'] = pageSize;
@@ -120,7 +124,7 @@ export default function ExplorePage() {
         };
 
         prepareAdParams();
-    }, [startDate, endDate, locationId, popularity]);
+    }, [startDate, endDate, locationId, popularity, searchText]);
 
     useEffect(() => {
         console.log(getGroupedStatesWithCities(addresses));
@@ -425,7 +429,8 @@ export default function ExplorePage() {
                         <Input.Search
                             variant='filled'
                             className='w-full'
-                        ></Input.Search>
+                            onSearch={(text) => setSearchText(text)}
+                        />
                     </Space.Compact>
                 </div>
                 <div className='w-full flex-1'>

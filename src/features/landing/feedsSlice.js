@@ -9,7 +9,7 @@ export const feedsSlice = apiSlice.injectEndpoints({
             query: ({ page, pageSize }) => `feed/soonEvents?page=${page}&pageSize=${pageSize}`,
         }),
         getEvents: builder.query({
-            query: ({ page, pageSize, startDate, endDate, locationId, popularity }) => {
+            query: ({ page, pageSize, startDate, endDate, locationId, popularity, search }) => {
                 const params = {};
 
                 if (page) {
@@ -37,6 +37,9 @@ export const feedsSlice = apiSlice.injectEndpoints({
                 }
                 if (popularity != null) {
                     params['most_popular'] = popularity;
+                }
+                if (search != null) {
+                    params['search'] = search;
                 }
                 const queryString = new URLSearchParams(params).toString();
                 return `feed/events?${queryString}`;
