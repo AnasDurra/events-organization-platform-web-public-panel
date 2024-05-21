@@ -100,7 +100,7 @@ export default function ViewFormsPage() {
                                         <div
                                             key={'actions-div-2'}
                                             className='flex flex-row justify-center items-center space-x-2'
-                                            onClick={() => navigate(`/form/${form.id}/edit`)}
+                                            onClick={() => navigate(`/forms/${form.id}/edit`)}
                                         >
                                             <SettingOutlined key='edit' />
                                             <span>edit</span>

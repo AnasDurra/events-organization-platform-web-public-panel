@@ -24,6 +24,35 @@ import { useGetAttendeeBalanceQuery } from '../../features/Ticketing Packages/Ti
 import './Landing.css';
 import TicketsCard from '../../features/landing/TicketsCard';
 import { IoCreateSharp } from 'react-icons/io5';
+import { GoNorthStar } from 'react-icons/go';
+
+const navigationItems = [
+    {
+        label: 'Home',
+        filledIcon: <HomeFilled />,
+        outlinedIcon: <HomeOutlined />,
+        path: '/home',
+    },
+    {
+        label: 'Following',
+        filledIcon: <GoNorthStar className=' text-[1.2em]' />,
+        outlinedIcon: <GoNorthStar className=' text-[1.2em]' />,
+        path: '/home/following',
+    },
+    {
+        label: 'Popular',
+        filledIcon: <FireFilled className='text-red-300 text-[1.2em]' />,
+        outlinedIcon: <FireFilled className='text-red-300 text-[1.2em]' />,
+        path: '/home/popular',
+        fire: true,
+    },
+    {
+        label: 'Explore',
+        filledIcon: <ExperimentFilled />,
+        outlinedIcon: <ExperimentOutlined />,
+        path: '/home/explore',
+    },
+];
 
 export default function HomeLayout({ roles }) {
     const navigate = useNavigate();
@@ -32,7 +61,7 @@ export default function HomeLayout({ roles }) {
 
     const theme = {
         token: {
-            colorPrimary: '#2C3531',
+            colorPrimary: '#116466',
         },
         components: {
             Layout: {
@@ -103,17 +132,16 @@ export default function HomeLayout({ roles }) {
         </Menu>
     );
 
-    useEffect(() => {
-        if (navIndex == 0) {
-            navigate('/home');
-        } else if (navIndex == 1) {
-            navigate('popular');
-        } else if (navIndex == 2) {
-            navigate('explore');
-        } else if (navIndex == 3) {
-            //TODO go to  profile
-        }
-    }, [navIndex]);
+    const handleNavigationClick = (index) => {
+        setNavIndex(index);
+        navigate(navigationItems[index].path);
+    };
+
+    const getNavIndexByPath = (path) => {
+        const item = navigationItems.find((item) => item.path == path);
+        return item ? navigationItems.indexOf(item) : 0;
+    };
+    const user = getLoggedInUserV2();
 
     useEffect(() => {
         console.log(checkAccessTokenObj);
@@ -134,27 +162,46 @@ export default function HomeLayout({ roles }) {
 
     return (
         <ConfigProvider theme={theme}>
-            <Spin
-                size='large'
-                spinning={isAccessTokenLoading}
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%',
-                    height: '100%',
-                }}
-            />
-            <Layout className='h-[100svh]' hidden={hideContent}>
+            {isAccessTokenLoading && (
+                <Spin
+                    size='large'
+                    spinning={isAccessTokenLoading}
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                        height: '100%',
+                    }}
+                />
+            )}
+
+            <Layout
+                className='h-[100svh]'
+                hidden={hideContent}
+            >
                 <Header className='h-[8svh] px-2'>
-                    <Row justify={'space-between'} className='h-full px-2'>
-                        <Col xs={{ span: 8 }} className='h-full flex items-center'>
+                    <Row
+                        justify={'space-between'}
+                        className='h-full px-2'
+                    >
+                        <Col
+                            xs={{ span: 8 }}
+                            className='h-full flex items-center'
+                        >
                             {' '}
-                            <Title style={{ margin: 0, color: 'whitesmoke' }} level={3} className='font-serif'>
+                            <Title
+                                style={{ margin: 0, color: 'whitesmoke' }}
+                                level={3}
+                                className='font-serif'
+                            >
                                 Eventure
                             </Title>
                         </Col>
-                        <Col xs={{ span: 16 }} className='h-full pr-2'>
+                        <Col
+                            xs={{ span: 16 }}
+                            className='h-full pr-2'
+                        >
                             <div className='w-full flex  mx-2 h-full items-center justify-end'>
                                 <div
                                     onClick={() => navigate('tickets')}
@@ -166,7 +213,10 @@ export default function HomeLayout({ roles }) {
                                     <TicketsCard ticketsCount={balance?.balance} />
                                 </div>
 
-                                <Badge count={5} size='small'>
+                                <Badge
+                                    count={5}
+                                    size='small'
+                                >
                                     <Button
                                         type='text'
                                         classNames={{ icon: 'text-2xl text-white' }}
@@ -205,41 +255,21 @@ export default function HomeLayout({ roles }) {
                         width={'20%'}
                     >
                         <div className='flex flex-col h-full mt-4 p-4 space-y-2'>
-                            <SiderNavigationItem
-                                key={uuidv4()}
-                                filledIcon={<HomeFilled />}
-                                outLinedIcon={<HomeOutlined />}
-                                isActive={navIndex == 0}
-                                label={'Home'}
-                                onClick={() => {
-                                    setNavIndex(0);
-                                }}
-                            />
-
-                            <SiderNavigationItem
-                                key={uuidv4()}
-                                filledIcon={<FireFilled className='text-red-300 text-[1.2em]' />}
-                                outLinedIcon={<FireOutlined className='text-red-300 text-[1.2em]' />}
-                                isActive={navIndex == 1}
-                                label={'Popular'}
-                                onClick={() => {
-                                    setNavIndex(1);
-                                }}
-                                fire
-                            />
-
-                            <SiderNavigationItem
-                                key={uuidv4()}
-                                filledIcon={<ExperimentFilled />}
-                                outLinedIcon={<ExperimentOutlined />}
-                                isActive={navIndex == 2}
-                                label={'Explore'}
-                                onClick={() => {
-                                    setNavIndex(2);
-                                }}
-                            />
+                            {navigationItems.map((item, index) => (
+                                <SiderNavigationItem
+                                    key={uuidv4()}
+                                    item={item}
+                                    isActive={navIndex == index}
+                                    onClick={() => handleNavigationClick(index)}
+                                    label={item.label}
+                                    filledIcon={item.filledIcon}
+                                    outLinedIcon={item.outlinedIcon}
+                                    fire={item.fire}
+                                />
+                            ))}
                         </div>
                     </Sider>
+
                     {/* <div className='md:grid md:grid-cols-10 w-full'>
                         <Content
                             className='md:col-span-7 md:col-start-2 h-[84svh] md:h-[92svh] overflow-y-scroll scroll-0 '
@@ -258,7 +288,10 @@ export default function HomeLayout({ roles }) {
                     </div>
                 </Layout>
 
-                <Footer className={`h-[8svh] p-0 md:hidden`} style={{ backgroundColor: theme.token.colorPrimary }}>
+                <Footer
+                    className={`h-[8svh] p-0 md:hidden`}
+                    style={{ backgroundColor: theme.token.colorPrimary }}
+                >
                     <BottomNavigation
                         showLabels
                         value={navIndex}

@@ -67,6 +67,37 @@ export const router = createBrowserRouter([
                 path: '/register',
                 element: <RegisterAttendee />,
             },
+            {
+                path: 'forms',
+                children: [
+                    {
+                        path: ':form_id',
+                        children: [
+                            {
+                                path: 'edit',
+                                element: (
+                                    <FormLayout>
+                                        <EditFormPage />
+                                    </FormLayout>
+                                ),
+                            },
+                            {
+                                path: 'event/:event_id',
+                                children: [
+                                    {
+                                        path: 'submit',
+                                        element: <SubmitForm />,
+                                    },
+                                    {
+                                        path: 'submissions',
+                                        element: <ViewFormSubmissions />,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
         ],
     },
 
@@ -96,6 +127,10 @@ export const router = createBrowserRouter([
                         element: <ShowEventAttendees />,
                     },
                 ],
+            },
+            {
+                path: 'org',
+                children: [{ path: ':orgId', element: <ProfilePage /> }],
             },
         ],
     },
@@ -194,34 +229,6 @@ export const router = createBrowserRouter([
             {
                 path: 'forms',
                 element: <ViewFormsPage />,
-                children: [
-                    {
-                        path: ':form_id',
-                        children: [
-                            {
-                                path: 'edit',
-                                element: (
-                                    <FormLayout>
-                                        <EditFormPage />
-                                    </FormLayout>
-                                ),
-                            },
-                            {
-                                path: 'event/:event_id/',
-                                children: [
-                                    {
-                                        path: 'submit',
-                                        element: <SubmitForm />,
-                                    },
-                                    {
-                                        path: 'submissions',
-                                        element: <ViewFormSubmissions />,
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                ],
             },
             {
                 path: 'event',

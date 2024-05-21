@@ -47,7 +47,7 @@ export default function OrganizerLayout({ roles }) {
 
     const theme = {
         token: {
-            colorPrimary: '#022140',
+            colorPrimary: '#265077',
         },
         components: {
             Layout: {
@@ -383,7 +383,7 @@ export default function OrganizerLayout({ roles }) {
                     />
                     <div className='lg:grid lg:grid-cols-9 w-full'>
                         <Content
-                            className='lg:col-span-7 lg:col-start-2 h-[84svh] lg:h-[92svh] overflow-y-scroll scrollbar-hide'
+                            className='lg:col-span-7 lg:col-start-2 h-[84svh] lg:h-[92svh] overflow-y-scroll scrollbar-hide ml-[10%]'
                             style={{ scrollbarWidth: 'none' }}
                         >
                             <Outlet />

@@ -1,10 +1,11 @@
-import { Button, ConfigProvider, DatePicker, Dropdown, Input, Pagination, Select, Space } from 'antd';
+import { Button, ConfigProvider, DatePicker, Dropdown, Input, Pagination, Select, Space, Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import './ExplorePage.css';
 import dayjs from 'dayjs';
 import { useGetAddressesQuery, useGetEventsQuery, useLazyGetEventsQuery } from './feedsSlice';
 import { key } from 'localforage';
+import EventCardWithImage from './components/cards/EventCardWithImage';
 const dimensions = [
     [400, 300],
     [950, 300],
@@ -48,7 +49,13 @@ export default function ExplorePage() {
     const [searchText, setSearchText] = useState(null);
 
     const { data: { result: addresses } = { result: [] } } = useGetAddressesQuery();
-    const [getEvents, { data: { result: events } = { result: [] } }] = useLazyGetEventsQuery();
+    const [
+        getEvents,
+        {
+            data: { result: { data: events, count: totalPages } } = { result: { data: [], count: 0 } },
+            isLoading: isEventsLoading,
+        },
+    ] = useLazyGetEventsQuery();
 
     function getGroupedStatesWithCities(addresses) {
         if (!addresses || !addresses.length) {
@@ -433,31 +440,65 @@ export default function ExplorePage() {
                         />
                     </Space.Compact>
                 </div>
-                <div className='w-full flex-1'>
-                    <ResponsiveMasonry columnsCountBreakPoints={{ 350: 3, 750: 3, 900: 4 }}>
-                        <Masonry gutter='1em'>
-                            {dimensions.map(([w, h], index) => (
-                                <img
-                                    key={index}
-                                    alt='Image 1'
-                                    src={`https://source.unsplash.com/random/${200}x${300}?space`}
-                                />
-                            ))}
-                        </Masonry>
-                    </ResponsiveMasonry>
-                </div>
-            </div>
 
-            {/* <Pagination
-                className='p-4'
-                onChange={(page) => {
-                    setCurrentPage(page);
-                }}
-                defaultCurrent={currentPage}
-                total={totalPages}
-                current={currentPage}
-                disabled={isEventsLoading}
-            /> */}
+                {isEventsLoading && (
+                    <Spin
+                        spinning
+                        tip={'loading'}
+                        size='large'
+                        className='flex justify-center items-center '
+                    />
+                )}
+
+                {/*  <div className='grid grid-cols-12 gap-4 p-4'>
+                     {events.map((event) => (
+                        <div
+                            key={event.id}
+                            className='col-start-2 col-span-10 md:col-span-4'
+                        >
+                            <EventCardWithImage
+                                id={event.event_id}
+                                title={event.event_title}
+                                description={event.event_description}
+                                tags={event.tags?.map((tag) => tag.tag.label)}
+                                organizationProfilePictureURL={
+                                    URL + '/organization/mainPicture/' + event.organization.main_picture
+                                }
+                                eventImageURL={event.cover_picture_url}
+                                days={event.days}
+                                event_type={event.event_type}
+                            />
+                        </div>
+                    ))} 
+                </div>
+                <div className='w-full flex justify-center  py-2'>
+                    <Pagination
+                        className='p-4'
+                        onChange={(page) => {
+                            setPage(page);
+                        }}
+                        defaultCurrent={page}
+                        total={10}
+                        current={page}
+                        disabled={isEventsLoading}
+                    />
+                </div> */}
+                {Array.isArray(events) && events.length == 0 && (
+                    <div className='w-full flex-1'>
+                        <ResponsiveMasonry columnsCountBreakPoints={{ 350: 3, 750: 3, 900: 4 }}>
+                            <Masonry gutter='1em'>
+                                {dimensions.map(([w, h], index) => (
+                                    <img
+                                        key={index}
+                                        alt='Image 1'
+                                        src={`https://source.unsplash.com/random/${200}x${300}?space`}
+                                    />
+                                ))}
+                            </Masonry>
+                        </ResponsiveMasonry>
+                    </div>
+                )}
+            </div>
         </ConfigProvider>
     );
 }
