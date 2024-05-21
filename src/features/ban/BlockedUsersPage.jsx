@@ -92,6 +92,7 @@ const BlockedUsersPage = () => {
     );
 
     useEffect(() => {
+        console.log(data);
         setFilteredAttendees(data?.result);
     }, [data]);
 
@@ -149,7 +150,7 @@ const BlockedUsersPage = () => {
                         >
                             <Link
                                 to={`/attendee-profile/${item?.attendee?.id}`}
-                                key={item?.attendee.id}
+                                key={item?.attendee?.id}
                                 style={{ textDecoration: 'none' }}
                             >
                                 <List.Item
@@ -166,12 +167,12 @@ const BlockedUsersPage = () => {
                                             icon={<UnlockOutlined />}
                                             key='unblock'
                                             onClick={(e) => {
-                                                item?.isBlocked
+                                                item?.blocking_date
                                                     ? confirmUnblockAttendee(e, item?.attendee)
                                                     : confirmBlockAttendee(e, item?.attendee);
                                             }}
                                         >
-                                            {item?.result?.isBlocked ? 'Unblock' : 'Block'}
+                                            {item?.blocking_date ? 'Unblock' : 'Block'}
                                         </Button>,
 
                                         <RightOutlined style={{ fontSize: '16px' }} key='navigate' />,
@@ -206,7 +207,9 @@ const BlockedUsersPage = () => {
                                         }
                                         description={
                                             <Space direction='vertical'>
-                                                <Text>{item?.attendee?.job?.label}</Text>
+                                                <Text>
+                                                    {item?.attendee?.job?.label ? item?.attendee?.job?.label : '-'}
+                                                </Text>
                                                 <Text type='secondary'>
                                                     Blocked by {item?.blocked_by?.username} on{' '}
                                                     {moment(item?.blocking_date).format('MMMM D, YYYY, h:mm A')}

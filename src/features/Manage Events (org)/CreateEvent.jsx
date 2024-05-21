@@ -177,7 +177,7 @@ const CreateEvent = () => {
                         console.log(res);
                         if (res.statusCode === 201) {
                             openNotification('success', 'Event Created Successfully !');
-                            // navigate(`/event/show/${res.result.id}`);
+                            navigate(`/event/show/${res.result.id}`);
                         }
                     })
                     .catch((error) => {

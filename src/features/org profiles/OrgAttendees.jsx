@@ -4,80 +4,86 @@ import './OrgAttendees.css';
 import { ArrowLeftOutlined, DollarOutlined } from '@ant-design/icons';
 
 import { useNavigate } from 'react-router-dom';
+import { useOrganizationAttendeesQuery } from './orgSlice';
 
 const OrgAttendees = () => {
+    const {
+        data: orgAttendees,
+        isLoading: isorgAttendeesLoading,
+        isFetching: isorgAttendeesFetching,
+    } = useOrganizationAttendeesQuery();
     const navigate = useNavigate();
-    // Fake data
     const [searchText, setSearchText] = useState('');
-    const data = [
-        {
-            status: true,
-            path: '/api/organization/attendees',
-            statusCode: 200,
-            result: [
-                {
-                    id: '4',
-                    firstName: 'hadi',
-                    lastName: 'ba',
-                    profile_image: 'https://randomuser.me/api/portraits/men/3.jpg',
-                    events: [
-                        {
-                            id: '2',
-                            title: 'dasd',
-                            description: 'dsadas',
-                            organization: {
-                                id: '1',
-                            },
-                            payedFees: 300,
-                        },
-                        {
-                            id: '3',
-                            title: 'dasd',
-                            description: 'dsadas',
-                            organization: {
-                                id: '1',
-                            },
-                            payedFees: 300,
-                        },
-                        {
-                            id: '4',
-                            title: 'dasd',
-                            description: 'dsadas',
-                            organization: {
-                                id: '1',
-                            },
-                            payedFees: 300,
-                        },
-                    ],
-                    totalFees: 0,
-                },
-                {
-                    id: '19',
-                    firstName: 'Anas',
-                    lastName: 'Rish',
-                    profile_image: 'https://randomuser.me/api/portraits/men/2.jpg',
-                    events: [
-                        {
-                            id: '2',
-                            title: 'dasd',
-                            description: 'dsadas',
-                            organization: {
-                                id: '1',
-                            },
-                            payedFees: 0,
-                        },
-                    ],
-                    totalFees: 50,
-                },
-            ],
-        },
-    ];
+
+    // const data = [
+    //     {
+    //         status: true,
+    //         path: '/api/organization/attendees',
+    //         statusCode: 200,
+    //         result: [
+    //             {
+    //                 id: '4',
+    //                 firstName: 'hadi',
+    //                 lastName: 'ba',
+    //                 profile_image: 'https://randomuser.me/api/portraits/men/3.jpg',
+    //                 events: [
+    //                     {
+    //                         id: '2',
+    //                         title: 'dasd',
+    //                         description: 'dsadas',
+    //                         organization: {
+    //                             id: '1',
+    //                         },
+    //                         payedFees: 300,
+    //                     },
+    //                     {
+    //                         id: '3',
+    //                         title: 'dasd',
+    //                         description: 'dsadas',
+    //                         organization: {
+    //                             id: '1',
+    //                         },
+    //                         payedFees: 300,
+    //                     },
+    //                     {
+    //                         id: '4',
+    //                         title: 'dasd',
+    //                         description: 'dsadas',
+    //                         organization: {
+    //                             id: '1',
+    //                         },
+    //                         payedFees: 300,
+    //                     },
+    //                 ],
+    //                 totalFees: 0,
+    //             },
+    //             {
+    //                 id: '19',
+    //                 firstName: 'Anas',
+    //                 lastName: 'Rish',
+    //                 profile_image: 'https://randomuser.me/api/portraits/men/2.jpg',
+    //                 events: [
+    //                     {
+    //                         id: '2',
+    //                         title: 'dasd',
+    //                         description: 'dsadas',
+    //                         organization: {
+    //                             id: '1',
+    //                         },
+    //                         payedFees: 0,
+    //                     },
+    //                 ],
+    //                 totalFees: 50,
+    //             },
+    //         ],
+    //     },
+    // ];
 
     const handleEventClick = (eventId) => {
         navigate(`/event/show/${eventId}`);
     };
 
-    const filteredAttendees = data[0].result.filter(
+    const filteredAttendees = orgAttendees?.result?.filter(
         (attendee) =>
             attendee.firstName.toLowerCase().includes(searchText.toLowerCase()) ||
             attendee.lastName.toLowerCase().includes(searchText.toLowerCase())
@@ -99,11 +105,14 @@ const OrgAttendees = () => {
                 placeholder='Search by name'
                 enterButton
                 onChange={(e) => handleSearch(e.target.value)}
+                disabled={isorgAttendeesLoading}
             />
             <Table
                 rowKey='id'
                 pagination={false}
                 dataSource={filteredAttendees}
+                loading={isorgAttendeesLoading}
+                bordered
                 columns={[
                     {
                         title: 'ID',
@@ -182,7 +191,6 @@ const OrgAttendees = () => {
                         width: 150,
                     },
                 ]}
-                bordered
                 className='org-attendees-table'
                 scroll={{ x: 600, y: false }}
             />

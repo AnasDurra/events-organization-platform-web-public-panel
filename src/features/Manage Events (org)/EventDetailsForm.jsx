@@ -82,7 +82,7 @@ const EventDetailsForm = ({
                 <Form.Item initialValue={1} label='Event Capacity' name='capacity'>
                     <Slider min={1} />
                 </Form.Item>
-                <Form.Item name='isChatEnabled' valuePropName='checked'>
+                <Form.Item name='isChatEnabled' valuePropName='checked' initialValue={false}>
                     <Checkbox onChange={() => setIsChatEnabled(!isChatEnabled)}>Is Chatting Enabled?</Checkbox>
                 </Form.Item>
                 {isChatEnabled && (

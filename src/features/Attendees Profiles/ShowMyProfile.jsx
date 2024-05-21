@@ -148,7 +148,7 @@ const ShowAttendeProfile = () => {
                                         </Tooltip>
                                     </div>
                                 </Col>
-                                <div className='flex flex-col sm:flex-row items-center justify-center sm:justify-start space-y-2 sm:space-x-2 sm:space-y-0 w-full'>
+                                <div className='flex flex-col sm:flex-row items-center justify-center sm:justify-start space-y-0 sm:space-x-0 sm:space-y-0 w-full'>
                                     <div className='order-1 sm:order-none'>
                                         <a
                                             style={{ display: 'flex', justifyContent: 'center' }}

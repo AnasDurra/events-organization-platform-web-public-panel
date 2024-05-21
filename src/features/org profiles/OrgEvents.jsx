@@ -27,28 +27,28 @@ const OrgEvents = () => {
         statusCode: 200,
         result: [
             {
-                event_id: '2',
+                event_id: '1',
                 event_title: 'Data Science Conference',
                 event_cover_picture_url: 'https://picsum.photos/300/200?random=1',
                 start_day: '2024-07-20T09:00:00.000Z',
                 tickets: 150,
             },
             {
-                event_id: '6',
+                event_id: '1',
                 event_title: 'Machine Learning Workshop',
                 event_cover_picture_url: 'https://picsum.photos/300/200?random=2',
                 start_day: '2024-08-15T10:30:00.000Z',
                 tickets: 100,
             },
             {
-                event_id: '7',
+                event_id: '2',
                 event_title: 'Blockchain Summit',
                 event_cover_picture_url: 'https://picsum.photos/300/200?random=3',
                 start_day: '2024-09-10T09:00:00.000Z',
                 tickets: 250,
             },
             {
-                event_id: '8',
+                event_id: '2',
                 event_title: 'Web Development Bootcamp',
                 event_cover_picture_url: 'https://picsum.photos/300/200?random=4',
                 start_day: '2024-10-05T08:00:00.000Z',
