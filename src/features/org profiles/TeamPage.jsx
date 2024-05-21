@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Col, Row, Avatar, Button, Space, Input, Spin } from 'antd';
 import { CheckCircleFilled, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import ModalNewMember from './configure org/modal-new member';
@@ -84,30 +84,26 @@ const TeamPage = () => {
         }
     };
 
+    useEffect(() => {
+        console.log(org);
+    }, [org]);
+
     return (
         <div style={{ padding: '24px' }}>
             <Spin spinning={isGetOrgLoading}>
-                <Row
-                    gutter={[20, 30]}
-                    justify='start'
-                >
+                <Row gutter={[20, 30]} justify='start'>
                     <Col span={24}>
-                        <Input.Search
-                            // className='org-attendees-search'
-                            placeholder='Search by name'
-                            enterButton
-                            size='large'
-                            // onChange={(e) => handleSearch(e.target.value)}
-                        />
+                        <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+                            <Input.Search
+                                // className='org-attendees-search'
+                                placeholder='Search by name'
+                                enterButton
+                                size='large'
+                                // onChange={(e) => handleSearch(e.target.value)}
+                            />
+                        </div>
                     </Col>
-                    <Col
-                        xs={24}
-                        sm={12}
-                        md={12}
-                        lg={8}
-                        xl={8}
-                        xxl={6}
-                    >
+                    <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={6}>
                         <div
                             style={{
                                 textAlign: 'center',
@@ -129,7 +125,7 @@ const TeamPage = () => {
                                     margin: '0 auto 16px',
                                 }}
                             >
-                                <div style={{ fontSize: '42px', lineHeight: '1' }}>{employees.length}</div>
+                                <div style={{ fontSize: '42px', lineHeight: '1' }}>{org?.employees?.length}</div>
                                 <div style={{ fontSize: '14px', lineHeight: '1' }}>EMPLOYEES</div>
                             </Space>
                             <Button
@@ -143,15 +139,7 @@ const TeamPage = () => {
                         </div>
                     </Col>
                     {org?.employees?.map((employee) => (
-                        <Col
-                            key={employee.id}
-                            xs={24}
-                            sm={12}
-                            md={12}
-                            lg={8}
-                            xl={8}
-                            xxl={6}
-                        >
+                        <Col key={employee.id} xs={24} sm={12} md={12} lg={8} xl={8} xxl={6}>
                             <Card
                                 onClick={() => {
                                     console.log('card clicked');
@@ -168,11 +156,8 @@ const TeamPage = () => {
                                     <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '8px' }}>
                                         <Avatar
                                             size={150}
-                                            alt={
-                                                employee?.user?.employee?.first_name +
-                                                employee?.user?.employee?.last_name
-                                            }
-                                            src={employee?.user?.employee?.profile_picture}
+                                            alt={employee?.first_name + employee?.last_name}
+                                            src={employee?.profile_picture ?? null}
                                         />
                                     </div>
                                 }
@@ -216,10 +201,10 @@ const TeamPage = () => {
                                 }}
                             >
                                 <Card.Meta
-                                    title={employee?.user?.employee?.first_name + employee?.user?.employee?.last_name}
+                                    title={employee?.first_name + employee?.last_name}
                                     description={employee?.user?.username}
                                 />
-                                <p style={{ marginTop: '8px' }}>{employee?.user?.employee?.phone_number}</p>
+                                <p style={{ marginTop: '8px' }}>{employee?.phone_number}</p>
                             </Card>
                         </Col>
                     ))}

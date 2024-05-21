@@ -145,19 +145,6 @@ export const router = createBrowserRouter([
                 element: <ChatsList />,
             },
             {
-                path: 'tags',
-                children: [
-                    {
-                        index: true,
-                        element: <ViewAllCategoriesPage />,
-                    },
-                    {
-                        path: ':tag_name',
-                        element: <ViewCategoryPage />,
-                    },
-                ],
-            },
-            {
                 path: 'event',
                 children: [
                     {

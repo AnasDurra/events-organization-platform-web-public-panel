@@ -148,76 +148,72 @@ const ShowAttendeProfile = () => {
                                         </Tooltip>
                                     </div>
                                 </Col>
-                                <Col xs={{ span: 24 }} sm={{ span: 5 }} md={{ span: 4 }}>
-                                    <a
-                                        style={{ display: 'flex', justifyContent: 'center' }}
-                                        onClick={() => {
-                                            Modal.info({
-                                                title: 'Avatar Picture',
-                                                content: (
-                                                    <img
-                                                        alt='Preview'
-                                                        style={{ width: '100%' }}
-                                                        src={
-                                                            data?.result?.profile_img ??
-                                                            'https://api.dicebear.com/7.x/miniavs/svg?seed=8'
-                                                        }
-                                                    />
-                                                ),
-                                                okText: 'Close',
-                                            });
-                                        }}
-                                        type='link'
-                                        size='small'
-                                    >
-                                        <Avatar
-                                            size={100}
-                                            icon={<UserOutlined />}
-                                            src={
-                                                data?.result?.profile_img ??
-                                                'https://api.dicebear.com/7.x/miniavs/svg?seed=8'
-                                            }
-                                            style={{
-                                                textAlign: 'center',
-                                                marginBottom: '10px',
-                                                border: '3px solid white',
-                                                borderRadius: '50%',
-                                                marginTop: '-60px',
+                                <div className='flex flex-col sm:flex-row items-center justify-center sm:justify-start space-y-2 sm:space-x-2 sm:space-y-0 w-full'>
+                                    <div className='order-1 sm:order-none'>
+                                        <a
+                                            style={{ display: 'flex', justifyContent: 'center' }}
+                                            onClick={() => {
+                                                Modal.info({
+                                                    title: 'Avatar Picture',
+                                                    content: (
+                                                        <img
+                                                            alt='Preview'
+                                                            style={{ width: '100%' }}
+                                                            src={
+                                                                data?.result?.profile_img ??
+                                                                'https://api.dicebear.com/7.x/miniavs/svg?seed=8'
+                                                            }
+                                                        />
+                                                    ),
+                                                    okText: 'Close',
+                                                });
                                             }}
-                                        />
-                                    </a>
-                                </Col>
-                                <Col
-                                    xs={{ span: 24 }}
-                                    sm={{ span: 10 }}
-                                    md={{ span: 7 }}
-                                    lg={{ span: 10, pull: 2 }}
-                                    xl={{ span: 6, pull: 1 }}
-                                >
-                                    {data ? (
-                                        <div style={{ textAlign: 'center' }}>
-                                            <Typography.Title
+                                            type='link'
+                                            size='small'
+                                        >
+                                            <Avatar
+                                                size={100}
+                                                icon={<UserOutlined />}
+                                                src={
+                                                    data?.result?.profile_img ??
+                                                    'https://api.dicebear.com/7.x/miniavs/svg?seed=8'
+                                                }
                                                 style={{
-                                                    // marginTop: '10px',
-                                                    marginBottom: '0px',
+                                                    textAlign: 'center',
+                                                    marginBottom: '10px',
+                                                    border: '3px solid white',
+                                                    borderRadius: '50%',
+                                                    marginTop: '-60px',
                                                 }}
-                                                level={3}
-                                            >
-                                                {data?.result?.full_name ? data.result?.full_name : ''}
-                                            </Typography.Title>
-                                            <Typography.Text type='secondary'>
-                                                {`Member since ${formatDate(data?.result.join_date)}
+                                            />
+                                        </a>
+                                    </div>
+                                    <div className='order-2 sm:order-none'>
+                                        {data ? (
+                                            <div style={{ textAlign: 'center' }}>
+                                                <Typography.Title
+                                                    style={{
+                                                        // marginTop: '10px',
+                                                        marginBottom: '0px',
+                                                    }}
+                                                    level={3}
+                                                >
+                                                    {data?.result?.full_name ? data.result?.full_name : ''}
+                                                </Typography.Title>
+                                                <Typography.Text type='secondary'>
+                                                    {`Member since ${formatDate(data?.result.join_date)}
                                                     ${
                                                         data?.result.address?.label
                                                             ? `* ${data?.result.address?.label}`
                                                             : ''
                                                     }`}
-                                            </Typography.Text>
-                                        </div>
-                                    ) : (
-                                        ''
-                                    )}
-                                </Col>
+                                                </Typography.Text>
+                                            </div>
+                                        ) : (
+                                            ''
+                                        )}
+                                    </div>
+                                </div>
                             </Row>
                         </Skeleton>
                     </div>

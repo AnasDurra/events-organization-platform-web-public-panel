@@ -240,9 +240,17 @@ export default function HomeLayout({ roles }) {
                             />
                         </div>
                     </Sider>
-                    <div className='md:grid md:grid-cols-10 w-full'>
+                    {/* <div className='md:grid md:grid-cols-10 w-full'>
                         <Content
                             className='md:col-span-7 md:col-start-2 h-[84svh] md:h-[92svh] overflow-y-scroll scroll-0 '
+                            style={{ scrollbarWidth: 'none' }}
+                        >
+                            <Outlet />
+                        </Content>
+                    </div> */}
+                    <div className='md:grid md:grid-cols-9 w-full'>
+                        <Content
+                            className='md:col-span-7 md:col-start-2 h-[84svh] md:h-[92svh] overflow-y-scroll scrollbar-hide'
                             style={{ scrollbarWidth: 'none' }}
                         >
                             <Outlet />

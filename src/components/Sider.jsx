@@ -43,7 +43,7 @@ export default function Sider({ isSiderOpen, setIsSiderOpen, userMenu, userMenuI
                     return getItem(item.name, item.url, itemIcon, null);
                 }
             });
-            console.log(formattedMenuItems);
+            // console.log(formattedMenuItems);
 
             setItems(formattedMenuItems);
         }

@@ -56,7 +56,7 @@ const DropdownSider = ({ menu }) => {
             >
                 <Button
                     type='text'
-                    className='bg-blue-500 md:bg-red-500'
+                    // className='bg-blue-500 md:bg-red-500'
                     style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}
                     icon={
                         <Icon

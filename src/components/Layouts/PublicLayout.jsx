@@ -23,7 +23,9 @@ export default function PublicLayout() {
             navigate('/login');
         }
     }, [checkAccessTokenError]);
-
+    useEffect(() => {
+        console.log(checkAccessTokenObj);
+    }, [checkAccessTokenObj]);
     return (
         <>
             <Spin
@@ -40,7 +42,7 @@ export default function PublicLayout() {
 
             {checkAccessTokenObj?.result?.user_role?.id == Roles.EMPLOYEE ? (
                 <OrganizerLayout roles={[Roles.EMPLOYEE]} />
-            ) : checkAccessTokenObj?.result?.user_role?.id == Roles.EMPLOYEE ? (
+            ) : checkAccessTokenObj?.result?.user_role?.id == Roles.ATTENDEE ? (
                 <HomeLayout roles={[Roles.ATTENDEE]} />
             ) : (
                 <></>
