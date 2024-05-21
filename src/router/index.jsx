@@ -97,6 +97,11 @@ export const router = createBrowserRouter([
                     },
                 ],
             },
+            {
+                path: 'org',
+                children: [{ path: ':orgId', element: <ProfilePage /> }],
+                
+            },
         ],
     },
 

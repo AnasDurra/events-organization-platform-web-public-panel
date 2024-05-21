@@ -31,7 +31,7 @@ export default function HomePage() {
                     <div
                         key={index}
                         className='relative hover:cursor-pointer'
-                        onClick={()=>navigate('event')}
+                        onClick={() => navigate('event')}
                     >
                         <div className='m-2 rounded-3xl overflow-hidden shadow-md'>
                             <div className='absolute inset-0 mx-2 bg-black opacity-30 rounded-3xl'></div>{' '}
