@@ -172,16 +172,17 @@ const BasicInfoRegistrationForm = ({ form }) => {
                         message: 'Please enter your password',
                     },
                     {
-                        min: 8,
-                        message: 'Password must be at least 8 characters',
+                        min: 6,
+                        message: 'Password must be at least 6 characters',
                     },
                     {
                         max: 20,
                         message: 'Password cannot exceed 20 characters',
                     },
                     {
-                        pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                        message: 'Password must contain at least one letter and one number',
+                        pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@#$^&*_]{6,20}$/,
+                        message:
+                            'Password must contain at least one letter, one number, and can include special characters',
                     },
                 ]}
             >

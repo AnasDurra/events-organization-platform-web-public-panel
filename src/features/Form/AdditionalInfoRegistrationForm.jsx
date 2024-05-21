@@ -23,7 +23,7 @@ const AdditionalInfoRegistrationForm = ({ form, imageFile, setImageFile }) => {
     const getSrcFromFile = (file) => {
         return new Promise((resolve) => {
             const reader = new FileReader();
-            reader.readAsDataURL(file.originFileObj);
+            reader.readAsDataURL(file?.originFileObj);
             reader.onload = () => resolve(reader.result);
         });
     };
@@ -57,8 +57,6 @@ const AdditionalInfoRegistrationForm = ({ form, imageFile, setImageFile }) => {
                                 {imageFile?.length != 0 ? '+Change Picture' : '+Upload'}
                             </Upload>
                         </ImgCrop>
-                        {console.log(URL.createObjectURL(imageFile[0]?.originFileObj))}
-                        {/* {imageFile && <Image height={250} src={URL.createObjectURL(imageFile[0]?.originFileObj)} />} */}
                     </div>
                 </Form.Item>
 

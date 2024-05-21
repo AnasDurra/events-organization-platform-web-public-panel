@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, List, Input, Button, Typography, Tag, Space } from 'antd';
 import './OrgAttendees.css';
 import { ArrowLeftOutlined, DollarOutlined } from '@ant-design/icons';
@@ -13,6 +13,8 @@ const OrgAttendees = () => {
         isFetching: isorgAttendeesFetching,
     } = useOrganizationAttendeesQuery();
     const navigate = useNavigate();
+    const [filteredAttendees, setfilteredAttendees] = useState(null);
+
     const [searchText, setSearchText] = useState('');
 
     // const data = [
@@ -83,15 +85,19 @@ const OrgAttendees = () => {
         navigate(`/event/show/${eventId}`);
     };
 
-    const filteredAttendees = orgAttendees?.result?.filter(
-        (attendee) =>
-            attendee.firstName.toLowerCase().includes(searchText.toLowerCase()) ||
-            attendee.lastName.toLowerCase().includes(searchText.toLowerCase())
-    );
-
     const handleSearch = (value) => {
         setSearchText(value);
     };
+
+    useEffect(() => {
+        setfilteredAttendees(
+            orgAttendees?.result?.filter(
+                (attendee) =>
+                    attendee.firstName.toLowerCase().includes(searchText.toLowerCase()) ||
+                    attendee.lastName.toLowerCase().includes(searchText.toLowerCase())
+            )
+        );
+    }, [orgAttendees]);
 
     return (
         <div className='org-attendees-container'>
