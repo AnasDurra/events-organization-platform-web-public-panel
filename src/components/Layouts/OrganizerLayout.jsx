@@ -38,7 +38,7 @@ export default function OrganizerLayout({ roles }) {
         isLoading: isAccessTokenLoading,
         error: checkAccessTokenError,
     } = useCheckAccessTokenQuery();
-    const [logoutMutation] = useLogoutMutation();
+    const [logoutMutation, { isLoading: isLogoutLoading }] = useLogoutMutation();
     const [isSiderOpen, setIsSiderOpen] = useState(true);
 
     const navigate = useNavigate();
@@ -264,9 +264,9 @@ export default function OrganizerLayout({ roles }) {
 
     return (
         <ConfigProvider theme={theme}>
-            {/* <Spin
+            <Spin
                 size='large'
-                spinning={isAccessTokenLoading}
+                spinning={isAccessTokenLoading || isLogoutLoading}
                 style={{
                     display: 'flex',
                     justifyContent: 'center',
@@ -274,7 +274,7 @@ export default function OrganizerLayout({ roles }) {
                     width: '100%',
                     height: '100%',
                 }}
-            /> */}
+            />
             <Layout hidden={hideContent}>
                 <Header className='h-[8svh] px-2'>
                     <Row justify={'space-between'} className='h-full px-2'>
