@@ -3,6 +3,7 @@ import React from 'react';
 import { Icon } from '@iconify/react';
 import Meta from 'antd/es/card/Meta';
 import Title from 'antd/es/typography/Title';
+import { useNavigate } from 'react-router-dom';
 
 const categories = [
     { title: 'Sport', icon: 'flat-color-icons:sports-mode' },
@@ -14,6 +15,7 @@ const categories = [
 ];
 
 export default function ViewAllCategoriesPage() {
+    const navigate = useNavigate();
     return (
         <div className='flex flex-col mt-2 space-y-4 px-4'>
             <div className='flex w-full justify-center'>
@@ -26,6 +28,7 @@ export default function ViewAllCategoriesPage() {
                     <Card
                         key={category.title}
                         className='bg-gradient-to-b from-green-300 to-transparent hover:shadow-lg rounded-3xl hover:cursor-pointer'
+                        onClick={() => navigate(category.title)}
                     >
                         <div className='flex justify-center items-center h-full p-4'>
                             <Icon

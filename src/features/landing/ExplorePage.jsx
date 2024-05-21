@@ -1,4 +1,4 @@
-import { Button, ConfigProvider, DatePicker, Dropdown, Input, Select, Space } from 'antd';
+import { Button, ConfigProvider, DatePicker, Dropdown, Input, Pagination, Select, Space } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
 import './ExplorePage.css';
@@ -45,13 +45,14 @@ export default function ExplorePage() {
     const [pageSize, setPageSize] = useState(12);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+    const [searchText, setSearchText] = useState(null);
 
     const { data: { result: addresses } = { result: [] } } = useGetAddressesQuery();
     const [getEvents, { data: { result: events } = { result: [] } }] = useLazyGetEventsQuery();
 
     function getGroupedStatesWithCities(addresses) {
         if (!addresses || !addresses.length) {
-            return []; // Return empty array for invalid input
+            return [];
         }
 
         const groupedStates = [];
@@ -112,6 +113,9 @@ export default function ExplorePage() {
             if (popularity != null) {
                 params['popularity'] = popularity;
             }
+            if (searchText != null) {
+                params['search'] = searchText;
+            }
 
             params['page'] = page;
             params['pageSize'] = pageSize;
@@ -120,7 +124,7 @@ export default function ExplorePage() {
         };
 
         prepareAdParams();
-    }, [startDate, endDate, locationId, popularity]);
+    }, [startDate, endDate, locationId, popularity, searchText, page]);
 
     useEffect(() => {
         console.log(getGroupedStatesWithCities(addresses));
@@ -425,7 +429,8 @@ export default function ExplorePage() {
                         <Input.Search
                             variant='filled'
                             className='w-full'
-                        ></Input.Search>
+                            onSearch={(text) => setSearchText(text)}
+                        />
                     </Space.Compact>
                 </div>
                 <div className='w-full flex-1'>
@@ -442,6 +447,17 @@ export default function ExplorePage() {
                     </ResponsiveMasonry>
                 </div>
             </div>
+
+            {/* <Pagination
+                className='p-4'
+                onChange={(page) => {
+                    setCurrentPage(page);
+                }}
+                defaultCurrent={currentPage}
+                total={totalPages}
+                current={currentPage}
+                disabled={isEventsLoading}
+            /> */}
         </ConfigProvider>
     );
 }

@@ -39,25 +39,7 @@ export default function PopularPage() {
     }, []);
 
     return (
-        <div className={`flex flex-col h-full mt-2 `}>
-            {/*    <div className='mx-[5%] hover:cursor-pointer '>
-                <EventRankCard
-                    rank={1}
-                    imgUrl={'/assets/event-1.png'}
-                />
-            </div>
-            <div className='mx-[5%]'>
-                <EventRankCard
-                    rank={2}
-                    imgUrl={'/assets/event-2.png'}
-                />
-            </div>
-            <div className='mx-[5%]'>
-                <EventRankCard
-                    rank={3}
-                    imgUrl={'/assets/event-3.png'}
-                />
-            </div> */}
+        <div className='flex flex-col h-full mt-2'>
             <div className='w-full'>
                 <InfiniteScroll
                     dataLength={loadedEvents.length}
@@ -69,21 +51,27 @@ export default function PopularPage() {
                     style={{ scrollbarWidth: 'none' }}
                 >
                     {loadedEvents.map((event, index) => (
-                        <div key={'event' + uuidv4()}>
+                        <div
+                            key={'event' + uuidv4()}
+                            className='flex justify-center'
+                        >
                             <div
-                                className={
-                                    'rounded-3xl ' +
-                                    (index == 0
-                                        ? 'bg-yellow-50 p-2 pb-6'
-                                        : index == 1
-                                        ? 'bg-slate-200 p-2 pb-6 '
-                                        : index == 2
-                                        ? 'bg-orange-100 p-2 pb-6'
-                                        : null)
-                                }
+                                className={`rounded-3xl shadow-lg p-6 mb-6 w-full max-w-4xl 
+                                    ${
+                                        index === 0
+                                            ? 'bg-gradient-to-r from-yellow-200 via-yellow-300 to-yellow-400'
+                                            : ''
+                                    }
+                                    ${index === 1 ? 'bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400' : ''}
+                                    ${
+                                        index === 2
+                                            ? 'bg-gradient-to-r from-orange-200 via-orange-300 to-orange-400'
+                                            : ''
+                                    }
+                                    ${index > 2 ? 'bg-white' : ''}`}
                             >
-                                <Divider>#{index + 1}</Divider>
-                                <div className=' mx-4'>
+                                <Divider className='text-lg font-semibold'>{`#${index + 1}`}</Divider>
+                                <div className='mx-4'>
                                     <EventCardWithDate
                                         eventTitle={event.event_title}
                                         eventDescription={event.event_description}
@@ -96,51 +84,6 @@ export default function PopularPage() {
                     ))}
                 </InfiniteScroll>
             </div>
-
-            {/*      <div className='bg-slate-200 p-2 pb-6 '>
-                <Divider>#2</Divider>
-                <div className=' mx-4'>
-                    <EventCardWithDate />
-                </div>
-            </div>
-
-            <div className='bg-orange-100 p-2 pb-6'>
-                <Divider>#3</Divider>
-                <div className=' mx-4'>
-                    <EventCardWithDate />
-                </div>
-            </div>
-
-            <Divider></Divider>
-            <div className=' mx-4'>
-                <EventCardWithDate />
-            </div>
-            <div className=' mx-4'>
-                <EventCardWithDate />
-            </div> */}
-
-            {/*  <CompactEventCard rank={4} />
-            <CompactEventCard rank={5} />
-            <CompactEventCard rank={4} />
-            <CompactEventCard rank={5} />
-            <CompactEventCard rank={4} />
-            <CompactEventCard rank={5} /> */}
-
-            {/* <div className='w-full flex flex-col col-span-2 space-y-4  h-full'>
-                <div className='bg-[#eaba3a]  px-4 py-4 rounded-t-3xl '>
-                    <div className='text-center w-full text-white text-lg font-bold mb-2'>TOP 3</div>
-                    <div className=' bg-[#cd9630] flex space-y-2  px-2 py-4 flex-col rounded-2xl '>
-                        <CompactEventCard rank={1} />
-                        <CompactEventCard rank={2} />
-                        <CompactEventCard rank={3} />
-                    </div>
-                </div>
-                <Divider />
-                <div className='mt-2 flex flex-col space-y-2'>
-                    <CompactEventCard rank={4} />
-                    <CompactEventCard rank={5} />
-                </div>
-            </div> */}
         </div>
     );
 }

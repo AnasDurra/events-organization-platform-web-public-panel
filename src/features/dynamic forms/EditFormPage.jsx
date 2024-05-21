@@ -12,10 +12,12 @@ import {
     useAddNewFieldMutation,
     useAddNewFieldOptionMutation,
     useAddNewGroupMutation,
+    useAddValidationRuleMutation,
     useGetFormQuery,
     useRemoveFieldMutation,
     useRemoveFieldOptionMutation,
     useRemoveGroupMutation,
+    useRemoveValidationRuleMutation,
     useUpdateFieldOptionNameMutation,
     useUpdateGroupFieldMutation,
     useUpdateGroupMutation,
@@ -25,9 +27,11 @@ import { onDragEnd } from './utils-drag';
 export default function EditFormPage() {
     let { form_id } = useParams();
     const { data: { result: DBform } = { result: {} }, isSuccess: isFetchFormSuccess } = useGetFormQuery(form_id);
+
     const [addNewGroup] = useAddNewGroupMutation();
     const [addNewField] = useAddNewFieldMutation();
     const [addNewFieldOption] = useAddNewFieldOptionMutation({ fixedCacheKey: 'shared-update-option' });
+    const [addValidationRule] = useAddValidationRuleMutation();
 
     const [updateGroup] = useUpdateGroupMutation();
     const [updateGroupField, { isError: isUpdateFormFieldError }] = useUpdateGroupFieldMutation({
@@ -38,6 +42,7 @@ export default function EditFormPage() {
     const [removeGroup] = useRemoveGroupMutation();
     const [removeField] = useRemoveFieldMutation();
     const [removeFieldOption] = useRemoveFieldOptionMutation({ fixedCacheKey: 'shared-update-option' });
+    const [removeValidationRule] = useRemoveValidationRuleMutation();
 
     // const [groups, setGroups] = useState([]);
     const [selectedField, setSelectedField] = useState(null);
@@ -67,13 +72,18 @@ export default function EditFormPage() {
     const debounceUpdateFieldOption = debounce(updateFieldOption, debounceTime);
 
     const handleUpdateProperties = (updatedField) => {
-        console.log(updatedField);
+        if (updatedField?.validationRules?.length) {
+            if (updatedField.validationRules[0].delete) {
+                removeValidationRule(updatedField.validationRules[0].validation_rule_id);
+            } else {
+                addValidationRule({ field_id: updatedField.id, ...updatedField.validationRules[0] });
+            }
+        }
         const updatedFieldValues = {
             name: updatedField.name,
             label: updatedField.label,
             required: updatedField.required,
             position: updatedField.position,
-            validationRules: updatedField.validationRules,
         };
 
         let currentFieldValues;
@@ -138,50 +148,9 @@ export default function EditFormPage() {
                 });
             }
         }
-
-        /* if (optionsToUpdate) {
-            if (!currentFieldValues.options) {
-                optionsToUpdate.forEach((option) => {
-                    addNewFieldOption({ field_id: updatedField?.id, name: option.name });
-                    console.log('new opt: ', option);
-                });
-            } else {
-                const addedOptions = optionsToUpdate.filter((option) => !currentFieldValues.options.includes(option));
-                const removedOptions = currentFieldValues.options.filter((option) => !optionsToUpdate.includes(option));
-
-                addedOptions.forEach((option) => {
-                    addNewFieldOption({ field_id: updatedField?.id, name: option.name });
-                    console.log('new opt: ', option);
-                });
-
-                removedOptions.forEach((option) => {
-                    removeFieldOption({ option_id: option.id });
-                    console.log('rem opt: ', option);
-                });
-            }
-        } */
-
-        /*  setGroups((groups) =>
-        groups.map((group) => ({
-            ...group,
-            fields: group.fields.map((field) => {
-                if (field.id === selectedField.id) {
-                    return updatedField;
-                }
-                return field;
-            }),
-        }))
-    ); */
-        // setSelectedField(updatedField);
     };
 
     const handleDeleteField = () => {
-        /* setGroups((groups) =>
-            groups.map((group) => ({
-                ...group,
-                fields: group.fields.filter((field) => field.id !== selectedField.id),
-            }))
-        ); */
         removeField({ field_id: selectedField.id, form_id }).then(() => setSelectedField(null));
     };
 

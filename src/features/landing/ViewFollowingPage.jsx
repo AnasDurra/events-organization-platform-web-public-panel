@@ -8,8 +8,13 @@ import { useLazyGetFollowingEventsQuery } from './feedsSlice';
 export default function ViewFollowingPage() {
     const [currentPage, setCurrentPage] = useState(1);
 
-    const [getFollowingEvents, { data: { result: events } = { result: [] }, isFetching: isEventsLoading }] =
-        useLazyGetFollowingEventsQuery();
+    const [
+        getFollowingEvents,
+        {
+            data: { result: { data: events, count: totalPages } } = { result: { data: [], count: 0 } },
+            isFetching: isEventsLoading,
+        },
+    ] = useLazyGetFollowingEventsQuery();
 
     useEffect(() => {
         getFollowingEvents({ page: currentPage, pageSize: 6 });
@@ -35,8 +40,6 @@ export default function ViewFollowingPage() {
                 size='large'
             >
                 <div className='grid grid-cols-12 gap-4 p-4'>
-                    {console.log('events', events)}
-
                     {events.map((event) => (
                         <div
                             key={event.id}
@@ -47,7 +50,9 @@ export default function ViewFollowingPage() {
                                 title={event.title}
                                 description={event.description}
                                 tags={event.tags.map((tag) => tag.tag.label)}
-                                organizationProfilePictureURL={URL + '/organization/mainPicture/'  +event.organization.main_picture}
+                                organizationProfilePictureURL={
+                                    URL + '/organization/mainPicture/' + event.organization.main_picture
+                                }
                                 eventImageURL={event.cover_picture_url}
                                 days={event.days}
                                 event_type={event.event_type}
@@ -63,7 +68,7 @@ export default function ViewFollowingPage() {
                         setCurrentPage(page);
                     }}
                     defaultCurrent={currentPage}
-                    total={50}
+                    total={totalPages}
                     current={currentPage}
                     disabled={isEventsLoading}
                 />

@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { Input, Checkbox, Space, Button, Divider, InputNumber } from 'antd';
+
 import Title from 'antd/es/typography/Title';
+import { CloseOutlined } from '@ant-design/icons';
 
 export default function NumberProperties({
     field,
@@ -26,7 +28,7 @@ export default function NumberProperties({
     };
 
     const handleValidationRulesChange = (ruleWithVal) => {
-        onValidationRulesChange(ruleWithVal)
+        onValidationRulesChange(ruleWithVal);
     };
 
     useEffect(() => {
@@ -84,19 +86,47 @@ export default function NumberProperties({
             <Divider>Rules</Divider>
             <div className='flex flex-col space-y-4'>
                 <div className='flex  items-start'>
-                    <div className='w-40 text-left'>minimum:</div>
                     <InputNumber
                         size='small'
-                        className='w-40'
+                        controls={false}
                         id='num-prop-rule-min'
+                        addonBefore={'minimum'}
+                        addonAfter={
+                            <CloseOutlined
+                                style={{ color: 'GrayText' }}
+                                className='hover:cursor-pointer'
+                                onClick={() =>
+                                    handleValidationRulesChange({
+                                        rule: 'min',
+                                        delete: true,
+                                        validation_rule_id: field.id,
+                                    })
+                                }
+                            />
+                        }
                         onBlur={(e) => handleValidationRulesChange({ rule: 'min', value: e.target.value })}
                     />
                 </div>
-                <div className='flex justify-between items-start'>
-                    <div className='w-40 text-left'>maximum:</div>
+                <div className='flex items-start'>
                     <InputNumber
                         size='small'
-                        className='w-40'
+                        controls={false}
+                        id='num-prop-rule-max'
+                        addonBefore={'maximum'}
+                        addonAfter={
+                            <CloseOutlined
+                                style={{ color: 'GrayText' }}
+                                className='hover:cursor-pointer'
+                                onClick={() =>
+                                    handleValidationRulesChange({
+                                        rule: 'max',
+                                        delete: true,
+                                        validation_rule_id: field.id,
+                                    })
+                                }
+                            />
+                        }
+                        onBlur={(e) => handleValidationRulesChange({ rule: 'max', value: e.target.value })}
                     />
                 </div>
             </div>

@@ -10,8 +10,13 @@ export default function ViewCategoryPage() {
 
     const [currentPage, setCurrentPage] = useState(1);
 
-    const [getFollowingEvents, { data: { result: events } = { result: [] }, isFetching: isEventsLoading }] =
-        useLazyGetFollowingEventsQuery();
+    const [
+        getFollowingEvents,
+        {
+            data: { result: { data: events, count: totalPages } } = { result: { data: [], count: 0 } },
+            isFetching: isEventsLoading,
+        },
+    ] = useLazyGetFollowingEventsQuery();
 
     useEffect(() => {
         getFollowingEvents({ page: currentPage, pageSize: 6 });
@@ -39,7 +44,7 @@ export default function ViewCategoryPage() {
                 <div className='grid grid-cols-12 gap-4 p-4'>
                     {console.log('events', events)}
 
-                    {events.map((event) => (
+                    {events?.map((event) => (
                         <div
                             key={event.id}
                             className='col-start-2 col-span-10 md:col-span-4'

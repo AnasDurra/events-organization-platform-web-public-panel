@@ -126,6 +126,14 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['form'],
         }),
+        addValidationRule: builder.mutation({
+            query: (body) => ({
+                url: `forms/validationRule`,
+                method: 'POST',
+                body: body,
+            }),
+            invalidatesTags: ['form'],
+        }),
         submitForm: builder.mutation({
             query: (data) => ({
                 url: `/forms/fillForm`,
@@ -314,6 +322,13 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['form'],
         }),
+        removeValidationRule: builder.mutation({
+            query: (id) => ({
+                url: `forms/validationRule/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['form'],
+        }),
     }),
 });
 
@@ -328,6 +343,7 @@ export const {
     useAddNewGroupMutation,
     useAddNewFieldMutation,
     useAddNewFieldOptionMutation,
+    useAddValidationRuleMutation,
     useUpdateFormMutation,
     useUpdateGroupMutation,
     useUpdateGroupFieldMutation,
@@ -336,4 +352,5 @@ export const {
     useRemoveFieldMutation,
     useRemoveFieldOptionMutation,
     useRemoveGroupMutation,
+    useRemoveValidationRuleMutation,
 } = dynamicFormsSlice;

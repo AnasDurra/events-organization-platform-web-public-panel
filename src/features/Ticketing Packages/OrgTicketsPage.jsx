@@ -106,36 +106,38 @@ export default function OrgTicketsPage() {
 
     return (
         <div className='container'>
-            <div className='w-full flex justify-start items-center p-4 m-4 space-x-8'>
-                <Card bordered={false}>
-                    <Statistic
-                        title='Generated Revenue'
-                        value={900}
-                        prefix={<DollarCircleFilled className='text-green-900' />}
-                        suffix='$'
-                    />
-                </Card>
-                <Card bordered={false}>
-                    <Statistic
-                        title='Current Tickets Balance'
-                        value={1500}
-                        prefix={<TiTicket className='text-yellow-500' />}
-                    />
-                </Card>
-                <Card bordered={false}>
-                    <Statistic
-                        title='Last Month Tickets'
-                        value={900}
-                        prefix={<TiTicket className='text-yellow-500' />}
-                    />
-                </Card>
-                <Card bordered={false}>
-                    <Statistic
-                        title='Total Tickets Sold'
-                        value={2500}
-                        prefix={<TiTicket className='text-yellow-500' />}
-                    />
-                </Card>
+            <div className='flex  items-center'>
+                <div className='w-full flex justify-start rounded-lg items-center p-4 m-4 space-x-8 bg-gradient-to-r from-[#8ed6bc] to-[#f0a2cf] via-[#a794e5]'>
+                    <Card bordered={false}>
+                        <Statistic
+                            title='Generated Revenue'
+                            value={900}
+                            prefix={<DollarCircleFilled className='text-green-900' />}
+                            suffix='$'
+                        />
+                    </Card>
+                    <Card bordered={false}>
+                        <Statistic
+                            title='Current Tickets Balance'
+                            value={1500}
+                            prefix={<TiTicket className='text-yellow-500' />}
+                        />
+                    </Card>
+                    <Card bordered={false}>
+                        <Statistic
+                            title='Last Month Tickets'
+                            value={900}
+                            prefix={<TiTicket className='text-yellow-500' />}
+                        />
+                    </Card>
+                    <Card bordered={false}>
+                        <Statistic
+                            title='Total Tickets Sold'
+                            value={2500}
+                            prefix={<TiTicket className='text-yellow-500' />}
+                        />
+                    </Card>
+                </div>
                 <Button type='primary'> Withdraw</Button>
             </div>
             <Tabs
