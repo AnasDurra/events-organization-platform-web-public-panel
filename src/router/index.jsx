@@ -13,7 +13,7 @@ import ConfigOrgPage from '../features/org profiles/ConfigOrgPage';
 import ProfilePage from '../features/org profiles/ProfilePage';
 import TeamPage from '../features/org profiles/TeamPage';
 import ErrorPage from '../pages/error-page';
-import LoginPage from '../pages/loginPage';
+import AttendeeLoginPage from '../pages/login pages/AttendeeLoginPage';
 import ViewFormSubmissions from '../features/dynamic forms/submission/ViewFormSubmissions';
 import ShowAttendeeEvents from '../features/Attendees Profiles/ShowAttendeeEvents';
 import ShowEventAttendees from '../features/Manage Events (org)/ShowEventAttendees';
@@ -34,12 +34,15 @@ import OrgEvents from '../features/org profiles/OrgEvents';
 import PublicLayout from '../components/Layouts/PublicLayout';
 import Roles from '../api/Roles';
 import BasicLayout from '../components/Layouts/BasicLayout';
+import OrganizerLoginPage from '../pages/login pages/OrganizerLoginPage';
 
 export const router = createBrowserRouter([
     {
         path: '/',
         element: <BasicLayout />,
+        errorElement: <ErrorPage />,
         children: [
+            //  { index: true, element: </> }, // TODO make a landing page for all types of users
             {
                 path: '/not-found',
                 element: <NotFound />,
@@ -50,7 +53,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/login',
-                element: <LoginPage />,
+                element: <AttendeeLoginPage />,
+            },
+            {
+                path: '/org/login',
+                element: <OrganizerLoginPage />,
             },
             {
                 path: '/register',
@@ -62,6 +69,7 @@ export const router = createBrowserRouter([
     {
         path: '/',
         element: <PublicLayout />,
+        errorElement: <ErrorPage />,
         children: [
             {
                 path: '/attendee-profile/:id',
@@ -91,6 +99,7 @@ export const router = createBrowserRouter([
     {
         path: 'home',
         element: <HomeLayout roles={[Roles.ATTENDEE]} />,
+        errorElement: <ErrorPage />,
         children: [
             { index: true, element: <HomePage /> },
             {
@@ -133,8 +142,9 @@ export const router = createBrowserRouter([
     {
         path: 'org',
         element: <OrganizerLayout roles={[Roles.EMPLOYEE]} />,
+        errorElement: <ErrorPage />,
         children: [
-            // { index: true, element: <HomePage /> }, // TODO Edit this
+            { index: true, element: <ProfilePage /> },
             { path: ':orgId', element: <ProfilePage /> },
             { path: 'blocklist', element: <BlockedUsersPage /> },
 

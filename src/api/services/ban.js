@@ -8,6 +8,7 @@ export const ban = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: body,
             }),
+            invalidatesTags: ['followers-list'],
         }),
         unBlockUser: builder.mutation({
             query: (body) => ({
@@ -15,18 +16,21 @@ export const ban = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: body,
             }),
+            invalidatesTags: ['followers-list'],
         }),
         blockList: builder.query({
             query: () => ({
                 url: 'organization/blacklist',
                 method: 'GET',
             }),
+            providesTags: 'followers-list',
         }),
         isBlocked: builder.query({
             query: (id) => ({
                 url: `organization/is-blocked/${id}`,
                 method: 'GET',
             }),
+            providesTags: 'followers-list',
         }),
     }),
 });

@@ -31,6 +31,8 @@ export default function OrganizerLayout({ roles }) {
     const screens = Grid.useBreakpoint();
     const [isLargerThanLGScreen, setIsLargerThanLGScreen] = useState(isLargerThanLG(screens));
     const user = getLoggedInUserV2();
+    const [hideContent, setHideContent] = useState(true);
+
     const {
         data: checkAccessTokenObj,
         isLoading: isAccessTokenLoading,
@@ -236,14 +238,18 @@ export default function OrganizerLayout({ roles }) {
     }, [screens]);
 
     useEffect(() => {
+        console.log(checkAccessTokenObj);
         if (checkAccessTokenObj) {
             if (!roles?.includes(checkAccessTokenObj?.result?.user_role?.id)) {
                 navigate('/not-found');
+            } else {
+                setHideContent(false);
             }
         }
     }, [checkAccessTokenObj, roles]);
 
     useEffect(() => {
+        console.log(checkAccessTokenError);
         if (checkAccessTokenError) {
             navigate('/login');
         }
@@ -251,123 +257,133 @@ export default function OrganizerLayout({ roles }) {
 
     return (
         <ConfigProvider theme={theme}>
-            <Spin spinning={isAccessTokenLoading}>
-                <Layout>
-                    <Header className='h-[8svh] px-2'>
-                        <Row justify={'space-between'} className='h-full px-2'>
-                            <Col xs={{ span: 12 }} className='h-full flex items-center'>
-                                <div className='md:hidden'>
-                                    <DropdownSider menu={userMenu.result.menu} />
-                                </div>
-                                <Title style={{ margin: 0, color: 'whitesmoke' }} level={3} className='font-serif'>
-                                    Eventure
-                                </Title>
-                            </Col>
-                            <Col xs={{ span: 12 }}>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'end',
-                                        gap: '16px',
-                                        width: '100%',
-                                        height: '100%',
-                                        // paddingRight: '8px',
-                                    }}
-                                >
-                                    <Button
-                                        type='text'
-                                        onClick={() => navigate('/event/create')}
-                                        style={{ transition: 'transform 0.3s' }}
-                                        icon={
-                                            <Icon
-                                                icon='fluent:calendar-add-28-filled'
-                                                style={{
-                                                    fontSize: '24px',
-                                                    color: '#fff',
-                                                    transition: 'transform 0.3s, color 0.3s',
-                                                }}
-                                                onMouseEnter={(e) => {
-                                                    e.target.style.transform = 'scale(1.2)';
-                                                    e.target.style.color = '#40a9ff';
-                                                }}
-                                                onMouseLeave={(e) => {
-                                                    e.target.style.transform = 'scale(1)';
-                                                    e.target.style.color = '#fff';
-                                                }}
-                                            />
-                                        }
-                                    />
-                                    <Badge count={5} size='small'>
-                                        <Dropdown arrow overlay={notificationMenu} trigger={['click']}>
-                                            <Badge count={notifications.length} size='small'>
-                                                <Button
-                                                    type='text'
-                                                    style={{ transition: 'transform 0.3s' }}
-                                                    icon={
-                                                        <Icon
-                                                            icon='clarity:notification-solid'
-                                                            style={{
-                                                                fontSize: '24px',
-                                                                color: '#fff',
-                                                                transition: 'transform 0.3s, color 0.3s',
-                                                            }}
-                                                            onMouseEnter={(e) => {
-                                                                e.target.style.transform = 'scale(1.2)';
-                                                                e.target.style.color = '#40a9ff';
-                                                            }}
-                                                            onMouseLeave={(e) => {
-                                                                e.target.style.transform = 'scale(1)';
-                                                                e.target.style.color = '#fff';
-                                                            }}
-                                                        />
-                                                    }
-                                                />
-                                            </Badge>
-                                        </Dropdown>
-                                    </Badge>
-                                    <Dropdown arrow overlay={menu} placement='bottomLeft'>
-                                        <a onClick={(e) => e.preventDefault()}>
-                                            <img
-                                                src='https://randomuser.me/api/portraits/men/3.jpg'
-                                                alt='Profile'
-                                                style={{
-                                                    width: '3em',
-                                                    aspectRatio: '1',
-                                                    borderRadius: '50%',
-                                                    transition: 'transform 0.3s',
-                                                }}
-                                                onMouseEnter={(e) => {
-                                                    e.target.style.transform = 'scale(1.1)';
-                                                }}
-                                                onMouseLeave={(e) => {
-                                                    e.target.style.transform = 'scale(1)';
-                                                }}
-                                            />
-                                        </a>
-                                    </Dropdown>
-                                </div>
-                            </Col>
-                        </Row>
-                    </Header>
-
-                    <Layout>
-                        <Sider
-                            isSiderOpen={isSiderOpen}
-                            setIsSiderOpen={setIsSiderOpen}
-                            userMenu={userMenu?.result?.menu}
-                            userMenuIsLoading={userMenuIsLoading}
-                        />
-                        <div className='md:grid md:grid-cols-10 w-full'>
-                            <Content
-                                className='md:col-span-7 md:col-start-2 h-[84svh] md:h-[92svh] overflow-y-scroll scroll-0 '
-                                style={{ scrollbarWidth: 'none' }}
+            <Spin
+                size='large'
+                spinning={isAccessTokenLoading}
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                }}
+            />
+            <Layout hidden={hideContent}>
+                <Header className='h-[8svh] px-2'>
+                    <Row justify={'space-between'} className='h-full px-2'>
+                        <Col xs={{ span: 12 }} className='h-full flex items-center'>
+                            <div className='md:hidden'>
+                                <DropdownSider menu={userMenu.result.menu} />
+                            </div>
+                            <Title style={{ margin: 0, color: 'whitesmoke' }} level={3} className='font-serif'>
+                                Eventure
+                            </Title>
+                        </Col>
+                        <Col xs={{ span: 12 }}>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'end',
+                                    gap: '16px',
+                                    width: '100%',
+                                    height: '100%',
+                                    // paddingRight: '8px',
+                                }}
                             >
-                                <Outlet />
-                            </Content>
-                        </div>
-                    </Layout>
-                    {/* <Footer style={{ backgroundColor: '#265077', color: '#fff', padding: '1.5rem 0', textAlign: 'center' }}>
+                                <Button
+                                    type='text'
+                                    onClick={() => navigate('event/create')}
+                                    style={{ transition: 'transform 0.3s' }}
+                                    icon={
+                                        <Icon
+                                            icon='fluent:calendar-add-28-filled'
+                                            style={{
+                                                fontSize: '24px',
+                                                color: '#fff',
+                                                transition: 'transform 0.3s, color 0.3s',
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.target.style.transform = 'scale(1.2)';
+                                                e.target.style.color = '#40a9ff';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.target.style.transform = 'scale(1)';
+                                                e.target.style.color = '#fff';
+                                            }}
+                                        />
+                                    }
+                                />
+                                <Badge count={5} size='small'>
+                                    <Dropdown arrow overlay={notificationMenu} trigger={['click']}>
+                                        <Badge count={notifications.length} size='small'>
+                                            <Button
+                                                type='text'
+                                                style={{ transition: 'transform 0.3s' }}
+                                                icon={
+                                                    <Icon
+                                                        icon='clarity:notification-solid'
+                                                        style={{
+                                                            fontSize: '24px',
+                                                            color: '#fff',
+                                                            transition: 'transform 0.3s, color 0.3s',
+                                                        }}
+                                                        onMouseEnter={(e) => {
+                                                            e.target.style.transform = 'scale(1.2)';
+                                                            e.target.style.color = '#40a9ff';
+                                                        }}
+                                                        onMouseLeave={(e) => {
+                                                            e.target.style.transform = 'scale(1)';
+                                                            e.target.style.color = '#fff';
+                                                        }}
+                                                    />
+                                                }
+                                            />
+                                        </Badge>
+                                    </Dropdown>
+                                </Badge>
+                                <Dropdown arrow overlay={menu} placement='bottomLeft'>
+                                    <a onClick={(e) => e.preventDefault()}>
+                                        <img
+                                            src='https://randomuser.me/api/portraits/men/3.jpg'
+                                            alt='Profile'
+                                            style={{
+                                                width: '3em',
+                                                aspectRatio: '1',
+                                                borderRadius: '50%',
+                                                transition: 'transform 0.3s',
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.target.style.transform = 'scale(1.1)';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.target.style.transform = 'scale(1)';
+                                            }}
+                                        />
+                                    </a>
+                                </Dropdown>
+                            </div>
+                        </Col>
+                    </Row>
+                </Header>
+
+                <Layout>
+                    <Sider
+                        isSiderOpen={isSiderOpen}
+                        setIsSiderOpen={setIsSiderOpen}
+                        userMenu={userMenu?.result?.menu}
+                        userMenuIsLoading={userMenuIsLoading}
+                    />
+                    <div className='md:grid md:grid-cols-10 w-full'>
+                        <Content
+                            className='md:col-span-7 md:col-start-2 h-[84svh] md:h-[92svh] overflow-y-scroll scroll-0 '
+                            style={{ scrollbarWidth: 'none' }}
+                        >
+                            <Outlet />
+                        </Content>
+                    </div>
+                </Layout>
+                {/* <Footer style={{ backgroundColor: '#265077', color: '#fff', padding: '1.5rem 0', textAlign: 'center' }}>
                 <Typography.Text strong style={{ fontSize: '1.2rem', marginBottom: '1rem', color: '#fff' }}>
                     © 2024 Abdo Organization. All rights reserved.
                 </Typography.Text>
@@ -383,8 +399,7 @@ export default function OrganizerLayout({ roles }) {
                     </a>
                 </div>
             </Footer> */}
-                </Layout>
-            </Spin>
+            </Layout>
         </ConfigProvider>
     );
 }

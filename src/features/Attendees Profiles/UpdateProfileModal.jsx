@@ -180,9 +180,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                             {data?.result?.cover_img || coverImageFile?.length != 0 ? (
                                 <Image
                                     width={'100%'}
-                                    style={{
-                                        borderRadius: '15px',
-                                    }}
+                                    style={{ height: '100%', minHeight: '25vh', borderRadius: '15px' }}
                                     src={
                                         coverImageFile?.length != 0
                                             ? URL.createObjectURL(coverImageFile[0].originFileObj)

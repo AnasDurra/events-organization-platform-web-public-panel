@@ -1,15 +1,15 @@
-import { Outlet, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { isLargerThanLG } from '../../utils/antd.utils';
-import { getLoggedInUserV2, useCheckAccessTokenQuery } from '../../api/services/auth';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useCheckAccessTokenQuery } from '../../api/services/auth';
 
 import { Spin } from 'antd';
 import Roles from '../../api/Roles';
 import OrganizerLayout from './OrganizerLayout';
 import HomeLayout from './HomeLayout';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Icon } from '@iconify/react';
 
-export default function PublicLayout({ roles }) {
-    const user = getLoggedInUserV2();
+export default function PublicLayout() {
     const {
         data: checkAccessTokenObj,
         isLoading: isAccessTokenLoading,
@@ -26,13 +26,25 @@ export default function PublicLayout({ roles }) {
 
     return (
         <>
-            <Spin spinning={isAccessTokenLoading}>
-                {checkAccessTokenObj?.result?.user_role?.id == Roles.EMPLOYEE ? (
-                    <OrganizerLayout roles={[Roles.EMPLOYEE]} />
-                ) : (
-                    <HomeLayout roles={[Roles.ATTENDEE]} />
-                )}
-            </Spin>
+            <Spin
+                size='large'
+                spinning={isAccessTokenLoading}
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                }}
+            />
+
+            {checkAccessTokenObj?.result?.user_role?.id == Roles.EMPLOYEE ? (
+                <OrganizerLayout roles={[Roles.EMPLOYEE]} />
+            ) : checkAccessTokenObj?.result?.user_role?.id == Roles.EMPLOYEE ? (
+                <HomeLayout roles={[Roles.ATTENDEE]} />
+            ) : (
+                <></>
+            )}
         </>
     );
 }

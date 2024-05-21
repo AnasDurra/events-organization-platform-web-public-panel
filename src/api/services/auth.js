@@ -10,6 +10,7 @@ export const auth = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: credentials,
             }),
+            invalidatesTags: ['auth'],
             transformResponse: (responseData) => {
                 Cookies.set('accessToken', responseData?.result?.access_token, {
                     expires: 12,
@@ -27,6 +28,7 @@ export const auth = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: credentials,
             }),
+            invalidatesTags: ['auth'],
             transformResponse: (responseData) => {
                 console.log(responseData?.result);
                 Cookies.set('user', JSON.stringify(responseData?.result), {
@@ -47,6 +49,7 @@ export const auth = apiSlice.injectEndpoints({
                 url: 'auth/logout',
                 method: 'POST',
             }),
+            invalidatesTags: ['auth'],
             transformResponse: (responseData) => {
                 console.log('hello ', responseData);
                 if (responseData?.statusCode == 200) {
@@ -79,6 +82,7 @@ export const auth = apiSlice.injectEndpoints({
                 url: 'user/exchange',
                 method: 'GET',
             }),
+            providesTags: ['auth'],
         }),
     }),
 });
