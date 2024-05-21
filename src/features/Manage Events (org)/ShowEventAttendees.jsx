@@ -1,4 +1,4 @@
-import { List, Avatar, Typography, Button, Space, Badge, Input, Select, Dropdown, Menu, Spin } from 'antd';
+import { List, Avatar, Typography, Button, Space, Badge, Input, Select, Dropdown, Menu, Spin, Tabs } from 'antd';
 import { LeftOutlined, RightOutlined, EllipsisOutlined } from '@ant-design/icons';
 
 import moment from 'moment';
@@ -10,6 +10,9 @@ const { Option } = Select;
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useShowEventAttendeesQuery } from '../../api/services/events';
+import EventAttendeesList from './EventAttendeesList';
+
+import './tabStyle.css';
 
 const ShowEventAttendees = () => {
     const { id } = useParams();
@@ -17,32 +20,57 @@ const ShowEventAttendees = () => {
     const navigate = useNavigate();
 
     const [filteredAttendees, setFilteredAttendees] = useState(attendees);
+    const [searchText, setSearchText] = useState('');
     const [searchType, setSearchType] = useState('name');
-    const [hoveredIndex, setHoveredIndex] = useState(null);
 
-    const handleClick = (attendeeId) => {
-        navigate(`/attendee-profile/${attendeeId}`);
-    };
+    const tabItems = [
+        {
+            key: '1',
+            label: 'Waiting Attendees',
+            children: <EventAttendeesList attendees={filteredAttendees} type={'waiting'} />,
+        },
+        {
+            key: '2',
+            label: 'Accepted Attendees',
+            children: <EventAttendeesList attendees={filteredAttendees} type={'accepted'} />,
+        },
+        {
+            key: '3',
+            label: 'Rejected Attendees',
+            children: <EventAttendeesList attendees={filteredAttendees} type={'rejected'} />,
+        },
+        {
+            key: '4',
+            label: 'All Attendees',
+            children: <EventAttendeesList attendees={filteredAttendees} type={'all'} />,
+        },
+    ];
+
     const handleGoBack = () => {
         navigate(-1);
     };
-    const handleSearchTypeSelect = ({ key }) => {
-        setSearchType(key);
-    };
 
     const handleSearch = (value) => {
-        const filtered = attendees.filter((attendee) => {
-            if (searchType === 'name') {
-                return (
-                    attendee.attendee.firstName.toLowerCase().includes(value.toLowerCase()) ||
-                    attendee.attendee.lastName.toLowerCase().includes(value.toLowerCase())
-                );
-            } else if (searchType === 'status') {
-                return attendee.status.toLowerCase().includes(value.toLowerCase());
-            }
-            return false;
-        });
-        setFilteredAttendees(filtered);
+        if (searchType === 'status' && !value) {
+            setFilteredAttendees(attendees);
+        } else {
+            const filtered = attendees.filter((attendee) => {
+                if (searchType === 'name') {
+                    return (
+                        attendee.attendee.firstName.toLowerCase().includes(value.toLowerCase()) ||
+                        attendee.attendee.lastName.toLowerCase().includes(value.toLowerCase())
+                    );
+                } else if (searchType === 'status') {
+                    return attendee?.status?.toLowerCase().includes(value?.toLowerCase());
+                }
+                return false;
+            });
+            setFilteredAttendees(filtered);
+        }
+    };
+
+    const handleSearchTypeSelect = ({ key }) => {
+        setSearchType(key);
     };
 
     const searchMenu = (
@@ -52,9 +80,9 @@ const ShowEventAttendees = () => {
         </Menu>
     );
 
-    useEffect(() => {
-        console.log(data);
-    }, [data]);
+    // useEffect(() => {
+    //     console.log(data);
+    // }, [data]);
     return (
         <div style={{ padding: '20px', width: '100%', margin: '0 auto' }}>
             <Button type='text' size='large' style={{ padding: '0px' }}>
@@ -65,7 +93,6 @@ const ShowEventAttendees = () => {
                 <Typography.Title level={2} style={{ marginBottom: '20px', textAlign: 'center' }}>
                     Attendees
                 </Typography.Title>
-
                 <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
                     <Dropdown overlay={searchMenu} trigger={['click']}>
                         <a className='ant-dropdown-link' onClick={(e) => e.preventDefault()}>
@@ -132,138 +159,14 @@ const ShowEventAttendees = () => {
                         </div>
                     )}
                 </div>
-                <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
-                    <Typography.Text style={{ fontSize: '14px', fontWeight: 'bold', marginRight: '8px' }}>
-                        Total Attendees:
-                    </Typography.Text>
-                    <Typography.Text style={{ fontSize: '14px', color: '#1890ff' }}>
-                        {data?.result?.length ?? 0}
-                    </Typography.Text>
-                </div>
-                <List
-                    itemLayout='horizontal'
-                    dataSource={filteredAttendees}
-                    renderItem={(attendee, index) => (
-                        <a
-                            href='#'
-                            onClick={(e) => {
-                                e.preventDefault();
-                                handleClick(attendee.attendee.id);
-                            }}
-                            onMouseEnter={() => setHoveredIndex(index)}
-                            onMouseLeave={() => setHoveredIndex(null)}
-                            style={{
-                                display: 'block',
-                                textDecoration: 'none',
-                            }}
-                        >
-                            <List.Item
-                                style={{
-                                    padding: '12px 0',
-                                    borderBottom: '1px solid #f0f0f0',
-                                    transition: 'background-color 0.3s',
-                                    backgroundColor: hoveredIndex === index ? '#f0f0f0' : 'inherit',
-                                }}
-                            >
-                                <List.Item.Meta
-                                    avatar={
-                                        <Avatar
-                                            src={attendee.attendee.profilePictureUrl || '/default-avatar.jpg'}
-                                            size={48}
-                                        />
-                                    }
-                                    title={
-                                        <div>
-                                            <Typography.Text
-                                                strong
-                                            >{`${attendee.attendee.firstName} ${attendee.attendee.lastName}`}</Typography.Text>
-                                            {attendee.status === 'accepted' && (
-                                                <Badge
-                                                    status='success'
-                                                    text={
-                                                        <Typography.Text
-                                                            style={{
-                                                                fontSize: '13px',
-                                                                fontWeight: 'bold',
-                                                                textAlign: 'center',
-                                                                color: '#52c41a',
-                                                            }}
-                                                        >
-                                                            Accepted
-                                                        </Typography.Text>
-                                                    }
-                                                    style={{
-                                                        marginLeft: '10px',
-
-                                                        borderRadius: '4px',
-                                                        padding: '4px 8px',
-                                                    }}
-                                                />
-                                            )}
-                                            {attendee.status === 'rejected' && (
-                                                <Badge
-                                                    status='error'
-                                                    text={
-                                                        <Typography.Text
-                                                            style={{
-                                                                fontSize: '13px',
-                                                                fontWeight: 'bold',
-                                                                textAlign: 'center',
-                                                                color: '#f5222d',
-                                                            }}
-                                                        >
-                                                            Rejected
-                                                        </Typography.Text>
-                                                    }
-                                                    style={{
-                                                        marginLeft: '10px',
-
-                                                        borderRadius: '4px',
-                                                        padding: '4px 8px',
-                                                    }}
-                                                />
-                                            )}
-                                            {attendee.status === 'waiting' && (
-                                                <Badge
-                                                    status='default'
-                                                    text={
-                                                        <Typography.Text
-                                                            style={{
-                                                                fontSize: '13px',
-                                                                fontWeight: 'bold',
-                                                                textAlign: 'center',
-                                                                color: '#d9d9d9',
-                                                            }}
-                                                        >
-                                                            Waiting
-                                                        </Typography.Text>
-                                                    }
-                                                    style={{
-                                                        marginLeft: '10px',
-                                                        borderRadius: '4px',
-                                                        padding: '4px 8px',
-                                                    }}
-                                                />
-                                            )}
-                                        </div>
-                                    }
-                                    description={
-                                        <>
-                                            <Typography.Text style={{ marginBottom: '4px', display: 'block' }}>
-                                                {attendee.attendee.bio}
-                                            </Typography.Text>
-                                            <Typography.Text type='secondary'>
-                                                Joined: {moment(attendee.createdAt).format('MMM DD, YYYY')}
-                                            </Typography.Text>
-                                        </>
-                                    }
-                                />
-                                <Space>
-                                    <RightOutlined style={{ fontSize: '16px' }} />
-                                </Space>
-                            </List.Item>
-                        </a>
-                    )}
+                <Tabs
+                    defaultActiveKey='1'
+                    items={tabItems}
+                    className='custom-tabs'
+                    onChange={() => {
+                        handleSearch('');
+                        setSearchType('name');
+                    }}
                 />
             </Spin>
         </div>

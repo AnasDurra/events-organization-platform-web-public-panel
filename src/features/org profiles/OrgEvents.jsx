@@ -186,7 +186,7 @@ const OrgEvents = () => {
                         </Space>
                         <Button
                             onClick={() => {
-                                navigate('/event/create');
+                                navigate('/org/event/create');
                             }}
                             block
                             type='primary'

@@ -1,5 +1,18 @@
 import { DeleteFilled, PlusCircleFilled } from '@ant-design/icons';
-import { Button, Col, DatePicker, Divider, Form, Input, Row, Space, TimePicker, Tooltip, Typography } from 'antd';
+import {
+    Button,
+    Checkbox,
+    Col,
+    DatePicker,
+    Divider,
+    Form,
+    Input,
+    Row,
+    Space,
+    TimePicker,
+    Tooltip,
+    Typography,
+} from 'antd';
 import dayjs from 'dayjs';
 import moment from 'moment';
 import { useEffect } from 'react';
@@ -134,10 +147,23 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
     // }, [days]);
     return (
         <>
-            <Form form={eventRegistrationForm} layout="vertical">
+            <Form form={eventRegistrationForm} layout='vertical'>
+                <Form.Item
+                    name='direct_register'
+                    valuePropName='checked'
+                    initialValue={false}
+                    extra={
+                        <Typography.Text type='secondary'>
+                            If checked, the attendee will be accepted immediately. If unchecked, the attendee will be
+                            placed on a waiting list for the organizer to accept or reject.
+                        </Typography.Text>
+                    }
+                >
+                    <Checkbox>Direct Register</Checkbox>
+                </Form.Item>
                 <Form.Item
                     label={<Typography.Text strong>Registration Date (Start - End)</Typography.Text>}
-                    name="registration_start_end_date"
+                    name='registration_start_end_date'
                     rules={[
                         {
                             required: true,
@@ -155,7 +181,7 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                 >
                     <DatePicker.RangePicker
                         showTime={{ format: 'HH:mm' }}
-                        format="YYYY-MM-DD HH:mm"
+                        format='YYYY-MM-DD HH:mm'
                         style={{
                             width: '100%',
                             marginTop: '1em',
@@ -215,8 +241,8 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                                             {days.length === dayIndex + 1 && (
                                                 <>
                                                     <Button
-                                                        size="small"
-                                                        type="primary"
+                                                        size='small'
+                                                        type='primary'
                                                         icon={<PlusCircleFilled />}
                                                         onClick={() => addDay(dayIndex)}
                                                         style={{
@@ -226,7 +252,7 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                                                         Add Day
                                                     </Button>
                                                     <Button
-                                                        size="small"
+                                                        size='small'
                                                         danger
                                                         icon={<DeleteFilled />}
                                                         onClick={() => removeDay(dayIndex)}
@@ -242,8 +268,8 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                                         {days[dayIndex]?.slots?.map((slot, slotIndex) => (
                                             <div key={slotIndex}>
                                                 <Tooltip
-                                                    title="Click here to add Slot Name"
-                                                    placement="leftTop"
+                                                    title='Click here to add Slot Name'
+                                                    placement='leftTop'
                                                     defaultOpen={days[dayIndex]?.day_date}
                                                 >
                                                     <Form.Item
@@ -257,8 +283,8 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                                                         ]}
                                                     >
                                                         <Input
-                                                            size="small"
-                                                            placeholder="Enter Slot Name"
+                                                            size='small'
+                                                            placeholder='Enter Slot Name'
                                                             disabled={!days[dayIndex]?.day_date}
                                                             style={{
                                                                 border: 'none',
@@ -315,7 +341,7 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                                                 </Form.Item>
                                                 {days[dayIndex]?.slots?.length === slotIndex + 1 && (
                                                     <Button
-                                                        size="small"
+                                                        size='small'
                                                         danger
                                                         // type="primary"
                                                         icon={<DeleteFilled />}
@@ -331,8 +357,8 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                                         ))}
                                         <div>
                                             <Button
-                                                size="small"
-                                                type="primary"
+                                                size='small'
+                                                type='primary'
                                                 icon={<PlusCircleFilled />}
                                                 onClick={() => addSlot(dayIndex)}
                                             >

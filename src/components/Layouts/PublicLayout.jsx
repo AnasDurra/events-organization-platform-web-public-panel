@@ -1,0 +1,50 @@
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useCheckAccessTokenQuery } from '../../api/services/auth';
+
+import { Spin } from 'antd';
+import Roles from '../../api/Roles';
+import OrganizerLayout from './OrganizerLayout';
+import HomeLayout from './HomeLayout';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Icon } from '@iconify/react';
+
+export default function PublicLayout() {
+    const {
+        data: checkAccessTokenObj,
+        isLoading: isAccessTokenLoading,
+        error: checkAccessTokenError,
+    } = useCheckAccessTokenQuery();
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (checkAccessTokenError) {
+            navigate('/login');
+        }
+    }, [checkAccessTokenError]);
+
+    return (
+        <>
+            <Spin
+                size='large'
+                spinning={isAccessTokenLoading}
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                }}
+            />
+
+            {checkAccessTokenObj?.result?.user_role?.id == Roles.EMPLOYEE ? (
+                <OrganizerLayout roles={[Roles.EMPLOYEE]} />
+            ) : checkAccessTokenObj?.result?.user_role?.id == Roles.EMPLOYEE ? (
+                <HomeLayout roles={[Roles.ATTENDEE]} />
+            ) : (
+                <></>
+            )}
+        </>
+    );
+}

@@ -11,25 +11,33 @@ import {
     Modal,
     notification,
     Row,
+    Spin,
     Typography,
 } from 'antd';
 import { Content, Footer, Header } from 'antd/es/layout/layout';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { isLargerThanLG } from '../../../utils/antd.utils';
-import Sider from '../../../components/Sider';
-import { getLoggedInUserV2, useUserMenuQuery } from '../../../api/services/auth';
+import { isLargerThanLG } from '../../utils/antd.utils';
+import Sider from '../Sider';
+import { getLoggedInUserV2, useCheckAccessTokenQuery, useUserMenuQuery } from '../../api/services/auth';
 import Title from 'antd/es/typography/Title';
 import { BellOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Icon } from '@iconify/react';
-import DropdownSider from '../../../components/DropdownSider';
+import DropdownSider from '../DropdownSider';
 
-import { useLogoutMutation } from '../../../api/services/auth';
+import { useLogoutMutation } from '../../api/services/auth';
 
-export default function OrganizerLayout() {
+export default function OrganizerLayout({ roles }) {
     const screens = Grid.useBreakpoint();
-
     const [isLargerThanLGScreen, setIsLargerThanLGScreen] = useState(isLargerThanLG(screens));
+    const user = getLoggedInUserV2();
+    const [hideContent, setHideContent] = useState(true);
+
+    const {
+        data: checkAccessTokenObj,
+        isLoading: isAccessTokenLoading,
+        error: checkAccessTokenError,
+    } = useCheckAccessTokenQuery();
     const [logoutMutation] = useLogoutMutation();
     const [isSiderOpen, setIsSiderOpen] = useState(true);
 
@@ -37,14 +45,13 @@ export default function OrganizerLayout() {
 
     const { data: userMenu2, isLoading: userMenuIsLoading } = useUserMenuQuery();
 
-    const user = getLoggedInUserV2();
     const theme = {
         token: {
-            colorPrimary: user?.user_role == 2 ? '#022140' : '#00474f',
+            colorPrimary: '#022140',
         },
         components: {
             Layout: {
-                headerBg: user?.user_role == 2 ? '#265077' : '#00474f',
+                headerBg: '#265077',
             },
         },
         cssVar: true,
@@ -243,9 +250,38 @@ export default function OrganizerLayout() {
         setIsLargerThanLGScreen(isLargerThanLG(screens));
     }, [screens]);
 
+    useEffect(() => {
+        console.log(checkAccessTokenObj);
+        if (checkAccessTokenObj) {
+            if (!roles?.includes(checkAccessTokenObj?.result?.user_role?.id)) {
+                navigate('/not-found');
+            } else {
+                setHideContent(false);
+            }
+        }
+    }, [checkAccessTokenObj, roles]);
+
+    useEffect(() => {
+        console.log(checkAccessTokenError);
+        if (checkAccessTokenError) {
+            navigate('/login');
+        }
+    }, [checkAccessTokenError]);
+
     return (
         <ConfigProvider theme={theme}>
-            <Layout>
+            <Spin
+                size='large'
+                spinning={isAccessTokenLoading}
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                    height: '100%',
+                }}
+            />
+            <Layout hidden={hideContent}>
                 <Header className='h-[8svh] px-2'>
                     <Row
                         justify={'space-between'}
@@ -280,7 +316,7 @@ export default function OrganizerLayout() {
                             >
                                 <Button
                                     type='text'
-                                    onClick={() => navigate('/event/create')}
+                                    onClick={() => navigate('event/create')}
                                     style={{ transition: 'transform 0.3s' }}
                                     icon={
                                         <Icon

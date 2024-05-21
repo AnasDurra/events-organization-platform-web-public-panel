@@ -103,6 +103,7 @@ const ShowAttendeProfile = () => {
                         {data?.result?.cover_img ? (
                             <Image
                                 width={'100%'}
+                                style={{ height: '100%', minHeight: '25vh' }}
                                 src={data?.result?.cover_img}
                                 fallback={
                                     <Empty

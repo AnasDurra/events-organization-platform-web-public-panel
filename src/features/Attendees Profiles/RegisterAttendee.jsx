@@ -201,7 +201,8 @@ export default function RegisterAttendee() {
                                         <>
                                             Register today for exclusive offers and a seamless event experience.{' '}
                                             <br></br>
-                                            Already have an Evento Account?{' '}
+                                            <br></br>
+                                            *Already have an Evento Account?{' '}
                                             <Link
                                                 href='login'
                                                 style={{

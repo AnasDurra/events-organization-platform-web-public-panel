@@ -128,7 +128,7 @@ const ShowEvent = () => {
                                     justifyContent: 'space-between',
                                 }}
                             >
-                                <Space size={0} direction='vertical'>
+                                <Space size={0} direction='vertical' style={{ marginRight: '1.5em' }}>
                                     <Space>
                                         <Typography.Title style={{ marginTop: '10px' }} level={4}>
                                             {eventData?.result?.title}
@@ -165,45 +165,58 @@ const ShowEvent = () => {
                                 </Space>
                                 {user?.role_id == 2 && user?.organization_id == eventData?.result?.organization?.id && (
                                     <div style={{ textAlign: 'end' }}>
-                                        <Tooltip title='Edit Event'>
-                                            <Button
-                                                icon={<EditOutlined />}
-                                                onClick={() => setIsUpdateModalOpen(true)}
-                                            />
-                                        </Tooltip>
-                                        <Tooltip title='Show Attendees'>
-                                            <Button
-                                                icon={<TeamOutlined />}
-                                                onClick={() => navigate(`/event/show/${id}/attendees`)}
-                                            />
-                                        </Tooltip>
-                                        <Dropdown
-                                            overlay={
-                                                <Menu>
-                                                    <Menu.Item
-                                                        key='delete'
+                                        <Row>
+                                            <Col xs={24} sm={8}>
+                                                <Tooltip title='Edit Event'>
+                                                    <Button
                                                         icon={
                                                             <Icon
-                                                                icon='line-md:remove'
-                                                                style={{
-                                                                    fontSize: '24px',
-                                                                    fontWeight: 'bold',
-                                                                    color: ` #ff0000`,
-                                                                }}
+                                                                icon='line-md:edit-twotone-full'
+                                                                style={{ fontSize: '18px' }}
                                                             />
                                                         }
-                                                        onClick={() => {
-                                                            handleDeleteEvent(eventData?.result?.id);
-                                                        }}
-                                                    >
-                                                        Delete Event
-                                                    </Menu.Item>
-                                                </Menu>
-                                            }
-                                            trigger={['click']}
-                                        >
-                                            <Button icon={<MoreOutlined />} />
-                                        </Dropdown>
+                                                        onClick={() => setIsUpdateModalOpen(true)}
+                                                    />
+                                                </Tooltip>
+                                            </Col>
+                                            <Col xs={24} sm={8}>
+                                                <Tooltip title='Show Attendees'>
+                                                    <Button
+                                                        icon={<Icon icon='fa6-solid:users' />}
+                                                        onClick={() => navigate(`/event/show/${id}/attendees`)}
+                                                    />
+                                                </Tooltip>
+                                            </Col>
+                                            <Col xs={24} sm={8}>
+                                                <Dropdown
+                                                    overlay={
+                                                        <Menu>
+                                                            <Menu.Item
+                                                                key='delete'
+                                                                icon={
+                                                                    <Icon
+                                                                        icon='line-md:remove'
+                                                                        style={{
+                                                                            fontSize: '24px',
+                                                                            fontWeight: 'bold',
+                                                                            color: ` #ff0000`,
+                                                                        }}
+                                                                    />
+                                                                }
+                                                                onClick={() => {
+                                                                    handleDeleteEvent(eventData?.result?.id);
+                                                                }}
+                                                            >
+                                                                Delete Event
+                                                            </Menu.Item>
+                                                        </Menu>
+                                                    }
+                                                    trigger={['click']}
+                                                >
+                                                    <Button icon={<MoreOutlined />} />
+                                                </Dropdown>
+                                            </Col>
+                                        </Row>
                                     </div>
                                 )}
                             </div>

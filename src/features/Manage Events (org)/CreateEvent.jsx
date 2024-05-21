@@ -1,5 +1,5 @@
-import { FileImageOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Image, Row, Skeleton, Spin, Upload, message } from 'antd';
+import { DeleteOutlined, EyeOutlined, FileImageOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Button, Card, Col, Image, Row, Skeleton, Space, Spin, Upload, message } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import { useState } from 'react';
 import { useEventCreationListsQuery } from '../../api/services/lists';
@@ -14,6 +14,9 @@ import RegistrationScheduleForm from './RegistrationScheduleForm';
 import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../../utils/NotificationContext';
 import AttachForm from './AttachForm';
+import ImgCrop from 'antd-img-crop';
+import { fallback_img } from '../org profiles/fallback_img';
+import { getLoggedInUserV2 } from '../../api/services/auth';
 
 const CreateEvent = () => {
     const navigate = useNavigate();
@@ -22,6 +25,9 @@ const CreateEvent = () => {
     const [createMutation, { isLoading: createEventIsLoading }] = useCreateMutation();
 
     const { openNotification } = useNotification();
+
+    const user = getLoggedInUserV2();
+    console.log(user);
 
     const [coverImage, setCoverImage] = useState(null);
     const [attachedForm, setAttachedForm] = useState(null);
@@ -43,7 +49,8 @@ const CreateEvent = () => {
     const [eventRegistrationForm] = useForm();
 
     const handleCoverImageUpload = (coverImage) => {
-        setCoverImage(coverImage);
+        console.log(coverImage?.file?.originFileObj);
+        setCoverImage(coverImage?.file?.originFileObj);
     };
 
     const handleAttachForm = (form) => {
@@ -106,7 +113,10 @@ const CreateEvent = () => {
                     photos: data?.photos?.fileList,
                     attachments: data?.attachments?.fileList,
                     location: data?.location,
-                    cover_picture: coverImage.file ?? null,
+                    cover_picture: coverImage ?? null,
+                    direct_register: data?.direct_register,
+                    is_chatting_enabled: data?.isChatEnabled == false ? null : true,
+                    chat_group_title: data?.groupName,
                     form_id: attachedForm ? attachedForm.id : undefined,
                     fees: data?.fees ? data.fees : undefined,
                 };
@@ -191,27 +201,60 @@ const CreateEvent = () => {
                     width: '100%',
                 }}
                 cover={
-                    <>
-                        {coverImage ? (
-                            <Image height={250} src='https://picsum.photos/1000/300' />
-                        ) : (
-                            <Upload.Dragger
-                                maxCount={1}
-                                name='cover'
-                                showUploadList={false}
-                                beforeUpload={() => false}
-                                onChange={handleCoverImageUpload}
-                                height={250}
-                            >
-                                <p className='ant-upload-drag-icon'>
-                                    <FileImageOutlined />
-                                </p>
-                                <p className='ant-upload-text'>
-                                    Click or drag photo to this area to upload cover picture
-                                </p>
-                            </Upload.Dragger>
-                        )}
-                    </>
+                    <ImgCrop aspect={16 / 9} showReset showGrid rotationSlider>
+                        <Upload.Dragger
+                            disabled={coverImage}
+                            listType='picture'
+                            maxCount={1}
+                            showUploadList={false}
+                            customRequest={({ onSuccess }) => onSuccess('ok')}
+                            onChange={handleCoverImageUpload}
+                        >
+                            {coverImage ? (
+                                <Image
+                                    height={250}
+                                    width={'100%'}
+                                    style={{ width: '100%' }}
+                                    src={URL.createObjectURL(coverImage)}
+                                    fallback={fallback_img}
+                                    preview={{
+                                        mask: (
+                                            <>
+                                                <Space>
+                                                    <Button icon={<EyeOutlined />} type='primary'>
+                                                        Show
+                                                    </Button>
+                                                    <Button
+                                                        type='primary'
+                                                        icon={<DeleteOutlined />}
+                                                        onClick={() => setCoverImage(null)}
+                                                    >
+                                                        delete
+                                                    </Button>
+                                                </Space>
+                                            </>
+                                        ),
+                                    }}
+                                />
+                            ) : (
+                                <div
+                                    style={{
+                                        minHeight: '30vh',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <p className='ant-upload-drag-icon'>
+                                        <FileImageOutlined />
+                                    </p>
+                                    <p className='ant-upload-text'>
+                                        Click or drag photo to this area to upload cover picture
+                                    </p>
+                                </div>
+                            )}
+                        </Upload.Dragger>
+                    </ImgCrop>
                 }
             >
                 <Spin spinning={createEventIsLoading}>

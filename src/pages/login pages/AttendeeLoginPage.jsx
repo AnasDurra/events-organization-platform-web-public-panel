@@ -1,18 +1,14 @@
-import { LoadingOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Card, Form, Image, Input, Space, Spin, Typography } from 'antd';
 import Password from 'antd/es/input/Password';
-import Link from 'antd/es/typography/Link';
-import { message } from 'antd';
+import image1 from '../../features/Attendees Profiles/assets/Hybrid-illu.png';
+import '../../features/Attendees Profiles/styles/styles.css';
+import { useLoginMutation } from '../../api/services/auth';
+import FormWelcomeTitle from '../../features/Form/FormWelcomeTitle';
+import { useNotification } from '../../utils/NotificationContext';
+import { Link, useNavigate } from 'react-router-dom';
+import Roles from '../../api/Roles';
 
-import image1 from '../features/Attendees Profiles/assets/Hybrid-illu.png';
-import '../features/Attendees Profiles/styles/styles.css';
-import { getLoggedInUserV2, useLoginMutation } from '../api/services/auth';
-import { useEffect, useState } from 'react';
-import FormWelcomeTitle from '../features/Form/FormWelcomeTitle';
-import { useNotification } from '../utils/NotificationContext';
-import { useNavigate } from 'react-router-dom';
-
-export default function RegisterAttendee() {
+export default function AttendeeLoginPage() {
     const { openNotification } = useNotification();
     const navigate = useNavigate();
 
@@ -24,7 +20,6 @@ export default function RegisterAttendee() {
             password: values.password,
             role_id: 3,
         };
-        console.log(data);
 
         loginMutation(data)
             .unwrap()
@@ -35,14 +30,8 @@ export default function RegisterAttendee() {
                     'Login Successfully',
                     `Welcome back, ${res.result.username}! We're glad to see you again.`
                 );
-                if (res.result.user_role == 3) {
+                if (res.result.user_role == Roles.ATTENDEE) {
                     navigate(`/home`);
-                } else if (res.result.user_role == 2) {
-                    navigate(`/org/our-events`);
-                }
-                // TODO handle admin navigation
-                else if (res.result.user_role == 1) {
-                    // navigate(`/admin`);
                 }
             })
             .catch((error) => {
@@ -70,36 +59,63 @@ export default function RegisterAttendee() {
                     }}
                 >
                     <div className='registerImage'>
-                        <Image
-                            width={320}
-                            height={800}
-                            src={image1}
-                            preview={false}
-                        />
+                        <Image width={320} height={700} src={image1} preview={false} />
                     </div>
                     <div>
-                        <Card
+                        <Typography.Title
+                            level={3}
                             style={{
-                                minHeight: '750px',
+                                textAlign: 'center',
+                                color: '#333',
+                                // marginBottom: '24px',
+                                fontWeight: 'bold',
+                                fontSize: '28px',
+                                fontFamily: 'Arial, sans-serif',
+                                textTransform: 'uppercase',
+                                letterSpacing: '1px',
+                                lineHeight: '1.5',
+                            }}
+                        >
+                            WELCOME BACK!
+                        </Typography.Title>
+                        <Card
+                            bodyStyle={{ paddingTop: '0px' }}
+                            bordered={false}
+                            style={{
+                                height: '600px',
                                 width: '100%',
                                 maxWidth: '430px',
                             }}
                         >
                             <Spin spinning={isLoading}>
                                 <FormWelcomeTitle
-                                    title={'Welcome Back !'}
                                     paragraph={
                                         <>
-                                            New to Evento?{' '}
+                                            Log In to Your{' '}
+                                            <span style={{ textDecoration: 'underline' }}>Attendee Account</span>
+                                            <br></br>
+                                            <br></br>
                                             <Link
-                                                href='/register'
+                                                to='/org/login'
                                                 style={{
                                                     color: 'blue',
                                                     fontWeight: 'bold',
                                                     fontSize: '13px',
                                                 }}
                                             >
-                                                Sign Up
+                                                Login as Organizer?
+                                            </Link>
+                                            {'. '}
+                                            Or if you new to Eventure?{' '}
+                                            <Link
+                                                to='/register'
+                                                style={{
+                                                    color: 'blue',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '13px',
+                                                }}
+                                            >
+                                                Sign Up Now
                                             </Link>
                                         </>
                                     }
@@ -167,7 +183,7 @@ export default function RegisterAttendee() {
                                         >
                                             By continuing past this page, you agree to the{' '}
                                             <Link
-                                                href='terms-of-use'
+                                                to='terms-of-use'
                                                 style={{
                                                     fontSize: '12px',
                                                     color: 'blue',
@@ -178,7 +194,7 @@ export default function RegisterAttendee() {
                                             </Link>{' '}
                                             and understand that information will be used as described in our{' '}
                                             <Link
-                                                href='privacy-policy'
+                                                to='privacy-policy'
                                                 style={{
                                                     fontSize: '12px',
                                                     color: 'blue',
@@ -196,11 +212,7 @@ export default function RegisterAttendee() {
                                             justifyContent: 'flex-end',
                                         }}
                                     >
-                                        <Button
-                                            htmlType='submit'
-                                            type='primary'
-                                            style={{ width: '100%' }}
-                                        >
+                                        <Button htmlType='submit' type='primary' style={{ width: '100%' }}>
                                             Login
                                         </Button>
                                     </Form.Item>
