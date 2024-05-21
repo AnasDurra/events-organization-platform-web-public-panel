@@ -51,9 +51,13 @@ export default function Sider({ isSiderOpen, setIsSiderOpen, userMenu, userMenuI
 
     return (
         <AntDSider
-            collapsedWidth={80}
-            style={{ backgroundColor: 'transparent' }}
-            collapsible={isSiderOpen}
+            style={{
+                overflow: 'auto',
+                height: '100vh',
+                position: 'fixed',
+                width: '15%',
+                backgroundColor: 'transparent',
+            }}
             defaultCollapsed={!isSiderOpen}
             collapsed={!isSiderOpen ? true : collapsed}
             onCollapse={() => {
@@ -66,7 +70,7 @@ export default function Sider({ isSiderOpen, setIsSiderOpen, userMenu, userMenuI
                 items={items}
                 onClick={handleMenuClick}
                 defaultSelectedKeys={1}
-                style={{ backgroundColor: 'transparent', height: '85vh' }}
+                style={{ backgroundColor: 'transparent', height: '100vh' }}
                 className='custom-menu'
             />
         </AntDSider>
