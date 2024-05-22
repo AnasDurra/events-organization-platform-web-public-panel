@@ -6,7 +6,7 @@ const { Sider: AntDSider } = Layout;
 
 import './menuStyles.css';
 
-export default function Sider({ isSiderOpen, setIsSiderOpen, userMenu, userMenuIsLoading }) {
+export default function Sider({ isSiderOpen, userMenu, userMenuIsLoading }) {
     const navigate = useNavigate();
 
     const [collapsed, setCollapsed] = useState(false);
