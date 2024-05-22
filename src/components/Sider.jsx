@@ -54,8 +54,6 @@ export default function Sider({ isSiderOpen, setIsSiderOpen, userMenu, userMenuI
             style={{
                 overflow: 'auto',
                 height: '100vh',
-                position: 'fixed',
-                width: '15%',
                 backgroundColor: 'transparent',
             }}
             defaultCollapsed={!isSiderOpen}
