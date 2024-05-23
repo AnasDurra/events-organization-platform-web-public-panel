@@ -6,7 +6,7 @@ import EventCardWithImage from './components/cards/EventCardWithImage';
 import { useParams } from 'react-router-dom';
 
 export default function ViewCategoryPage() {
-    let { tag_name } = useParams();
+    let { category_name } = useParams();
 
     const [currentPage, setCurrentPage] = useState(1);
 

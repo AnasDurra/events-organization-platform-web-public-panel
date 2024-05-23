@@ -18,7 +18,6 @@ import ShowAttendeeEvents from '../features/Attendees Profiles/ShowAttendeeEvent
 import ShowEventAttendees from '../features/Manage Events (org)/ShowEventAttendees';
 import BlockedUsersPage from '../features/ban/BlockedUsersPage';
 import NotFound from '../pages/notFound';
-import HomeLayout from '../components/Layouts/HomeLayout';
 import PopularPage from '../features/landing/PopularPage';
 import ExplorePage from '../features/landing/ExplorePage';
 import HomePage from '../features/landing/HomePage';
@@ -39,6 +38,7 @@ import OrganizerLoginPage from '../pages/login pages/OrganizerLoginPage';
 import OrgTicketsPage from '../features/Ticketing Packages/OrgTicketsPage';
 import ViewCategoryPage from '../features/landing/ViewCategoryPage';
 import ViewAllCategoriesPage from '../features/landing/ViewAllCategoriesPage';
+import HomeLayout from '../components/Layouts/home/HomeLayout';
 
 export const router = createBrowserRouter([
     {
@@ -197,14 +197,14 @@ export const router = createBrowserRouter([
                 ],
             },
             {
-                path: 'tags',
+                path: 'categories',
                 children: [
                     {
                         index: true,
                         element: <ViewAllCategoriesPage />,
                     },
                     {
-                        path: ':tag_name',
+                        path: ':category_name',
                         element: <ViewCategoryPage />,
                     },
                 ],

@@ -9,7 +9,7 @@ export default function TicketsCard({ ticketsCount }) {
                 className={'text-xl bg-yellow-600 text-white rounded-lg p-1'}
                 icon={<BsTicketPerforated />}
             />
-            <span className='bg-transparent text-black font-mono'>{ticketsCount}</span>
+            <span className='bg-transparent text-black font-mono mx-2'>{ticketsCount}</span>
         </>
     );
 }

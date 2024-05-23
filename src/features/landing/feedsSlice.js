@@ -46,6 +46,10 @@ export const feedsSlice = apiSlice.injectEndpoints({
             },
         }),
 
+        getFeaturedEvents: builder.query({
+            query: () => `featured-events`,
+        }),
+
         getOrganizationsSummary: builder.query({
             query: ({ page, pageSize }) => `feed/organizations?page=${page}&pageSize=${pageSize}`,
         }),
@@ -57,6 +61,9 @@ export const feedsSlice = apiSlice.injectEndpoints({
         }),
         getAddresses: builder.query({
             query: () => `address`,
+        }),
+        getCategories: builder.query({
+            query: () => `feed/categories`,
         }),
 
         querySubmissions: builder.mutation({
@@ -113,4 +120,6 @@ export const {
     useLazyGetFollowingEventsQuery,
     useGetFollowingEventsQuery,
     useGetAddressesQuery,
+    useGetFeaturedEventsQuery,
+    useGetCategoriesQuery
 } = feedsSlice;
