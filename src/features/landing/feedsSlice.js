@@ -65,6 +65,10 @@ export const feedsSlice = apiSlice.injectEndpoints({
         getCategories: builder.query({
             query: () => `feed/categories`,
         }),
+        getCategoryEvents: builder.query({
+            query: ({ page, pageSize, category_id }) =>
+                `feed/event/categories?categories=${category_id}&pageSize=${pageSize}&page=${page}`,
+        }),
 
         querySubmissions: builder.mutation({
             query: (data) => ({
@@ -121,5 +125,7 @@ export const {
     useGetFollowingEventsQuery,
     useGetAddressesQuery,
     useGetFeaturedEventsQuery,
-    useGetCategoriesQuery
+    useGetCategoriesQuery,
+    useGetCategoryEventsQuery,
+    useLazyGetCategoryEventsQuery
 } = feedsSlice;

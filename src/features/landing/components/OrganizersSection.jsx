@@ -30,7 +30,7 @@ export default function OrganizersSection() {
                     </div>
                     <Skeleton loading={isLoading}>
                         {Array.isArray(orgs) && orgs.length > 0 ? (
-                            <div className='grid grid-cols-1  sm:grid-cols-4 gap-4'>
+                            <div className='grid grid-cols-1  sm:grid-cols-3 gap-4'>
                                 {orgs.slice(0, 4).map((org, index) => (
                                     <OrganizerCard
                                         key={'org-' + index}

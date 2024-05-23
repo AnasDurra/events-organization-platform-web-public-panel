@@ -204,7 +204,7 @@ export const router = createBrowserRouter([
                         element: <ViewAllCategoriesPage />,
                     },
                     {
-                        path: ':category_name',
+                        path: ':category_name/:category_id',
                         element: <ViewCategoryPage />,
                     },
                 ],
