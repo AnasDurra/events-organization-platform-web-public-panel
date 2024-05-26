@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { List, Avatar, Typography, Input, Divider, Space, Button, Empty } from 'antd';
-import { ArrowLeftOutlined, MessageOutlined, SearchOutlined, SmileOutlined } from '@ant-design/icons';
+import { List, Avatar, Typography, Input, Divider, Space, Button, Empty, Card, Image, Row, Col, Badge } from 'antd';
+import { ArrowLeftOutlined, MessageOutlined, SearchOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, Navigate } from 'react-router-dom';
 import { useChattingListQuery } from '../../api/services/chats';
+import { colors } from '@mui/material';
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -56,77 +57,98 @@ const ChatsList = () => {
         console.log(chatList);
     }, [chatList]);
     return (
-        <Space direction="vertical" style={{ display: 'flex' }}>
-            {/* <Button size="large" icon={<ArrowLeftOutlined />} type="text" onClick={() => Navigate(-1)} /> */}
+        <Space direction='vertical' style={{ display: 'flex' }}>
             <Title level={2} style={styles.title}>
                 Chat Groups
             </Title>
             <div style={styles.container}>
-                <Space size={10} style={{ display: 'flex' }} direction="vertical">
+                <Space size={10} style={{ display: 'flex' }} direction='vertical'>
                     <div style={styles.searchContainer}>
                         <Search
-                            placeholder="Search chat groups"
+                            placeholder='Search chat groups'
                             prefix={<SearchOutlined />}
                             onChange={(e) => handleSearch(e.target.value)}
                             style={styles.searchInput}
                             enterButton={
-                                <Button type="primary" icon={<SearchOutlined />}>
+                                <Button type='primary' icon={<SearchOutlined />}>
                                     Search
                                 </Button>
                             }
                         />
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5px' }}>
-                            <Text style={styles.note} type="secondary">
+                            <Text style={styles.note} type='secondary'>
                                 * Explore active event chats. Click to continue the conversation.
                             </Text>
-                            <Text style={styles.totalChats} type="secondary">
+                            <Text style={styles.totalChats} type='secondary'>
                                 {totalChats} chat groups
                             </Text>
                         </div>
                     </div>
                 </Space>
                 <Divider style={{ marginTop: '0px' }} />
-                <List
-                    locale={{
-                        emptyText: (
+                <Row gutter={[16, 16]}>
+                    {filteredData?.length > 0 ? (
+                        filteredData.map((item) => (
+                            <Col xs={24} sm={12} md={8} lg={6} key={item?.chat_group_id}>
+                                <Link to={`/event/show/${item?.event_id}/?showChat=true`} style={styles.groupLink}>
+                                    <Card
+                                        hoverable
+                                        bodyStyle={{ padding: '0px' }}
+                                        cover={
+                                            <div style={styles.eventCoverContainer}>
+                                                <Image
+                                                    width={'100%'}
+                                                    height={'100%'}
+                                                    // src={item?.event_cover}
+                                                    src={'https://picsum.photos/300/200?random=2'}
+                                                    alt={item?.group_title}
+                                                    style={styles.eventCover}
+                                                />
+                                                <div style={styles.overlay}>
+                                                    <Title level={3} style={styles.groupTitle}>
+                                                        {item?.group_title}
+                                                    </Title>
+                                                    <div style={styles.groupInfo}>
+                                                        <Badge
+                                                            count={item?.group_members_count}
+                                                            style={{ backgroundColor: '#52c41a' }}
+                                                        >
+                                                            <Avatar shape='circle' icon={<UserOutlined />} />
+                                                        </Badge>
+                                                        <Text style={styles.groupStatus} type='secondary'>
+                                                            Active
+                                                        </Text>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        style={styles.groupCard}
+                                        onMouseEnter={(e) => (
+                                            (e.currentTarget.style.transform = 'scale(1.01)'),
+                                            (e.currentTarget.style.boxShadow = '0 3px 16px rgba(0, 0, 0, 0.4)')
+                                        )}
+                                        onMouseLeave={(e) => (
+                                            (e.currentTarget.style.transform = 'scale(1.00)'),
+                                            (e.currentTarget.style.boxShadow = 'none')
+                                        )}
+                                    ></Card>
+                                </Link>
+                            </Col>
+                        ))
+                    ) : (
+                        <Col span={24}>
                             <Empty
                                 imageStyle={{ height: '10vh' }}
                                 image={<MessageOutlined style={{ fontSize: 48 }} />}
                                 description={
-                                    <Text type="secondary">
+                                    <Text type='secondary'>
                                         There are currently no chats available. Join a conversation to see them here!
                                     </Text>
                                 }
                             />
-                        ),
-                    }}
-                    itemLayout="horizontal"
-                    dataSource={filteredData}
-                    renderItem={(item) => (
-                        <Link to={`/event/show/${item?.event_id}/?showChat=true`} style={styles.groupLink}>
-                            <List.Item
-                                style={styles.groupItem}
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
-                            >
-                                <List.Item.Meta
-                                    avatar={<Avatar src={`https://i.pravatar.cc/150?u=${item?.group_title}`} />}
-                                    title={<span style={styles.groupTitle}>{item?.group_title}</span>}
-                                    description={
-                                        <Text style={styles.groupStatus} type="secondary">
-                                            Active
-                                        </Text>
-                                    }
-                                />
-                                <div style={styles.groupInfo}>
-                                    <Text style={styles.memberCount} type="secondary">
-                                        {item?.group_member_count} members
-                                    </Text>
-                                </div>
-                            </List.Item>
-                        </Link>
+                        </Col>
                     )}
-                />
+                </Row>
             </div>
         </Space>
     );
@@ -175,32 +197,71 @@ const styles = {
         textDecoration: 'none',
         color: 'inherit',
     },
-    groupItem: {
-        padding: '16px',
+    groupCard: {
+        marginBottom: '16px',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        transition: 'transform 0.3s, box-shadow 0.3s',
+    },
+    eventCoverContainer: {
+        position: 'relative',
+        height: '200px',
+        overflow: 'hidden',
+    },
+    eventCover: {
+        width: '100%',
+        height: '200px',
+        objectFit: 'cover',
+    },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5))',
+        color: 'white',
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        transition: 'background-color 0.3s',
-        cursor: 'pointer',
+        padding: '16px',
     },
     groupTitle: {
-        fontSize: '16px',
+        fontSize: '18px',
+        color: '#fff',
         fontWeight: 'bold',
-        color: '#333',
-    },
-    groupInfo: {
-        display: 'flex',
-        alignItems: 'center',
-    },
-    memberCount: {
-        marginLeft: '8px',
-        fontSize: '14px',
-        color: '#666',
+        margin: 0,
+        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8)',
+        fontFamily: "'Roboto Mono', monospace",
+        marginBottom: '10px',
     },
     groupStatus: {
         fontSize: '12px',
-        color: '#52c41a',
+        fontWeight: 'bold',
+        padding: '4px 8px',
+        backgroundColor: '#4b8d2a',
+        borderRadius: '12px',
+        color: '#fff',
+        textShadow: '1px 1px 2px rgba(0, 0, 0, 0.3)',
+        fontFamily: "'Roboto Mono', monospace",
+        display: 'inline-block',
+    },
+    groupInfo: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: '8px',
+        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+    },
+    memberCount: {
+        fontSize: '14px',
+        color: '#fff',
+        position: 'absolute',
+        top: '16px',
+        right: '16px',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        padding: '4px 8px',
+        borderRadius: '4px',
     },
 };
-
 export default ChatsList;

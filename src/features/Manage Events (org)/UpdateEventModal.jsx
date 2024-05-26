@@ -22,6 +22,10 @@ import AttachForm from './AttachForm';
 import { useRemoveFormMutation, useUpdateDetailsMutation } from '../../api/services/events';
 import { getLoggedInUserV2 } from '../../api/services/auth';
 
+import 'react-quill/dist/quill.snow.css';
+import 'react-quill/dist/quill.bubble.css';
+import ReactQuill from 'react-quill';
+
 const UpdateEventModal = ({
     isUpdateModalOpen,
     setIsUpdateModalOpen,
@@ -52,16 +56,12 @@ const UpdateEventModal = ({
         removeForm(eventData?.result?.id);
     };
 
-
     return (
         <div>
             <Modal
                 title={
                     <>
-                        <Title
-                            style={{ marginTop: '0px' }}
-                            level={4}
-                        >
+                        <Title style={{ marginTop: '0px' }} level={4}>
                             Update Event
                         </Title>
                         <Divider style={{ marginBottom: '0px' }} />
@@ -88,10 +88,7 @@ const UpdateEventModal = ({
                                 marginBottom: '20px',
                             }}
                         >
-                            <Title
-                                level={2}
-                                style={{ margin: 0 }}
-                            >
+                            <Title level={2} style={{ margin: 0 }}>
                                 Event Details
                             </Title>
                             <Button
@@ -113,7 +110,8 @@ const UpdateEventModal = ({
                             </Paragraph>
                             <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
                                 <InfoCircleOutlined style={{ marginRight: '8px', color: '#1890ff' }} />{' '}
-                                <strong>Description:</strong> {eventData?.result?.description}
+                                <strong>Description:</strong>
+                                <ReactQuill value={eventData?.result?.description} readOnly={true} theme={'bubble'} />
                             </Paragraph>
                             <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
                                 <SettingOutlined style={{ marginRight: '8px', color: '#1890ff' }} />{' '}
@@ -191,10 +189,7 @@ const UpdateEventModal = ({
                                 marginBottom: '20px',
                             }}
                         >
-                            <Title
-                                level={2}
-                                style={{ margin: 0 }}
-                            >
+                            <Title level={2} style={{ margin: 0 }}>
                                 Event Tags
                             </Title>
                             <Button
@@ -253,10 +248,7 @@ const UpdateEventModal = ({
                                 marginBottom: '20px',
                             }}
                         >
-                            <Title
-                                level={2}
-                                style={{ margin: 0 }}
-                            >
+                            <Title level={2} style={{ margin: 0 }}>
                                 Event Age Group
                             </Title>
                             <Button
@@ -298,15 +290,12 @@ const UpdateEventModal = ({
                         </div>
                     </div>
                     <div className='pl p-2 bg-gray-100/50 my-2'>
-                        <Title
-                            level={2}
-                            className='my-2 '
-                        >
+                        <Title level={2} className='my-2 '>
                             Attached Form
                         </Title>
                         <AttachForm
                             onAttach={handleAttachForm}
-                            //TODO org id 
+                            //TODO org id
                             organization_id={getLoggedInUserV2()?.organization_id}
                             attachedForm={eventData?.result?.form}
                             onDetachForm={handleDetachForm}

@@ -1,4 +1,5 @@
 import { apiSlice } from '../apiSlice';
+import { chatSocket, joinChannel, setChatSocketHeader } from '../../chatSocket';
 
 export const chats = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -15,8 +16,34 @@ export const chats = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: { group_id: chat_group_id },
             }),
+            // async onCacheEntryAdded(arg, { updateCachedData, cacheDataLoaded, cacheEntryRemoved }) {
+            //     try {
+            //         await cacheDataLoaded;
+
+            //         const listener = (message) => {
+            //             console.log(message.message);
+            //             updateCachedData((draft) => {
+            //                 draft?.result?.messages?.unshift(message.message);
+            //             });
+            //         };
+
+            //         // chatSocket.on(`group-${arg?.chat_group_id}`, listener);
+            //     } catch {
+            //         // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
+            //         // in which case `cacheDataLoaded` will throw
+            //     }
+            //     // cacheEntryRemoved will resolve when the cache subscription is no longer active
+            //     await cacheEntryRemoved;
+            //     chatSocket.close();
+            // },
+        }),
+        joinedGroups: builder.query({
+            query: () => ({
+                url: 'chat/joined-groups',
+                method: 'GET',
+            }),
         }),
     }),
 });
 
-export const { useChattingListQuery, useGroupChatListQuery } = chats;
+export const { useChattingListQuery, useGroupChatListQuery, useJoinedGroupsQuery } = chats;

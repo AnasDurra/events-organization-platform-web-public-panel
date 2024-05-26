@@ -24,7 +24,7 @@ export default function PublicLayout() {
         }
     }, [checkAccessTokenError]);
     useEffect(() => {
-        console.log(checkAccessTokenObj);
+        // console.log(checkAccessTokenObj);
     }, [checkAccessTokenObj]);
     return (
         <>

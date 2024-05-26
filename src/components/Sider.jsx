@@ -43,7 +43,6 @@ export default function Sider({ isSiderOpen, userMenu, userMenuIsLoading }) {
                     return getItem(item.name, item.url, itemIcon, null);
                 }
             });
-            // console.log(formattedMenuItems);
 
             setItems(formattedMenuItems);
         }
@@ -56,6 +55,7 @@ export default function Sider({ isSiderOpen, userMenu, userMenuIsLoading }) {
                 height: '100vh',
                 backgroundColor: 'transparent',
             }}
+            collapsible={isSiderOpen}
             defaultCollapsed={!isSiderOpen}
             collapsed={!isSiderOpen ? true : collapsed}
             onCollapse={() => {

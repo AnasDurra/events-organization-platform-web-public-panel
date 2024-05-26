@@ -245,7 +245,7 @@ export default function OrganizerLayout({ roles }) {
     }, [screens]);
 
     useEffect(() => {
-        console.log(checkAccessTokenObj);
+        // console.log(checkAccessTokenObj);
         if (checkAccessTokenObj) {
             if (!roles?.includes(checkAccessTokenObj?.result?.user_role?.id)) {
                 navigate('/not-found');
@@ -264,7 +264,7 @@ export default function OrganizerLayout({ roles }) {
 
     return (
         <ConfigProvider theme={theme}>
-            <Spin
+            {/* <Spin
                 size='large'
                 spinning={isAccessTokenLoading || isLogoutLoading}
                 style={{
@@ -274,7 +274,7 @@ export default function OrganizerLayout({ roles }) {
                     width: '100%',
                     height: '100%',
                 }}
-            />
+            /> */}
             <Layout hidden={hideContent}>
                 <Header className='h-[8svh] px-2'>
                     <Row justify={'space-between'} className='h-full px-2'>
@@ -383,7 +383,7 @@ export default function OrganizerLayout({ roles }) {
                     />
                     <div className='lg:grid lg:grid-cols-9 w-full'>
                         <Content
-                            className='lg:col-span-7 lg:col-start-2 h-[84svh] lg:h-[92svh] overflow-y-scroll scrollbar-hide'
+                            className='lg:col-span-9 lg:col-start-1 h-[84svh] lg:h-[92svh] overflow-y-scroll scrollbar-hide'
                             style={{ scrollbarWidth: 'none' }}
                         >
                             <Outlet />

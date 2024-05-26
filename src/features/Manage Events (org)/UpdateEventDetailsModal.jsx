@@ -15,12 +15,15 @@ import LocationOnMapsModal from './LocationOnMapsModal';
 import { useForm } from 'antd/es/form/Form';
 const { Title, Paragraph } = Typography;
 
-import moment from 'moment';
 import dayjs from 'dayjs';
 
 import { useUpdateDetailsMutation } from '../../api/services/events';
 import { useParams } from 'react-router-dom';
 import RegistrationScheduleForm from './RegistrationScheduleForm';
+
+import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill';
+
 const UpdateEventDetailsModal = ({
     isUpdateEventDetailsModalOpen,
     setIsUpdateEventDetailsModalOpen,
@@ -43,6 +46,7 @@ const UpdateEventDetailsModal = ({
             ],
         },
     ]);
+    const [value, setValue] = useState('');
 
     const handleEventDetailsCancel = () => {
         setIsUpdateEventDetailsModalOpen(false);
@@ -161,11 +165,11 @@ const UpdateEventDetailsModal = ({
                     spinning={UpdateDetailsIsLoading}
                 >
                     <div>
-                        <Form layout="vertical" initialValues={initialFormValues} form={form}>
+                        <Form layout='vertical' initialValues={initialFormValues} form={form}>
                             <Title level={3}>Event Information</Title>
                             <Form.Item
-                                label="Title"
-                                name="title"
+                                label='Title'
+                                name='title'
                                 rules={[
                                     {
                                         required: true,
@@ -173,11 +177,11 @@ const UpdateEventDetailsModal = ({
                                     },
                                 ]}
                             >
-                                <Input prefix={<EditOutlined />} placeholder="Event Title" />
+                                <Input prefix={<EditOutlined />} placeholder='Event Title' />
                             </Form.Item>
                             <Form.Item
-                                label="Description"
-                                name="description"
+                                label='Description'
+                                name='description'
                                 rules={[
                                     {
                                         required: true,
@@ -185,11 +189,12 @@ const UpdateEventDetailsModal = ({
                                     },
                                 ]}
                             >
-                                <Input.TextArea prefix={<InfoCircleOutlined />} placeholder="Event Description" />
+                                {/* <Input.TextArea prefix={<InfoCircleOutlined />} placeholder='Event Description' /> */}
+                                <ReactQuill value={value} onChange={setValue} modules={modules} formats={formats} />
                             </Form.Item>
                             <Form.Item
-                                label="Event Type (Online - Onsite)"
-                                name="event_type"
+                                label='Event Type (Online - Onsite)'
+                                name='event_type'
                                 rules={[
                                     {
                                         required: true,
@@ -213,8 +218,8 @@ const UpdateEventDetailsModal = ({
                             </Form.Item>
 
                             <Title level={3}>Location</Title>
-                            <Form.Item label="Location on Maps">
-                                <Space style={{ width: '100%' }} direction="vertical">
+                            <Form.Item label='Location on Maps'>
+                                <Space style={{ width: '100%' }} direction='vertical'>
                                     {!position?.lat && (
                                         <div style={{ height: '30vh' }}>
                                             <Dragger
@@ -223,16 +228,16 @@ const UpdateEventDetailsModal = ({
                                                 }}
                                                 disabled
                                             >
-                                                <p className="ant-upload-hint">No Location Selected Yet</p>
+                                                <p className='ant-upload-hint'>No Location Selected Yet</p>
                                             </Dragger>
                                         </div>
                                     )}
                                     {position?.lat && (
                                         <Tooltip
-                                            trigger="hover"
+                                            trigger='hover'
                                             defaultOpen
-                                            title="Click here to show the selected location on Maps"
-                                            placement="topRight"
+                                            title='Click here to show the selected location on Maps'
+                                            placement='topRight'
                                         >
                                             <div>
                                                 <ShowMap position={position} />
@@ -242,7 +247,7 @@ const UpdateEventDetailsModal = ({
                                     <div style={{ textAlign: 'center' }}>
                                         <Space size={30} wrap>
                                             <Button
-                                                type="primary"
+                                                type='primary'
                                                 onClick={() => setIsLocationOnMapModalOpen(true)}
                                                 icon={<EnvironmentFilled />}
                                             >
@@ -250,7 +255,7 @@ const UpdateEventDetailsModal = ({
                                             </Button>
 
                                             <Button
-                                                type="dashed"
+                                                type='dashed'
                                                 disabled={!position?.lat}
                                                 danger
                                                 onClick={() => {
@@ -264,12 +269,12 @@ const UpdateEventDetailsModal = ({
                                     </div>
                                 </Space>
                             </Form.Item>
-                            <Form.Item label="Address Notes" name="address_notes">
-                                <Input.TextArea prefix={<EditOutlined />} placeholder="Address Notes" />
+                            <Form.Item label='Address Notes' name='address_notes'>
+                                <Input.TextArea prefix={<EditOutlined />} placeholder='Address Notes' />
                             </Form.Item>
 
                             <Title level={3}>Event Settings</Title>
-                            <Form.Item label="Capacity" name="capacity">
+                            <Form.Item label='Capacity' name='capacity'>
                                 <InputNumber prefix={<TeamOutlined />} min={0} style={{ width: '100%' }} />
                             </Form.Item>
 
@@ -299,3 +304,15 @@ const UpdateEventDetailsModal = ({
 };
 
 export default UpdateEventDetailsModal;
+
+const modules = {
+    toolbar: [
+        [{ size: ['normal', 'large'] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+        ['link'],
+        ['clean'],
+    ],
+};
+
+const formats = ['font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'indent', 'link'];

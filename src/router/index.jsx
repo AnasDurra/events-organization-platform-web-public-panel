@@ -4,7 +4,7 @@ import RegisterAttendee from '../features/Attendees Profiles/RegisterAttendee';
 import ShowAttendeProfile from '../features/Attendees Profiles/ShowAttendeProfile';
 import ShowMyProfile from '../features/Attendees Profiles/ShowMyProfile';
 import CreateEvent from '../features/Manage Events (org)/CreateEvent';
-import ShowEvent from '../features/Manage Events (org)/ShowEvent';
+import ShowEvent from '../features/Manage Events (org)/show_event/ShowEvent';
 import EditFormPage from '../features/dynamic forms/EditFormPage';
 import ViewFormsPage from '../features/dynamic forms/ViewFormsPage';
 import FormLayout from '../features/dynamic forms/components/FormLayout';

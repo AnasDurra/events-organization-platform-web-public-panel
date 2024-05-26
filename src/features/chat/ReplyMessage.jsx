@@ -1,6 +1,6 @@
 import { CloseOutlined } from '@ant-design/icons';
 import { MdOutlineReply } from 'react-icons/md';
-import { Button } from 'antd';
+import { Button, Space, Typography } from 'antd';
 
 const ReplyMessage = ({ message, setIsReplying }) => {
     const cardStyle = {
@@ -18,16 +18,17 @@ const ReplyMessage = ({ message, setIsReplying }) => {
     console.log(message);
     return (
         <div style={cardStyle}>
-            <div style={{ display: 'flex' }}>
-                <MdOutlineReply style={{ fontSize: '24px', color: '#1679AB', marginRight: '5px' }} />
+            <Space direction='vertical'>
+                <Space>
+                    <MdOutlineReply style={{ fontSize: '24px', color: '#1679AB' }} />
+                    <strong style={{ width: '100%', color: '#1679AB' }}>Reply to {message?.user?.username}</strong>
+                </Space>
 
-                <div>
-                    <strong style={{ color: '#1679AB' }}>Reply to {message.user.name}</strong>
-                    <div style={{ fontSize: '14px', direction: 'ltr' }}>{message.text}</div>
-                </div>
-            </div>
+                <Typography.Text style={{ fontSize: '14px', direction: 'ltr' }}>{message.text}</Typography.Text>
+            </Space>
+
             <div>
-                <Button type="text" icon={<CloseOutlined />} onClick={() => setIsReplying(false)} />
+                <Button type='text' icon={<CloseOutlined />} onClick={() => setIsReplying(false)} />
             </div>
         </div>
     );

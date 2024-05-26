@@ -7,18 +7,18 @@ import ReplyMessage from './ReplyMessage';
 
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useGroupChatListQuery } from '../../api/services/chats';
-import { sendMessage } from '../../chatSocket';
+import { chatSocket, sendMessage } from '../../chatSocket';
+import { getLoggedInUserV2 } from '../../api/services/auth';
 
 const EventChat = ({ chat_group_id }) => {
-    const [pageSize, setPageSize] = useState(3);
+    const [pageSize, setPageSize] = useState(10);
     const [page, setPage] = useState(1);
     const { data, error, isLoading, refetch, isFetching } = useGroupChatListQuery({ chat_group_id, pageSize, page });
 
-    console.log(chat_group_id); // TODO Delete this
-
+    const [user] = useState(getLoggedInUserV2());
+    // console.log(user);
     const [messages, setMessages] = useState([]);
     const [inputValue, setInputValue] = useState('');
-    const [user] = useState({ name: 'Alice' });
 
     const [isReplying, setIsReplying] = useState(false);
     const [replyMessage, setReplyMessage] = useState(null);
@@ -36,9 +36,23 @@ const EventChat = ({ chat_group_id }) => {
                 content: inputValue,
                 group_id: chat_group_id,
             };
-            // setMessages([...messages, newMessage]);
             sendMessage(newMessage);
             setInputValue('');
+
+            // const messageToAdd = {
+            //     message_id: (parseInt(messages[0]?.message_id) + 1).toString() || '1',
+            //     reactions: [],
+            //     text: inputValue,
+            //     timestamp: new Date().toISOString(),
+            //     user: {
+            //         user_id: user.user_id,
+            //         username: user.username,
+            //         avatar: user.profile_picture,
+            //         is_organizer: user.user_role === '2',
+            //     },
+            // };
+
+            // setMessages((prevMessages) => [messageToAdd, ...prevMessages]);
         }
     };
 
@@ -68,13 +82,23 @@ const EventChat = ({ chat_group_id }) => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
         }
+
+        function messageReceived(message) {
+            setMessages((prevMessages) => [message.message, ...prevMessages]);
+        }
+        chatSocket.on(`group-${4}`, messageReceived);
+
+        return () => {
+            chatSocket.off(`group-${4}`, messageReceived);
+        };
     }, []);
 
     useEffect(() => {
+        console.log(data);
         if (data) {
             setMessages((prevMessages) => [...prevMessages, ...data.result.messages]);
+            // setMessages(data?.result?.messages);
         }
-        console.log(data);
     }, [data]);
 
     return (
@@ -82,7 +106,7 @@ const EventChat = ({ chat_group_id }) => {
             <Spin spinning={isLoading}>
                 <div ref={messagesEndRef} style={{ maxHeight: '400px', overflowY: 'auto' }}>
                     <div
-                        id="scrollableDiv"
+                        id='scrollableDiv'
                         style={{
                             height: 300,
                             overflow: 'auto',
@@ -91,33 +115,35 @@ const EventChat = ({ chat_group_id }) => {
                         }}
                     >
                         <InfiniteScroll
-                            style={{ display: 'flex', flexDirection: 'column-reverse' }}
+                            style={{ display: 'flex', flexDirection: 'column-reverse', overflow: 'unset' }}
                             dataLength={data?.result?.meta_data?.page_size ?? 0}
                             next={fetchMoreData}
                             inverse={true}
                             hasMore={true}
                             loader={<h4>Loading...</h4>}
                             endMessage={null} // TODO
-                            scrollableTarget="scrollableDiv"
+                            scrollableTarget='scrollableDiv'
                         >
                             {messages.map((message, index) => (
                                 <div key={message.message_id}>
                                     {index < messages.length &&
                                         moment(messages[index + 1]?.timestamp).format('DD-MM-YYYY') !=
                                             moment(message.timestamp).format('DD-MM-YYYY') && (
-                                            <Divider orientation="left">
+                                            <Divider orientation='left'>
                                                 {moment(message?.timestamp).format('MMMM DD, YYYY')}
                                             </Divider>
                                         )}
                                     <Message
                                         message={message}
-                                        previousUser={index < messages.length ? messages[index - 1]?.user : null}
+                                        previousUser={index < messages.length ? messages[index + 1]?.user : null}
                                         type={
-                                            message.user.name === user.name ? TYPE_SENT_MESSAGE : TYPE_RECEIVED_MESSAGE
+                                            message?.user?.user_id === user.user_id
+                                                ? TYPE_SENT_MESSAGE
+                                                : TYPE_RECEIVED_MESSAGE
                                         }
                                         replyOnMessage={replyOnMessage}
                                         scrollToRepliedMessage={scrollToRepliedMessage}
-                                        isFocused={focusedMessageId === message.id}
+                                        isFocused={focusedMessageId === message.message_id}
                                     />
                                 </div>
                             ))}
@@ -134,9 +160,9 @@ const EventChat = ({ chat_group_id }) => {
                         value={inputValue}
                         onChange={handleInputChange}
                         onPressEnter={handleSendMessage}
-                        placeholder="Type your message..."
+                        placeholder='Type your message...'
                     />
-                    <Button style={{ width: '80px' }} type="primary" onClick={handleSendMessage}>
+                    <Button style={{ width: '80px' }} type='primary' onClick={handleSendMessage}>
                         Send
                     </Button>
                 </div>

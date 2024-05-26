@@ -26,6 +26,10 @@ import TicketsCard from '../../features/landing/TicketsCard';
 import { IoCreateSharp } from 'react-icons/io5';
 import { GoNorthStar } from 'react-icons/go';
 
+import { chatSocket, joinChannel, setChatSocketHeader } from '../../chatSocket';
+import Cookies from 'js-cookie';
+import { useJoinedGroupsQuery } from '../../api/services/chats';
+
 const navigationItems = [
     {
         label: 'Home',
@@ -80,6 +84,8 @@ export default function HomeLayout({ roles }) {
     const { data: { result: balance } = { result: {} }, isLoading: isBalanceLoading } = useGetAttendeeBalanceQuery(
         getLoggedInUserV2()?.attendee_id
     );
+    const { data: { result: joinedGroups } = { result: [] }, isLoading: isJoinedGroupsLoading } =
+        useJoinedGroupsQuery();
 
     const menu = (
         <Menu style={{ borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', width: '180px' }}>
@@ -144,7 +150,7 @@ export default function HomeLayout({ roles }) {
     const user = getLoggedInUserV2();
 
     useEffect(() => {
-        console.log(checkAccessTokenObj);
+        // console.log(checkAccessTokenObj);
         if (checkAccessTokenObj?.result) {
             if (!roles?.includes(checkAccessTokenObj?.result?.user_role?.id)) {
                 navigate('/not-found');
@@ -159,6 +165,40 @@ export default function HomeLayout({ roles }) {
             navigate('/login');
         }
     }, [checkAccessTokenError]);
+
+    // start here
+    const authToken = Cookies.get('accessToken');
+    useEffect(() => {
+        function onGroupsJoined(group) {
+            joinChannel(group.channel);
+            console.log('joined group !!', group);
+        }
+
+        function chatRecieved(message) {
+            console.log(message);
+        }
+
+        if (authToken) {
+            console.log(authToken);
+            setChatSocketHeader(authToken);
+        }
+
+        chatSocket.on('group-joined', onGroupsJoined);
+        chatSocket.on('notification-received', chatRecieved);
+
+        return () => {
+            chatSocket.off('group-joined', onGroupsJoined);
+        };
+    }, [authToken]);
+
+    useEffect(() => {
+        console.log('layout', joinedGroups);
+
+        joinedGroups?.map((group) => {
+            const { channel } = group;
+            joinChannel(channel);
+        });
+    }, [joinedGroups]);
 
     return (
         <ConfigProvider theme={theme}>
@@ -176,32 +216,16 @@ export default function HomeLayout({ roles }) {
                 />
             )}
 
-            <Layout
-                className='h-[100svh]'
-                hidden={hideContent}
-            >
+            <Layout className='h-[100svh]' hidden={hideContent}>
                 <Header className='h-[8svh] px-2'>
-                    <Row
-                        justify={'space-between'}
-                        className='h-full px-2'
-                    >
-                        <Col
-                            xs={{ span: 8 }}
-                            className='h-full flex items-center'
-                        >
+                    <Row justify={'space-between'} className='h-full px-2'>
+                        <Col xs={{ span: 8 }} className='h-full flex items-center'>
                             {' '}
-                            <Title
-                                style={{ margin: 0, color: 'whitesmoke' }}
-                                level={3}
-                                className='font-serif'
-                            >
+                            <Title style={{ margin: 0, color: 'whitesmoke' }} level={3} className='font-serif'>
                                 Eventure
                             </Title>
                         </Col>
-                        <Col
-                            xs={{ span: 16 }}
-                            className='h-full pr-2'
-                        >
+                        <Col xs={{ span: 16 }} className='h-full pr-2'>
                             <div className='w-full flex  mx-2 h-full items-center justify-end'>
                                 <div
                                     onClick={() => navigate('tickets')}
@@ -213,10 +237,7 @@ export default function HomeLayout({ roles }) {
                                     <TicketsCard ticketsCount={balance?.balance} />
                                 </div>
 
-                                <Badge
-                                    count={5}
-                                    size='small'
-                                >
+                                <Badge count={5} size='small'>
                                     <Button
                                         type='text'
                                         classNames={{ icon: 'text-2xl text-white' }}
@@ -288,10 +309,7 @@ export default function HomeLayout({ roles }) {
                     </div>
                 </Layout>
 
-                <Footer
-                    className={`h-[8svh] p-0 md:hidden`}
-                    style={{ backgroundColor: theme.token.colorPrimary }}
-                >
+                <Footer className={`h-[8svh] p-0 md:hidden`} style={{ backgroundColor: theme.token.colorPrimary }}>
                     <BottomNavigation
                         showLabels
                         value={navIndex}
