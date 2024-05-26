@@ -1,54 +1,15 @@
-import { Affix, Button, Card, Col, Descriptions, Divider, List, Modal, Row, Space, Table, Tag, Typography } from 'antd';
-import {
-    ArrowRightOutlined,
-    CalendarOutlined,
-    EnvironmentOutlined,
-    InfoCircleFilled,
-    InfoCircleOutlined,
-    ScheduleOutlined,
-    TagsOutlined,
-    UserOutlined,
-} from '@ant-design/icons';
-import ShowMap from '../../ShowMap';
+import { Button, Col, Modal, Row, Space, Typography } from 'antd';
+import { InfoCircleOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { getLoggedInUserV2 } from '../../../../api/services/auth';
 import { useState } from 'react';
-import { Icon } from '@iconify/react';
-
 import 'react-quill/dist/quill.snow.css';
-import ReactQuill from 'react-quill';
-import Paragraph from 'antd/es/typography/Paragraph';
 import moment from 'moment';
-import { ShareOutlined } from '@material-ui/icons';
 import EventRegistratinInfoModal from './EventRegistratinInfoModal';
+import EventDetails from './EventDetails';
+import EventScheduleAndMap from './EventScheduleAndMap';
 
 const EventDetailsTab = ({ eventData, handleRegisterClicked }) => {
     const [user] = useState(getLoggedInUserV2());
-    const dataSource = [
-        {
-            key: '1',
-            name: 'General Admission',
-            price: 100,
-            qty: 10,
-        },
-    ];
-
-    const columns = [
-        {
-            title: 'Available Tickets',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Price',
-            dataIndex: 'price',
-            key: 'price',
-        },
-        {
-            title: 'Qty*',
-            dataIndex: 'qty',
-            key: 'qty',
-        },
-    ];
 
     const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -64,268 +25,22 @@ const EventDetailsTab = ({ eventData, handleRegisterClicked }) => {
         <>
             <Row gutter={[20, 50]} style={{ direction: 'revert' }}>
                 <Col xs={{ span: 24, order: 2 }} sm={{ span: 24, order: 2 }} lg={{ span: 16, order: 1 }}>
-                    <Row gutter={[30, 20]}>
-                        <Col span={24}>
-                            <Typography.Title style={{ margin: '0px' }} level={2} strong>
-                                <span
-                                    style={{
-                                        borderBottom: '5px solid #000',
-                                        paddingBottom: '4px',
-                                    }}
-                                >
-                                    Event
-                                </span>{' '}
-                                Overview
-                            </Typography.Title>
-                        </Col>
-                        <Col span={24}>
-                            <Card
-                                style={{
-                                    height: '100%',
-                                    // padding: '10px',
-                                    borderRadius: '8px',
-                                    boxShadow: '0 1px 1px rgba(0, 0, 0, 0.1)',
-                                    // backgroundColor: '#fafafa', //card
-                                    backgroundColor: 'transparent', //card
-                                }}
-                            >
-                                <Space direction='vertical' wrap>
-                                    <Paragraph>
-                                        <ReactQuill
-                                            value={eventData?.result?.description}
-                                            readOnly={true}
-                                            theme={'bubble'}
-                                        />
-                                    </Paragraph>
-                                </Space>
-                            </Card>
-                        </Col>
-                        <Col span={24}>
-                            <Divider />
-                            <Typography.Title style={{ margin: '0px' }} level={2} strong>
-                                <span
-                                    style={{
-                                        borderBottom: '5px solid #000', // Adjust the color and thickness as needed
-                                        paddingBottom: '4px', // Adjust the spacing between text and underline
-                                    }}
-                                >
-                                    Event
-                                </span>{' '}
-                                Detials
-                            </Typography.Title>
-                        </Col>
-                        <Col xs={24}>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    height: '100%',
-                                    width: '100%',
-                                }}
-                            >
-                                <Row style={{ flex: 1 }} gutter={[20, 20]}>
-                                    <Col span={24}>
-                                        <Card
-                                            type='inner'
-                                            style={{
-                                                width: '100%',
-                                                height: '100%',
-                                                // padding: '10px',
-                                                borderRadius: '8px',
-                                                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
-                                                // backgroundColor: '#fafafa', //card
-                                                backgroundColor: 'transparent', //card
-                                            }}
-                                        >
-                                            <Space style={{ width: '100%' }} direction='vertical' size={10}>
-                                                <Space>
-                                                    <Icon
-                                                        icon='fluent-mdl2:calendar-settings-mirrored'
-                                                        style={{ fontSize: '18px' }}
-                                                    />
-                                                    <Typography.Text strong>
-                                                        <span
-                                                            style={{
-                                                                borderBottom: '4px solid #000',
-                                                                paddingBottom: '4px',
-                                                            }}
-                                                        >
-                                                            Eve
-                                                        </span>
-                                                        nt Attributes:
-                                                    </Typography.Text>
-                                                </Space>
-                                                <Divider
-                                                    style={{
-                                                        margin: '10px 0px',
-                                                    }}
-                                                />
-                                                <Space wrap>
-                                                    <TagsOutlined style={{ fontSize: '18px' }} />
-                                                    {/* <Typography.Text strong>Event Tags:</Typography.Text> */}
-                                                    <div>
-                                                        {eventData?.result?.tags.length === 0
-                                                            ? 'No Tags for this event'
-                                                            : eventData?.result?.tags.map((tag) => (
-                                                                  <Tag
-                                                                      key={tag?.tag?.value}
-                                                                      style={{
-                                                                          padding: '2px 10px',
-                                                                          margin: '5px',
-                                                                          fontSize: '15px',
-                                                                          backgroundColor: '#DCF2F1',
-                                                                      }}
-                                                                  >
-                                                                      <Typography.Text strong>
-                                                                          {tag?.tag?.label}
-                                                                      </Typography.Text>
-                                                                  </Tag>
-                                                              ))}
-                                                    </div>
-                                                </Space>
-
-                                                <Space wrap>
-                                                    <UserOutlined style={{ fontSize: '18px' }} />
-                                                    {/* <Typography.Text strong>Event Target Age Group:</Typography.Text> */}
-                                                    <div>
-                                                        {eventData?.result?.age_groups.length === 0
-                                                            ? 'No Age Groups for this event'
-                                                            : eventData?.result?.age_groups.map((age_group) => (
-                                                                  <Tag
-                                                                      style={{
-                                                                          padding: '2px 10px',
-                                                                          margin: '5px',
-                                                                          fontSize: '15px',
-                                                                          backgroundColor: '#EEF5FF',
-                                                                      }}
-                                                                      key={age_group?.age_group_id}
-                                                                  >
-                                                                      <Typography.Text strong>
-                                                                          Age range {age_group?.age_group_name}
-                                                                      </Typography.Text>
-                                                                  </Tag>
-                                                              ))}
-                                                    </div>
-                                                </Space>
-                                            </Space>
-                                        </Card>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </Col>
-                    </Row>
+                    <EventDetails
+                        description={eventData?.result?.description}
+                        tags={eventData?.result?.tags}
+                        age_groups={eventData?.result?.age_groups}
+                    />
                 </Col>
                 <Col xs={{ span: 24, order: 1 }} sm={{ span: 24, order: 1 }} lg={{ span: 8, order: 2 }}>
-                    <div style={{ position: 'sticky', top: 1 }}>
-                        <Row gutter={[30, 20]}>
-                            <Col xs={24}>
-                                <Card
-                                    type='inner'
-                                    style={{
-                                        borderRadius: '8px',
-                                        boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
-                                        backgroundColor: '#fafafa', //card
-                                        // backgroundColor: 'transparent', //card
-                                    }}
-                                >
-                                    <Space direction='vertical' style={{ width: '100%' }} size={30}>
-                                        {eventData?.result?.days?.map((dateObj, index) => (
-                                            <Space
-                                                direction='vertical'
-                                                style={{
-                                                    width: '100%',
-                                                }}
-                                                size={10}
-                                                key={index}
-                                            >
-                                                <Space>
-                                                    <CalendarOutlined style={{ fontSize: '14px', color: '#A2A2A2' }} />
-                                                    <Typography.Text
-                                                        strong
-                                                        style={{
-                                                            fontWeight: 'bold',
-                                                            fontSize: '16px',
-                                                        }}
-                                                    >
-                                                        {moment(dateObj.day_date).format('ddd, MMMM D, YYYY')}
-                                                    </Typography.Text>
-                                                </Space>
-                                                <List
-                                                    bordered
-                                                    dataSource={dateObj.slots}
-                                                    renderItem={(slot, i) => (
-                                                        <>
-                                                            <div
-                                                                style={{
-                                                                    fontWeight: 'bold',
-                                                                    padding: '12px',
-                                                                }}
-                                                            >
-                                                                {slot.label}
-                                                            </div>
-                                                            <List.Item
-                                                                style={{
-                                                                    display: 'flex',
-                                                                    justifyContent: 'space-between',
-                                                                    alignItems: 'center',
-                                                                }}
-                                                            >
-                                                                <div>
-                                                                    <Typography.Text>
-                                                                        {formatDate(slot.start_time)}
-                                                                    </Typography.Text>
-                                                                </div>
-
-                                                                <ArrowRightOutlined
-                                                                    style={{
-                                                                        margin: '0em 1em',
-                                                                    }}
-                                                                />
-                                                                <div>
-                                                                    <Typography.Text>
-                                                                        {formatDate(slot.end_time)}
-                                                                    </Typography.Text>
-                                                                </div>
-                                                            </List.Item>
-                                                        </>
-                                                    )}
-                                                />
-                                            </Space>
-                                        ))}
-                                        <Space style={{ width: '100%' }} direction='vertical' size={10}>
-                                            <Space>
-                                                <EnvironmentOutlined style={{ fontSize: '14px', color: '#A2A2A2' }} />
-                                                <Typography.Text>
-                                                    <strong>Address Note:</strong>{' '}
-                                                    {eventData?.result?.address_notes ?? 'No additional notes'}
-                                                </Typography.Text>
-                                            </Space>
-                                        </Space>
-                                    </Space>
-                                </Card>
-                            </Col>
-                            <Col span={24}>
-                                <div style={{ marginTop: '-1.5em' }}>
-                                    {eventData?.result?.location?.latitude && (
-                                        <ShowMap
-                                            position={{
-                                                lat: eventData?.result?.location?.latitude
-                                                    ? parseFloat(eventData.result?.location.latitude)
-                                                    : 0,
-                                                lng: eventData?.result?.location?.longitude
-                                                    ? parseFloat(eventData.result?.location.longitude)
-                                                    : 0,
-                                            }}
-                                        />
-                                    )}
-                                </div>
-                            </Col>
-                        </Row>
-                    </div>
+                    <EventScheduleAndMap
+                        days={eventData?.result?.days}
+                        address_notes={eventData?.result?.address_notes}
+                        location={eventData?.result?.location}
+                    />
                 </Col>
 
-                {user?.user_role == 2 && (
+                {user?.user_role == 3 && (
                     <Col xs={{ span: 24, order: 3 }}>
-                        {/* <Affix offsetBottom={0} offsetTop={120}> */}
                         <div
                             style={{
                                 position: 'fixed',
@@ -367,7 +82,7 @@ const EventDetailsTab = ({ eventData, handleRegisterClicked }) => {
                                     </Space>
                                     <Space size={10}>
                                         <Button
-                                            icon={<ShareOutlined />}
+                                            icon={<ShareAltOutlined />}
                                             size='large'
                                             type='default'
                                             style={{ marginTop: 10, marginRight: 10 }}
@@ -382,7 +97,12 @@ const EventDetailsTab = ({ eventData, handleRegisterClicked }) => {
                                             style={{ marginTop: 10 }}
                                         />
 
-                                        <Button type='primary' size='large' style={{ marginTop: 10 }}>
+                                        <Button
+                                            type='primary'
+                                            size='large'
+                                            style={{ marginTop: 10 }}
+                                            onClick={handleRegisterClicked}
+                                        >
                                             Attend
                                         </Button>
                                     </Space>
@@ -404,13 +124,3 @@ const EventDetailsTab = ({ eventData, handleRegisterClicked }) => {
 };
 
 export default EventDetailsTab;
-
-function formatDate(dateTimeString) {
-    const date = new Date(dateTimeString);
-    const formattedTime = date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-    });
-    return formattedTime;
-}

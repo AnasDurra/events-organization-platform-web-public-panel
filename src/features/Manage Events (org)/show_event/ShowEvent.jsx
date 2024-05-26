@@ -34,7 +34,7 @@ const ShowEvent = () => {
     }, [eventData]);
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '5em' }}>
             <RegistrationModal
                 isOpen={isRegistrationModalOpen}
                 event={eventData}
