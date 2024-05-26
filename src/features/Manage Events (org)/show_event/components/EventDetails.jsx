@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 import { Card, Col, Divider, Row, Space, Tag, Typography } from 'antd';
 import Paragraph from 'antd/es/skeleton/Paragraph';
 import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const EventDetails = ({ description, tags, age_groups }) => {
     return (
@@ -31,11 +32,7 @@ const EventDetails = ({ description, tags, age_groups }) => {
                         backgroundColor: 'transparent', //card
                     }}
                 >
-                    <Space direction='vertical' wrap>
-                        <Paragraph>
-                            <ReactQuill value={description} readOnly={true} theme={'bubble'} />
-                        </Paragraph>
-                    </Space>
+                    <ReactQuill value={description} readOnly={true} theme={'bubble'} />
                 </Card>
             </Col>
             <Col span={24}>

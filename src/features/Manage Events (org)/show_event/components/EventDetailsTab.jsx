@@ -2,11 +2,11 @@ import { Button, Col, Modal, Row, Space, Typography } from 'antd';
 import { InfoCircleOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { getLoggedInUserV2 } from '../../../../api/services/auth';
 import { useState } from 'react';
-import 'react-quill/dist/quill.snow.css';
+
 import moment from 'moment';
 import EventRegistratinInfoModal from './EventRegistratinInfoModal';
-import EventDetails from './EventDetails';
 import EventScheduleAndMap from './EventScheduleAndMap';
+import EventDetails from './EventDetails';
 
 const EventDetailsTab = ({ eventData, handleRegisterClicked }) => {
     const [user] = useState(getLoggedInUserV2());
