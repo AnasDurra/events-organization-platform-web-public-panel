@@ -82,7 +82,7 @@ const ModalChooseForm = ({ isModalOpen, handleOk, handleCancel, organization_id,
             onSelectForm(res?.data?.result);
             setIsAddFormModalOpen(false);
             //TODO with no event id
-            window.open(`${window.location.origin}/form/${res?.data?.result?.id}/edit`)
+            window.open(`${window.location.origin}/forms/${res?.data?.result?.id}/edit`)
 
         });
     };

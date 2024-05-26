@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, Checkbox, Space, Button, Divider, InputNumber } from 'antd';
 
 import Title from 'antd/es/typography/Title';
 import { CloseOutlined } from '@ant-design/icons';
+import { useAddValidationRuleMutation, useRemoveValidationRuleMutation } from '../dynamicFormsSlice';
 
 export default function NumberProperties({
     field,
@@ -12,6 +13,15 @@ export default function NumberProperties({
     onDelete,
     onValidationRulesChange,
 }) {
+    const [, { isError: isErrorRemovingValidationRule }] = useRemoveValidationRuleMutation({
+        fixedCacheKey: 'shared-update-val-rule',
+    });
+    const [, { isError: isErrorAddingValidationRule }] = useAddValidationRuleMutation({
+        fixedCacheKey: 'shared-update-val-rule',
+    });
+    const [minValue, setMinValue] = useState(null);
+    const [maxValue, setMaxValue] = useState(null);
+
     const handleNameInputChange = (e) => {
         const newName = e.target.value;
         onNameChange(newName);
@@ -28,6 +38,12 @@ export default function NumberProperties({
     };
 
     const handleValidationRulesChange = (ruleWithVal) => {
+        if (ruleWithVal.rule == 'min') {
+            setMinValue(ruleWithVal.value);
+        }
+        if (ruleWithVal.rule == 'max') {
+            setMaxValue(ruleWithVal.value);
+        }
         onValidationRulesChange(ruleWithVal);
     };
 
@@ -35,11 +51,15 @@ export default function NumberProperties({
         if (field) {
             document.getElementById('num-prop-name').value = field.name || '';
             document.getElementById('num-prop-label').value = field.label || '';
-            document.getElementById('num-prop-isRequired').checked = !!field.isRequired;
-            //  document.getElementById('num-prop-rule-min').value = ;
+            document.getElementById('num-prop-isRequired').checked = !!field.required;
+
+            const minRule = field.validationRules.find((rule) => rule.rule == 'min');
+            setMinValue(minRule?.value || '');
+
+            const maxRule = field.validationRules.find((rule) => rule.rule == 'max');
+            setMaxValue(maxRule?.value || '');
         }
-        console.log(field);
-    }, [field]);
+    }, [field, isErrorRemovingValidationRule, isErrorAddingValidationRule]);
 
     return (
         <Space.Compact
@@ -90,6 +110,7 @@ export default function NumberProperties({
                         size='small'
                         controls={false}
                         id='num-prop-rule-min'
+                        value={minValue}
                         addonBefore={'minimum'}
                         addonAfter={
                             <CloseOutlined
@@ -99,7 +120,8 @@ export default function NumberProperties({
                                     handleValidationRulesChange({
                                         rule: 'min',
                                         delete: true,
-                                        validation_rule_id: field.id,
+                                        validation_rule_id: field.validationRules.find((rule) => rule.rule === 'min')
+                                            .id,
                                     })
                                 }
                             />
@@ -112,6 +134,7 @@ export default function NumberProperties({
                         size='small'
                         controls={false}
                         id='num-prop-rule-max'
+                        value={maxValue}
                         addonBefore={'maximum'}
                         addonAfter={
                             <CloseOutlined
@@ -121,7 +144,8 @@ export default function NumberProperties({
                                     handleValidationRulesChange({
                                         rule: 'max',
                                         delete: true,
-                                        validation_rule_id: field.id,
+                                        validation_rule_id: field.validationRules.find((rule) => rule.rule === 'max')
+                                            .id,
                                     })
                                 }
                             />

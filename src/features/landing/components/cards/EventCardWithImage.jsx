@@ -89,7 +89,7 @@ export default function EventCardWithImage({
                 <Button
                     className='w-full'
                     type='primary'
-                    onClick={() => navigate(`../event/show/${id}`)}
+                    onClick={() => navigate(`/event/show/${id}`)}
                 >
                     REGISTER
                 </Button>

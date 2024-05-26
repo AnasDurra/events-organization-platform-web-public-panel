@@ -39,6 +39,7 @@ import OrgTicketsPage from '../features/Ticketing Packages/OrgTicketsPage';
 import ViewCategoryPage from '../features/landing/ViewCategoryPage';
 import ViewAllCategoriesPage from '../features/landing/ViewAllCategoriesPage';
 import HomeLayout from '../components/Layouts/home/HomeLayout';
+import DesignBadge from '../features/gamification/badges/design/DesignBadge';
 
 export const router = createBrowserRouter([
     {
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             //  { index: true, element: </> }, // TODO make a landing page for all types of users
+            {
+                path: '/badge',
+                element: <DesignBadge />,
+            },
             {
                 path: '/not-found',
                 element: <NotFound />,

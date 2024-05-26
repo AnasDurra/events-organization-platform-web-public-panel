@@ -1,4 +1,4 @@
-import { FormOutlined, ReloadOutlined, SmileOutlined } from '@ant-design/icons';
+import { FormOutlined, ReloadOutlined, SmileOutlined, WarningOutlined } from '@ant-design/icons';
 import { Button, Modal, Result, Space, Spin, Steps, Typography } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState } from 'react';
@@ -15,22 +15,34 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
     const navigate = useNavigate();
     const { openNotification } = useNotification();
 
+    const [pullForm, setPullForm] = useState(false);
+    const [pullBalance, setPullBalance] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
 
-    /* const [attendEvent, { isLoading: isAttendEventLoading, isSuccess: isAttendEventSuccess }] =
-        useAttendEventMutation(); */
+    const [attendEvent, { isLoading: isAttendEventLoading, isSuccess: isAttendEventSuccess }] =
+        useAttendEventMutation();
     const {
         data: { result: didFillForm } = { result: false },
         isLoading: isDidFillFormLoading,
         isFetching: isDidFillFormFetching,
     } = useGetDidAttendeeFillFormQuery(
         { event_id: event?.result?.id, attendee_id: getLoggedInUserV2()?.attendee_id },
-        { pollingInterval: currentStep > 0 ? undefined : 3000 }
+        { pollingInterval: pullForm ? 3000 : undefined }
     );
     const { data: { result: balanceObj } = { result: {} }, isLoading: isBalanceObjLoading } =
         useGetAttendeeBalanceQuery(getLoggedInUserV2()?.attendee_id, {
-            pollingInterval: currentStep > 1 ? undefined : 3000,
+            pollingInterval: pullBalance ? 3000 : undefined,
         });
+
+    useEffect(() => {
+        if (!didFillForm && event?.result?.form) setPullForm(true);
+        else setPullForm(false);
+    }, [didFillForm, event]);
+
+    useEffect(() => {
+        if (parseInt(balanceObj.balance) < parseInt(event?.result?.fees)) setPullBalance(true);
+        else setPullBalance(false);
+    }, [balanceObj, event]);
 
     /*   useEffect(() => {
         let newStep = currentStep;
@@ -58,16 +70,42 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
         });
     }, [isAttendEventSuccess]); */
 
-    useEffect(() => {
-        if (event?.result?.form) {
-            setCurrentStep((step) => {
-                if (step == 0 && didFillForm) return step + 1;
-                else return step;
-            });
+    const handleStepChange = (step) => {
+        if (step == steps.length - 1) {
+            attendEvent({ event_id: event?.result?.id })
+                .unwrap()
+                .then((res) => {
+                    setCurrentStep(step + 1);
+                })
+                .catch((e) => {
+                    openNotification('error', 'Failed to confirm registration', e?.data?.message, 'bottomRight');
+                });
+        } else {
+            setCurrentStep(step);
         }
-    }, [didFillForm, event?.result?.form, isDidFillFormFetching]);
-
+    };
     const steps = [
+        !event?.result?.form &&
+            !event?.result?.fees && {
+                title: 'Confirm Registration',
+                icon: <WarningOutlined />,
+                content: (
+                    <div className=' flex flex-col justify-center items-center'>
+                        <WarningOutlined className='text-[10em] my-6 text-primary' />
+                        <div className='text-pretty text-lg text-gray-500 my-4'>
+                            You are registering for {event?.result?.title} event
+                        </div>
+                        <Button
+                            type='primary'
+                            onClick={() => {
+                                handleStepChange(currentStep + 1);
+                            }}
+                        >
+                            Confirm Registration
+                        </Button>
+                    </div>
+                ),
+            },
         event?.result?.form && {
             title: 'Form',
             icon: <FormOutlined />,
@@ -75,7 +113,16 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                 <Spin spinning={isDidFillFormLoading}>
                     <div className='flex flex-col  items-center justify-center w-full space-y-8 p-8'>
                         {didFillForm ? (
-                            'You Have Submitted Event Form'
+                            <div className='flex flex-col justify-center items-center'>
+                                <div className='text-lg text-pretty text-primary'>You Have Submitted Event Form</div>
+                                <Button
+                                    type='primary'
+                                    onClick={handleStepChange(currentStep + 1)}
+                                >
+                                    {' '}
+                                    Next
+                                </Button>
+                            </div>
                         ) : (
                             <div className=' w-[80%] lg:w-[40%] p-4 rounded-xl text-center flex justify-center flex-col bg-gray-200  space-y-6'>
                                 <div className='flex flex-col w-full'>
@@ -97,13 +144,6 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                                 </Button>
                             </div>
                         )}
-                        {/*  <Button
-                            icon={<ReloadOutlined />}
-                            type='text'
-                        >
-                            {' '}
-                            I FILLED THE FORM
-                        </Button> */}
                     </div>
                 </Spin>
             ),
@@ -153,7 +193,14 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                             </div>
                         </div>
                         <div className='flex w-full space-x-2 justify-center'>
-                            <Button type='primary'>Confirm Payment</Button>
+                            <Button
+                                type='primary'
+                                onClick={() => {
+                                    handleStepChange(currentStep + 1);
+                                }}
+                            >
+                                Confirm Payment
+                            </Button>
                         </div>
                     </div>
                 ) : (
@@ -191,9 +238,7 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                             <Button
                                 type='primary'
                                 onClick={() => {
-                                    window.open(
-                                        `${window.location.origin}/home/tickets`
-                                    );
+                                    window.open(`${window.location.origin}/home/tickets`);
                                 }}
                             >
                                 {' '}
@@ -214,7 +259,9 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                 ></Result>
             ),
         },
-    ].filter((entry) => entry != null);
+    ].filter((entry) => entry != null && entry != false);
+
+    console.log(steps);
 
     return (
         <Modal
@@ -223,13 +270,18 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
             open={isOpen}
             width={'80svw'}
             footer={null}
-            onCancel={onClose}
+            onCancel={() => {
+                onClose();
+                setCurrentStep(0);
+            }}
             classNames={{ body: 'm-4 mt-8' }}
+            destroyOnClose
         >
             <Steps
                 current={currentStep}
-                onChange={(step) => setCurrentStep(step)}
                 items={steps}
+                responsive
+                size='small'
             />
 
             <div className='mt-4 p-2 overflow-y-auto max-h-[70svh]'>{steps[currentStep]?.content}</div>

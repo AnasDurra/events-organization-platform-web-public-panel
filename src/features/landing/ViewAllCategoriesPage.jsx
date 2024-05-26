@@ -34,22 +34,23 @@ export default function ViewAllCategoriesPage() {
             <div className='col-span-8 sm:col-span-6 sm:col-start-2 '>
                 <div className='flex flex-col mt-2 space-y-4 px-4'>
                     <div className='flex w-full justify-center'>
-                        <Title level={2}>Tags</Title>
+                        <Title level={2}>Categories</Title>
                     </div>
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                        {' '}
                         {displayedCategories.map((category) => (
                             <Card
                                 key={category.title}
-                                className='bg-gradient-to-b from-primary/80 to-secondary/80 hover:shadow-lg rounded-3xl hover:cursor-pointer'
+                                className='bg-gradient-to-b from-primary/80 to-secondary/80 hover:shadow-lg rounded-3xl hover:cursor-pointer flex justify-center items-center'
                                 onClick={() => navigate(`${category.tagName}/${category.id}`)}
                             >
-                                <div className='flex justify-center items-center h-full p-4'>
-                                    <Icon
-                                        icon={category.emoji}
-                                        style={{ fontSize: '4em' }}
-                                    />{' '}
-                                </div>
+                                {category.emoji && (
+                                    <div className='flex justify-center items-center h-full p-4'>
+                                        <Icon
+                                            icon={category.emoji}
+                                            style={{ fontSize: '4em' }}
+                                        />{' '}
+                                    </div>
+                                )}
                                 <Meta
                                     title={<div className='text-lg text-white'>{category.tagName}</div>}
                                     className='text-center text-white font-bold'

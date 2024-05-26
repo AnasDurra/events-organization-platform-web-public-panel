@@ -12,7 +12,7 @@ export default function OrganizersSection() {
         isSuccess,
         isLoading,
         isError,
-    } = useGetOrganizationsSummaryQuery({ page: 1, pageSize: 4 });
+    } = useGetOrganizationsSummaryQuery({ page: 1, pageSize: 3 });
 
     const navigate = useNavigate();
     return (
@@ -31,7 +31,7 @@ export default function OrganizersSection() {
                     <Skeleton loading={isLoading}>
                         {Array.isArray(orgs) && orgs.length > 0 ? (
                             <div className='grid grid-cols-1  sm:grid-cols-3 gap-4'>
-                                {orgs.slice(0, 4).map((org, index) => (
+                                {orgs.slice(0, 3).map((org, index) => (
                                     <OrganizerCard
                                         key={'org-' + index}
                                         orgID={org?.org_id}

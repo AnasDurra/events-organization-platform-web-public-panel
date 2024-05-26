@@ -38,47 +38,50 @@ export default function ViewCategoryPage() {
                             {category_name}
                         </Title>
                     </div>
-                    <Spin
-                        spinning={isEventsLoading}
-                        tip={'loading'}
-                        size='large'
-                    >
-                        <div className='grid grid-cols-12 gap-4 p-4'>
-                            {console.log('events', events)}
-
-                            {events?.map((event) => (
-                                <div
-                                    key={event.id}
-                                    className='col-start-2 col-span-10 md:col-span-4'
-                                >
-                                    <EventCardWithImage
-                                        id={event.id}
-                                        title={event.title}
-                                        description={event.description}
-                                        tags={event.tags.map((tag) => tag.tag?.label)}
-                                        organizationProfilePictureURL={
-                                            URL + '/organization/mainPicture/' + event.organization?.main_picture
-                                        }
-                                        eventImageURL={event.cover_picture_url}
-                                        days={event.days}
-                                        event_type={event.event_type}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                    </Spin>
-                    <div className='w-full flex justify-center  py-2'>
-                        <Pagination
-                            className='p-4'
-                            onChange={(page) => {
-                                setCurrentPage(page);
-                            }}
-                            defaultCurrent={currentPage}
-                            total={totalPages}
-                            current={currentPage}
-                            disabled={isEventsLoading}
+                    {isEventsLoading && (
+                        <Spin
+                            spinning
+                            tip={'loading'}
+                            size='large'
+                            className='flex justify-center items-center h-[80svh] w-full'
                         />
+                    )}
+                    <div className='grid grid-cols-12 gap-4 p-4'>
+                        {events?.map((event) => (
+                            <div
+                                key={event.id}
+                                className='col-start-2 col-span-10 md:col-span-4'
+                            >
+                                <EventCardWithImage
+                                    id={event.id}
+                                    title={event.title}
+                                    description={event.description}
+                                    tags={event.tags.map((tag) => tag.tag?.label)}
+                                    organizationProfilePictureURL={
+                                        URL + '/organization/mainPicture/' + event.organization?.main_picture
+                                    }
+                                    eventImageURL={event.cover_picture_url}
+                                    days={event.days}
+                                    event_type={event.event_type}
+                                />
+                            </div>
+                        ))}
                     </div>
+
+                    {totalPages > 0 && (
+                        <div className='w-full flex justify-center  py-2'>
+                            <Pagination
+                                className='p-4'
+                                onChange={(page) => {
+                                    setCurrentPage(page);
+                                }}
+                                defaultCurrent={currentPage}
+                                total={totalPages}
+                                current={currentPage}
+                                disabled={isEventsLoading}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
