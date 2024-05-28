@@ -5,6 +5,21 @@ import React from 'react';
 import { WiStars } from 'react-icons/wi';
 
 export default function FormTextFieldOverview({ isDragging, field, groupIndex, fieldIndex }) {
+    const { label, required, validationRules } = field;
+
+    const getValidationRulesText = () => {
+        const rulesText = validationRules.map((rule) => {
+            if (rule.rule === 'min') {
+                return `Min characters: ${rule.value}`;
+            } else if (rule.rule === 'max') {
+                return `Max characters: ${rule.value}`;
+            }
+            return '';
+        });
+
+        return rulesText.join(' | ');
+    };
+
     return (
         <div
             className='bg-gray-100 w-full px-4 border-4 border-zinc-200 rounded-3xl'
@@ -17,11 +32,13 @@ export default function FormTextFieldOverview({ isDragging, field, groupIndex, f
                 className='w-full'
             >
                 <div className='text-gray-500 flex items-center space-x-2  w-full my-2'>
-                    <span>{field?.label}</span>
-                    {field?.required && <WiStars className='ml-2' />}
+                    <span>{label}</span>
+                    {required && <WiStars className='ml-2' />}
                 </div>
 
-                <Form.Item name={['groups', groupIndex, 'fields', fieldIndex, 'name']}>
+                <Form.Item name={['groups', groupIndex, 'fields', fieldIndex, 'name']}
+                className='my-2'
+                >
                     <Input
                         className='w-[100%] '
                         disabled
@@ -31,6 +48,7 @@ export default function FormTextFieldOverview({ isDragging, field, groupIndex, f
                         suffix={<FieldStringOutlined />}
                     />
                 </Form.Item>
+                {validationRules?.length > 0 && <div className='text-xs text-gray-500 p-2'>{getValidationRulesText()}</div>}
             </Space.Compact>
         </div>
     );

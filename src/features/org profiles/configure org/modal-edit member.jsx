@@ -50,7 +50,6 @@ export default function ModalEditMember({ isOpen, onOk, onCancel, employee, orgI
                     remember: true,
                 }}
                 onFinish={(fields) => {
-                    console.log(fields);
                     editEmployee({
                         ...fields,
                         organization_id: parseInt(orgId),
@@ -183,44 +182,8 @@ export default function ModalEditMember({ isOpen, onOk, onCancel, employee, orgI
                             />
                         </Form.Item>
                     </Col>
-
-                    <Col span={12}>
-                        <Form.Item
-                            label='profile picture'
-                            name='profile_picture'
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                            style={{ width: '100%' }}
-                        >
-                            <Upload
-                                {...props}
-                                listType='picture-circle'
-                                maxCount={1}
-                                multiple={false}
-                            >
-                                <span style={{ padding: '1em' }}>Click to upload</span>
-                            </Upload>
-                        </Form.Item>
-                    </Col>
                 </Row>
             </Form>
         </Modal>
     );
 }
-
-const props = {
-    name: 'file',
-    onChange(info) {
-        if (info.file.status !== 'uploading') {
-            console.log(info.file, info.fileList);
-        }
-        if (info.file.status === 'done') {
-            console.log(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === 'error') {
-            console.log(`${info.file.name} file upload failed.`);
-        }
-    },
-};

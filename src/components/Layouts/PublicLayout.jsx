@@ -1,13 +1,11 @@
-import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCheckAccessTokenQuery } from '../../api/services/auth';
 
 import { Spin } from 'antd';
 import Roles from '../../api/Roles';
 import OrganizerLayout from './OrganizerLayout';
-import HomeLayout from './HomeLayout';
-import { LoadingOutlined } from '@ant-design/icons';
-import { Icon } from '@iconify/react';
+import HomeLayout from './home/HomeLayout';
 
 export default function PublicLayout() {
     const {

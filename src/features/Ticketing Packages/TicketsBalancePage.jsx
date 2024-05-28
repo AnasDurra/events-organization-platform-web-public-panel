@@ -32,40 +32,47 @@ export default function TicketsBalancePage() {
     };
 
     return (
-        <div className='flex flex-col justify-center items-center w-full'>
-            <div className='flex flex-col justify-center items-center space-y-4 mt-4'>
-                <Typography.Text className='text-[2em] font-semibold font-mono'> Tickets Balance</Typography.Text>
-                <TiTicket className='text-[5em] text-yellow-500' />
-                <Spin spinning={isBalanceLoading}>
-                    <Typography.Text
-                        code
-                        className='text-[2em]'
-                    >
-                        {balanceObj?.balance}
-                    </Typography.Text>
-                </Spin>
-            </div>
+        <div className='grid grid-cols-8 w-full  mb-4'>
+            <div className='col-span-8 sm:col-span-6 sm:col-start-2 '>
+                <div className='flex flex-col justify-center items-center w-full'>
+                    <div className='flex flex-col justify-center items-center space-y-4 mt-4'>
+                        <Typography.Text className='text-[2em] font-semibold font-mono'>
+                            {' '}
+                            Tickets Balance
+                        </Typography.Text>
+                        <TiTicket className='text-[5em] text-yellow-500' />
+                        <Spin spinning={isBalanceLoading}>
+                            <Typography.Text
+                                code
+                                className='text-[2em]'
+                            >
+                                {balanceObj?.balance}
+                            </Typography.Text>
+                        </Spin>
+                    </div>
 
-            <Divider>History</Divider>
-            <AttendeeTicketsHistory />
+                    <Divider>History</Divider>
+                    <AttendeeTicketsHistory />
 
-            <Divider> Buy More</Divider>
-            <Skeleton loading={isPackagesLoading}>
-                <div className='grid grid-cols-1 gap-4 gap-y-8  lg:grid-cols-3 lg:gap-8 lg:gap-y-12 w-full p-12 lg:p-0'>
-                    {packages
-                        .filter((pck) => pck.active)
-                        .map((pck, idx) => (
-                            <PackageCard
-                                key={'package_' + idx}
-                                name={pck.name}
-                                status={pck.active ? 'Active' : 'Archived'}
-                                price={pck.default_price?.unit_amount / 100}
-                                tickets={pck.metadata.value}
-                                onBuyClick={() => handleCheckoutRequest(pck.default_price?.id)}
-                            />
-                        ))}
+                    <Divider> Buy More</Divider>
+                    <Skeleton loading={isPackagesLoading}>
+                        <div className='grid grid-cols-1 gap-4 gap-y-8  lg:grid-cols-4 lg:gap-8 lg:gap-y-12 w-full p-12 lg:p-0'>
+                            {packages
+                                .filter((pck) => pck.active)
+                                .map((pck, idx) => (
+                                    <PackageCard
+                                        key={'package_' + idx}
+                                        name={pck.name}
+                                        status={pck.active ? 'Active' : 'Archived'}
+                                        price={pck.default_price?.unit_amount / 100}
+                                        tickets={pck.metadata.value}
+                                        onBuyClick={() => handleCheckoutRequest(pck.default_price?.id)}
+                                    />
+                                ))}
+                        </div>
+                    </Skeleton>
                 </div>
-            </Skeleton>
+            </div>
         </div>
     );
 }

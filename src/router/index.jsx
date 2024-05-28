@@ -17,7 +17,6 @@ import ShowAttendeeEvents from '../features/Attendees Profiles/ShowAttendeeEvent
 import ShowEventAttendees from '../features/Manage Events (org)/ShowEventAttendees';
 import BlockedUsersPage from '../features/ban/BlockedUsersPage';
 import NotFound from '../pages/notFound';
-import HomeLayout from '../components/Layouts/HomeLayout';
 import PopularPage from '../features/landing/PopularPage';
 import ExplorePage from '../features/landing/ExplorePage';
 import HomePage from '../features/landing/HomePage';
@@ -39,6 +38,9 @@ import OrgTicketsPage from '../features/Ticketing Packages/OrgTicketsPage';
 import ViewCategoryPage from '../features/landing/ViewCategoryPage';
 import ViewAllCategoriesPage from '../features/landing/ViewAllCategoriesPage';
 import AttendeeProfile from '../features/Attendees Profiles/AttendeeProfile';
+import HomeLayout from '../components/Layouts/home/HomeLayout';
+import DesignBadge from '../features/gamification/badges/design/DesignBadge';
+import SeedPage from '../api/services/SeedPage';
 
 export const router = createBrowserRouter([
     {
@@ -47,6 +49,14 @@ export const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             //  { index: true, element: </> }, // TODO make a landing page for all types of users
+            {
+                path: '/badge',
+                element: <DesignBadge />,
+            },
+            {
+                path: '/seed',
+                element: <SeedPage />,
+            },
             {
                 path: '/not-found',
                 element: <NotFound />,
@@ -198,14 +208,14 @@ export const router = createBrowserRouter([
                 ],
             },
             {
-                path: 'tags',
+                path: 'categories',
                 children: [
                     {
                         index: true,
                         element: <ViewAllCategoriesPage />,
                     },
                     {
-                        path: ':tag_name',
+                        path: ':category_name/:category_id',
                         element: <ViewCategoryPage />,
                     },
                 ],

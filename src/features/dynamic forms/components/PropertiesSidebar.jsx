@@ -43,6 +43,7 @@ export default function PropertiesSidebar({ field, onUpdateProperties, onDeleteF
                     onLabelChange={handleLabelChange}
                     onIsRequiredChange={handleIsRequiredChange}
                     onDelete={onDeleteField}
+                    onValidationRulesChange={handleValidationRuleChange}
                 />
             )}
 
