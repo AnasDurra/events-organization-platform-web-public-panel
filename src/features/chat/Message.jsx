@@ -33,7 +33,7 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
         display: 'flex',
         width: '100%',
         flexDirection: 'row',
-        marginTop: previousUser?.user_id === message?.user?.user_id ? '-10px' : '5px',
+        marginBottom: previousUser?.user_id === message?.user?.user_id ? '-10px' : '5px',
     };
 
     switch (type) {

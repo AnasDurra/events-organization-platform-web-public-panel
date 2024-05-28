@@ -269,7 +269,7 @@ export default function HomeLayout({ roles }) {
                     </Row>
                 </Header>
                 <Layout>
-                    <Sider
+                    {/* <Sider
                         theme='light'
                         className='hidden md:block'
                         style={{ backgroundColor: 'whitesmoke' }}
@@ -289,19 +289,12 @@ export default function HomeLayout({ roles }) {
                                 />
                             ))}
                         </div>
-                    </Sider>
+                    </Sider> */}
 
-                    {/* <div className='md:grid md:grid-cols-10 w-full'>
+                    <div className='lg:grid lg:grid-cols-9 w-full'>
                         <Content
-                            className='md:col-span-7 md:col-start-2 h-[84svh] md:h-[92svh] overflow-y-scroll scroll-0 '
-                            style={{ scrollbarWidth: 'none' }}
-                        >
-                            <Outlet />
-                        </Content>
-                    </div> */}
-                    <div className='md:grid md:grid-cols-9 w-full'>
-                        <Content
-                            className='md:col-span-7 md:col-start-2 h-[84svh] md:h-[92svh] overflow-y-scroll scrollbar-hide'
+                            className='lg:col-span-9 lg:col-start-1 h-[84svh] lg:h-[92svh] overflow-y-scroll scrollbar-hide
+                    p-2 sm:p-6 md:p-8 lg:p-12 xl:p-14'
                             style={{ scrollbarWidth: 'none' }}
                         >
                             <Outlet />

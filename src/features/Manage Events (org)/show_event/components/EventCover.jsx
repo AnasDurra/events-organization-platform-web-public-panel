@@ -146,7 +146,7 @@ const coverImageStyle = {
         flexDirection: 'column',
         justifyContent: 'flex-end',
         padding: '1em',
-        zIndex: 1, // Set a higher z-index to bring the overlay (text) above the image
+        zIndex: 1,
     },
 
     text: {

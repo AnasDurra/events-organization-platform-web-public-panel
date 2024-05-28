@@ -38,21 +38,6 @@ const EventChat = ({ chat_group_id }) => {
             };
             sendMessage(newMessage);
             setInputValue('');
-
-            // const messageToAdd = {
-            //     message_id: (parseInt(messages[0]?.message_id) + 1).toString() || '1',
-            //     reactions: [],
-            //     text: inputValue,
-            //     timestamp: new Date().toISOString(),
-            //     user: {
-            //         user_id: user.user_id,
-            //         username: user.username,
-            //         avatar: user.profile_picture,
-            //         is_organizer: user.user_role === '2',
-            //     },
-            // };
-
-            // setMessages((prevMessages) => [messageToAdd, ...prevMessages]);
         }
     };
 
@@ -97,7 +82,6 @@ const EventChat = ({ chat_group_id }) => {
         console.log(data);
         if (data) {
             setMessages((prevMessages) => [...prevMessages, ...data.result.messages]);
-            // setMessages(data?.result?.messages);
         }
     }, [data]);
 
@@ -135,7 +119,7 @@ const EventChat = ({ chat_group_id }) => {
                                         )}
                                     <Message
                                         message={message}
-                                        previousUser={index < messages.length ? messages[index + 1]?.user : null}
+                                        previousUser={index > 0 ? messages[index - 1]?.user : null}
                                         type={
                                             message?.user?.user_id === user.user_id
                                                 ? TYPE_SENT_MESSAGE
@@ -151,20 +135,30 @@ const EventChat = ({ chat_group_id }) => {
                     </div>
                 </div>
             </Spin>
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', marginTop: '5px' }}>
-                {isReplying && <ReplyMessage message={replyMessage} setIsReplying={setIsReplying} />}
+            <div
+                style={{
+                    position: 'sticky',
+                    bottom: 1,
+                    backgroundColor: '#fff',
+                    padding: '5px',
+                    borderTop: '1px solid #ccc',
+                }}
+            >
+                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                    {isReplying && <ReplyMessage message={replyMessage} setIsReplying={setIsReplying} />}
 
-                <div style={{ display: 'flex', width: '100%' }}>
-                    <Input
-                        style={{ flex: 1, marginRight: '10px' }}
-                        value={inputValue}
-                        onChange={handleInputChange}
-                        onPressEnter={handleSendMessage}
-                        placeholder='Type your message...'
-                    />
-                    <Button style={{ width: '80px' }} type='primary' onClick={handleSendMessage}>
-                        Send
-                    </Button>
+                    <div style={{ display: 'flex', width: '100%' }}>
+                        <Input.TextArea
+                            style={{ flex: 1, marginRight: '10px' }}
+                            value={inputValue}
+                            onChange={handleInputChange}
+                            onPressEnter={handleSendMessage}
+                            placeholder='Type your message...'
+                        />
+                        <Button style={{ width: '80px' }} type='primary' onClick={handleSendMessage}>
+                            Send
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
