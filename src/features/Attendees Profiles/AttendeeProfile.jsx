@@ -1,7 +1,7 @@
 import { Button, Card, Col, Empty, Image, Row, Skeleton, Space, Spin, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import LastThreeEvents from './components/LastThreeEvents';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { EyeOutlined } from '@ant-design/icons';
 
 import './styles//Profile.css';
@@ -192,17 +192,27 @@ const AttendeeProfile = () => {
                                     </Col>
 
                                     <Col span={24}>
-                                        <Typography.Title level={3} strong>
-                                            <span
-                                                style={{
-                                                    borderBottom: '5px solid #000',
-                                                    paddingBottom: '4px',
-                                                }}
-                                            >
-                                                Last 3
-                                            </span>{' '}
-                                            Events
-                                        </Typography.Title>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'end',
+                                                maxWidth: '800px',
+                                            }}
+                                        >
+                                            <Typography.Title level={3} strong>
+                                                <span
+                                                    style={{
+                                                        borderBottom: '5px solid #000',
+                                                        paddingBottom: '4px',
+                                                    }}
+                                                >
+                                                    Last 3
+                                                </span>{' '}
+                                                Events
+                                            </Typography.Title>
+                                            <Link to={'events'}>show all</Link>
+                                        </div>
                                     </Col>
                                     <Col span={24}>
                                         {/* TODO: uncomment this: */}

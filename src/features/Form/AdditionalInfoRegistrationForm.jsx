@@ -38,7 +38,7 @@ const AdditionalInfoRegistrationForm = ({ form, imageFile, setImageFile }) => {
     }, [data]);
     return (
         <>
-            <Form form={form} autoComplete='off' layout='vertical' style={{ maxWidth: 550 }} className='my-custom-form'>
+            <Form form={form} autoComplete='off' layout='vertical' style={{ maxWidth: 550 }}>
                 <Form.Item label='Profile Picture' name='profile_img'>
                     <div
                         style={{
@@ -61,7 +61,6 @@ const AdditionalInfoRegistrationForm = ({ form, imageFile, setImageFile }) => {
                 </Form.Item>
 
                 <Form.Item
-                    label='Birth Date'
                     name='birth_date'
                     rules={[
                         {
@@ -71,30 +70,44 @@ const AdditionalInfoRegistrationForm = ({ form, imageFile, setImageFile }) => {
                     ]}
                 >
                     <DatePicker
+                        size='large'
+                        placeholder='Select you birth date'
                         style={{
                             width: '100%',
                         }}
                     />
                 </Form.Item>
 
-                <Form.Item label='Job' name='job'>
-                    <Select loading={isLoading} showSearch placeholder='Select your job' options={data?.result.jobs} />
+                <Form.Item name='job'>
+                    <Select
+                        loading={isLoading}
+                        showSearch
+                        placeholder='Select your job'
+                        size='large'
+                        options={data?.result.jobs}
+                    />
                 </Form.Item>
 
-                <Form.Item label='Address' name='address'>
+                <Form.Item name='address'>
                     <Select
                         loading={isLoading}
                         showSearch
                         placeholder='Select your address'
+                        size='large'
                         options={data?.result.addresses}
                     />
                 </Form.Item>
 
-                <Form.Item label='Bio' name='bio'>
-                    <TextArea placeholder='Tell us about yourself...' allowClear />
+                <Form.Item name='bio'>
+                    <TextArea
+                        placeholder='Write Bio, Tell us about yourself...'
+                        size='large'
+                        allowClear
+                        autoSize={{ minRows: 3, maxRows: 10 }}
+                    />
                 </Form.Item>
             </Form>
-            <Modal visible={previewVisible} onCancel={handleClosePreview} footer={null}>
+            <Modal open={previewVisible} onCancel={handleClosePreview} footer={null}>
                 <img alt='Preview' style={{ width: '100%' }} src={previewImage} />
             </Modal>
         </>

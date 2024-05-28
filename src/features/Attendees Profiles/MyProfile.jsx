@@ -188,6 +188,7 @@ const AttendeeProfile = () => {
                                                 display: 'flex',
                                                 justifyContent: 'space-between',
                                                 alignItems: 'end',
+                                                maxWidth: '800px',
                                             }}
                                         >
                                             <Typography.Title level={3} strong>
