@@ -28,7 +28,7 @@ export default function EventCardWithImage({
         borderColor: token.colorPrimary,
     };
 
-    const minDate = days.length > 0 ? dayjs.min(days.map((day) => dayjs(day.day_date))) : null;
+    const minDate = days?.length > 0 ? dayjs.min(days.map((day) => dayjs(day.day_date))) : null;
 
     const formattedDate = minDate ? minDate.format('DD MMM | HH:mm') : '';
 
@@ -89,7 +89,7 @@ export default function EventCardWithImage({
                 <Button
                     className='w-full'
                     type='primary'
-                    onClick={() => navigate(`../event/show/${id}`)}
+                    onClick={() => navigate(`/event/show/${id}`)}
                 >
                     REGISTER
                 </Button>

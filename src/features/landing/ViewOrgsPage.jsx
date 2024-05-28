@@ -17,7 +17,7 @@ export default function ViewOrgsPage() {
 
     const loadMoreData = async () => {
         console.log('hi load');
-        getOrgs({ page: currentPage, pageSize: 5 }).then((response) => {
+        getOrgs({ page: currentPage, pageSize: 9 }).then((response) => {
             setOrgsCount(response?.data?.result?.count);
 
             const newOrgs = response?.data?.result?.data.filter((org) => !orgIds.has(org.org_id));
@@ -33,35 +33,39 @@ export default function ViewOrgsPage() {
         loadMoreData();
     }, []);
 
-
     return (
         <div className='h-[100svh] w-full flex flex-col justify-start items-center'>
-            <div className='text-3xl font-semibold m-2'>organizations</div>
-            <div className='w-full'>
-                <InfiniteScroll
-                    dataLength={loadedOrgs.length}
-                    next={loadMoreData}
-                    hasMore={loadedOrgs.length < orgsCount}
-                    loader={<h4>Loading...</h4>}
-                    className=' w-full '
-                    height={'100svh'}
-                    style={{ scrollbarWidth: 'none' }}
-                >
-                    {loadedOrgs.map((org) => (
-                        <div
-                            key={'org' + uuidv4()}
-                            className='mx-4 my-12'
-                        >
-                            <OrganizerCard
-                                className={'rounded-tl-xl'}
-                                orgID={org.org_id}
-                                orgName={org.org_name}
-                                attendanceCount={org.attendees_num}
-                                eventsCount={org.events_num}
-                            />
-                        </div>
-                    ))}
-                </InfiniteScroll>
+            <div className='grid grid-cols-8 w-full  mb-4'>
+                <div className='col-span-8 sm:col-span-6 sm:col-start-2  '>
+                    <div className='text-3xl font-semibold m-2 text-center'>Organizations</div>
+                    <div className='w-full'>
+                        {/*  <InfiniteScroll
+                            dataLength={loadedOrgs.length}
+                            next={loadMoreData}
+                            hasMore={loadedOrgs.length < orgsCount}
+                            loader={<h4>Loading...</h4>}
+                            className=' w-full '
+                            height={'100svh'}
+                            style={{ scrollbarWidth: 'none' }}
+                        > */}
+                        {loadedOrgs.map((org) => (
+                            <div
+                                key={org.id}
+                                className='mx-4 my-12'
+                            >
+                                <OrganizerCard
+                                    className={'rounded-tl-xl'}
+                                    orgID={org.org_id}
+                                    orgName={org.org_name}
+                                    attendanceCount={org.attendees_num}
+                                    eventsCount={org.events_num}
+                                />
+                            </div>
+                        ))}
+                        {/*                         </InfiniteScroll>
+                         */}{' '}
+                    </div>
+                </div>
             </div>
         </div>
     );

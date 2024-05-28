@@ -31,7 +31,7 @@ export default function EditFormPage() {
     const [addNewGroup] = useAddNewGroupMutation();
     const [addNewField] = useAddNewFieldMutation();
     const [addNewFieldOption] = useAddNewFieldOptionMutation({ fixedCacheKey: 'shared-update-option' });
-    const [addValidationRule] = useAddValidationRuleMutation();
+    const [addValidationRule] = useAddValidationRuleMutation({ fixedCacheKey: 'shared-update-val-rule' });
 
     const [updateGroup] = useUpdateGroupMutation();
     const [updateGroupField, { isError: isUpdateFormFieldError }] = useUpdateGroupFieldMutation({
@@ -42,7 +42,7 @@ export default function EditFormPage() {
     const [removeGroup] = useRemoveGroupMutation();
     const [removeField] = useRemoveFieldMutation();
     const [removeFieldOption] = useRemoveFieldOptionMutation({ fixedCacheKey: 'shared-update-option' });
-    const [removeValidationRule] = useRemoveValidationRuleMutation();
+    const [removeValidationRule] = useRemoveValidationRuleMutation({ fixedCacheKey: 'shared-update-val-rule' });
 
     // const [groups, setGroups] = useState([]);
     const [selectedField, setSelectedField] = useState(null);
@@ -72,11 +72,31 @@ export default function EditFormPage() {
     const debounceUpdateFieldOption = debounce(updateFieldOption, debounceTime);
 
     const handleUpdateProperties = (updatedField) => {
+        console.log("1433: ",updatedField)
         if (updatedField?.validationRules?.length) {
+            console.log(updatedField);
             if (updatedField.validationRules[0].delete) {
                 removeValidationRule(updatedField.validationRules[0].validation_rule_id);
             } else {
-                addValidationRule({ field_id: updatedField.id, ...updatedField.validationRules[0] });
+                addValidationRule({ field_id: updatedField.id, ...updatedField.validationRules[0] })
+                    .unwrap()
+                    .catch((e) => {
+                        console.log('e: ', e, updatedField);
+                        if (e?.data?.statusCode == 409) {
+                            removeValidationRule(
+                                selectedField?.validationRules?.find(
+                                    (rule) => rule.rule == updatedField.validationRules[0].rule
+                                ).id
+                            )
+                                .unwrap()
+                                .then(() => {
+                                    addValidationRule({
+                                        field_id: updatedField.id,
+                                        ...updatedField.validationRules[0],
+                                    });
+                                });
+                        }
+                    });
             }
         }
         const updatedFieldValues = {

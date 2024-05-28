@@ -78,8 +78,14 @@ export default function ProfilePage() {
         <div className='grid grid-cols-10'>
             {contextHolder}
             <div className='sm:col-start-2 sm:col-span-8 col-span-10'>
-                <Row className='cover-row' justify={'start'}>
-                    <Col span={24} style={{ height: '100%' }}>
+                <Row
+                    className='cover-row'
+                    justify={'start'}
+                >
+                    <Col
+                        span={24}
+                        style={{ height: '100%' }}
+                    >
                         <CoverImage
                             org={org}
                             onNewCoverPic={handleNewCoverPic}
@@ -88,15 +94,30 @@ export default function ProfilePage() {
                     </Col>
                 </Row>
                 <Row justify={'start'}>
-                    <Col style={{ height: '100%' }} offset={1} xs={{ span: 8 }} sm={{ span: 6 }} lg={{ span: 4 }}>
+                    <Col
+                        style={{ height: '100%' }}
+                        offset={1}
+                        xs={{ span: 8 }}
+                        sm={{ span: 6 }}
+                        lg={{ span: 4 }}
+                    >
                         <ProfileImage
                             org={org}
                             onNewProfilePic={handleNewProfilePic}
                             onRemoveProfilePic={handleRemoveProfilePic}
                         />
                     </Col>
-                    <Col offset={1} xs={{ span: 10 }} sm={{ span: 8 }} lg={{ span: 10 }}>
-                        <Title level={4} className='mt-4' style={{ marginBottom: '0px' }}>
+                    <Col
+                        offset={1}
+                        xs={{ span: 10 }}
+                        sm={{ span: 8 }}
+                        lg={{ span: 10 }}
+                    >
+                        <Title
+                            level={4}
+                            className='mt-4'
+                            style={{ marginBottom: '0px' }}
+                        >
                             {org?.name}
                         </Title>
                         <Link
@@ -120,7 +141,12 @@ export default function ProfilePage() {
                     </Col>
 
                     {user?.role_id == 2 && user?.organization_id == orgId && (
-                        <Col xs={{ span: 3 }} sm={{ span: 7 }} lg={{ span: 7 }} className='text-right'>
+                        <Col
+                            xs={{ span: 3 }}
+                            sm={{ span: 7 }}
+                            lg={{ span: 7 }}
+                            className='text-right'
+                        >
                             <Button
                                 type='text'
                                 className='mt-2'
@@ -141,14 +167,20 @@ export default function ProfilePage() {
                         span={14}
                         className='text-center'
                     >
-                        <Text type='secondary' style={{ textWrap: 'wrap' }}>
+                        <Text
+                            type='secondary'
+                            style={{ textWrap: 'wrap' }}
+                        >
                             {org?.bio}
                         </Text>
                     </Col>
                 </Row>
 
                 {user?.role_id == 3 && (
-                    <Col span={24} className='text-right'>
+                    <Col
+                        span={24}
+                        className='text-right'
+                    >
                         <Button
                             style={{ width: '30%', margin: '10px 30px' }}
                             block
@@ -202,12 +234,26 @@ export default function ProfilePage() {
                     </Col>
                 )}
                 <Row justify={'start'}>
-                    <Col sm={{ span: 21 }} xs={{ span: 21 }} lg={{ span: 5 }}>
-                        <AddressInfo org={org} isLoading={isLoading} />
+                    <Col
+                        sm={{ span: 21 }}
+                        xs={{ span: 21 }}
+                        lg={{ span: 5 }}
+                    >
+                        <AddressInfo
+                            org={org}
+                            isLoading={isLoading}
+                        />
 
-                        <ContactInfo org={org} isLoading={isLoading} />
+                        <ContactInfo
+                            org={org}
+                            isLoading={isLoading}
+                        />
                     </Col>
-                    <Col sm={{ span: 23 }} xs={{ span: 23 }} lg={{ span: 14, offset: 1 }}>
+                    <Col
+                        sm={{ span: 23 }}
+                        xs={{ span: 23 }}
+                        lg={{ span: 14, offset: 1 }}
+                    >
                         <EventsTab data={fakeData} />
                     </Col>
                 </Row>
