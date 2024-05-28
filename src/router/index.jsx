@@ -40,6 +40,7 @@ import ViewCategoryPage from '../features/landing/ViewCategoryPage';
 import ViewAllCategoriesPage from '../features/landing/ViewAllCategoriesPage';
 import HomeLayout from '../components/Layouts/home/HomeLayout';
 import DesignBadge from '../features/gamification/badges/design/DesignBadge';
+import SeedPage from '../api/services/SeedPage';
 
 export const router = createBrowserRouter([
     {
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
             {
                 path: '/badge',
                 element: <DesignBadge />,
+            },
+            {
+                path: '/seed',
+                element: <SeedPage />,
             },
             {
                 path: '/not-found',

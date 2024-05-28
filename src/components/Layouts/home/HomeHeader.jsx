@@ -26,7 +26,7 @@ const navigationItems = [
         path: '/home/following',
     },
     {
-        label: 'Popular',
+        label: 'Trending 🔥 ',
         filledIcon: <FireFilled className='text-red-300 text-[1.2em]' />,
         outlinedIcon: <FireOutlined className='text-red-300 text-[1.2em]' />,
         path: '/home/popular',
@@ -69,7 +69,7 @@ export default function HomeHeader() {
         <Layout.Header className='h-[8svh] px-2'>
             <div className='flex justify-between items-center h-full w-full font-serif px-4 space-x-8'>
                 <div
-                    className='text-nowrap text-3xl  font-serif text-white hover:cursor-pointer'
+                    className='text-nowrap text-3xl  font-serif  hover:cursor-pointer text-primary'
                     onClick={() => navigate('/home')}
                 >
                     Eventure
@@ -79,7 +79,7 @@ export default function HomeHeader() {
                         {navigationItems.map((item, index) => (
                             <div
                                 key={index}
-                                className='font-sans hover:cursor-pointer text-lg text-nowrap text-white hover:text-[#AA8B56]'
+                                className='font-sans hover:cursor-pointer text-lg text-nowrap  hover:text-[#AA8B56]'
                                 onClick={()=>navigate(item.path)}
                             >
                                 {item.label}
@@ -89,7 +89,7 @@ export default function HomeHeader() {
                     <div className='flex items-center gap-x-2'>
                         <div
                             onClick={() => navigate('tickets')}
-                            className='flex items-center bg-gray-400 shadow-sm rounded-3xl h-[4svh] px-2 hover:shadow-lg hover:cursor-pointer'
+                            className='flex items-center  border-2 bg-primary/10 border-primary shadow-sm rounded-3xl h-[4svh] px-2 hover:shadow-lg hover:cursor-pointer'
                             style={{ transition: 'transform 0.3s' }}
                             onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')}
                             onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
@@ -102,7 +102,7 @@ export default function HomeHeader() {
                         >
                             <Button
                                 type='text'
-                                icon={<IoMdNotificationsOutline className='text-2xl text-white' />}
+                                icon={<IoMdNotificationsOutline className='text-2xl ' />}
                                 onMouseEnter={(e) => (e.target.style.transform = 'scale(1.2)')}
                                 onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
                             />

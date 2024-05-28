@@ -50,7 +50,7 @@ export default function ViewCategoryPage() {
                         {events?.map((event) => (
                             <div
                                 key={event.id}
-                                className='col-start-2 col-span-10 md:col-span-4'
+                                className='col-start-2 col-span-10 md:col-span-3'
                             >
                                 <EventCardWithImage
                                     id={event.id}

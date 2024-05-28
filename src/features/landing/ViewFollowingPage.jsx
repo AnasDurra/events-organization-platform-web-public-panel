@@ -346,53 +346,57 @@ export default function ViewFollowingPage() {
     }, [currentPage]);
 
     return (
-        <div className='flex flex-col h-full justify-between'>
-            <div className='w-full text-center'>
-                <Title
-                    level={3}
-                    className='my-2 text-pretty'
-                >
-                    Events From Organizations You Follow
-                </Title>
-            </div>
-            <Spin
-                spinning={isEventsLoading}
-                tip={'loading'}
-                size='large'
-            >
-                <div className='grid grid-cols-12 gap-4 p-4'>
-                    {[...events, ...fakeEvents].map((event) => (
-                        <div
-                            key={event.id}
-                            className='col-start-2 col-span-10 md:col-span-4'
+        <div className='grid grid-cols-8 w-full my-2 mt-8'>
+            <div className='col-span-8 sm:col-span-6 sm:col-start-2'>
+                <div className='flex flex-col h-full justify-between'>
+                    <div className='w-full text-center'>
+                        <Title
+                            level={3}
+                            className='my-2 text-pretty'
                         >
-                            <EventCardWithImage
-                                id={event.id}
-                                title={event.title}
-                                description={event.description}
-                                tags={event.tags.map((tag) => tag.tag.label)}
-                                organizationProfilePictureURL={
-                                    URL + '/organization/mainPicture/' + event.organization.main_picture
-                                }
-                                eventImageURL={event.cover_picture_url}
-                                days={event.days}
-                                event_type={event.event_type}
-                            />
+                            Events From Organizations You Follow
+                        </Title>
+                    </div>
+                    <Spin
+                        spinning={isEventsLoading}
+                        tip={'loading'}
+                        size='large'
+                    >
+                        <div className='grid grid-cols-12 gap-4 p-4'>
+                            {[...events, ...fakeEvents].map((event) => (
+                                <div
+                                    key={event.id}
+                                    className='col-start-2 col-span-10 md:col-span-3'
+                                >
+                                    <EventCardWithImage
+                                        id={event.id}
+                                        title={event.title}
+                                        description={event.description}
+                                        tags={event.tags.map((tag) => tag.tag.label)}
+                                        organizationProfilePictureURL={
+                                            URL + '/organization/mainPicture/' + event.organization.main_picture
+                                        }
+                                        eventImageURL={event.cover_picture_url}
+                                        days={event.days}
+                                        event_type={event.event_type}
+                                    />
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                    </Spin>
+                    <div className='w-full flex justify-center  py-2'>
+                        <Pagination
+                            className='p-4'
+                            onChange={(page) => {
+                                setCurrentPage(page);
+                            }}
+                            defaultCurrent={currentPage}
+                            total={totalPages}
+                            current={currentPage}
+                            disabled={isEventsLoading}
+                        />
+                    </div>
                 </div>
-            </Spin>
-            <div className='w-full flex justify-center  py-2'>
-                <Pagination
-                    className='p-4'
-                    onChange={(page) => {
-                        setCurrentPage(page);
-                    }}
-                    defaultCurrent={currentPage}
-                    total={totalPages}
-                    current={currentPage}
-                    disabled={isEventsLoading}
-                />
             </div>
         </div>
     );

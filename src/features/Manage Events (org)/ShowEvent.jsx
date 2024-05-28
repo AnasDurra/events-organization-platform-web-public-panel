@@ -1,4 +1,13 @@
 import {
+    ArrowRightOutlined,
+    CalendarOutlined,
+    EnvironmentOutlined,
+    MoreOutlined,
+    ScheduleOutlined,
+    TagsOutlined,
+    UserOutlined
+} from '@ant-design/icons';
+import {
     Button,
     Card,
     Col,
@@ -8,7 +17,6 @@ import {
     Image,
     List,
     Menu,
-    Modal,
     Row,
     Skeleton,
     Space,
@@ -16,22 +24,8 @@ import {
     Tabs,
     Tag,
     Tooltip,
-    Typography,
-    Upload,
-    message,
+    Typography
 } from 'antd';
-import {
-    ArrowRightOutlined,
-    CalendarOutlined,
-    EditOutlined,
-    EnvironmentOutlined,
-    TeamOutlined,
-    ScheduleOutlined,
-    TagsOutlined,
-    UserOutlined,
-    DeleteOutlined,
-    MoreOutlined,
-} from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import ShowMap from './ShowMap';
@@ -39,11 +33,11 @@ import ShowMap from './ShowMap';
 import { useShowQuery } from '../../api/services/events';
 import UpdateEventModal from './UpdateEventModal';
 
+import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { getLoggedInUser } from '../../api/services/auth';
 import EventChat from '../chat/EventChat';
 import RegistrationModal from './registration/RegistrationModal';
-import { Icon } from '@iconify/react';
 import useEventHandlers from './utils/eventHandlers';
 
 const ShowEvent = () => {

@@ -4,72 +4,88 @@ import { useNavigate } from 'react-router-dom';
 import { Carousel } from 'react-responsive-carousel';
 import Title from 'antd/es/typography/Title';
 import { useGetFeaturedEventsQuery } from '../../feedsSlice';
-
+import './MainCarousel.css';
 export default function MainCarousel() {
     const navigate = useNavigate();
 
     const { data: { result: featuredEvents } = { result: [] } } = useGetFeaturedEventsQuery();
 
     return (
-        <Carousel
-            className='w-full h-[40svh]   '
-            infiniteLoop
-            autoPlay
-            //  emulateTouch
-            showStatus={false}
-            showThumbs={false}
-            showArrows={false}
-            showIndicators={false}
-        >
-            {fakeFeaturedEvents.map((item, index) => (
-                <div
-                    key={index}
-                    className='relative hover:cursor-pointer'
-                    onClick={() => navigate('event')}
+        <div className='relative'>
+            <div className='custom-shape-divider-top-1716895009'>
+                <svg
+                    data-name='Layer 1'
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 1200 120'
+                    preserveAspectRatio='none'
+                    className='z-10'
                 >
-                    {console.log(item.event.coverPictureUrl)}
-                    <div className=' overflow-hidden shadow-md'>
-                        <div className='absolute inset-0 bg-black opacity-30' />
-                        <img
-                            className='h-[40svh] aspect-square object-cover   '
-                            src={item.event.coverPictureUrl}
-                            alt={`Carousel Item ${index + 1}`}
-                        />
-                        <div className='absolute inset-0'>
-                            <div className='grid grid-cols-8 w-full h-full'>
-                                <div className='col-span-4 col-start-3 '>
-                                    <div className='flex flex-col w-full h-full space-y-4 justify-center items-start'>
-                                        <div className='flex flex-col space-y-0'>
-                                            <Title
-                                                level={4}
-                                                className=' text-left m-0'
-                                                style={{ color: 'white' }}
-                                            >
-                                                {item.event.organization?.name}
-                                            </Title>
-                                            <Title
-                                                level={5}
-                                                className=' text-left m-0'
-                                                style={{ color: 'white' }}
-                                            >
-                                                {item.event.title}
-                                            </Title>
-                                        </div>
+                    <path
+                        d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z'
+                        className='shape-fill'
+                    ></path>
+                </svg>
+            </div>
+            <Carousel
+                className='w-full h-[40svh] relative   '
+                infiniteLoop
+                autoPlay
+                emulateTouch
+                showStatus={false}
+                showThumbs={false}
+                showArrows={false}
+                showIndicators={false}
+            >
+                {fakeFeaturedEvents.map((item, index) => (
+                    <div
+                        key={index}
+                        className='relative hover:cursor-pointer'
+                        onClick={() => navigate('event')}
+                    >
+                        {console.log(item.event.coverPictureUrl)}
+                        <div className=' overflow-hidden shadow-md'>
+                            <div className='absolute inset-0 bg-black opacity-30' />
+                            <img
+                                className='h-[40svh] aspect-square object-cover   '
+                                src={item.event.coverPictureUrl}
+                                alt={`Carousel Item ${index + 1}`}
+                            />
+                            <div className='absolute inset-0'>
+                                <div className='grid grid-cols-8 w-full h-full'>
+                                    <div className='col-span-4 col-start-3 '>
+                                        <div className='flex flex-col w-full h-full space-y-4 justify-center items-start'>
+                                            <div className='flex flex-col space-y-0'>
+                                                <Title
+                                                    level={4}
+                                                    className=' text-left m-0'
+                                                    style={{ color: 'white' }}
+                                                >
+                                                    {item.event.organization?.name}
+                                                </Title>
+                                                <Title
+                                                    level={5}
+                                                    className=' text-left m-0'
+                                                    style={{ color: 'white' }}
+                                                >
+                                                    {item.event.title}
+                                                </Title>
+                                            </div>
 
-                                        <Button
-                                            type='primary'
-                                            className='w-40'
-                                        >
-                                            REGISTER
-                                        </Button>
+                                            <Button
+                                                type='primary'
+                                                className='w-40'
+                                            >
+                                                REGISTER
+                                            </Button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            ))}
-        </Carousel>
+                ))}
+            </Carousel>
+        </div>
     );
 }
 

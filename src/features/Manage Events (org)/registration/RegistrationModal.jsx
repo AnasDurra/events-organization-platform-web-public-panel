@@ -69,13 +69,17 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
             else return step;
         });
     }, [isAttendEventSuccess]); */
-
     const handleStepChange = (step) => {
-        if (step == steps.length - 1) {
+        var stepsLength = 1;
+        if (!event?.result?.form && !event?.result?.fees) stepsLength++;
+        if (event?.result?.form) stepsLength++;
+        if (event?.result?.fees) stepsLength++;
+
+        if (step == stepsLength - 1) {
             attendEvent({ event_id: event?.result?.id })
                 .unwrap()
                 .then((res) => {
-                    setCurrentStep(step + 1);
+                    setCurrentStep(step);
                 })
                 .catch((e) => {
                     openNotification('error', 'Failed to confirm registration', e?.data?.message, 'bottomRight');
@@ -84,6 +88,7 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
             setCurrentStep(step);
         }
     };
+
     const steps = [
         !event?.result?.form &&
             !event?.result?.fees && {
@@ -136,7 +141,7 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                                     onClick={() =>
                                         // navigate(`/form/${event?.result?.form?.id}/event/${event?.result?.id}/submit`)
                                         window.open(
-                                            `${window.location.origin}/form/${event?.result?.form?.id}/event/${event?.result?.id}/submit`
+                                            `${window.location.origin}/forms/${event?.result?.form?.id}/event/${event?.result?.id}/submit`
                                         )
                                     }
                                 >

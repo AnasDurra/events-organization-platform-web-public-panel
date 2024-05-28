@@ -13,7 +13,6 @@ import WebFooter from './components/WebFooter';
 import MainCarousel from './components/cards/MainCarousel';
 import CategoriesSection from './components/CategoriesSection';
 import SoonToHappenSection from './components/SoonToHappenSection';
-
 export default function HomePage() {
     return (
         <div className='flex flex-col items-center justify-start w-full'>

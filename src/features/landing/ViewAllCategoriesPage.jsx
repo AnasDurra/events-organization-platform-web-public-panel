@@ -6,28 +6,33 @@ import Title from 'antd/es/typography/Title';
 import { useNavigate } from 'react-router-dom';
 import { useGetCategoriesQuery } from './feedsSlice';
 
-const categories = [
-    { title: 'Sport', icon: 'flat-color-icons:sports-mode' },
-    { title: 'Tech', icon: 'streamline-emojis:woman-technologist-2' },
-    { title: 'Music', icon: 'emojione:musical-keyboard' },
-    { title: 'Gaming', icon: 'emojione-v1:video-game' },
-    { title: 'Education', icon: 'streamline-emojis:graduation-cap' },
-];
-
 export default function ViewAllCategoriesPage() {
     const navigate = useNavigate();
 
     const { data: { result: categories } = { result: [] } } = useGetCategoriesQuery();
 
-    const fakeCategories = [
-        { id: 'fake-1', tagName: 'Sport', emoji: 'flat-color-icons:sports-mode' },
-        { id: 'fake-2', tagName: 'Tech', emoji: 'streamline-emojis:woman-technologist-2' },
-        { id: 'fake-3', tagName: 'Music', emoji: 'emojione:musical-keyboard' },
-        { id: 'fake-4', tagName: 'Gaming', emoji: 'emojione-v1:video-game' },
-        { id: 'fake-5', tagName: 'Education', emoji: 'streamline-emojis:graduation-cap' },
-    ];
+    const displayedCategories = categories.map((category) => ({
+        id: category.id,
+        tagName: category.tagName,
+        emoji: getCategoryEmoji(category.tagName.toLowerCase()),
+    }));
 
-    const displayedCategories = [...fakeCategories, ...categories];
+    function getCategoryEmoji(tagName) {
+        switch (tagName) {
+            case 'sport':
+                return 'flat-color-icons:sports-mode';
+            case 'tech':
+                return 'streamline-emojis:woman-technologist-2';
+            case 'music':
+                return 'emojione:musical-keyboard';
+            case 'gaming':
+                return 'emojione-v1:video-game';
+            case 'education':
+                return 'streamline-emojis:graduation-cap';
+            default:
+                return null;
+        }
+    }
 
     return (
         <div className='grid grid-cols-8 w-full  mb-4'>
@@ -39,22 +44,22 @@ export default function ViewAllCategoriesPage() {
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
                         {displayedCategories.map((category) => (
                             <Card
-                                key={category.title}
-                                className='bg-gradient-to-b from-primary/80 to-secondary/80 hover:shadow-lg rounded-3xl hover:cursor-pointer flex justify-center items-center'
-                                onClick={() => navigate(`${category.tagName}/${category.id}`)}
+                                key={category.tagName}
+                                className='bg-gradient-to-b min-h-[20svh] from-primary/80 to-secondary/80 hover:shadow-lg rounded-3xl hover:cursor-pointer flex justify-center items-center'
+                                onClick={() => navigate(`/home/categories/${category.tagName}/${category.id}`)}
                             >
                                 {category.emoji && (
                                     <div className='flex justify-center items-center h-full p-4'>
                                         <Icon
                                             icon={category.emoji}
                                             style={{ fontSize: '4em' }}
-                                        />{' '}
+                                        />
                                     </div>
                                 )}
                                 <Meta
                                     title={<div className='text-lg text-white'>{category.tagName}</div>}
                                     className='text-center text-white font-bold'
-                                />{' '}
+                                />
                             </Card>
                         ))}
                     </div>
