@@ -94,10 +94,10 @@ const AttendeeProfile = () => {
                         <Row gutter={[30, 20]}>
                             <Col
                                 xs={{ span: 24 }}
-                                sm={{ span: 12 }}
-                                md={{ span: 10 }}
-                                lg={{ span: 8 }}
-                                xxl={{ span: 7 }}
+                                sm={{ span: 10 }}
+                                md={{ span: 8 }}
+                                lg={{ span: 6 }}
+                                xxl={{ span: 4 }}
                             >
                                 <div
                                     style={{
@@ -125,10 +125,10 @@ const AttendeeProfile = () => {
 
                             <Col
                                 xs={{ span: 24 }}
-                                sm={{ span: 12 }}
-                                md={{ span: 14 }}
-                                lg={{ span: 16 }}
-                                xxl={{ span: 17 }}
+                                sm={{ span: 14 }}
+                                md={{ span: 16 }}
+                                lg={{ span: 18 }}
+                                xxl={{ span: 20 }}
                             >
                                 <Row gutter={[10, 20]}>
                                     <Col span={24}>

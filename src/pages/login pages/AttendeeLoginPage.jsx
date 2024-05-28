@@ -56,6 +56,9 @@ export default function AttendeeLoginPage() {
                                 icon={<UserOutlined />}
                                 className='w-full mb-4 bg-white text-black border border-gray-300'
                                 size='large'
+                                onClick={() => {
+                                    navigate('/org/login');
+                                }}
                             >
                                 Login as Organizer
                             </Button>
