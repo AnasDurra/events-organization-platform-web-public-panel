@@ -53,8 +53,7 @@ const HomeLayout = ({ roles }) => {
 
                 <Layout>
                     <Content
-                        className='lg:col-span-9 lg:col-start-1 h-[84svh] lg:h-[92svh] overflow-y-scroll scrollbar-hide
-                         p-2 sm:p-6 md:p-8 lg:p-12 xl:p-14'
+                        className='h-[84svh] md:h-[92svh] overflow-y-scroll scrollbar-hide '
                         style={{ scrollbarWidth: 'none' }}
                     >
                         <Outlet />

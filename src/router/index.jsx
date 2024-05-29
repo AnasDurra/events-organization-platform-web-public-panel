@@ -170,8 +170,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'profile',
-                element: <MyProfile />,
                 children: [
+                    {
+                        index: true,
+                        element: <MyProfile />,
+                    },
                     {
                         path: 'events',
                         element: <ShowAttendeeEvents />,
@@ -193,10 +196,6 @@ export const router = createBrowserRouter([
             {
                 path: 'event',
                 children: [
-                    {
-                        path: 'create',
-                        element: <CreateEvent />,
-                    },
                     {
                         path: 'show/:id',
                         element: <ShowEvent />,

@@ -20,7 +20,6 @@ const MainProfileCard = ({
     fetchIsBlocked,
     setIsUpdateModalOpen,
 }) => {
-    console.log(profile_img);
     const navigate = useNavigate();
     const { openNotification } = useNotification();
     const user = getLoggedInUserV2();
