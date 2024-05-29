@@ -187,7 +187,7 @@ const BasicInfoRegistrationForm = ({ form }) => {
                     <Link
                         href='terms-of-use'
                         style={{
-                            fontSize: '12px',
+                            fontSize: '10px',
                             color: 'blue',
                             fontWeight: 'bolder',
                         }}
@@ -198,7 +198,7 @@ const BasicInfoRegistrationForm = ({ form }) => {
                     <Link
                         href='privacy-policy'
                         style={{
-                            fontSize: '12px',
+                            fontSize: '10px',
                             color: 'blue',
                             fontWeight: 'bold',
                         }}

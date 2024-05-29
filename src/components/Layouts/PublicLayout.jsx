@@ -26,17 +26,19 @@ export default function PublicLayout() {
     }, [checkAccessTokenObj]);
     return (
         <>
-            <Spin
-                size='large'
-                spinning={isAccessTokenLoading}
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%',
-                    height: '100%',
-                }}
-            />
+            {isAccessTokenLoading && (
+                <Spin
+                    size='large'
+                    spinning={isAccessTokenLoading}
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                        height: '100%',
+                    }}
+                />
+            )}
 
             {checkAccessTokenObj?.result?.user_role?.id == Roles.EMPLOYEE ? (
                 <OrganizerLayout roles={[Roles.EMPLOYEE]} />
