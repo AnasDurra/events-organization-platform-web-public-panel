@@ -46,10 +46,10 @@ const AttendeeProfile = () => {
                         {data?.result?.cover_img ? (
                             <div className='relative -m-2 sm:-m-6 md:-m-8 lg:-m-12 xl:-m-14'>
                                 <Image
-                                    height={'40vh'}
+                                    // height={'40vh'}
                                     width={'100%'}
-                                    style={{ minHeight: '20vh' }}
-                                    src='https://picsum.photos/1000/300'
+                                    style={{ minHeight: '30vh', maxHeight: '50vh' }}
+                                    src={data?.result?.cover_img ?? 'https://picsum.photos/1000/300'}
                                     preview={{
                                         mask: (
                                             <>
@@ -73,9 +73,21 @@ const AttendeeProfile = () => {
                             </div>
                         ) : (
                             <Empty
-                                style={{ minHeight: '20vh' }}
+                                style={{
+                                    minHeight: '40vh',
+                                    maxHeight: '50vh',
+                                    paddingTop: '10px',
+                                    border: '1px solid #e8e8e8',
+                                    color: '#595959',
+                                    margin: '0px',
+                                    backgroundColor: '#c0c0c0',
+                                }}
                                 image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                description='No cover picture available'
+                                description={
+                                    <span style={{ fontSize: '16px', fontWeight: '500', color: '#8c8c8c' }}>
+                                        No cover picture available
+                                    </span>
+                                }
                             />
                         )}
                     </div>
@@ -116,6 +128,7 @@ const AttendeeProfile = () => {
                                         id={data?.result?.user_id}
                                         full_name={data?.result?.full_name}
                                         bio={data?.result?.bio}
+                                        profile_img={data?.result?.profile_img}
                                         contacts={data?.result?.contacts}
                                         join_date={data?.result?.join_date}
                                         setIsUpdateModalOpen={setIsUpdateModalOpen}

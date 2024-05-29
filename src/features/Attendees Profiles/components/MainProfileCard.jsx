@@ -1,24 +1,9 @@
-import {
-    CalendarOutlined,
-    CheckOutlined,
-    EditOutlined,
-    EllipsisOutlined,
-    FacebookOutlined,
-    InstagramOutlined,
-    LinkedinOutlined,
-    MailOutlined,
-    PhoneOutlined,
-    StarFilled,
-    TwitterOutlined,
-    UserOutlined,
-    WhatsAppOutlined,
-} from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Dropdown, Menu, Modal, Row, Space, Statistic, Tooltip, Typography } from 'antd';
+import { CalendarOutlined, EditOutlined } from '@ant-design/icons';
+import { Button, Card, Dropdown, Image, Menu, Modal, Space, Tooltip, Typography } from 'antd';
 import Meta from 'antd/es/card/Meta';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../../../utils/NotificationContext';
 import { getLoggedInUserV2 } from '../../../api/services/auth';
-import ProfileDescreption from './ProfileDescreption';
 import ContactInfo from './ContactInfo';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
@@ -26,6 +11,7 @@ const MainProfileCard = ({
     id,
     full_name,
     bio,
+    profile_img,
     contacts,
     join_date,
     blockMutation,
@@ -34,6 +20,7 @@ const MainProfileCard = ({
     fetchIsBlocked,
     setIsUpdateModalOpen,
 }) => {
+    console.log(profile_img);
     const navigate = useNavigate();
     const { openNotification } = useNotification();
     const user = getLoggedInUserV2();
@@ -93,7 +80,12 @@ const MainProfileCard = ({
                 }}
                 cover={
                     <div style={{ position: 'relative' }}>
-                        <img style={{ height: 200, width: '100%' }} alt='example' src='https://picsum.photos/300/300' />
+                        <Image
+                            width={'100%'}
+                            height={200}
+                            alt='example'
+                            src={profile_img ?? 'https://picsum.photos/300/300'}
+                        />
                         <div className='md:hidden absolute bottom-2.5 left-2.5 flex justify-end'>
                             <Space size={10} direction='vertical'>
                                 <Typography.Title
