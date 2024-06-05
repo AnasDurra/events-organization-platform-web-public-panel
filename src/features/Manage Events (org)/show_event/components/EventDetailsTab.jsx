@@ -50,7 +50,7 @@ const EventDetailsTab = ({ eventData, handleRegisterClicked }) => {
                     marginTop: '2em',
                 }}
             >
-                {user?.user_role == 2 && (
+                {user?.user_role == 3 && (
                     <Space
                         style={{
                             backgroundColor: 'rgba(255, 255, 255, 1)',

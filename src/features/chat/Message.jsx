@@ -1,28 +1,35 @@
-import { Avatar, Button, Card, Input, List, Popover, Space, Tooltip, Typography } from 'antd';
+import { Avatar, Button, Popover, Space, Typography } from 'antd';
 import { TYPE_RECEIVED_MESSAGE, TYPE_SENT_MESSAGE, TYPE_SYSTEM_MESSAGE } from './CONSTANTS';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HeartFilled, LikeFilled, MessageOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { getLoggedInUserV2 } from '../../api/services/auth';
+import { userReacted } from '../../chatSocket';
 
-function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedMessage, isFocused }) {
+function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedMessage, isFocused, chat_group_id }) {
+    console.log('leees');
     const [user] = useState(getLoggedInUserV2());
     const [showText, setShowText] = useState(false);
+    const [showReactions, setshowReactions] = useState(true);
+
+    const [hideFocused, setHideFocused] = useState(false);
 
     const messageStyle = {
+        minWidth: '5em',
         width: '100%',
         margin: '0.5rem 0',
         padding: '0.8rem',
         border: '2px solid transparent',
-        transition: 'border-color 0.7s ease-in-out',
-        borderColor: isFocused ? 'black' : 'transparent',
+        boxShadow: isFocused && !hideFocused ? '1px 1px 15px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.1)' : 'none',
+        transition: 'box-shadow 0.9s ease',
         outline: 'none',
     };
 
     const replyMessageStyle = {
         textAlign: 'start',
-        width: '90%',
+        width: '100%',
+        maxWidth: '30vw',
         margin: '0.5rem 0',
         padding: '0.4rem',
         borderRadius: '0rem 1.5rem 1.5rem 0rem',
@@ -40,6 +47,7 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
         case TYPE_SENT_MESSAGE:
             messageStyle.borderRadius = '1.5rem 1.5rem 0rem 1.5rem';
             messageStyle.backgroundColor = '#C8E6C9';
+            messageStyle.marginRight = '1.5em';
             replyMessageStyle.backgroundColor = '#EDF5FB';
             containerStyle.direction = 'rtl';
 
@@ -70,23 +78,19 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
             break;
     }
 
-    const [reactions, setReactions] = useState({
-        like: 0,
-        love: 0,
-        laugh: 0,
-    });
-
-    const handleReaction = (reaction) => {
-        setReactions((prevReactions) => ({
-            ...prevReactions,
-            [reaction]: prevReactions[reaction] + 1,
-        }));
+    const handleReaction = (reaction, message_id) => {
+        const reactionData = {
+            group_id: chat_group_id,
+            reaction_id: reaction === 'love' ? 1 : 2,
+            message_id: message_id,
+        };
+        userReacted(reactionData);
+        setshowReactions(false);
     };
 
     const iconStyle = {
         fontSize: '20px',
         cursor: 'pointer',
-        // marginRight: '18px',
     };
 
     const reactionsContent = (
@@ -98,10 +102,8 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
             >
                 <Button
                     type='text'
-                    icon={
-                        <LikeFilled onClick={() => handleReaction('like')} style={{ ...iconStyle, color: '#1890ff' }} />
-                    }
-                    // onClick={handleLikeClicked} //TODO implement handleLikeClicked function
+                    icon={<LikeFilled style={{ ...iconStyle, color: '#1890ff' }} />}
+                    onClick={() => handleReaction('like', message?.message_id)}
                 />
             </div>
             <div
@@ -111,23 +113,35 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
             >
                 <Button
                     type='text'
-                    icon={
-                        <HeartFilled
-                            onClick={() => handleReaction('love')}
-                            style={{ ...iconStyle, color: '#eb2f96' }}
-                        />
-                    }
-                    // onClick={handleLikeClicked} //TODO implement handleLikeClicked function
+                    icon={<HeartFilled style={{ ...iconStyle, color: '#eb2f96' }} />}
+                    onClick={() => handleReaction('love', message?.message_id)}
                 />
             </div>
         </Space>
     );
 
+    useEffect(() => {
+        setHideFocused(false);
+        if (isFocused === true) {
+            setTimeout(() => {
+                setHideFocused(true);
+            }, 2000);
+        }
+    }, [isFocused]);
     return (
-        <div style={containerStyle} onMouseEnter={() => setShowText(true)} onMouseLeave={() => setShowText(false)}>
-            <Space style={{ display: 'flex', alignItems: 'center', minWidth: '10vw', width: '80%' }}>
+        <div style={containerStyle}>
+            <Space
+                style={{ display: 'flex', alignItems: 'center', width: '80%' }}
+                onMouseLeave={() => setshowReactions(true)}
+            >
                 {message?.user?.user_id != user?.user_id && <Avatar size={50} src={message?.user?.avatar} />}
-                <Popover placement={'top'} content={reactionsContent} trigger='hover'>
+                <Popover
+                    placement='top'
+                    content={reactionsContent}
+                    trigger='hover'
+                    defaultOpen={1}
+                    open={showReactions ? null : false}
+                >
                     <div
                         id={message?.message_id}
                         style={messageStyle}
@@ -142,93 +156,107 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
                             </div>
                         )}
 
-                        {message?.replyTo && (
-                            <button
-                                style={replyMessageStyle}
-                                onClick={() => {
-                                    scrollToRepliedMessage(message.replyTo.id);
-                                }}
-                            >
-                                <div
-                                    style={{
-                                        color: '#1679AB',
-                                        fontWeight: 'bold',
-                                        fontSize: '13px',
-                                        marginBottom: '4px',
+                        <Space direction='vertical'>
+                            {message?.replied_message && (
+                                <button
+                                    style={replyMessageStyle}
+                                    onClick={() => {
+                                        scrollToRepliedMessage(message.replied_message?.message_id);
                                     }}
                                 >
-                                    {message?.replyTo.user.name}
-                                </div>
+                                    <div
+                                        style={{
+                                            color: '#1679AB',
+                                            fontWeight: 'bold',
+                                            fontSize: '13px',
+                                            marginBottom: '4px',
+                                            padding: '5px',
+                                        }}
+                                    >
+                                        {message?.replied_message?.sender_username}
+                                    </div>
 
-                                <div style={{ fontSize: '14px', direction: 'ltr' }}>
-                                    <Typography.Text ellipsis={{ rows: 1 }}>{message?.replyTo.text}</Typography.Text>
-                                </div>
-                            </button>
-                        )}
+                                    <div style={{ fontSize: '14px', direction: 'ltr' }}>
+                                        <Typography.Text ellipsis={{ rows: 1 }}>
+                                            {message?.replied_message?.message_content}
+                                        </Typography.Text>
+                                    </div>
+                                </button>
+                            )}
 
-                        <Space direction='vertical'>
-                            <Typography.Text style={{ fontSize: '14px' }}>{message?.text}</Typography.Text>
-                            <Space size={20} style={{ marginTop: '1em' }}>
-                                <div style={{ fontSize: '10px', color: 'gray', marginTop: '4px' }}>
-                                    {moment(message?.timestamp).format('h:mm A')}
-                                </div>
-                                {message?.reactions?.length != 0 && (
-                                    <Space size={0}>
-                                        {message?.reactions?.map((reaction, index) => (
-                                            <div key={index}>
-                                                <div
-                                                    key={reaction.reaction.id}
-                                                    style={{
-                                                        display: 'inline-flex',
-                                                        alignItems: 'center',
-                                                        marginRight: '10px',
-                                                        direction: 'ltr',
-                                                    }}
-                                                >
-                                                    {reaction.reaction.id === 2 && (
-                                                        <>
-                                                            <Button
-                                                                size='small'
-                                                                type='text'
-                                                                icon={
-                                                                    <LikeFilled
-                                                                        onClick={() => handleReaction('like')}
-                                                                        style={{ ...iconStyle, color: '#1890ff' }}
-                                                                    />
-                                                                }
-                                                                // onClick={handleLikeClicked} //TODO implement handleLikeClicked function
-                                                            />
-                                                            <span style={{ marginLeft: '4px', fontSize: '14px' }}>
-                                                                {1}
-                                                            </span>
-                                                        </>
-                                                    )}
+                            <Space direction='vertical'>
+                                <Typography.Text style={{ fontSize: '14px' }}>{message?.text}</Typography.Text>
+                                <Space size={20} style={{ marginTop: '1em' }}>
+                                    <div style={{ fontSize: '10px', color: 'gray', marginTop: '4px' }}>
+                                        {moment(message?.timestamp).format('h:mm A')}
+                                    </div>
+                                    {message?.reactions?.length != 0 && (
+                                        <Space size={0}>
+                                            {message?.reactions?.map((reaction, index) => (
+                                                <div key={index}>
+                                                    <div
+                                                        key={reaction.reaction.id}
+                                                        style={{
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            marginRight: '10px',
+                                                            direction: 'ltr',
+                                                        }}
+                                                    >
+                                                        {reaction.reaction.id === '2' && (
+                                                            <>
+                                                                <Button
+                                                                    size='small'
+                                                                    type='text'
+                                                                    icon={
+                                                                        <LikeFilled
+                                                                            style={{ ...iconStyle, color: '#1890ff' }}
+                                                                        />
+                                                                    }
+                                                                    onClick={() =>
+                                                                        handleReaction('like', message?.message_id)
+                                                                    }
+                                                                />
+                                                                <span style={{ marginLeft: '4px', fontSize: '14px' }}>
+                                                                    {
+                                                                        message?.reactions?.filter(
+                                                                            (reaction) => reaction.reaction.id === '2'
+                                                                        ).length
+                                                                    }
+                                                                </span>
+                                                            </>
+                                                        )}
 
-                                                    {reaction.reaction.id === '1' && (
-                                                        <>
-                                                            <Button
-                                                                size='small'
-                                                                type='text'
-                                                                icon={
-                                                                    <HeartFilled
-                                                                        onClick={() => handleReaction('love')}
-                                                                        style={{ ...iconStyle, color: '#eb2f96' }}
-                                                                    />
-                                                                }
-                                                                // onClick={handleLikeClicked} //TODO implement handleLikeClicked function
-                                                            />
-                                                            <span style={{ marginLeft: '4px', fontSize: '14px' }}>
-                                                                {1}
-                                                            </span>
-                                                        </>
-                                                    )}
+                                                        {reaction.reaction.id === '1' && (
+                                                            <>
+                                                                <Button
+                                                                    size='small'
+                                                                    type='text'
+                                                                    icon={
+                                                                        <HeartFilled
+                                                                            style={{ ...iconStyle, color: '#eb2f96' }}
+                                                                        />
+                                                                    }
+                                                                    onClick={() =>
+                                                                        handleReaction('love', message?.message_id)
+                                                                    }
+                                                                />
+                                                                <span style={{ marginLeft: '4px', fontSize: '14px' }}>
+                                                                    {
+                                                                        message?.reactions?.filter(
+                                                                            (reaction) => reaction.reaction.id === '1'
+                                                                        ).length
+                                                                    }
+                                                                </span>
+                                                            </>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))}
-                                    </Space>
-                                )}
-                            </Space>
-                            {/* {showText && (
+                                            ))}
+                                        </Space>
+                                    )}
+                                </Space>
+                                {/* {showText && (
                                     <div
                                         style={{
                                             fontWeight: 'bold',
@@ -246,6 +274,7 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
                                         </button>
                                     </div>
                                 )} */}
+                            </Space>
                         </Space>
                     </div>
                 </Popover>
