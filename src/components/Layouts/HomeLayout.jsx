@@ -217,7 +217,7 @@ export default function HomeLayout({ roles }) {
             )}
 
             <Layout className='h-[100svh]' hidden={hideContent}>
-                <Header className='h-[8svh] px-2'>
+                <Header className='h-[8svh] px-2 z-50'>
                     <Row justify={'space-between'} className='h-full px-2'>
                         <Col xs={{ span: 8 }} className='h-full flex items-center'>
                             {' '}

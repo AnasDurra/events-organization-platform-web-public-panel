@@ -101,12 +101,12 @@ export default function DesignTools({
                     <Select.Option value={CENTER_TYPES.ALMOST_STAR}>Almost Star</Select.Option>
                 </Select>
 
-                <div className='flex flex-col w-16 justify-center items-center scale-[0.2]'>
+               {/*  <div className='flex flex-col w-16 justify-center items-center scale-[0.2]'>
                     <BadgeOverView
                         layers={layers}
                         colors={{ center: 'red', bottom: 'gray', decor: 'gray', horizontal: 'gray' }}
                     ></BadgeOverView>
-                </div>
+                </div> */}
             </div>
 
             <div className='flex w-full space-x-4 justify-center items-center'>
@@ -140,12 +140,12 @@ export default function DesignTools({
                     <Select.Option value={HORIZONTAL_TYPES.WING}>Wing</Select.Option>
                 </Select>
 
-                <div className='flex flex-col w-16 justify-center items-center scale-[0.2]'>
+               {/*  <div className='flex flex-col w-16 justify-center items-center scale-[0.2]'>
                     <BadgeOverView
                         layers={layers}
                         colors={{ center: 'gray', bottom: 'gray', decor: 'gray', horizontal: 'red' }}
                     ></BadgeOverView>
-                </div>
+                </div> */}
             </div>
 
             <div className='flex w-full space-x-4 justify-center items-center'>
