@@ -1,0 +1,15 @@
+@media (max-width: 576px) {
+    .custom-div {
+        position: static !important;
+        top: auto !important;
+        left: auto !important;
+        margin-top: auto !important;
+        z-index: auto !important;
+        width: auto !important;
+        height: auto !important;
+        color: inherit !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: stretch !important;
+    }
+}

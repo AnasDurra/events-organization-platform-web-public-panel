@@ -1,8 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import OrganizerLayout from '../components/Layouts/OrganizerLayout';
 import RegisterAttendee from '../features/Attendees Profiles/RegisterAttendee';
-import ShowAttendeProfile from '../features/Attendees Profiles/ShowAttendeProfile';
-import ShowMyProfile from '../features/Attendees Profiles/ShowMyProfile';
+import MyProfile from '../features/Attendees Profiles/MyProfile';
 import CreateEvent from '../features/Manage Events (org)/CreateEvent';
 import ShowEvent from '../features/Manage Events (org)/show_event/ShowEvent';
 import EditFormPage from '../features/dynamic forms/EditFormPage';
@@ -38,6 +37,7 @@ import OrganizerLoginPage from '../pages/login pages/OrganizerLoginPage';
 import OrgTicketsPage from '../features/Ticketing Packages/OrgTicketsPage';
 import ViewCategoryPage from '../features/landing/ViewCategoryPage';
 import ViewAllCategoriesPage from '../features/landing/ViewAllCategoriesPage';
+import AttendeeProfile from '../features/Attendees Profiles/AttendeeProfile';
 import HomeLayout from '../components/Layouts/home/HomeLayout';
 import DesignBadge from '../features/gamification/badges/design/DesignBadge';
 import SeedPage from '../api/services/SeedPage';
@@ -118,7 +118,8 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: '/attendee-profile/:id',
-                element: <ShowAttendeProfile />,
+                // element: <ShowAttendeProfile />,
+                element: <AttendeeProfile />,
             },
             {
                 path: '/attendee-profile/:id/organizations',
@@ -169,8 +170,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'profile',
-                element: <ShowMyProfile />,
                 children: [
+                    {
+                        index: true,
+                        element: <MyProfile />,
+                    },
                     {
                         path: 'events',
                         element: <ShowAttendeeEvents />,
@@ -192,10 +196,6 @@ export const router = createBrowserRouter([
             {
                 path: 'event',
                 children: [
-                    {
-                        path: 'create',
-                        element: <CreateEvent />,
-                    },
                     {
                         path: 'show/:id',
                         element: <ShowEvent />,

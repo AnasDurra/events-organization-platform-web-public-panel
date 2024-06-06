@@ -9,6 +9,7 @@ const { Meta } = Card;
 const { Text } = Typography;
 
 const ShowFollowingOrgsList = () => {
+    console.log(1111);
     const { data: data2, error, isLoading } = useFollowedOrgsQuery();
     const data = {
         status: true,

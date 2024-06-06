@@ -167,20 +167,19 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
 
     return (
         <Spin spinning={isLoading || listsIsLoading}>
-            <Card style={{ width: '100%' }}>
-                <div>
-                    <Row
-                        style={{
-                            display: 'flex',
-                            // justifyContent: 'space-around',
-                        }}
-                        gutter={20}
-                    >
-                        <Col span={24}>
-                            {data?.result?.cover_img || coverImageFile?.length != 0 ? (
+            <div>
+                <Row
+                    style={{
+                        display: 'flex',
+                    }}
+                    gutter={20}
+                >
+                    <Col span={24}>
+                        {data?.result?.cover_img || coverImageFile?.length != 0 ? (
+                            <div className='relative -mx-6  '>
                                 <Image
                                     width={'100%'}
-                                    style={{ height: '100%', minHeight: '25vh', borderRadius: '15px' }}
+                                    style={{ minHeight: '25vh' }}
                                     src={
                                         coverImageFile?.length != 0
                                             ? URL.createObjectURL(coverImageFile[0].originFileObj)
@@ -207,213 +206,215 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                         ),
                                     }}
                                 />
-                            ) : (
-                                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No cover picture available' />
-                            )}
+                            </div>
+                        ) : (
+                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description='No cover picture available' />
+                        )}
 
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'flex-end',
-                                    padding: '0px',
-                                    transform: 'translate(0%, -60%)',
+                        <div
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'flex-end',
+                                padding: '0px',
+                                transform: 'translate(0%, -60%)',
+                            }}
+                        >
+                            <ImgCrop
+                                showReset
+                                rotationSlider
+                                aspect={3 / 1}
+                                onModalOk={(file) => {
+                                    handleImageChange(file, 'cover');
                                 }}
                             >
-                                <ImgCrop
-                                    showReset
-                                    rotationSlider
-                                    aspect={3 / 1}
-                                    onModalOk={(file) => {
+                                <Upload
+                                    name='cover'
+                                    fileList={coverImageFile}
+                                    maxCount={1}
+                                    showUploadList={false}
+                                    onChange={(file) => {
                                         handleImageChange(file, 'cover');
                                     }}
+                                    customRequest={({ onSuccess }) => onSuccess('ok')}
                                 >
-                                    <Upload
-                                        name='cover'
-                                        fileList={coverImageFile}
-                                        maxCount={1}
-                                        showUploadList={false}
-                                        onChange={(file) => {
-                                            handleImageChange(file, 'cover');
-                                        }}
-                                        customRequest={({ onSuccess }) => onSuccess('ok')}
-                                    >
-                                        <Button style={{ padding: '0px' }} type='text'>
-                                            <CameraOutlined
-                                                style={{
-                                                    fontSize: '24px',
-                                                    color: '#00000',
-                                                    backgroundColor: '#E6E6E6',
-                                                    borderRadius: '50%',
-                                                    padding: '3px',
-                                                }}
-                                            />
-                                        </Button>
-                                    </Upload>
-                                </ImgCrop>
-                            </div>
-                        </Col>
+                                    <Button style={{ padding: '0px' }} type='text'>
+                                        <CameraOutlined
+                                            style={{
+                                                fontSize: '24px',
+                                                color: '#00000',
+                                                backgroundColor: '#E6E6E6',
+                                                borderRadius: '50%',
+                                                padding: '3px',
+                                            }}
+                                        />
+                                    </Button>
+                                </Upload>
+                            </ImgCrop>
+                        </div>
+                    </Col>
 
-                        <Col span={24}>
-                            <Row gutter={20}>
-                                <Col xs={8} sm={6} md={5}>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            alignItems: 'center',
-                                            marginTop: '-70px',
-                                        }}
-                                    >
-                                        <Space>
-                                            <Image
-                                                width={100}
-                                                height={100}
-                                                style={{
-                                                    textAlign: 'center',
-                                                    marginBottom: '10px',
-                                                    border: '3px solid white',
-                                                    borderRadius: '50%',
-                                                }}
-                                                src={
-                                                    avatarImageFile?.length != 0
-                                                        ? URL.createObjectURL(avatarImageFile[0].originFileObj)
-                                                        : data?.result?.profile_img
-                                                        ? data?.result?.profile_img
-                                                        : null
-                                                }
-                                                fallback={<UserOutlined style={{ fontSize: '100px', color: '#ccc' }} />}
-                                                preview={{
-                                                    mask: (
-                                                        <Button
-                                                            type='primary'
-                                                            shape='round'
-                                                            size='middle'
-                                                            icon={<EyeOutlined />}
-                                                            style={{
-                                                                position: 'absolute',
-                                                                top: '50%',
-                                                                left: '50%',
-                                                                transform: 'translate(-50%, -50%)',
-                                                            }}
-                                                        >
-                                                            Preview
-                                                        </Button>
-                                                    ),
-                                                }}
-                                            />
-                                            <div
-                                                style={{
-                                                    marginBottom: '-40px',
-                                                    paddingTop: '35px',
-                                                    marginTop: '-15px',
-                                                    marginLeft: '-2.5em',
-                                                }}
-                                            >
-                                                <ImgCrop showReset rotationSlider aspect={4 / 3}>
-                                                    <Upload
-                                                        fileList={avatarImageFile}
-                                                        maxCount={1}
-                                                        showUploadList={false}
-                                                        onChange={(file) => {
-                                                            handleImageChange(file, 'avatar');
+                    <Col span={24}>
+                        <Row gutter={20}>
+                            <Col xs={8} sm={6} md={5}>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        marginTop: '-80px',
+                                    }}
+                                >
+                                    <Space>
+                                        <Image
+                                            width={120}
+                                            height={120}
+                                            style={{
+                                                textAlign: 'center',
+                                                marginBottom: '10px',
+                                                border: '3px solid white',
+                                                borderRadius: '50%',
+                                            }}
+                                            src={
+                                                avatarImageFile?.length != 0
+                                                    ? URL.createObjectURL(avatarImageFile[0].originFileObj)
+                                                    : data?.result?.profile_img
+                                                    ? data?.result?.profile_img
+                                                    : null
+                                            }
+                                            fallback={<UserOutlined style={{ fontSize: '100px', color: '#ccc' }} />}
+                                            preview={{
+                                                mask: (
+                                                    <Button
+                                                        type='primary'
+                                                        shape='round'
+                                                        size='middle'
+                                                        icon={<EyeOutlined />}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            top: '50%',
+                                                            left: '50%',
+                                                            transform: 'translate(-50%, -50%)',
                                                         }}
-                                                        customRequest={({ onSuccess }) => onSuccess('ok')}
                                                     >
-                                                        <Button style={{ padding: '0px' }} type='text'>
-                                                            <CameraOutlined
-                                                                style={{
-                                                                    fontSize: '20px',
-                                                                    color: '#00000',
-                                                                    backgroundColor: '#E6E6E6',
-                                                                    borderRadius: '50%',
-                                                                    padding: '3px',
-                                                                }}
-                                                            />
-                                                        </Button>
-                                                    </Upload>
-                                                </ImgCrop>
-                                            </div>
-                                        </Space>
-                                    </div>
-                                </Col>
-                                <Col xs={16} sm={18} md={19}>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <Typography.Title style={{ marginTop: '0px' }} level={3}>
-                                            {data?.result?.full_name ?? ''}
-                                        </Typography.Title>
+                                                        Preview
+                                                    </Button>
+                                                ),
+                                            }}
+                                        />
+                                        <div
+                                            style={{
+                                                marginBottom: '-40px',
+                                                paddingTop: '35px',
+                                                marginTop: '-15px',
+                                                marginLeft: '-2.5em',
+                                            }}
+                                        >
+                                            <ImgCrop showReset rotationSlider aspect={4 / 3}>
+                                                <Upload
+                                                    fileList={avatarImageFile}
+                                                    maxCount={1}
+                                                    showUploadList={false}
+                                                    onChange={(file) => {
+                                                        handleImageChange(file, 'avatar');
+                                                    }}
+                                                    customRequest={({ onSuccess }) => onSuccess('ok')}
+                                                >
+                                                    <Button style={{ padding: '0px' }} type='text'>
+                                                        <CameraOutlined
+                                                            style={{
+                                                                fontSize: '20px',
+                                                                color: '#00000',
+                                                                backgroundColor: '#E6E6E6',
+                                                                borderRadius: '50%',
+                                                                padding: '3px',
+                                                            }}
+                                                        />
+                                                    </Button>
+                                                </Upload>
+                                            </ImgCrop>
+                                        </div>
+                                    </Space>
+                                </div>
+                            </Col>
+                            <Col xs={16} sm={18} md={19}>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        width: '100%',
+                                    }}
+                                >
+                                    <Typography.Title style={{ marginTop: '0px' }} level={3}>
+                                        {data?.result?.full_name ?? ''}
+                                    </Typography.Title>
 
-                                        <Space size={10}>
-                                            {data?.result.contacts?.map((contact) => (
-                                                <Tooltip title={contact.contact_name} key={contact.id}>
-                                                    <a
-                                                        href={getContactLink(contact.contact_name)}
-                                                        target='_blank'
-                                                        rel='noopener noreferrer'
-                                                    >
-                                                        {contact.contact_name === 'WhatsApp' && (
-                                                            <WhatsAppOutlined
-                                                                style={{
-                                                                    fontSize: '24px',
-                                                                    color: '#25D366',
-                                                                }}
-                                                            />
-                                                        )}
-                                                        {contact.contact_name === 'LinkedIn' && (
-                                                            <LinkedinOutlined
-                                                                style={{
-                                                                    fontSize: '24px',
-                                                                    color: '#0077B5',
-                                                                }}
-                                                            />
-                                                        )}
-                                                        {contact.contact_name === 'Facebook' && (
-                                                            <FacebookOutlined
-                                                                style={{
-                                                                    fontSize: '24px',
-                                                                    color: '#3b5998',
-                                                                }}
-                                                            />
-                                                        )}
-                                                        {contact.contact_name === 'Twitter' && (
-                                                            <TwitterOutlined
-                                                                style={{
-                                                                    fontSize: '24px',
-                                                                    color: '#1DA1F2',
-                                                                }}
-                                                            />
-                                                        )}
-                                                        {contact.contact_name === 'Email' && (
-                                                            <MailOutlined
-                                                                style={{
-                                                                    fontSize: '24px',
-                                                                    color: 'black',
-                                                                }}
-                                                            />
-                                                        )}
-                                                        {contact.contact_name === 'Phone Number' && (
-                                                            <PhoneOutlined
-                                                                style={{ fontSize: '24px' }}
-                                                                onClick={() =>
-                                                                    (window.location.href = `tel:${contact.value}`)
-                                                                }
-                                                            />
-                                                        )}
-                                                    </a>
-                                                </Tooltip>
-                                            ))}
-                                        </Space>
-                                    </div>
-                                </Col>
-                            </Row>
-                        </Col>
+                                    <Space size={10}>
+                                        {data?.result.contacts?.map((contact) => (
+                                            <Tooltip title={contact.contact_name} key={contact.id}>
+                                                <a
+                                                    href={getContactLink(contact.contact_name)}
+                                                    target='_blank'
+                                                    rel='noopener noreferrer'
+                                                >
+                                                    {contact.contact_name === 'WhatsApp' && (
+                                                        <WhatsAppOutlined
+                                                            style={{
+                                                                fontSize: '24px',
+                                                                color: '#25D366',
+                                                            }}
+                                                        />
+                                                    )}
+                                                    {contact.contact_name === 'LinkedIn' && (
+                                                        <LinkedinOutlined
+                                                            style={{
+                                                                fontSize: '24px',
+                                                                color: '#0077B5',
+                                                            }}
+                                                        />
+                                                    )}
+                                                    {contact.contact_name === 'Facebook' && (
+                                                        <FacebookOutlined
+                                                            style={{
+                                                                fontSize: '24px',
+                                                                color: '#3b5998',
+                                                            }}
+                                                        />
+                                                    )}
+                                                    {contact.contact_name === 'Twitter' && (
+                                                        <TwitterOutlined
+                                                            style={{
+                                                                fontSize: '24px',
+                                                                color: '#1DA1F2',
+                                                            }}
+                                                        />
+                                                    )}
+                                                    {contact.contact_name === 'Email' && (
+                                                        <MailOutlined
+                                                            style={{
+                                                                fontSize: '24px',
+                                                                color: 'black',
+                                                            }}
+                                                        />
+                                                    )}
+                                                    {contact.contact_name === 'Phone Number' && (
+                                                        <PhoneOutlined
+                                                            style={{ fontSize: '24px' }}
+                                                            onClick={() =>
+                                                                (window.location.href = `tel:${contact.value}`)
+                                                            }
+                                                        />
+                                                    )}
+                                                </a>
+                                            </Tooltip>
+                                        ))}
+                                    </Space>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Col>
 
-                        <Col span={24}>
+                    <Col span={24}>
+                        <Card className='bg-gray-50' bordered={false} style={{ width: '100%' }}>
                             <Form
                                 onFinish={onFinish}
                                 form={form}
@@ -425,7 +426,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                 className='my-custom-form'
                             >
                                 <Form.Item initialValue={data?.result.bio ?? ''} label='Bio' name='bio'>
-                                    <TextArea placeholder='Tell us about yourself...' allowClear />
+                                    <TextArea size='large' placeholder='Tell us about yourself...' allowClear />
                                 </Form.Item>
                                 <Form.Item
                                     label='Birth Date'
@@ -434,11 +435,12 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                         data?.result.birth_date ? moment(data?.result.birth_date, 'DD-MM-YYYY') : null
                                     }
                                 >
-                                    <DatePicker format={'DD-MM-YYYY'} style={{ width: '100%' }} />
+                                    <DatePicker size='large' format={'DD-MM-YYYY'} style={{ width: '100%' }} />
                                 </Form.Item>
 
                                 <Form.Item label='Job' name='job_id' initialValue={data?.result.job?.value ?? null}>
                                     <Select
+                                        size='large'
                                         loading={listsIsLoading}
                                         showSearch
                                         placeholder='Select your job'
@@ -452,6 +454,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                     initialValue={data?.result.job?.value ?? null}
                                 >
                                     <Select
+                                        size='large'
                                         loading={listsIsLoading}
                                         showSearch
                                         placeholder='Select your address'
@@ -484,6 +487,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                                 }}
                                             >
                                                 <Input
+                                                    size='large'
                                                     placeholder={
                                                         contact.label === 'Email' || contact.label === 'Phone Number'
                                                             ? contact.label
@@ -496,32 +500,43 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                 </Form>
 
                                 <Form.Item>
-                                    <Space
+                                    <div
                                         style={{
                                             display: 'flex',
                                             justifyContent: 'flex-end',
                                         }}
                                     >
                                         <Button
+                                            size='large'
+                                            type='default'
+                                            className='w-full'
+                                            style={{
+                                                margin: '0 8px',
+                                            }}
                                             onClick={() => {
                                                 form.resetFields();
                                                 contactForm.resetFields();
                                                 modalCancel();
                                             }}
-                                            type='default'
                                         >
                                             Cancel
                                         </Button>
-                                        <Button loading={isLoading} type='primary' htmlType='submit'>
+                                        <Button
+                                            className='w-full'
+                                            size='large'
+                                            loading={isLoading}
+                                            type='primary'
+                                            htmlType='submit'
+                                        >
                                             Submit
                                         </Button>
-                                    </Space>
+                                    </div>
                                 </Form.Item>
                             </Form>
-                        </Col>
-                    </Row>
-                </div>
-            </Card>
+                        </Card>
+                    </Col>
+                </Row>
+            </div>
         </Spin>
     );
 };

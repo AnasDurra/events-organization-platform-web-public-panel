@@ -1,19 +1,11 @@
 import { Col, DatePicker, Input, Row, Typography, Upload, message, Form, Image } from 'antd';
-import Password from 'antd/es/input/Password';
 import Link from 'antd/es/typography/Link';
 import { useState } from 'react';
 
 const BasicInfoRegistrationForm = ({ form }) => {
     return (
-        <Form
-            form={form}
-            autoComplete='off'
-            layout='vertical'
-            // style={{ maxWidth: 550 }}
-            className='my-custom-form'
-        >
+        <Form form={form} autoComplete='off' layout='vertical'>
             <Form.Item
-                label='Email'
                 name='email'
                 rules={[
                     {
@@ -23,13 +15,12 @@ const BasicInfoRegistrationForm = ({ form }) => {
                     },
                 ]}
             >
-                <Input />
+                <Input placeholder='Email' size='large' />
             </Form.Item>
 
             <Row gutter={15}>
                 <Col span={12}>
                     <Form.Item
-                        label='First Name'
                         name='first_name'
                         rules={[
                             {
@@ -46,13 +37,12 @@ const BasicInfoRegistrationForm = ({ form }) => {
                             },
                         ]}
                     >
-                        <Input />
+                        <Input placeholder='First Name' size='large' />
                     </Form.Item>
                 </Col>
 
                 <Col span={12}>
                     <Form.Item
-                        label='Last Name'
                         name='last_name'
                         rules={[
                             {
@@ -69,7 +59,7 @@ const BasicInfoRegistrationForm = ({ form }) => {
                             },
                         ]}
                     >
-                        <Input />
+                        <Input placeholder='Last Name' size='large' />
                     </Form.Item>
                 </Col>
             </Row>
@@ -144,7 +134,6 @@ const BasicInfoRegistrationForm = ({ form }) => {
             </Form.Item> */}
 
             <Form.Item
-                label='Username'
                 name='username'
                 rules={[
                     {
@@ -161,10 +150,9 @@ const BasicInfoRegistrationForm = ({ form }) => {
                     },
                 ]}
             >
-                <Input />
+                <Input placeholder='Username' size='large' />
             </Form.Item>
             <Form.Item
-                label='Password'
                 name='password'
                 rules={[
                     {
@@ -186,7 +174,7 @@ const BasicInfoRegistrationForm = ({ form }) => {
                     },
                 ]}
             >
-                <Password type='Password' />
+                <Input.Password type='Password' placeholder='Passwords' size='large' />
             </Form.Item>
             <Form.Item style={{ marginTop: '2em' }}>
                 <Typography.Paragraph
@@ -199,7 +187,7 @@ const BasicInfoRegistrationForm = ({ form }) => {
                     <Link
                         href='terms-of-use'
                         style={{
-                            fontSize: '12px',
+                            fontSize: '10px',
                             color: 'blue',
                             fontWeight: 'bolder',
                         }}
@@ -210,7 +198,7 @@ const BasicInfoRegistrationForm = ({ form }) => {
                     <Link
                         href='privacy-policy'
                         style={{
-                            fontSize: '12px',
+                            fontSize: '10px',
                             color: 'blue',
                             fontWeight: 'bold',
                         }}

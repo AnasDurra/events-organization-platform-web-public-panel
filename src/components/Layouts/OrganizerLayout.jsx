@@ -383,7 +383,8 @@ export default function OrganizerLayout({ roles }) {
                     />
                     <div className='lg:grid lg:grid-cols-9 w-full'>
                         <Content
-                            className='lg:col-span-9 lg:col-start-1 h-[84svh] lg:h-[92svh] overflow-y-scroll scrollbar-hide'
+                            className='lg:col-span-9 lg:col-start-1 h-[84svh] lg:h-[92svh] overflow-y-scroll scrollbar-hide
+                    p-2 sm:p-6 md:p-8 lg:p-12 xl:p-14'
                             style={{ scrollbarWidth: 'none' }}
                         >
                             <Outlet />

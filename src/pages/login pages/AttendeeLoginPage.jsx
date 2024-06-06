@@ -1,11 +1,10 @@
-import { Button, Card, Form, Image, Input, Space, Spin, Typography } from 'antd';
-import Password from 'antd/es/input/Password';
-import image1 from '../../features/Attendees Profiles/assets/Hybrid-illu.png';
-import '../../features/Attendees Profiles/styles/styles.css';
+// src/App.js
+import React from 'react';
+import { Form, Input, Button, Checkbox, Spin, Typography } from 'antd';
+import { GoogleOutlined, UserOutlined } from '@ant-design/icons';
 import { useLoginMutation } from '../../api/services/auth';
-import FormWelcomeTitle from '../../features/Form/FormWelcomeTitle';
-import { useNotification } from '../../utils/NotificationContext';
 import { Link, useNavigate } from 'react-router-dom';
+import { useNotification } from '../../utils/NotificationContext';
 import Roles from '../../api/Roles';
 
 export default function AttendeeLoginPage() {
@@ -43,185 +42,90 @@ export default function AttendeeLoginPage() {
     };
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
-            }}
-        >
-            <Card>
-                <Space
-                    direction='horizontal'
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                    }}
-                >
-                    <div className='registerImage'>
-                        <Image width={320} height={700} src={image1} preview={false} />
-                    </div>
-                    <div>
-                        <Typography.Title
-                            level={3}
-                            style={{
-                                textAlign: 'center',
-                                color: '#333',
-                                // marginBottom: '24px',
-                                fontWeight: 'bold',
-                                fontSize: '28px',
-                                fontFamily: 'Arial, sans-serif',
-                                textTransform: 'uppercase',
-                                letterSpacing: '1px',
-                                lineHeight: '1.5',
-                            }}
-                        >
-                            WELCOME BACK!
-                        </Typography.Title>
-                        <Card
-                            bodyStyle={{ paddingTop: '0px' }}
-                            bordered={false}
-                            style={{
-                                height: '600px',
-                                width: '100%',
-                                maxWidth: '430px',
-                            }}
-                        >
-                            <Spin spinning={isLoading}>
-                                <FormWelcomeTitle
-                                    paragraph={
-                                        <>
-                                            Log In to Your{' '}
-                                            <span style={{ textDecoration: 'underline' }}>Attendee Account</span>
-                                            <br></br>
-                                            <br></br>
-                                            <Link
-                                                to='/org/login'
-                                                style={{
-                                                    color: 'blue',
-                                                    fontWeight: 'bold',
-                                                    fontSize: '13px',
-                                                }}
-                                            >
-                                                Login as Organizer?
-                                            </Link>
-                                            {'. '}
-                                            Or if you new to Eventure?{' '}
-                                            <Link
-                                                to='/register'
-                                                style={{
-                                                    color: 'blue',
-                                                    fontWeight: 'bold',
-                                                    fontSize: '13px',
-                                                }}
-                                            >
-                                                Sign Up Now
-                                            </Link>
-                                        </>
-                                    }
-                                />
-                                <Form
-                                    onFinish={onFinish}
-                                    autoComplete='off'
-                                    layout='vertical'
-                                    style={{ maxWidth: 550 }}
-                                    className='my-custom-form'
-                                >
-                                    <Form.Item
-                                        label='Username'
-                                        name='username'
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Please enter your Username',
-                                            },
-                                            {
-                                                min: 2,
-                                                message: 'Username must be at least 3 characters',
-                                            },
-                                            {
-                                                max: 50,
-                                                message: 'Username cannot exceed 12 characters',
-                                            },
-                                        ]}
-                                    >
-                                        <Input />
-                                    </Form.Item>
+        <div className='flex items-center justify-center min-h-screen bg-gray-100'>
+            <div className='w-full max-w-md p-8 space-y-8 bg-white shadow-md rounded-lg'>
+                <div className='text-center'>
+                    <h2 className='text-3xl font-extrabold text-gray-900'>Login</h2>
+                    <p className='mt-2 text-sm text-gray-600'>Hi, Welcome back 👋</p>
+                </div>
+                <Spin spinning={isLoading}>
+                    <Form name='login' initialValues={{ remember: true }} onFinish={onFinish} layout='vertical'>
+                        <Form.Item>
+                            <Button
+                                type='default'
+                                icon={<UserOutlined />}
+                                className='w-full mb-4 bg-white text-black border border-gray-300'
+                                size='large'
+                                onClick={() => {
+                                    navigate('/org/login');
+                                }}
+                            >
+                                Login as Organizer
+                            </Button>
+                        </Form.Item>
 
-                                    <Form.Item
-                                        label='Password'
-                                        name='password'
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Please enter your password',
-                                            },
-                                            // {
-                                            //     min: 8,
-                                            //     message: 'Password must be at least 8 characters',
-                                            // },
-                                            {
-                                                max: 20,
-                                                message: 'Password cannot exceed 20 characters',
-                                            },
-                                            // {
-                                            //     pattern:
-                                            //         /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-                                            //     message:
-                                            //         "Password must contain at least one letter and one number",
-                                            // },
-                                        ]}
-                                    >
-                                        <Password type='Password' />
-                                    </Form.Item>
-                                    <Form.Item style={{ marginTop: '2em' }}>
-                                        <Typography.Paragraph
-                                            style={{
-                                                fontSize: '11px',
-                                                color: 'gray',
-                                            }}
-                                        >
-                                            By continuing past this page, you agree to the{' '}
-                                            <Link
-                                                to='terms-of-use'
-                                                style={{
-                                                    fontSize: '12px',
-                                                    color: 'blue',
-                                                    fontWeight: 'bolder',
-                                                }}
-                                            >
-                                                Terms of Use
-                                            </Link>{' '}
-                                            and understand that information will be used as described in our{' '}
-                                            <Link
-                                                to='privacy-policy'
-                                                style={{
-                                                    fontSize: '12px',
-                                                    color: 'blue',
-                                                    fontWeight: 'bold',
-                                                }}
-                                            >
-                                                Privacy Policy
-                                            </Link>
-                                            .
-                                        </Typography.Paragraph>
-                                    </Form.Item>
-                                    <Form.Item
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'flex-end',
-                                        }}
-                                    >
-                                        <Button htmlType='submit' type='primary' style={{ width: '100%' }}>
-                                            Login
-                                        </Button>
-                                    </Form.Item>
-                                </Form>
-                            </Spin>
-                        </Card>
-                    </div>
-                </Space>
-            </Card>
+                        <div className='flex items-center justify-center my-4'>
+                            <span className='text-gray-500 mx-2'>or Login as Attendee </span>
+                        </div>
+
+                        <Form.Item
+                            name='username'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please enter your Username',
+                                },
+
+                                {
+                                    max: 50,
+                                    message: 'Username cannot exceed 12 characters',
+                                },
+                            ]}
+                        >
+                            <Input placeholder='Username' size='large' />
+                        </Form.Item>
+
+                        <Form.Item
+                            name='password'
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please enter your Password',
+                                },
+                                {
+                                    min: 8,
+                                    message: 'Password must be at least 8 characters',
+                                },
+                            ]}
+                        >
+                            <Input.Password placeholder='Password' size='large' />
+                        </Form.Item>
+
+                        <Form.Item name='remember' valuePropName='checked'>
+                            <Checkbox>Remember me</Checkbox>
+                        </Form.Item>
+
+                        <Form.Item>
+                            <Button type='primary' htmlType='submit' className='w-full' size='large'>
+                                Login
+                            </Button>
+                        </Form.Item>
+
+                        <div className='text-center'>
+                            <a href='/' className='text-sm text-blue-600'>
+                                Forgot Password?
+                            </a>
+                        </div>
+
+                        <div className='text-center mt-4'>
+                            <span className='text-sm'>Not registered yet? </span>
+                            <Link to={'/register'} className='text-sm text-blue-600'>
+                                Create an account
+                            </Link>
+                        </div>
+                    </Form>
+                </Spin>
+            </div>
         </div>
     );
 }

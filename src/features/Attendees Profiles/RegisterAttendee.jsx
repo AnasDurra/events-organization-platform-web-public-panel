@@ -1,4 +1,4 @@
-import { Button, Card, Form, Image, Space, Spin, Steps, Typography } from 'antd';
+import { Button, Card, Checkbox, Form, Image, Input, Space, Spin, Steps, Typography } from 'antd';
 
 import Link from 'antd/es/typography/Link';
 import { message } from 'antd';
@@ -13,6 +13,7 @@ import FormWelcomeTitle from '../Form/FormWelcomeTitle';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../../utils/NotificationContext';
+import { GoogleOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 
 export default function RegisterAttendee() {
     const [signupMutation, { isLoading }] = useSignupMutation();
@@ -150,122 +151,55 @@ export default function RegisterAttendee() {
         marginTop: 16,
     };
     return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
-            }}
-        >
-            <Card>
-                <Space
-                    direction='horizontal'
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'flex-start',
-                    }}
-                >
-                    <div className='registerImage'>
-                        <Image width={320} height={700} src={image1} preview={false} />
+        <div className='flex items-center justify-center min-h-screen bg-gray-100'>
+            <div className='w-full max-w-md p-8 space-y-8 bg-white shadow-md rounded-lg'>
+                <div className='text-center'>
+                    <h2 className='text-3xl font-extrabold text-gray-900'>Register</h2>
+                    <p className='mt-2 text-sm text-gray-600'>Join us for Eventure 🚀</p>
+                </div>
+                <Spin spinning={false}>
+                    <div className='flex items-center justify-center my-4'>
+                        <span className='text-gray-500 mx-2'>
+                            Register today for exclusive offers and a seamless event experience.
+                        </span>
                     </div>
-                    <div>
-                        <Typography.Title
-                            level={3}
-                            style={{
-                                textAlign: 'center',
-                                color: '#333',
-                                // marginBottom: '24px',
-                                fontWeight: 'bold',
-                                fontSize: '28px',
-                                fontFamily: 'Arial, sans-serif',
-                                textTransform: 'uppercase',
-                                letterSpacing: '1px',
-                                lineHeight: '1.5',
-                            }}
-                        >
-                            Join us for Eventure!
-                        </Typography.Title>
-                        <Card
-                            bodyStyle={{ paddingTop: '0px' }}
-                            bordered={false}
-                            style={{
-                                height: '600px',
-                                width: '100%',
-                                maxWidth: '430px',
-                                overflow: 'auto',
-                            }}
-                        >
-                            <Spin spinning={isLoading}>
-                                <FormWelcomeTitle
-                                    paragraph={
-                                        <>
-                                            Register today for exclusive offers and a seamless event experience.{' '}
-                                            <br></br>
-                                            <br></br>
-                                            *Already have an Evento Account?{' '}
-                                            <Link
-                                                href='login'
-                                                style={{
-                                                    color: 'blue',
-                                                    fontWeight: 'bold',
-                                                    fontSize: '13px',
-                                                }}
-                                            >
-                                                Sign In
-                                            </Link>
-                                        </>
-                                    }
-                                />
 
-                                <Steps size='small' current={current} items={items} />
+                    <Steps style={{ padding: '20px 0px' }} size='small' current={current} items={items} />
 
-                                <div style={contentStyle}>{steps[current].content}</div>
+                    <div style={contentStyle}>{steps[current].content}</div>
 
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'flex-end',
-                                        // marginTop: 24,
-                                    }}
-                                >
-                                    {current > 0 && (
-                                        <Button
-                                            style={{
-                                                margin: '0 8px',
-                                            }}
-                                            onClick={() => prev()}
-                                        >
-                                            Previous
-                                        </Button>
-                                    )}
-                                    {current < steps.length - 1 && (
-                                        <Button type='primary' onClick={() => handleFormSubmit()}>
-                                            Next
-                                        </Button>
-                                    )}
-                                    {current === steps.length - 1 && (
-                                        <Button type='primary' onClick={onFinish}>
-                                            Done
-                                        </Button>
-                                    )}
-                                </div>
-                            </Spin>
-                        </Card>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            // marginTop: 24,
+                        }}
+                    >
+                        {current > 0 && (
+                            <Button
+                                style={{
+                                    margin: '0 8px',
+                                }}
+                                className='w-full'
+                                size='large'
+                                onClick={() => prev()}
+                            >
+                                Previous
+                            </Button>
+                        )}
+                        {current < steps.length - 1 && (
+                            <Button type='primary' className='w-full' size='large' onClick={() => handleFormSubmit()}>
+                                Next
+                            </Button>
+                        )}
+                        {current === steps.length - 1 && (
+                            <Button type='primary' className='w-full' size='large' onClick={onFinish}>
+                                Done
+                            </Button>
+                        )}
                     </div>
-                </Space>
-            </Card>
+                </Spin>
+            </div>
         </div>
     );
 }
-
-// const beforeUpload = (file) => {
-//     const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-//     if (!isJpgOrPng) {
-//         message.error("You can only upload JPG/PNG file!");
-//     }
-//     const isLt2M = file.size / 1024 / 1024 < 2;
-//     if (!isLt2M) {
-//         message.error("Image must smaller than 2MB!");
-//     }
-//     return isJpgOrPng && isLt2M;
-// };

@@ -48,11 +48,7 @@ const HomeLayout = ({ roles }) => {
                 />
             )}
 
-            <Layout
-                className='h-[100svh]'
-                style={{ scrollbarWidth: 0 }}
-                hidden={hideContent}
-            >
+            <Layout className='h-[100svh]' style={{ scrollbarWidth: 0 }} hidden={hideContent}>
                 <HomeHeader />
 
                 <Layout>
