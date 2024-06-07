@@ -1,62 +1,13 @@
+import { DeleteOutlined, EditOutlined, LoadingOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Image, Input, Row, Space, Spin, Upload, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Card, Col, Row, Avatar, Button, Space, Input, Spin } from 'antd';
-import { CheckCircleFilled, DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import ModalNewMember from './configure org/modal-new member';
-import { useGetOrgQuery } from './orgSlice';
+import { URL } from '../../api/constants';
 import { getLoggedInUserV2 } from '../../api/services/auth';
+import './TeamPage.css';
 import ModalEditMember from './configure org/modal-edit member';
-
-const employees = [
-    {
-        id: 1,
-        name: 'Alexa Douglas',
-        title: 'Community Manager',
-        phone: '773-499-8188',
-        image: 'https://randomuser.me/api/portraits/women/1.jpg',
-    },
-    {
-        id: 2,
-        name: 'Arianna Fowler',
-        title: 'Designer',
-        phone: '941-337-6322',
-        image: 'https://randomuser.me/api/portraits/women/2.jpg',
-    },
-    {
-        id: 3,
-        name: 'Aubree Matthews',
-        title: 'Art Director',
-        phone: '',
-        image: 'https://randomuser.me/api/portraits/women/3.jpg',
-    },
-    {
-        id: 4,
-        name: 'Eli Warren',
-        title: 'Systems Administrator',
-        phone: '503-646-6739',
-        image: 'https://randomuser.me/api/portraits/men/1.jpg',
-    },
-    {
-        id: 5,
-        name: 'Jack Lee',
-        title: 'Engineer',
-        phone: '971-700-9847',
-        image: 'https://randomuser.me/api/portraits/men/2.jpg',
-    },
-    {
-        id: 6,
-        name: 'James Merriweather',
-        title: 'Executive Assistant',
-        phone: '',
-        image: 'https://randomuser.me/api/portraits/men/3.jpg',
-    },
-    {
-        id: 7,
-        name: 'Julian Davis',
-        title: 'Director of Engineering',
-        phone: '780-689-3483',
-        image: 'https://randomuser.me/api/portraits/men/4.jpg',
-    },
-];
+import ModalNewMember from './configure org/modal-new member';
+import { useRemoveEmployeeMutation, useRemoveEmployeeProfilePicMutation } from './employeeSlice';
+import { useGetOrgQuery } from './orgSlice';
 
 const iconStyle = { transition: 'transform 0.3s', cursor: 'pointer' };
 const handleMouseEnter = (e) => {
@@ -66,23 +17,89 @@ const handleMouseEnter = (e) => {
 const handleMouseLeave = (e) => {
     e.currentTarget.style.transform = 'scale(1)';
 };
+const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+};
+
+const beforeUpload = (file) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+        message.error('You can only upload JPG/PNG file!');
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+        message.error('Image must be smaller than 2MB!');
+    }
+    return isJpgOrPng && isLt2M;
+};
 
 const TeamPage = () => {
     const [isNewEmpModalOpen, setIsNewEmpModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [isImageloading, setIsImageLoading] = useState(false);
+    const [imageUrl, setImageUrl] = useState();
 
     const { data: { result: org } = { result: {} }, isLoading: isGetOrgLoading } = useGetOrgQuery(
         getLoggedInUserV2().organization_id
     );
+
+    const [removeEmployee, { isLoading: isRemoveLoading }] = useRemoveEmployeeMutation();
+    const [removeEmployeeProfilePic, { isLoading: isRemoveProfilePicLoading }] = useRemoveEmployeeProfilePicMutation();
 
     const handleClick = (e, action, employee) => {
         e.stopPropagation();
         if (action == 'edit') {
             setSelectedEmployee(employee);
             setIsEditModalOpen(true);
+        } else if (action == 'remove') {
+            message.loading();
+
+            removeEmployee(employee.id)
+                .unwrap()
+                .then((res) => {
+                    message.destroy();
+                    message.success(`Employee with username @${employee?.user?.username} deleted`);
+                })
+                .catch((e) => {
+                    message.error(`Failed to delete employee with username @${employee?.user?.username}`);
+                });
         }
     };
+
+    const handleChange = (info) => {
+        console.log('info: ', info);
+        if (info.file.status === 'uploading') {
+            setIsImageLoading(true);
+            return;
+        }
+        if (info.file.status === 'done') {
+            getBase64(info.file.originFileObj, (url) => {
+                setIsImageLoading(false);
+                setImageUrl(url);
+            });
+        }
+    };
+    const uploadButton = (
+        <button
+            style={{
+                border: 0,
+                background: 'none',
+            }}
+            type='button'
+        >
+            {isImageloading ? <LoadingOutlined /> : <PlusOutlined />}
+            <div
+                style={{
+                    marginTop: 8,
+                }}
+            >
+                Upload
+            </div>
+        </button>
+    );
 
     useEffect(() => {
         console.log(org);
@@ -91,7 +108,10 @@ const TeamPage = () => {
     return (
         <div style={{ padding: '24px' }}>
             <Spin spinning={isGetOrgLoading}>
-                <Row gutter={[20, 30]} justify='start'>
+                <Row
+                    gutter={[20, 30]}
+                    justify='start'
+                >
                     <Col span={24}>
                         <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
                             <Input.Search
@@ -103,7 +123,14 @@ const TeamPage = () => {
                             />
                         </div>
                     </Col>
-                    <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={6}>
+                    <Col
+                        xs={24}
+                        sm={12}
+                        md={12}
+                        lg={8}
+                        xl={8}
+                        xxl={6}
+                    >
                         <div
                             style={{
                                 textAlign: 'center',
@@ -139,7 +166,15 @@ const TeamPage = () => {
                         </div>
                     </Col>
                     {org?.employees?.map((employee) => (
-                        <Col key={employee.id} xs={24} sm={12} md={12} lg={8} xl={8} xxl={6}>
+                        <Col
+                            key={employee.id}
+                            xs={24}
+                            sm={12}
+                            md={12}
+                            lg={8}
+                            xl={8}
+                            xxl={6}
+                        >
                             <Card
                                 onClick={() => {
                                     console.log('card clicked');
@@ -151,46 +186,88 @@ const TeamPage = () => {
                                     transition: 'box-shadow 0.3s',
                                     boxShadow: '0 2px 2px rgba(0, 0, 0, 0.1)',
                                 }}
+                                className='rounded-3xl'
                                 hoverable
                                 cover={
-                                    <div style={{ display: 'flex', justifyContent: 'center', paddingTop: '8px' }}>
-                                        <Avatar
-                                            size={150}
-                                            alt={employee?.first_name + employee?.last_name}
-                                            src={employee?.profile_picture ?? null}
-                                        />
-                                    </div>
+                                    <Upload
+                                        name='profile_picture'
+                                        listType='picture-circle'
+                                        showUploadList={false}
+                                        action={`${URL}/employee/updateProfilePicture/${employee.id}`}
+                                        beforeUpload={beforeUpload}
+                                        onChange={handleChange}
+                                    >
+                                        {imageUrl ? (
+                                            <Image
+                                                src={imageUrl}
+                                                preview={{
+                                                    visible: false,
+                                                    mask: (
+                                                        <div className='flex space-x-2'>
+                                                            <Button
+                                                                type='primary'
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    e.preventDefault();
+                                                                    message.loading('Removing profile pic');
+                                                                    removeEmployeeProfilePic(employee.id)
+                                                                        .unwrap()
+                                                                        .then((res) => {
+                                                                            setImageUrl(null);
+                                                                        });
+                                                                }}
+                                                                icon={<DeleteOutlined className='  '></DeleteOutlined>}
+                                                            ></Button>
+                                                            <Button
+                                                                type='primary'
+                                                                onClick={(e) => {}}
+                                                                icon={<UploadOutlined className='  '></UploadOutlined>}
+                                                            ></Button>
+                                                        </div>
+                                                    ),
+                                                }}
+                                                alt='avatar'
+                                                className=' w-[100%] aspect-square object-contain rounded-full'
+                                                style={{ borderRadius: '9999px' }}
+                                            />
+                                        ) : (
+                                            uploadButton
+                                        )}{' '}
+                                    </Upload>
                                 }
+                                styles={{ actions: { borderRadius: '9999px' } }}
+                                classNames={{
+                                    actions: 'rounded-3xl bg-red-500',
+                                    body: 'rounded-3xl m-2',
+                                    cover: 'rounded-3xl p-4',
+                                }}
                                 actions={[
-                                    <CheckCircleFilled
-                                        style={iconStyle}
-                                        onMouseEnter={handleMouseEnter}
-                                        onMouseLeave={handleMouseLeave}
-                                        onClick={(e) => handleClick(e, 'active')}
-                                        key='activate'
-                                    />,
-                                    // TODO For deactivate user
-                                    // <CloseCircleFilled
-                                    // style={iconStyle}
-                                    // onMouseEnter={handleMouseEnter}
-                                    // onClick={(e)=>handleClick(e,"disactive")}
-                                    // onMouseLeave={handleMouseLeave}
-                                    //     key='Deactivate'
-                                    // />,
-                                    <EditOutlined
-                                        style={iconStyle}
-                                        onMouseEnter={handleMouseEnter}
-                                        onMouseLeave={handleMouseLeave}
+                                    <div
+                                        key={'edit-emp'}
+                                        className='flex  justify-center items-center  space-x-2'
                                         onClick={(e) => handleClick(e, 'edit', employee)}
-                                        key='edit'
-                                    />,
-                                    <DeleteOutlined
-                                        style={{ ...iconStyle, color: 'red', fontSize: '18px' }}
-                                        onMouseEnter={handleMouseEnter}
-                                        onMouseLeave={handleMouseLeave}
-                                        onClick={(e) => handleClick(e, 'remove')}
-                                        key='remove'
-                                    />,
+                                    >
+                                        <EditOutlined
+                                            style={{ ...iconStyle, fontSize: '16px' }}
+                                            onMouseEnter={handleMouseEnter}
+                                            onMouseLeave={handleMouseLeave}
+                                            key='edit'
+                                        />
+                                        <div className='text-xs'> Edit</div>
+                                    </div>,
+                                    <div
+                                        key={'delete-emp'}
+                                        className='flex  justify-center items-center  space-x-2'
+                                        onClick={(e) => handleClick(e, 'remove', employee)}
+                                    >
+                                        <DeleteOutlined
+                                            style={{ ...iconStyle, color: 'red', fontSize: '16px' }}
+                                            onMouseEnter={handleMouseEnter}
+                                            onMouseLeave={handleMouseLeave}
+                                            key='remove'
+                                        />
+                                        <div className=' text-xs text-red-400'> Delete</div>
+                                    </div>,
                                 ]}
                                 onMouseOver={(e) => {
                                     e.currentTarget.style.boxShadow =
@@ -202,9 +279,15 @@ const TeamPage = () => {
                             >
                                 <Card.Meta
                                     title={employee?.first_name + employee?.last_name}
-                                    description={employee?.user?.username}
+                                    description={
+                                        <div>
+                                            <div>@{employee?.user?.username}</div>
+                                            <div>
+                                                <p>{employee?.phone_number}</p>
+                                            </div>
+                                        </div>
+                                    }
                                 />
-                                <p style={{ marginTop: '8px' }}>{employee?.phone_number}</p>
                             </Card>
                         </Col>
                     ))}

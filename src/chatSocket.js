@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import { URL } from './constants.js';
 
-export let chatSocket = io(URL + '/chat');
+export let chatSocket = null;
 
 // Function to reinitialize the socket
 export const setChatSocketHeader = (authToken) => {

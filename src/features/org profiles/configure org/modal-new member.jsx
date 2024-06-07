@@ -48,6 +48,7 @@ export default function ModalNewMember({ isOpen, onOk, onCancel }) {
                         ...fields,
                         organization_id: parseInt(getLoggedInUserV2().organization_id),
                         birth_date: moment(fields.birth_date).format('YYYY-MM-DD'),
+                        permissions: fields.permissions.map((per) => ({ permission_id: per })),
                     })
                         .unwrap()
                         .then(() => {

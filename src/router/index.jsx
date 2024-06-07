@@ -46,7 +46,7 @@ export const router = createBrowserRouter([
     {
         path: '/',
         element: <BasicLayout />,
-        errorElement: <ErrorPage />,
+        //errorElement: <ErrorPage />,
         children: [
             //  { index: true, element: </> }, // TODO make a landing page for all types of users
             {
@@ -114,7 +114,7 @@ export const router = createBrowserRouter([
     {
         path: '/',
         element: <PublicLayout />,
-        errorElement: <ErrorPage />,
+       // errorElement: <ErrorPage />,
         children: [
             {
                 path: '/attendee-profile/:id',
@@ -149,7 +149,7 @@ export const router = createBrowserRouter([
     {
         path: 'home',
         element: <HomeLayout roles={[Roles.ATTENDEE]} />,
-        errorElement: <ErrorPage />,
+        //errorElement: <ErrorPage />,
         children: [
             { index: true, element: <HomePage /> },
             {
@@ -225,7 +225,7 @@ export const router = createBrowserRouter([
     {
         path: 'org',
         element: <OrganizerLayout roles={[Roles.EMPLOYEE]} />,
-        errorElement: <ErrorPage />,
+       // errorElement: <ErrorPage />,
         children: [
             { index: true, element: <ProfilePage /> },
             { path: ':orgId', element: <ProfilePage /> },

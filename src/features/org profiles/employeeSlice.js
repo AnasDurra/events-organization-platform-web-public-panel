@@ -36,7 +36,27 @@ export const employeeSlice = apiSlice.injectEndpoints({
             },
             invalidatesTags: ['one-org'],
         }),
+
+        removeEmployee: builder.mutation({
+            query: (id) => {
+                return {
+                    url: `employee/${id}`,
+                    method: 'DELETE',
+                };
+            },
+            invalidatesTags: ['one-org'],
+        }),
+        removeEmployeeProfilePic: builder.mutation({
+            query: (id) => {
+                return {
+                    url: `employee/profilePicture/${id}`,
+                    method: 'DELETE',
+                };
+            },
+            invalidatesTags: ['one-org'],
+        }),
     }),
 });
 
-export const { useNewEmployeeMutation, useEditEmployeeMutation, useGetPermissionsQuery } = employeeSlice;
+export const { useNewEmployeeMutation, useEditEmployeeMutation, useGetPermissionsQuery, useRemoveEmployeeMutation ,useRemoveEmployeeProfilePicMutation} =
+    employeeSlice;
