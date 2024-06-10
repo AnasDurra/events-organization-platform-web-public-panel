@@ -1,11 +1,20 @@
 import { Modal, Form, Input, Select, Typography, Space, Avatar } from 'antd';
 import moment from 'moment';
 
+import { useAbuseTypeQuery } from '../../api/services/reports';
+import { useEffect } from 'react';
+import { useState } from 'react';
 const { Option } = Select;
 const { Text } = Typography;
 
 const ReportMessageModal = ({ message, showReportMessageModal, setShowReportMessageModal }) => {
+    const { data: { result: abuseType } = { result: [] }, isLoading: isAbuseTypeLoading } = useAbuseTypeQuery();
     const [form] = Form.useForm();
+    const [showInputReason, setInputReasoon] = useState(false);
+
+    useEffect(() => {
+        console.log(abuseType);
+    }, [abuseType]);
 
     const handleOk = () => {
         form.validateFields()
@@ -86,11 +95,21 @@ const ReportMessageModal = ({ message, showReportMessageModal, setShowReportMess
                     label='Reason for Reporting:'
                     rules={[{ required: true, message: 'Please select a reason!' }]}
                 >
-                    <Select placeholder='Select a reason'>
-                        <Option value='spam'>Spam</Option>
-                        <Option value='abuse'>Abuse</Option>
-                        <Option value='inappropriate'>Inappropriate Content</Option>
-                        <Option value='other'>Other (Specify Below)</Option>
+                    <Select
+                        onChange={(id) => {
+                            if (id === '8') {
+                                setInputReasoon(true);
+                            } else {
+                                setInputReasoon(false);
+                            }
+                        }}
+                        placeholder='Select a reason'
+                    >
+                        {abuseType?.map((type) => (
+                            <Option key={type.value} value={type.value}>
+                                {type.label} {type.label === 'Other' ? '(Specify Below)' : ''}
+                            </Option>
+                        ))}
                     </Select>
                 </Form.Item>
 
@@ -98,16 +117,14 @@ const ReportMessageModal = ({ message, showReportMessageModal, setShowReportMess
                     noStyle
                     shouldUpdate={(prevValues, currentValues) => prevValues.reason !== currentValues.reason}
                 >
-                    {({ getFieldValue }) =>
-                        getFieldValue('reason') === 'other' ? (
-                            <Form.Item
-                                name='customReason'
-                                rules={[{ required: true, message: 'Please input your reason!' }]}
-                            >
-                                <Input placeholder='Please specify your reason' />
-                            </Form.Item>
-                        ) : null
-                    }
+                    {showInputReason ? (
+                        <Form.Item
+                            name='customReason'
+                            rules={[{ required: true, message: 'Please input your reason!' }]}
+                        >
+                            <Input placeholder='Please specify your reason' />
+                        </Form.Item>
+                    ) : null}
                 </Form.Item>
             </Form>
         </Modal>
