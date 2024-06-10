@@ -1,18 +1,19 @@
-import { Avatar, Button, Popover, Space, Typography } from 'antd';
+import { Avatar, Button, Popover, Space, Typography, Dropdown, Menu } from 'antd';
 import { TYPE_RECEIVED_MESSAGE, TYPE_SENT_MESSAGE, TYPE_SYSTEM_MESSAGE } from './CONSTANTS';
 
 import { useEffect, useState } from 'react';
-import { HeartFilled, LikeFilled, MessageOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { getLoggedInUserV2 } from '../../api/services/auth';
 import { userReacted } from '../../chatSocket';
 import { Icon } from '@iconify/react';
-import ReactedUsersList from './ReactedUsersList';
+import MessageReactions from './MessageReactions';
+import ReportMessageModal from './ReportMessageModal';
 
 function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedMessage, isFocused, chat_group_id }) {
     const [user] = useState(getLoggedInUserV2());
-    const [showText, setShowText] = useState(false);
-    const [showReactions, setshowReactions] = useState(true);
+    const [showDots, setShowDots] = useState(false);
+    const [showReactions, setShowReactions] = useState(true);
+    const [showReportMessageModal, setShowReportMessageModal] = useState(false);
 
     const [hideFocused, setHideFocused] = useState(false);
 
@@ -86,14 +87,35 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
             message_id: message_id,
         };
         userReacted(reactionData);
-        setshowReactions(false);
+        setShowReactions(false);
     };
 
-    const iconStyle = {
-        fontSize: '20px',
-        cursor: 'pointer',
-    };
-
+    const dotsMenu = (
+        <Menu>
+            <Menu.Item
+                onClick={() => replyOnMessage(message)}
+                key='1'
+                icon={<Icon icon='icomoon-free:reply' style={{ fontSize: '18px' }} />}
+            >
+                Reply
+            </Menu.Item>
+            {user.user_id != message.user.user_id && (
+                <Menu.Item
+                    onClick={() => setShowReportMessageModal(true)}
+                    key='2'
+                    icon={<Icon icon='ic:round-report-problem' style={{ fontSize: '18px', color: '#ffc800' }} />}
+                >
+                    Report
+                </Menu.Item>
+            )}
+            <Menu.Item
+                key='3'
+                icon={<Icon icon='material-symbols:delete' style={{ color: 'red', fontSize: '18px' }} />}
+            >
+                Delete
+            </Menu.Item>
+        </Menu>
+    );
     const reactionsContent = (
         <Space size={15} style={{ display: 'flex', alignItems: 'center' }}>
             <div
@@ -165,10 +187,10 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
         }
     }, [isFocused]);
     return (
-        <div style={containerStyle}>
+        <div style={containerStyle} onMouseEnter={() => setShowDots(true)} onMouseLeave={() => setShowDots(false)}>
             <Space
                 style={{ display: 'flex', alignItems: 'center', width: '80%' }}
-                onMouseLeave={() => setshowReactions(true)}
+                onMouseLeave={() => setShowReactions(true)}
             >
                 {message?.user?.user_id != user?.user_id && <Avatar size={50} src={message?.user?.avatar} />}
                 <Popover
@@ -225,101 +247,33 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
                                     <div style={{ fontSize: '10px', color: 'gray', marginTop: '4px' }}>
                                         {moment(message?.timestamp).format('h:mm A')}
                                     </div>
-                                    {message?.reactions?.length != 0 && (
-                                        <Space size={0}>
-                                            {message?.reactions?.map((reaction, index) => (
-                                                <div key={index}>
-                                                    <div
-                                                        key={reaction.reaction.id}
-                                                        style={{
-                                                            display: 'inline-flex',
-                                                            alignItems: 'center',
-                                                            marginRight: '10px',
-                                                            direction: 'ltr',
-                                                        }}
-                                                    >
-                                                        <>
-                                                            <Popover
-                                                                destroyTooltipOnHide
-                                                                mouseEnterDelay={1}
-                                                                title={'Reactions'}
-                                                                content={
-                                                                    <ReactedUsersList
-                                                                        message={message}
-                                                                        reaction_id={reaction?.reaction?.id}
-                                                                    />
-                                                                }
-                                                            >
-                                                                <Button
-                                                                    size='small'
-                                                                    type='text'
-                                                                    icon={
-                                                                        <Icon
-                                                                            icon={reaction?.reaction?.icon
-                                                                                .split('/')
-                                                                                .pop()}
-                                                                            style={{
-                                                                                fontSize: '18px',
-                                                                                color:
-                                                                                    reaction?.reaction?.label ===
-                                                                                        'Like' ||
-                                                                                    reaction?.reaction?.label ===
-                                                                                        'Dislike'
-                                                                                        ? 'blue'
-                                                                                        : reaction?.reaction?.label ===
-                                                                                          'Love'
-                                                                                        ? 'red'
-                                                                                        : 'black',
-                                                                            }}
-                                                                        />
-                                                                    }
-                                                                    onClick={() =>
-                                                                        handleReaction(
-                                                                            reaction?.reaction?.label?.toLowerCase(),
-                                                                            message?.message_id
-                                                                        )
-                                                                    }
-                                                                />
-                                                                <span style={{ marginLeft: '4px', fontSize: '14px' }}>
-                                                                    {
-                                                                        message?.reactions?.filter(
-                                                                            (reaction) =>
-                                                                                reaction.reaction.id ===
-                                                                                reaction?.reaction?.id
-                                                                        ).length
-                                                                    }
-                                                                </span>
-                                                            </Popover>
-                                                        </>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </Space>
-                                    )}
+                                    <MessageReactions message={message} handleReaction={handleReaction} />
                                 </Space>
-                                {/* {showText && (
-                                    <div
-                                        style={{
-                                            fontWeight: 'bold',
-                                            fontSize: '10px',
-                                            color: 'gray',
-                                            marginTop: '4px',
-                                        }}
-                                    >
-                                        <button
-                                            onClick={() => {
-                                                replyOnMessage(message);
-                                            }}
-                                        >
-                                            <span style={{ textDecoration: 'underline' }}>Reply</span>
-                                        </button>
-                                    </div>
-                                )} */}
                             </Space>
                         </Space>
                     </div>
                 </Popover>
+                {showDots && (
+                    <Dropdown
+                        overlay={dotsMenu}
+                        trigger={'click'}
+                        placement={type === TYPE_RECEIVED_MESSAGE ? 'bottomLeft' : 'bottomRight'}
+                    >
+                        <Button
+                            type='text'
+                            icon={<Icon icon='zondicons:dots-horizontal-triple' />}
+                            style={{ fontSize: '18px', marginRight: '20px' }}
+                        />
+                    </Dropdown>
+                )}
             </Space>
+            {showReportMessageModal && (
+                <ReportMessageModal
+                    message={message}
+                    showReportMessageModal={showReportMessageModal}
+                    setShowReportMessageModal={setShowReportMessageModal}
+                />
+            )}
         </div>
     );
 }

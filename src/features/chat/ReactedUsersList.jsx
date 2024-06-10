@@ -1,27 +1,20 @@
 import React from 'react';
 import { Avatar, List } from 'antd';
 
-const ReactedUsersList = ({ message, reaction_id }) => {
-    const filteredReactions = message.reactions.filter((reaction) => reaction.reaction.id === reaction_id);
-
-    const users = filteredReactions.map((reaction) => ({
-        ...reaction.reacted_by,
-        reactionDate: reaction.reaction_date,
-    }));
-
+const ReactedUsersList = ({ reactedUsers }) => {
     return (
         <div style={{ minWidth: '30vw' }} className='bg-white rounded overflow-hidden'>
             <List
                 itemLayout='horizontal'
-                dataSource={users}
-                renderItem={(user) => (
+                dataSource={reactedUsers}
+                renderItem={(item) => (
                     <List.Item>
                         <List.Item.Meta
-                            avatar={<Avatar src={user.avatar} />}
+                            avatar={<Avatar src={item?.avatar} />}
                             title={
                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <span>{user.username}</span>
-                                    {user.is_organizer ? (
+                                    <span>{item?.username}</span>
+                                    {item?.is_organizer ? (
                                         <span style={{ color: 'gray' }}>Organizer</span>
                                     ) : (
                                         <span style={{ color: 'gray' }}>Attendee</span>
@@ -30,7 +23,7 @@ const ReactedUsersList = ({ message, reaction_id }) => {
                             }
                             description={
                                 <span className='text-xs text-gray-400'>
-                                    {new Date(user.reactionDate).toLocaleString('en-US', {
+                                    {new Date(item?.reaction_date).toLocaleString('en-US', {
                                         timeZone: 'America/New_York',
                                     })}
                                 </span>

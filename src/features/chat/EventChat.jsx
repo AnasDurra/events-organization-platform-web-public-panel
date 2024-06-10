@@ -77,7 +77,17 @@ const EventChat = ({ chat_group_id }) => {
     }, [data]);
 
     return (
-        <div style={{ width: '100%', margin: '0 auto', padding: '10px' }}>
+        <div
+            style={{
+                width: '100%',
+                margin: '0 auto',
+                padding: '20px',
+                backgroundColor: '#f4f7f6',
+                border: '1px solid #e4e4e4',
+                borderRadius: '8px',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+            }}
+        >
             <Spin spinning={isLoading}>
                 <div style={{ height: '450px', overflowY: 'auto' }}>
                     <div
