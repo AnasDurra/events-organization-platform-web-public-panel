@@ -6,9 +6,10 @@ import { HeartFilled, LikeFilled, MessageOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { getLoggedInUserV2 } from '../../api/services/auth';
 import { userReacted } from '../../chatSocket';
+import { Icon } from '@iconify/react';
+import ReactedUsersList from './ReactedUsersList';
 
 function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedMessage, isFocused, chat_group_id }) {
-    console.log('leees');
     const [user] = useState(getLoggedInUserV2());
     const [showText, setShowText] = useState(false);
     const [showReactions, setshowReactions] = useState(true);
@@ -102,7 +103,15 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
             >
                 <Button
                     type='text'
-                    icon={<LikeFilled style={{ ...iconStyle, color: '#1890ff' }} />}
+                    icon={
+                        <Icon
+                            icon={'mdi:like'}
+                            style={{
+                                fontSize: '18px',
+                                color: 'blue',
+                            }}
+                        />
+                    }
                     onClick={() => handleReaction('like', message?.message_id)}
                 />
             </div>
@@ -113,10 +122,37 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
             >
                 <Button
                     type='text'
-                    icon={<HeartFilled style={{ ...iconStyle, color: '#eb2f96' }} />}
+                    icon={
+                        <Icon
+                            icon={'flat-color-icons:like'}
+                            style={{
+                                fontSize: '18px',
+                                color: 'blue',
+                            }}
+                        />
+                    }
                     onClick={() => handleReaction('love', message?.message_id)}
                 />
             </div>
+            {/* <div
+                onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.2)')}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                style={{ transition: 'transform 0.2s' }}
+            >
+                <Button
+                    type='text'
+                    icon={
+                        <Icon
+                            icon={'mdi:dislike-outline'}
+                            style={{
+                                fontSize: '18px',
+                                color: 'blue',
+                            }}
+                        />
+                    }
+                    onClick={() => handleReaction('dislike', message?.message_id)}
+                />
+            </div> */}
         </Space>
     );
 
@@ -149,7 +185,6 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
                             replyOnMessage(message);
                         }}
                     >
-                        {/* previousUser?.user_id != message?.user?.user_id && */}
                         {message?.user?.user_id !== user?.user_id && (
                             <div style={{ fontWeight: 'bold', fontSize: '13px', marginBottom: '4px' }}>
                                 {message?.user?.username}
@@ -203,53 +238,59 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
                                                             direction: 'ltr',
                                                         }}
                                                     >
-                                                        {reaction.reaction.id === '2' && (
-                                                            <>
+                                                        <>
+                                                            <Popover
+                                                                destroyTooltipOnHide
+                                                                mouseEnterDelay={1}
+                                                                title={'Reactions'}
+                                                                content={
+                                                                    <ReactedUsersList
+                                                                        message={message}
+                                                                        reaction_id={reaction?.reaction?.id}
+                                                                    />
+                                                                }
+                                                            >
                                                                 <Button
                                                                     size='small'
                                                                     type='text'
                                                                     icon={
-                                                                        <LikeFilled
-                                                                            style={{ ...iconStyle, color: '#1890ff' }}
+                                                                        <Icon
+                                                                            icon={reaction?.reaction?.icon
+                                                                                .split('/')
+                                                                                .pop()}
+                                                                            style={{
+                                                                                fontSize: '18px',
+                                                                                color:
+                                                                                    reaction?.reaction?.label ===
+                                                                                        'Like' ||
+                                                                                    reaction?.reaction?.label ===
+                                                                                        'Dislike'
+                                                                                        ? 'blue'
+                                                                                        : reaction?.reaction?.label ===
+                                                                                          'Love'
+                                                                                        ? 'red'
+                                                                                        : 'black',
+                                                                            }}
                                                                         />
                                                                     }
                                                                     onClick={() =>
-                                                                        handleReaction('like', message?.message_id)
+                                                                        handleReaction(
+                                                                            reaction?.reaction?.label?.toLowerCase(),
+                                                                            message?.message_id
+                                                                        )
                                                                     }
                                                                 />
                                                                 <span style={{ marginLeft: '4px', fontSize: '14px' }}>
                                                                     {
                                                                         message?.reactions?.filter(
-                                                                            (reaction) => reaction.reaction.id === '2'
+                                                                            (reaction) =>
+                                                                                reaction.reaction.id ===
+                                                                                reaction?.reaction?.id
                                                                         ).length
                                                                     }
                                                                 </span>
-                                                            </>
-                                                        )}
-
-                                                        {reaction.reaction.id === '1' && (
-                                                            <>
-                                                                <Button
-                                                                    size='small'
-                                                                    type='text'
-                                                                    icon={
-                                                                        <HeartFilled
-                                                                            style={{ ...iconStyle, color: '#eb2f96' }}
-                                                                        />
-                                                                    }
-                                                                    onClick={() =>
-                                                                        handleReaction('love', message?.message_id)
-                                                                    }
-                                                                />
-                                                                <span style={{ marginLeft: '4px', fontSize: '14px' }}>
-                                                                    {
-                                                                        message?.reactions?.filter(
-                                                                            (reaction) => reaction.reaction.id === '1'
-                                                                        ).length
-                                                                    }
-                                                                </span>
-                                                            </>
-                                                        )}
+                                                            </Popover>
+                                                        </>
                                                     </div>
                                                 </div>
                                             ))}

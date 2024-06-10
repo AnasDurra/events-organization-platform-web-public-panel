@@ -100,7 +100,12 @@ const EventChat = ({ chat_group_id }) => {
                                     ? false
                                     : true
                             }
-                            loader={<Spin spinning={true} style={{ margin: '20px auto', fontSize: '24px' }} />}
+                            loader={
+                                <Spin
+                                    spinning={true}
+                                    style={{ margin: '20px auto', fontSize: '24px', height: '5em' }}
+                                />
+                            }
                             endMessage={
                                 <>
                                     <Typography.Title
