@@ -41,6 +41,8 @@ import AttendeeProfile from '../features/Attendees Profiles/AttendeeProfile';
 import HomeLayout from '../components/Layouts/home/HomeLayout';
 import DesignBadge from '../features/gamification/badges/design/DesignBadge';
 import SeedPage from '../api/services/SeedPage';
+import ViewShop from '../features/gamification/shop/ViewShop';
+import ShopTickets from '../features/gamification/shop/ShopTickets';
 
 export const router = createBrowserRouter([
     {
@@ -114,7 +116,7 @@ export const router = createBrowserRouter([
     {
         path: '/',
         element: <PublicLayout />,
-       // errorElement: <ErrorPage />,
+        // errorElement: <ErrorPage />,
         children: [
             {
                 path: '/attendee-profile/:id',
@@ -219,13 +221,23 @@ export const router = createBrowserRouter([
                     },
                 ],
             },
+            {
+                path: 'shop',
+                element: <ViewShop />,
+                children: [
+                    {
+                        index: true,
+                        element: <ShopTickets></ShopTickets>,
+                    },
+                ],
+            },
         ],
     },
 
     {
         path: 'org',
         element: <OrganizerLayout roles={[Roles.EMPLOYEE]} />,
-       // errorElement: <ErrorPage />,
+        // errorElement: <ErrorPage />,
         children: [
             { index: true, element: <ProfilePage /> },
             { path: ':orgId', element: <ProfilePage /> },

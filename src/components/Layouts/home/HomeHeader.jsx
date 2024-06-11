@@ -7,6 +7,7 @@ import {
     HomeFilled,
     HomeOutlined,
     LogoutOutlined,
+    ShopOutlined,
     UserOutlined,
 } from '@ant-design/icons';
 import React from 'react';
@@ -26,12 +27,18 @@ const navigationItems = [
         path: '/home/following',
     },
     {
-        label: 'Trending 🔥 ',
+        label: '🔥Trending',
         filledIcon: <FireFilled className='text-red-300 text-[1.2em]' />,
         outlinedIcon: <FireOutlined className='text-red-300 text-[1.2em]' />,
         path: '/home/popular',
     },
     { label: 'Explore', filledIcon: <ExperimentFilled />, outlinedIcon: <ExperimentOutlined />, path: '/home/explore' },
+    {
+        label: 'Shop',
+        filledIcon: <ShopOutlined className='text-[1.2em]' />,
+        outlinedIcon: <ShopOutlined className='text-[1.2em]' />,
+        path: '/home/shop',
+    },
 ];
 
 export default function HomeHeader() {
@@ -80,7 +87,7 @@ export default function HomeHeader() {
                             <div
                                 key={index}
                                 className='font-sans hover:cursor-pointer text-lg text-nowrap  hover:text-[#AA8B56]'
-                                onClick={()=>navigate(item.path)}
+                                onClick={() => navigate(item.path)}
                             >
                                 {item.label}
                             </div>

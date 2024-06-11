@@ -12,7 +12,9 @@ const HomeLayout = ({ roles }) => {
 
     const theme = {
         token: { colorPrimary: '#4E6C50', fontFamily: 'Roboto' },
-        components: { Layout: { headerBg: lightenColor('#4E6C50', 70), bodyBg: '#F9F9F9' } },
+        components: {
+            Layout: { headerBg: lightenColor('#4E6C50', 70), bodyBg: '#F9F9F9' },
+        },
         cssVar: true,
     };
 
@@ -48,7 +50,11 @@ const HomeLayout = ({ roles }) => {
                 />
             )}
 
-            <Layout className='h-[100svh]' style={{ scrollbarWidth: 0 }} hidden={hideContent}>
+            <Layout
+                className='h-[100svh]'
+                style={{ scrollbarWidth: 0 }}
+                hidden={hideContent}
+            >
                 <HomeHeader />
 
                 <Layout>

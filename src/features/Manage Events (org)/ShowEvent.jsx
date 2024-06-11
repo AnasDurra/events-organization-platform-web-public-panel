@@ -5,7 +5,7 @@ import {
     MoreOutlined,
     ScheduleOutlined,
     TagsOutlined,
-    UserOutlined
+    UserOutlined,
 } from '@ant-design/icons';
 import {
     Button,
@@ -24,7 +24,7 @@ import {
     Tabs,
     Tag,
     Tooltip,
-    Typography
+    Typography,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
@@ -94,7 +94,7 @@ const ShowEvent = () => {
     useEffect(() => {
         const loggedUser = getLoggedInUser();
         setUser(loggedUser);
-        console.log(loggedUser);
+        console.log('logged: ',loggedUser);
     }, []);
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -103,14 +103,23 @@ const ShowEvent = () => {
                 event={eventData}
                 onClose={handleCloseRegistrationModal}
             />
+            {console.log('user: ', user)}
 
-            <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}>
+            <Skeleton
+                loading={eventDataIsLoading}
+                active
+                round
+                paragraph={{ rows: 10 }}
+            >
                 <Card
                     style={{ width: '100%' }}
                     bodyStyle={{ padding: '10px 20px' }}
                     cover={
                         <>
-                            <Image height={250} src='https://picsum.photos/1000/300' />
+                            <Image
+                                height={250}
+                                src='https://picsum.photos/1000/300'
+                            />
                         </>
                     }
                 >
@@ -122,17 +131,32 @@ const ShowEvent = () => {
                                     justifyContent: 'space-between',
                                 }}
                             >
-                                <Space size={0} direction='vertical' style={{ marginRight: '1.5em' }}>
+                                <Space
+                                    size={0}
+                                    direction='vertical'
+                                    style={{ marginRight: '1.5em' }}
+                                >
                                     <Space>
-                                        <Typography.Title style={{ marginTop: '10px' }} level={4}>
+                                        <Typography.Title
+                                            style={{ marginTop: '10px' }}
+                                            level={4}
+                                        >
                                             {eventData?.result?.title}
                                         </Typography.Title>
-                                        <Typography.Title style={{ marginTop: '10px' }} level={5} disabled>
+                                        <Typography.Title
+                                            style={{ marginTop: '10px' }}
+                                            level={5}
+                                            disabled
+                                        >
                                             ({eventData?.result?.event_type})
                                         </Typography.Title>
                                     </Space>
                                     <Space>
-                                        <Typography.Text level={5} disabled style={{ marginTop: '0px' }}>
+                                        <Typography.Text
+                                            level={5}
+                                            disabled
+                                            style={{ marginTop: '0px' }}
+                                        >
                                             {(() => {
                                                 const registrationStartDate = new Date(
                                                     eventData?.result?.registration_start_date
@@ -149,7 +173,11 @@ const ShowEvent = () => {
                                                 return `${differenceInDays} days ago`;
                                             })()}
                                         </Typography.Text>
-                                        <Typography.Text level={5} underline style={{ marginTop: '0px' }}>
+                                        <Typography.Text
+                                            level={5}
+                                            underline
+                                            style={{ marginTop: '0px' }}
+                                        >
                                             by @
                                             <Link to={`/org/${eventData?.result?.organization?.id}`}>
                                                 {eventData?.result?.organization?.name}
@@ -157,10 +185,13 @@ const ShowEvent = () => {
                                         </Typography.Text>
                                     </Space>
                                 </Space>
-                                {user?.role_id == 2 && user?.organization_id == eventData?.result?.organization?.id && (
+                                {user?.role_id == 3 && user?.organization_id == eventData?.result?.organization?.id && (
                                     <div style={{ textAlign: 'end' }}>
                                         <Row>
-                                            <Col xs={24} sm={8}>
+                                            <Col
+                                                xs={24}
+                                                sm={8}
+                                            >
                                                 <Tooltip title='Edit Event'>
                                                     <Button
                                                         icon={
@@ -173,7 +204,10 @@ const ShowEvent = () => {
                                                     />
                                                 </Tooltip>
                                             </Col>
-                                            <Col xs={24} sm={8}>
+                                            <Col
+                                                xs={24}
+                                                sm={8}
+                                            >
                                                 <Tooltip title='Show Attendees'>
                                                     <Button
                                                         icon={<Icon icon='fa6-solid:users' />}
@@ -181,7 +215,10 @@ const ShowEvent = () => {
                                                     />
                                                 </Tooltip>
                                             </Col>
-                                            <Col xs={24} sm={8}>
+                                            <Col
+                                                xs={24}
+                                                sm={8}
+                                            >
                                                 <Dropdown
                                                     overlay={
                                                         <Menu>
@@ -224,7 +261,10 @@ const ShowEvent = () => {
                                         label: 'Event Details',
                                         children: (
                                             <Row gutter={[50, 30]}>
-                                                <Col xs={24} md={12}>
+                                                <Col
+                                                    xs={24}
+                                                    md={12}
+                                                >
                                                     <Table
                                                         style={{
                                                             height: '100%',
@@ -238,7 +278,10 @@ const ShowEvent = () => {
                                                         pagination={false}
                                                     />
                                                 </Col>
-                                                <Col xs={24} md={12}>
+                                                <Col
+                                                    xs={24}
+                                                    md={12}
+                                                >
                                                     <Descriptions
                                                         bordered
                                                         column={1}
@@ -292,7 +335,11 @@ const ShowEvent = () => {
 
                                                 <Col span={24}>
                                                     <Divider />
-                                                    <Typography.Title style={{ margin: '0px' }} level={3} strong>
+                                                    <Typography.Title
+                                                        style={{ margin: '0px' }}
+                                                        level={3}
+                                                        strong
+                                                    >
                                                         Event Overview
                                                     </Typography.Title>
                                                 </Col>
@@ -305,7 +352,10 @@ const ShowEvent = () => {
                                                             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                                         }}
                                                     >
-                                                        <Space direction='vertical' wrap>
+                                                        <Space
+                                                            direction='vertical'
+                                                            wrap
+                                                        >
                                                             <Typography.Text>
                                                                 {eventData?.result?.description}
                                                             </Typography.Text>
@@ -315,11 +365,18 @@ const ShowEvent = () => {
 
                                                 <Col span={24}>
                                                     <Divider />
-                                                    <Typography.Title style={{ margin: '0px' }} level={3} strong>
+                                                    <Typography.Title
+                                                        style={{ margin: '0px' }}
+                                                        level={3}
+                                                        strong
+                                                    >
                                                         Event Detials
                                                     </Typography.Title>
                                                 </Col>
-                                                <Col xs={24} lg={12}>
+                                                <Col
+                                                    xs={24}
+                                                    lg={12}
+                                                >
                                                     <div
                                                         style={{
                                                             display: 'flex',
@@ -327,7 +384,10 @@ const ShowEvent = () => {
                                                             width: '100%',
                                                         }}
                                                     >
-                                                        <Row style={{ flex: 1 }} gutter={[20, 10]}>
+                                                        <Row
+                                                            style={{ flex: 1 }}
+                                                            gutter={[20, 10]}
+                                                        >
                                                             <Col span={24}>
                                                                 <Card
                                                                     type='inner'
@@ -339,7 +399,10 @@ const ShowEvent = () => {
                                                                         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                                                     }}
                                                                 >
-                                                                    <Space direction='vertical' size={30}>
+                                                                    <Space
+                                                                        direction='vertical'
+                                                                        size={30}
+                                                                    >
                                                                         <Space wrap>
                                                                             <TagsOutlined />
                                                                             <Typography.Text strong>
@@ -459,7 +522,10 @@ const ShowEvent = () => {
                                                         </Row>
                                                     </div>
                                                 </Col>
-                                                <Col xs={24} lg={12}>
+                                                <Col
+                                                    xs={24}
+                                                    lg={12}
+                                                >
                                                     <Card
                                                         type='inner'
                                                         style={{
@@ -469,7 +535,11 @@ const ShowEvent = () => {
                                                             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                                                         }}
                                                     >
-                                                        <Space direction='vertical' style={{ width: '100%' }} size={20}>
+                                                        <Space
+                                                            direction='vertical'
+                                                            style={{ width: '100%' }}
+                                                            size={20}
+                                                        >
                                                             <Space>
                                                                 <ScheduleOutlined />
                                                                 <Typography.Text
