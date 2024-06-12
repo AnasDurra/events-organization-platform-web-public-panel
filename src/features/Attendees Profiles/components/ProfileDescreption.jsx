@@ -1,9 +1,16 @@
 import { CheckOutlined, StarFilled, UserOutlined } from '@ant-design/icons';
-import { Avatar, Col, Row, Statistic, Tooltip, Typography } from 'antd';
-import React from 'react';
+import { Avatar, Button, Col, Row, Statistic, Tooltip, Typography } from 'antd';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useGetAttendeeBadgesQuery } from '../../gamification/gamificationSlice';
+import { getLoggedInUserV2 } from '../../../api/services/auth';
+import BadgesModal from './BadgesModal';
 
 const ProfileDescreption = () => {
+    const [isBadgesModalOpen, setIsBadgesModalOpen] = useState(true);
+
+    const { data: { result: badges } = { result: [] } } = useGetAttendeeBadgesQuery(getLoggedInUserV2()?.attendee_id);
+
     return (
         <div>
             <Row gutter={[20, 10]}>
@@ -111,8 +118,11 @@ const ProfileDescreption = () => {
                         valueStyle={{ fontSize: '0px' }}
                         prefix={
                             <Avatar.Group>
-                                {badges.map((badge) => (
-                                    <Tooltip title={badge.name} key={badge.id}>
+                                {/*     {badges.map((badge) => (
+                                    <Tooltip
+                                        title={badge.name}
+                                        key={badge.id}
+                                    >
                                         <Avatar
                                             size={35}
                                             style={{
@@ -129,12 +139,45 @@ const ProfileDescreption = () => {
                                             </span>
                                         </Avatar>
                                     </Tooltip>
+                                ))} */}
+                                {badges.slice(0, 3).map((bdg) => (
+                                    <Avatar
+                                        key={bdg.badge_id}
+                                        size={50}
+                                        className='bg-stone-100'
+                                    >
+                                        <img
+                                            src={`data:image/svg+xml;utf8,${encodeURIComponent(bdg?.badge_shape?.svg)}`}
+                                            width={50}
+                                        />
+                                    </Avatar>
                                 ))}
+                                <Avatar
+                                    size={50}
+                                    className='bg-stone-100 hover:bg-gray-200 hover:cursor-pointer text-black border-2 border-red-400 '
+                                    onClick={() => setIsBadgesModalOpen(true)}
+                                >
+                                    <div
+                                        className='text-lg  p-1 font-bold text-gray-600 '
+                                        type='text'
+                                    >
+                                        View all
+                                    </div>
+                                </Avatar>
                             </Avatar.Group>
                         }
                     />
                 </Col>
             </Row>
+
+            <BadgesModal
+                isOpen={isBadgesModalOpen}
+                myBadges={badges}
+                onClose={() => {
+                    console.log('close');
+                    setIsBadgesModalOpen(false);
+                }}
+            />
         </div>
     );
 };

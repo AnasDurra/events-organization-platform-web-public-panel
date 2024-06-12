@@ -73,7 +73,7 @@ export default function CategoriesMenu() {
             defaultSelectedKeys={['tickets']}
             mode='inline'
             items={items}
-            className=' rounded-lg h-full  '
+            className=' rounded-lg h-fit shadow-lg  '
         />
     );
 }

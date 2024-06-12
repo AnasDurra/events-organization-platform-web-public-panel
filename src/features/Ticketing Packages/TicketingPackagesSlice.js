@@ -7,6 +7,7 @@ export const ticketingPackagesSlice = apiSlice.injectEndpoints({
         }),
         getAttendeeBalance: builder.query({
             query: (id) => `/payment/attendee/balance/${id}`,
+            providesTags:['tickets-balance']
         }),
         getAttendeeTicketsHistory: builder.query({
             query: (id) => `payment/attendee/${id}/ticketsHistory`,

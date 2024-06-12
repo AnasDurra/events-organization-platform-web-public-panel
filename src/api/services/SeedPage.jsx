@@ -4,7 +4,7 @@ import { URL } from '../constants';
 
 export default function SeedPage() {
     const handleSeedClick = () => {
-        fetch(URL + '/seed/admin')
+        fetch(URL + '/seed')
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
