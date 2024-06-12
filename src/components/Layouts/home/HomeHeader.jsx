@@ -14,10 +14,14 @@ import React from 'react';
 import { GoNorthStar } from 'react-icons/go';
 import { Link, useNavigate } from 'react-router-dom';
 import TicketsCard from '../../../features/landing/TicketsCard';
-import { Badge, Button, Dropdown, Layout, Menu } from 'antd';
+import { Badge, Button, Divider, Dropdown, Layout, Menu, Space } from 'antd';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { getLoggedInUserV2 } from '../../../api/services/auth';
 import { useGetAttendeeBalanceQuery } from '../../../features/Ticketing Packages/TicketingPackagesSlice';
+import { SiGamejolt } from 'react-icons/si';
+import { TiTick, TiTicket } from 'react-icons/ti';
+import HomeHeaderPoints from './HomeHeaderPoints';
+
 const navigationItems = [
     { label: 'Home', filledIcon: <HomeFilled />, outlinedIcon: <HomeOutlined />, path: '/home' },
     {
@@ -44,9 +48,7 @@ const navigationItems = [
 export default function HomeHeader() {
     const navigate = useNavigate();
 
-    const { data: { result: balance } = { result: {} }, isLoading: isBalanceLoading } = useGetAttendeeBalanceQuery(
-        getLoggedInUserV2()?.attendee_id
-    );
+    
     const menu = (
         <Menu style={{ borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', width: '180px' }}>
             <Menu.Item
@@ -81,7 +83,7 @@ export default function HomeHeader() {
                 >
                     Eventure
                 </div>
-                <div className='flex items-center gap-x-4 w-full justify-end  sm:justify-between  '>
+                <div className='flex items-center gap-x-4 w-full justify-end  sm:justify-between w-full  '>
                     <div className=' items-center gap-x-4 hidden sm:flex'>
                         {navigationItems.map((item, index) => (
                             <div
@@ -93,8 +95,9 @@ export default function HomeHeader() {
                             </div>
                         ))}
                     </div>
-                    <div className='flex items-center gap-x-2'>
-                        <div
+                    <div className='flex items-center justify-end gap-x-2 w-full '>
+                        <HomeHeaderPoints />
+                        {/*  <div
                             onClick={() => navigate('tickets')}
                             className='flex items-center  border-2 bg-primary/10 border-primary shadow-sm rounded-3xl h-[4svh] px-2 hover:shadow-lg hover:cursor-pointer'
                             style={{ transition: 'transform 0.3s' }}
@@ -102,7 +105,7 @@ export default function HomeHeader() {
                             onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
                         >
                             <TicketsCard ticketsCount={balance?.balance} />
-                        </div>
+                        </div> */}
                         <Badge
                             count={5}
                             size='small'

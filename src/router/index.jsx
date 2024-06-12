@@ -43,6 +43,8 @@ import DesignBadge from '../features/gamification/badges/design/DesignBadge';
 import SeedPage from '../api/services/SeedPage';
 import ViewShop from '../features/gamification/shop/ViewShop';
 import ShopTickets from '../features/gamification/shop/ShopTickets';
+import ViewPointsBalance from '../features/gamification/ViewPointsBalance';
+import ViewRPsBalance from '../features/gamification/ViewRPsBalance';
 
 export const router = createBrowserRouter([
     {
@@ -169,6 +171,14 @@ export const router = createBrowserRouter([
             {
                 path: 'tickets',
                 element: <TicketsBalancePage />,
+            },
+            {
+                path: 'points',
+                element: <ViewPointsBalance />,
+            },
+            {
+                path: 'RPs',
+                element: <ViewRPsBalance />,
             },
             {
                 path: 'profile',

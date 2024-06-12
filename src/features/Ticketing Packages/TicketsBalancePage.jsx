@@ -40,7 +40,7 @@ export default function TicketsBalancePage() {
                             {' '}
                             Tickets Balance
                         </Typography.Text>
-                        <TiTicket className='text-[5em] text-yellow-500' />
+                        <TiTicket className='text-[5em] text-rose-500' />
                         <Spin spinning={isBalanceLoading}>
                             <Typography.Text
                                 code

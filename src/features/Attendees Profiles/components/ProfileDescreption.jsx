@@ -7,7 +7,7 @@ import { getLoggedInUserV2 } from '../../../api/services/auth';
 import BadgesModal from './BadgesModal';
 
 const ProfileDescreption = () => {
-    const [isBadgesModalOpen, setIsBadgesModalOpen] = useState(true);
+    const [isBadgesModalOpen, setIsBadgesModalOpen] = useState(false);
 
     const { data: { result: badges } = { result: [] } } = useGetAttendeeBadgesQuery(getLoggedInUserV2()?.attendee_id);
 

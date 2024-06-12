@@ -3,9 +3,21 @@ import { getLoggedInUserV2 } from '../../api/services/auth';
 
 export const gamificationSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
+        getAttendeePoints: builder.query({
+            query: (attendee_id) => `gamification/attendee/${attendee_id}/points`,
+        }),
+
+        getAttendeePointsHistory: builder.query({
+            query: (attendee_id) => `gamification/attendee/${attendee_id}/points-history`,
+        }),
+
         getAttendeeRPs: builder.query({
             query: (attendee_id) => `gamification/attendee/${attendee_id}/redeemable-points`,
             providesTags: ['rp-balance'],
+        }),
+
+        getAttendeeRPsHistory: builder.query({
+            query: (attendee_id) => `gamification/attendee/${attendee_id}/redeemable-points-history`,
         }),
 
         getAttendeeBadges: builder.query({
@@ -39,7 +51,10 @@ export const gamificationSlice = apiSlice.injectEndpoints({
 });
 
 export const {
+    useGetAttendeePointsQuery,
+    useGetAttendeePointsHistoryQuery,
     useGetAttendeeRPsQuery,
+    useGetAttendeeRPsHistoryQuery,
     useGetPrizesQuery,
     useGetBadgesQuery,
     useGetAttendeeBadgesQuery,

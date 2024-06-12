@@ -96,7 +96,7 @@ export default function AttendeeTicketsHistory() {
                             </TimelineDot>
                         ) : (
                             <TimelineDot style={{ color: 'transparent', backgroundColor: 'transparent' }}>
-                                <TiTicket className='text-yellow-500 text-[1.5em]' />
+                                <TiTicket className='text-rose-500 text-[1.5em]' />
                             </TimelineDot>
                         )}
                         <TimelineConnector />
