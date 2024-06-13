@@ -41,6 +41,7 @@ import AttendeeProfile from '../features/Attendees Profiles/AttendeeProfile';
 import HomeLayout from '../components/Layouts/home/HomeLayout';
 import DesignBadge from '../features/gamification/badges/design/DesignBadge';
 import SeedPage from '../api/services/SeedPage';
+import OrgReports from '../features/org profiles/reports/OrgReports';
 
 export const router = createBrowserRouter([
     {
@@ -250,6 +251,7 @@ export const router = createBrowserRouter([
                 ],
             },
             { path: 'tickets', element: <OrgTicketsPage /> },
+            { path: 'reports', element: <OrgReports /> },
         ],
     },
 ]);

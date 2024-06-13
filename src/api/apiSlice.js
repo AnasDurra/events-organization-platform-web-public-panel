@@ -26,6 +26,7 @@ export const apiSlice = createApi({
         'auth',
         'followers-list',
         'blocked-list',
+        'reports',
     ],
 
     endpoints: () => ({}),

@@ -8,8 +8,24 @@ import { userReacted } from '../../chatSocket';
 import { Icon } from '@iconify/react';
 import MessageReactions from './MessageReactions';
 import ReportMessageModal from './ReportMessageModal';
+import { useLazyIsMessageReportedQuery } from '../../api/services/reports';
+import { useNotification } from '../../utils/NotificationContext';
 
-function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedMessage, isFocused, chat_group_id }) {
+function Message({
+    message,
+    previousUser,
+    type,
+    replyOnMessage,
+    scrollToRepliedMessage,
+    isFocused,
+    chat_group_id,
+    eventID,
+    orgID,
+}) {
+    const { openNotification } = useNotification();
+
+    const [checkIsMessageReported, { isFetching: isIsMessageReportedFetching }] = useLazyIsMessageReportedQuery();
+
     const [user] = useState(getLoggedInUserV2());
     const [showDots, setShowDots] = useState(false);
     const [showReactions, setShowReactions] = useState(true);
@@ -101,7 +117,33 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
             </Menu.Item>
             {user.user_id != message.user.user_id && (
                 <Menu.Item
-                    onClick={() => setShowReportMessageModal(true)}
+                    onClick={() => {
+                        checkIsMessageReported(message?.message_id)
+                            .unwrap()
+                            .then((res) => {
+                                console.log(res);
+                                if (res.error) {
+                                    openNotification(
+                                        'error',
+                                        'Error',
+                                        'There was an error checking the report status. Please try again later.',
+                                        'bottomRight'
+                                    );
+                                } else if (res?.result === false) {
+                                    setShowReportMessageModal(true);
+                                } else {
+                                    openNotification(
+                                        'info',
+                                        'Already Reported',
+                                        'You have already reported this message, and is under review.',
+                                        'topLeft'
+                                    );
+                                }
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            });
+                    }}
                     key='2'
                     icon={<Icon icon='ic:round-report-problem' style={{ fontSize: '18px', color: '#ffc800' }} />}
                 >
@@ -260,6 +302,7 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
                         placement={type === TYPE_RECEIVED_MESSAGE ? 'bottomLeft' : 'bottomRight'}
                     >
                         <Button
+                            loading={isIsMessageReportedFetching}
                             type='text'
                             icon={<Icon icon='zondicons:dots-horizontal-triple' />}
                             style={{ fontSize: '18px', marginRight: '20px' }}
@@ -270,6 +313,8 @@ function Message({ message, previousUser, type, replyOnMessage, scrollToRepliedM
             {showReportMessageModal && (
                 <ReportMessageModal
                     message={message}
+                    eventID={eventID}
+                    orgID={orgID}
                     showReportMessageModal={showReportMessageModal}
                     setShowReportMessageModal={setShowReportMessageModal}
                 />

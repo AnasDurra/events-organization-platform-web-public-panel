@@ -10,7 +10,7 @@ import { chatSocket } from '../../chatSocket';
 import { getLoggedInUserV2 } from '../../api/services/auth';
 import InputMessage from './InputMessage';
 
-const EventChat = ({ chat_group_id }) => {
+const EventChat = ({ chat_group_id, eventID, orgID }) => {
     const pageSize = 10;
     const [page, setPage] = useState(1);
     const { data, isLoading, refetch, isFetching } = useGroupChatListQuery({ chat_group_id, pageSize, page });
@@ -154,6 +154,8 @@ const EventChat = ({ chat_group_id }) => {
                                         scrollToRepliedMessage={scrollToRepliedMessage}
                                         isFocused={focusedMessageId === message.message_id}
                                         chat_group_id={chat_group_id}
+                                        eventID={eventID}
+                                        orgID={orgID}
                                     />
                                 </div>
                             ))}

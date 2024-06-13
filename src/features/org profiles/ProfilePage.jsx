@@ -1,5 +1,5 @@
-import { MinusOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons';
-import { Button, Col, Row, Typography, message } from 'antd';
+import { DownOutlined, FileTextOutlined, MinusOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons';
+import { Button, Col, Dropdown, Menu, Row, Space, Typography, message } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -26,11 +26,15 @@ import cover from '/public/TimelineCovers.pro_beautiful-abstract-colors-facebook
 
 import { getLoggedInUser } from '../../api/services/auth';
 import { useNotification } from '../../utils/NotificationContext';
+import { Icon } from '@iconify/react';
+import ComplaintModal from './reports/ComplaintModal';
 
 export default function ProfilePage() {
     const navigate = useNavigate();
     const { openNotification } = useNotification();
     const [user, setUser] = useState(null);
+
+    const [showComplaintModal, setShowComplaintModal] = useState(false);
 
     let { orgId } = useParams();
     const [messageApi, contextHolder] = message.useMessage();
@@ -78,14 +82,8 @@ export default function ProfilePage() {
         <div className='grid grid-cols-10'>
             {contextHolder}
             <div className='sm:col-start-2 sm:col-span-8 col-span-10'>
-                <Row
-                    className='cover-row'
-                    justify={'start'}
-                >
-                    <Col
-                        span={24}
-                        style={{ height: '100%' }}
-                    >
+                <Row className='cover-row' justify={'start'}>
+                    <Col span={24} style={{ height: '100%' }}>
                         <CoverImage
                             org={org}
                             onNewCoverPic={handleNewCoverPic}
@@ -94,30 +92,15 @@ export default function ProfilePage() {
                     </Col>
                 </Row>
                 <Row justify={'start'}>
-                    <Col
-                        style={{ height: '100%' }}
-                        offset={1}
-                        xs={{ span: 8 }}
-                        sm={{ span: 6 }}
-                        lg={{ span: 4 }}
-                    >
+                    <Col style={{ height: '100%' }} offset={1} xs={{ span: 8 }} sm={{ span: 6 }} lg={{ span: 4 }}>
                         <ProfileImage
                             org={org}
                             onNewProfilePic={handleNewProfilePic}
                             onRemoveProfilePic={handleRemoveProfilePic}
                         />
                     </Col>
-                    <Col
-                        offset={1}
-                        xs={{ span: 10 }}
-                        sm={{ span: 8 }}
-                        lg={{ span: 10 }}
-                    >
-                        <Title
-                            level={4}
-                            className='mt-4'
-                            style={{ marginBottom: '0px' }}
-                        >
+                    <Col offset={1} xs={{ span: 10 }} sm={{ span: 8 }} lg={{ span: 10 }}>
+                        <Title level={4} className='mt-4' style={{ marginBottom: '0px' }}>
                             {org?.name}
                         </Title>
                         <Link
@@ -141,12 +124,7 @@ export default function ProfilePage() {
                     </Col>
 
                     {user?.role_id == 2 && user?.organization_id == orgId && (
-                        <Col
-                            xs={{ span: 3 }}
-                            sm={{ span: 7 }}
-                            lg={{ span: 7 }}
-                            className='text-right'
-                        >
+                        <Col xs={{ span: 3 }} sm={{ span: 7 }} lg={{ span: 7 }} className='text-right'>
                             <Button
                                 type='text'
                                 className='mt-2'
@@ -167,93 +145,97 @@ export default function ProfilePage() {
                         span={14}
                         className='text-center'
                     >
-                        <Text
-                            type='secondary'
-                            style={{ textWrap: 'wrap' }}
-                        >
+                        <Text type='secondary' style={{ textWrap: 'wrap' }}>
                             {org?.bio}
                         </Text>
                     </Col>
                 </Row>
 
                 {user?.role_id == 3 && (
-                    <Col
-                        span={24}
-                        className='text-right'
-                    >
-                        <Button
-                            style={{ width: '30%', margin: '10px 30px' }}
-                            block
-                            icon={isAttendeeFollowing?.result ? <MinusOutlined /> : <PlusOutlined />}
-                            loading={isFollowingOrgLoading || isUnFollowingOrgLoading || isAttendeeFollowingFetching}
-                            disabled={isLoading || isAttendeeFollowingLoading || isAttendeeFollowingFetching}
-                            onClick={() => {
-                                isAttendeeFollowing?.result
-                                    ? unFollowOrg({ organization_id: orgId })
-                                          .unwrap()
-                                          .then((res) => {
-                                              if (res.statusCode == 200) {
-                                                  openNotification(
-                                                      'success',
-                                                      'You are no longer following this organization.'
-                                                  );
-                                                  fetchIsAttendeeFollowing(orgId);
-                                                  refetch();
-                                              }
-                                          })
-                                    : followOrg({ organization_id: orgId })
-                                          .unwrap()
-                                          .then((res) => {
-                                              if (res.statusCode == 200) {
-                                                  openNotification(
-                                                      'success',
-                                                      'You are now following this organization.'
-                                                  );
-                                                  fetchIsAttendeeFollowing(orgId);
-                                                  refetch();
-                                              }
-                                          })
-                                          .catch((error) => {
-                                              openNotification('warning', error.data.message);
-                                              console.error('Error:', error);
-                                          })
-                                          .catch((error) => {
-                                              openNotification('warning', error.data.message);
-                                              console.error('Error:', error);
-                                          });
-                            }}
-                        >
-                            {isAttendeeFollowing?.result
-                                ? isUnFollowingOrgLoading
-                                    ? 'Unfollowing..'
-                                    : 'Unfollow'
-                                : isFollowingOrgLoading
-                                ? 'Following..'
-                                : 'Follow'}
-                        </Button>
+                    <Col span={24} className='text-right'>
+                        <Space size={50}>
+                            <Button
+                                style={{ width: '100%', margin: '10px 30px' }}
+                                block
+                                icon={isAttendeeFollowing?.result ? <MinusOutlined /> : <PlusOutlined />}
+                                loading={
+                                    isFollowingOrgLoading || isUnFollowingOrgLoading || isAttendeeFollowingFetching
+                                }
+                                disabled={isLoading || isAttendeeFollowingLoading || isAttendeeFollowingFetching}
+                                onClick={() => {
+                                    isAttendeeFollowing?.result
+                                        ? unFollowOrg({ organization_id: orgId })
+                                              .unwrap()
+                                              .then((res) => {
+                                                  if (res.statusCode == 200) {
+                                                      openNotification(
+                                                          'success',
+                                                          'You are no longer following this organization.'
+                                                      );
+                                                      fetchIsAttendeeFollowing(orgId);
+                                                      refetch();
+                                                  }
+                                              })
+                                        : followOrg({ organization_id: orgId })
+                                              .unwrap()
+                                              .then((res) => {
+                                                  if (res.statusCode == 200) {
+                                                      openNotification(
+                                                          'success',
+                                                          'You are now following this organization.'
+                                                      );
+                                                      fetchIsAttendeeFollowing(orgId);
+                                                      refetch();
+                                                  }
+                                              })
+                                              .catch((error) => {
+                                                  openNotification('warning', error.data.message);
+                                                  console.error('Error:', error);
+                                              })
+                                              .catch((error) => {
+                                                  openNotification('warning', error.data.message);
+                                                  console.error('Error:', error);
+                                              });
+                                }}
+                            >
+                                {isAttendeeFollowing?.result
+                                    ? isUnFollowingOrgLoading
+                                        ? 'Unfollowing..'
+                                        : 'Unfollow'
+                                    : isFollowingOrgLoading
+                                    ? 'Following..'
+                                    : 'Follow'}
+                            </Button>
+                            <Dropdown
+                                overlay={
+                                    <Menu>
+                                        <Menu.Item
+                                            key='1'
+                                            icon={<Icon icon='hugeicons:complaint' style={{ fontSize: '24px' }} />}
+                                            onClick={() => setShowComplaintModal(true)}
+                                        >
+                                            Report to Organizer
+                                        </Menu.Item>
+                                    </Menu>
+                                }
+                                trigger='click'
+                                placement='bottomCenter'
+                                arrow
+                            >
+                                <a className='ant-dropdown-link' onClick={(e) => e.preventDefault()}>
+                                    <Icon icon='entypo:dots-three-vertical' style={{ fontSize: '18px' }} />
+                                </a>
+                            </Dropdown>
+                        </Space>
                     </Col>
                 )}
                 <Row justify={'start'}>
-                    <Col
-                        sm={{ span: 21 }}
-                        xs={{ span: 21 }}
-                        lg={{ span: 5 }}
-                    >
-                        <AddressInfo
-                            org={org}
-                            isLoading={isLoading}
-                        />
+                    <Col sm={{ span: 21 }} xs={{ span: 21 }} lg={{ span: 5 }}>
+                        <AddressInfo org={org} isLoading={isLoading} />
 
-                        <ContactInfo
-                            org={org}
-                            isLoading={isLoading}
-                        />
+                        <ContactInfo org={org} isLoading={isLoading} />
                     </Col>
-                    <Col
-                        sm={{ span: 23 }}
-                        xs={{ span: 23 }}
-                        lg={{ span: 14, offset: 1 }}
-                    >
+                    <Col sm={{ span: 23 }} xs={{ span: 23 }} lg={{ span: 14, offset: 1 }}>
                         <EventsTab data={fakeData} />
                     </Col>
                 </Row>
@@ -286,6 +268,14 @@ export default function ProfilePage() {
                     newProfilePic({ file, orgId });
                 }}
             />
+
+            {showComplaintModal && (
+                <ComplaintModal
+                    organizer={org}
+                    showComplaintModal={showComplaintModal}
+                    setShowComplaintModal={setShowComplaintModal}
+                />
+            )}
         </div>
     );
 }
