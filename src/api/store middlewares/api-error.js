@@ -8,7 +8,7 @@ const apiError = (store) => (next) => async (action) => {
 
     if (statusCode === 404) {
         if (!window.location.pathname.startsWith('/login')) {
-            router.navigate('/not-found', { replace: true });
+            // router.navigate('/not-found', { replace: true });
         } else errorMessage({ content: message });
     } else if (statusCode > 299 && statusCode != 401) {
         // errorMessage({ content: message }); // TODO comment this

@@ -28,5 +28,7 @@ export const joinChannel = (channel) => {
 
 export const sendMessage = (messageData) => {
     chatSocket.emit('message-sent', messageData);
-    console.log('done');
+};
+export const userReacted = (reactionData) => {
+    chatSocket.emit('user-reacted', reactionData);
 };

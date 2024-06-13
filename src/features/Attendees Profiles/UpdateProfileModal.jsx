@@ -426,7 +426,15 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                 className='my-custom-form'
                             >
                                 <Form.Item initialValue={data?.result.bio ?? ''} label='Bio' name='bio'>
-                                    <TextArea size='large' placeholder='Tell us about yourself...' allowClear />
+                                    <TextArea
+                                        size='large'
+                                        placeholder='Tell us about yourself...'
+                                        allowClear
+                                        autoSize={{
+                                            minRows: 1,
+                                            maxRows: 6,
+                                        }}
+                                    />
                                 </Form.Item>
                                 <Form.Item
                                     label='Birth Date'

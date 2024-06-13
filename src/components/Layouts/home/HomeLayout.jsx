@@ -5,6 +5,9 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { useCheckAccessTokenQuery } from '../../../api/services/auth';
 import HomeHeader from './HomeHeader';
 import '../Landing.css';
+import { chatSocket, joinChannel, setChatSocketHeader } from '../../../chatSocket';
+import Cookies from 'js-cookie';
+import { useJoinedGroupsQuery } from '../../../api/services/chats';
 
 const HomeLayout = ({ roles }) => {
     const navigate = useNavigate();
@@ -17,6 +20,9 @@ const HomeLayout = ({ roles }) => {
         },
         cssVar: true,
     };
+
+    const { data: { result: joinedGroups } = { result: [] }, isLoading: isJoinedGroupsLoading } =
+        useJoinedGroupsQuery();
 
     const {
         data: checkAccessTokenObj,
@@ -40,6 +46,39 @@ const HomeLayout = ({ roles }) => {
         }
     }, [checkAccessTokenError]);
 
+    // start here
+    const authToken = Cookies.get('accessToken');
+    useEffect(() => {
+        function onGroupsJoined(group) {
+            joinChannel(group.channel);
+            console.log('joined group !!', group);
+        }
+
+        function chatRecieved(message) {
+            console.log(message);
+        }
+
+        if (authToken) {
+            console.log(authToken);
+            setChatSocketHeader(authToken);
+        }
+
+        chatSocket.on('group-joined', onGroupsJoined);
+        chatSocket.on('notification-received', chatRecieved);
+
+        return () => {
+            chatSocket.off('group-joined', onGroupsJoined);
+        };
+    }, [authToken]);
+
+    useEffect(() => {
+        console.log('layout', joinedGroups);
+
+        joinedGroups?.map((group) => {
+            const { channel } = group;
+            joinChannel(channel);
+        });
+    }, [joinedGroups]);
     return (
         <ConfigProvider theme={theme}>
             {isAccessTokenLoading && (
