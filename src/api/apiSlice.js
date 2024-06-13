@@ -27,7 +27,7 @@ export const apiSlice = createApi({
         'followers-list',
         'blocked-list',
         'tickets-balance',
-        'rp-balance'
+        'rp-balance',
         'reports',
     ],
 
