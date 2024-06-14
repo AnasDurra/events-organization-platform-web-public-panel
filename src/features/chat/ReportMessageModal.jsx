@@ -74,6 +74,8 @@ const ReportMessageModal = ({ message, eventID, orgID, showReportMessageModal, s
             onCancel={handleCancel}
             okText='Submit Report'
             cancelText='Cancel'
+            okButtonProps={{ loading: isReportToOrgLoading }}
+            cancelButtonProps={{ loading: isReportToOrgLoading }}
         >
             <Spin spinning={isReportToOrgLoading}>
                 <Form

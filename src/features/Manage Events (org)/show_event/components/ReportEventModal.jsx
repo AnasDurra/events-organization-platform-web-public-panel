@@ -69,8 +69,10 @@ const ReportEventModal = ({ data, showReportEventModal, setShowReportEventModal 
             onCancel={handleCancel}
             okText='Submit Report'
             cancelText='Cancel'
+            okButtonProps={{ loading: isReportAdminLoading }}
+            cancelButtonProps={{ loading: isReportAdminLoading }}
         >
-            <Spin spinning={isReportAdminLoading}>
+            <Spin spinning={isReportAdminLoading || isPlatformProblemsLoading}>
                 <Divider style={{ marginTop: '0px' }} />
                 <Form form={form} layout='vertical'>
                     <Space direction='vertical' style={{ width: '100%', marginBottom: '2em' }}>
