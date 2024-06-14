@@ -33,8 +33,8 @@ const OrgReports = () => {
         refetch(currentPage, pageSize);
     };
 
-    const showModal = (id, type, message, description, event_name, status, date, isDisabled) => {
-        setModalContent({ id, type, message, description, event_name, status, date, isDisabled });
+    const showModal = (id, type, message, description, event, status, date, isDisabled) => {
+        setModalContent({ id, type, message, description, event, status, date, isDisabled });
         setIsModalVisible(true);
     };
 
@@ -163,7 +163,7 @@ const OrgReports = () => {
                         record?.type,
                         record?.message,
                         record?.description,
-                        record?.event_name,
+                        record?.event,
                         record?.status,
                         record?.date,
                         isDisabled
@@ -364,10 +364,10 @@ const OrgReports = () => {
                                     <Typography.Paragraph
                                         style={{ padding: '10px', backgroundColor: '#f0f2f5', borderRadius: '4px' }}
                                     >
-                                        {modalContent?.event_name}
+                                        {modalContent?.event?.title}
                                     </Typography.Paragraph>
                                     <Button size='small' type='primary'>
-                                        <Link to={`/events/${modalContent?.event_id}`} style={{ color: 'white' }}>
+                                        <Link to={`/events/${modalContent?.event?.id}`} style={{ color: 'white' }}>
                                             Go to Event
                                         </Link>
                                     </Button>

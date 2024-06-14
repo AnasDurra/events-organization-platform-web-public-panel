@@ -69,7 +69,7 @@ const ReportMessageModal = ({ message, eventID, orgID, showReportMessageModal, s
     return (
         <Modal
             title='Report Message'
-            visible={showReportMessageModal}
+            open={showReportMessageModal}
             onOk={handleOk}
             onCancel={handleCancel}
             okText='Submit Report'

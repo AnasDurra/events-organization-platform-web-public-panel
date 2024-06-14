@@ -98,9 +98,9 @@ const EventDetails = ({ description, tags, age_groups }) => {
                                         <TagsOutlined style={{ fontSize: '18px' }} />
                                         {/* <Typography.Text strong>Event Tags:</Typography.Text> */}
                                         <div>
-                                            {tags.length === 0
+                                            {tags?.length === 0
                                                 ? 'No Tags for this event'
-                                                : tags.map((tag) => (
+                                                : tags?.map((tag) => (
                                                       <Tag
                                                           key={tag?.tag?.value}
                                                           style={{
@@ -120,9 +120,9 @@ const EventDetails = ({ description, tags, age_groups }) => {
                                         <UserOutlined style={{ fontSize: '18px' }} />
                                         {/* <Typography.Text strong>Event Target Age Group:</Typography.Text> */}
                                         <div>
-                                            {age_groups.length === 0
+                                            {age_groups?.length === 0
                                                 ? 'No Age Groups for this event'
-                                                : age_groups.map((age_group) => (
+                                                : age_groups?.map((age_group) => (
                                                       <Tag
                                                           style={{
                                                               padding: '2px 10px',

@@ -114,7 +114,7 @@ const EventDetailsTab = ({ eventData, handleRegisterClicked }) => {
             <Modal title='Registration Information' open={isModalVisible} onCancel={handleCancel} footer={null}>
                 <EventRegistratinInfoModal
                     registration_start_date={eventData?.result?.registration_start_date}
-                    registration_end_date={eventData.result?.registration_end_date}
+                    registration_end_date={eventData?.result?.registration_end_date}
                 />
             </Modal>
         </>
