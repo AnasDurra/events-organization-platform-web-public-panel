@@ -9,6 +9,8 @@ import {
     LogoutOutlined,
     ShopOutlined,
     UserOutlined,
+    AlertFilled,
+    AlertOutlined,
 } from '@ant-design/icons';
 import React from 'react';
 import { GoNorthStar } from 'react-icons/go';
@@ -43,32 +45,27 @@ const navigationItems = [
         outlinedIcon: <ShopOutlined className='text-[1.2em]' />,
         path: '/home/shop',
     },
+    {
+        label: 'Contact Us',
+        filledIcon: <AlertFilled className='text-[1.2em]' />,
+        outlinedIcon: <AlertOutlined className='text-[1.2em]' />,
+        path: '/home/report-to-admin',
+    },
 ];
 
 export default function HomeHeader() {
     const navigate = useNavigate();
 
-    
     const menu = (
         <Menu style={{ borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', width: '180px' }}>
-            <Menu.Item
-                key='profile'
-                style={menuItemStyle}
-                onClick={() => navigate('profile')}
-            >
+            <Menu.Item key='profile' style={menuItemStyle} onClick={() => navigate('profile')}>
                 <UserOutlined style={iconStyle} /> My Profile
             </Menu.Item>
-            <Menu.Item
-                key='events'
-                style={menuItemStyle}
-            >
+            <Menu.Item key='events' style={menuItemStyle}>
                 <CalendarOutlined style={iconStyle} /> My Events
             </Menu.Item>
             <Menu.Divider />
-            <Menu.Item
-                key='logout'
-                style={{ ...menuItemStyle, color: '#ff4d4f' }}
-            >
+            <Menu.Item key='logout' style={{ ...menuItemStyle, color: '#ff4d4f' }}>
                 <LogoutOutlined style={iconStyle} /> Logout
             </Menu.Item>
         </Menu>
@@ -106,10 +103,7 @@ export default function HomeHeader() {
                         >
                             <TicketsCard ticketsCount={balance?.balance} />
                         </div> */}
-                        <Badge
-                            count={5}
-                            size='small'
-                        >
+                        <Badge count={5} size='small'>
                             <Button
                                 type='text'
                                 icon={<IoMdNotificationsOutline className='text-2xl ' />}
@@ -117,11 +111,7 @@ export default function HomeHeader() {
                                 onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
                             />
                         </Badge>
-                        <Dropdown
-                            overlay={menu}
-                            placement='bottomLeft'
-                            arrow
-                        >
+                        <Dropdown overlay={menu} placement='bottomLeft' arrow>
                             <Link onClick={(e) => e.preventDefault()}>
                                 <img
                                     className='w-[2.5em] aspect-square rounded-full hidden md:block md:ml-4'

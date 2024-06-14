@@ -41,10 +41,7 @@ export default function FooterMobileNav() {
         navigate(navigationItems[index].path);
     };
     return (
-        <Footer
-            className='h-[8svh] p-0 md:hidden'
-            style={{ backgroundColor: token.colorPrimary }}
-        >
+        <Footer className='h-[8svh] p-0 md:hidden' style={{ backgroundColor: token.colorPrimary }}>
             <BottomNavigation
                 showLabels
                 value={navIndex}

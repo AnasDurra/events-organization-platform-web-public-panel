@@ -52,7 +52,7 @@ const ComplaintModal = ({ organizer, showComplaintModal, setShowComplaintModal }
 
     useEffect(() => {
         if (abuseType) {
-            console.log(abuseType);
+            // console.log(abuseType);
             setGeneralAbuseTypes(abuseType?.filter((type) => type.category === 'general'));
         }
     }, [abuseType]);

@@ -1,5 +1,4 @@
-import { Modal, Form, Input, Select, Typography, Space, Spin, Divider } from 'antd';
-import moment from 'moment';
+import { Modal, Form, Input, Select, Typography, Space, Spin, Divider, Alert } from 'antd';
 
 import { useState } from 'react';
 import { useNotification } from '../../../../utils/NotificationContext';
@@ -19,7 +18,7 @@ const ReportEventModal = ({ data, showReportEventModal, setShowReportEventModal 
     const { openNotification } = useNotification();
 
     const [showInputReason, setInputReasoon] = useState(false);
-    const [messageAbuseTypes, setMessageAbuseTypes] = useState(null);
+    const [eventAbuseTypes, setEventAbuseTypes] = useState(null);
 
     const handleOk = () => {
         form.validateFields()
@@ -58,7 +57,7 @@ const ReportEventModal = ({ data, showReportEventModal, setShowReportEventModal 
 
     useEffect(() => {
         if (platformProblems) {
-            setMessageAbuseTypes(platformProblems?.filter((type) => type.category === 'event'));
+            setEventAbuseTypes(platformProblems?.filter((type) => type.category === 'event'));
         }
     }, [platformProblems]);
 
@@ -117,7 +116,7 @@ const ReportEventModal = ({ data, showReportEventModal, setShowReportEventModal 
                             }}
                             loading={isPlatformProblemsLoading}
                         >
-                            {messageAbuseTypes?.map((type) => (
+                            {eventAbuseTypes?.map((type) => (
                                 <Option key={type.value} value={type.value}>
                                     {type.label} {type.label === 'Other' ? '(Specify Below)' : ''}
                                 </Option>
@@ -139,6 +138,13 @@ const ReportEventModal = ({ data, showReportEventModal, setShowReportEventModal 
                         ) : null}
                     </Form.Item>
                 </Form>
+                <Alert
+                    // message='Important'
+                    description='Please note that this report will be sent to the platform admin for review.'
+                    type='info'
+                    showIcon
+                    // className='mb-4'
+                />
             </Spin>
         </Modal>
     );

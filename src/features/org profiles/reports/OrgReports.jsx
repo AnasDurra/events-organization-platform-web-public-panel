@@ -330,8 +330,7 @@ const OrgReports = () => {
                     </Button>,
                 ]}
             >
-                <Divider style={{ margin: '0em 0em 2.5em 0em' }} />
-                {/* {console.log(data)} */}
+                <Divider style={{ marginTop: '0px' }} />
                 <Space direction='vertical' style={{ width: '100%' }} size={20}>
                     {modalContent?.message && (
                         <>
