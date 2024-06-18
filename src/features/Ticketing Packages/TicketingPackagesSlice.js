@@ -7,11 +7,31 @@ export const ticketingPackagesSlice = apiSlice.injectEndpoints({
         }),
         getAttendeeBalance: builder.query({
             query: (id) => `/payment/attendee/balance/${id}`,
-            providesTags:['tickets-balance']
+            providesTags: ['tickets-balance'],
         }),
         getAttendeeTicketsHistory: builder.query({
             query: (id) => `payment/attendee/${id}/ticketsHistory`,
         }),
+
+        getOrgBalance: builder.query({
+            query: (id) => `/payment/organization/balance/${id}`,
+            providesTags: ['org-tickets-balance'],
+        }),
+
+        getOrgWithdraws: builder.query({
+            query: (orgID) => `payment/organization/${orgID}/withdraw/requests`,
+            providesTags: ['org-withdraws'],
+        }),
+
+        withdraw: builder.mutation({
+            query: (body) => ({
+                url: '/payment/organization/withdraw',
+                method: 'POST',
+                body: body,
+            }),
+            invalidatesTags: ['org-withdraws', 'org-tickets-balance'],
+        }),
+
         checkout: builder.mutation({
             query: (body) => ({
                 url: '/payment/checkout',
@@ -25,6 +45,9 @@ export const ticketingPackagesSlice = apiSlice.injectEndpoints({
 export const {
     useGetPackagesQuery,
     useGetAttendeeBalanceQuery,
+    useGetOrgBalanceQuery,
     useCheckoutMutation,
     useGetAttendeeTicketsHistoryQuery,
+    useWithdrawMutation,
+    useGetOrgWithdrawsQuery,
 } = ticketingPackagesSlice;

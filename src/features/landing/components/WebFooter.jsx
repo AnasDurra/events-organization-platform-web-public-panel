@@ -4,10 +4,10 @@ import React from 'react';
 export default function WebFooter() {
     return (
         <div
-            className={`min-h-[40svh] w-full  bg-primary p-8 flex flex-col sm:flex-row sm:justify-between sm:items-center px-40`}
+            className={`min-h-[40svh] w-full  bg-primary p-8 flex flex-col sm:flex-row sm:justify-between sm:items-center lg:px-40`}
         >
             <div className='flex flex-col space-y-8 min-w-[20svw] sm:min-w-0 '>
-                <div className='text-nowrap text-3xl font-serif text-white'>Eventure</div>
+                <div className='text-nowrap text-3xl  text-white font-[bangers]'>Eventure</div>
                 <div className='flex flex-col '>
                     <div className='text-lg text-white'> Follow Us</div>
                     <div className='flex space-x-4 my-4'>

@@ -17,7 +17,7 @@ const getTabsItems = (data) => {
     return [
         {
             key: '1',
-            label: <Title level={5}>Events</Title>,
+            label: <div className='text-textPrimary text-lg'>Events</div>,
             children: (
                 <List
                     pagination={{ position: 'bottom', align: 'center', pageSize: '3' }}
@@ -29,7 +29,7 @@ const getTabsItems = (data) => {
         },
         {
             key: '2',
-            label: <Title level={5}>Posts</Title>,
+            label: <div className='text-textPrimary text-lg'>About us</div>,
             children: <></>,
         },
     ];

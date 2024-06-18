@@ -6,23 +6,22 @@ export default function AddressInfo({ org, isLoading }) {
     return (
         <Skeleton loading={isLoading}>
             <div style={{ width: '100%' }}>
-                <Typography.Title
-                    level={5}
-                    className='my-2'
+                <div
+                    className='text-lg text-textPrimary font-sans'
                 >
                     {' '}
                     Address
-                </Typography.Title>
+                </div>
                 {org?.addresses?.map((addr) => (
                     <Space.Compact
                         key={addr.id}
                         style={{ color: 'darkblue' }}
                         className='my-2'
                     >
-                        <FaLocationDot className='icon-location' />
-                        <Typography.Text style={{ color: 'darkblue' }}>
+                        <FaLocationDot className=' mr-2 text-[1.5em] text-secondary' />
+                        <div className='text-textPrimary'>
                             {addr.address?.city?.cityName}, {addr.address?.state?.stateName}
-                        </Typography.Text>
+                        </div>
                     </Space.Compact>
                 ))}
             </div>

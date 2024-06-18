@@ -28,7 +28,7 @@ export default function PackageCard({ name, price, tickets, onClick, onBuyClick 
             classNames={{ header: 'bg-primary' }}
         >
             <div className='flex justify-center items-center'>
-                <TiTicket className='text-[5em] text-rose-500 ' />
+                <TiTicket className='text-[5em] text-primary ' />
             </div>
             <Meta
                 description={

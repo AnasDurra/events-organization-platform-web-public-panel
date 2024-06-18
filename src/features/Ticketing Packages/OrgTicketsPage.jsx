@@ -1,10 +1,36 @@
 import { ArrowUpOutlined, DollarCircleFilled } from '@ant-design/icons';
-import { Avatar, Button, Card, Statistic, Table, Tabs, Typography } from 'antd';
-import React from 'react';
+import { Avatar, Badge, Button, Card, Statistic, Table, Tabs, Typography, message } from 'antd';
+import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import { TiTicket } from 'react-icons/ti';
+import { useGetOrgBalanceQuery, useGetOrgWithdrawsQuery, useWithdrawMutation } from './TicketingPackagesSlice';
+import { getLoggedInUserV2 } from '../../api/services/auth';
+import WithdrawModal from './WithdrawModal';
+import OrgTicketsPageWithdrawTab from './OrgTicketsPageWithdrawTab';
 
 export default function OrgTicketsPage() {
+    const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+
+    const { data: { result: balanceObj } = { result: {} } } = useGetOrgBalanceQuery(
+        getLoggedInUserV2()?.organization_id
+    );
+    const { data: { result: withdraws } = { result: [] },isLoading:isFetchWithdrawLoading } = useGetOrgWithdrawsQuery(
+        getLoggedInUserV2()?.organization_id
+    );
+
+    const [withdraw, { isLoading: isWithdrawLoading }] = useWithdrawMutation();
+
+    const handleWithdrawFinish = (fields) => {
+        withdraw(fields)
+            .unwrap()
+            .then((res) => {
+                message.success('Withdraw request sent successfully');
+                setIsWithdrawModalOpen(false);
+            })
+            .catch((e) => {
+                message.error('Withdraw request failed');
+            });
+    };
     const columns = [
         {
             title: 'Ticket ID',
@@ -99,15 +125,24 @@ export default function OrgTicketsPage() {
         },
         {
             key: '2',
-            label: 'Withdraws',
-            children: <div>hi</div>,
+            label: (
+                <Badge
+                    size='small'
+                    color='orange'
+                    showZero
+                    count={withdraws.filter((withdraw) => withdraw.status == 'waiting').length}
+                >
+                    <div className='p-1'>Withdraws</div>
+                </Badge>
+            ),
+            children:<OrgTicketsPageWithdrawTab withdraws={withdraws} loading={isFetchWithdrawLoading}></OrgTicketsPageWithdrawTab>,
         },
     ];
 
     return (
         <div className='container'>
-            <div className='flex  items-center'>
-                <div className='w-full flex justify-start rounded-lg items-center p-4 m-4 space-x-8 bg-gradient-to-r from-[#8ed6bc] to-[#f0a2cf] via-[#a794e5]'>
+            <div className='flex   items-center'>
+                <div className='w-fit flex justify-start rounded-lg items-center p-4 m-4 space-x-8 bg-gradient-to-r from-[#8ed6bc] to-[#f0a2cf] via-[#a794e5]'>
                     <Card bordered={false}>
                         <Statistic
                             title='Generated Revenue'
@@ -119,7 +154,7 @@ export default function OrgTicketsPage() {
                     <Card bordered={false}>
                         <Statistic
                             title='Current Tickets Balance'
-                            value={1500}
+                            value={balanceObj?.balance}
                             prefix={<TiTicket className='text-yellow-500' />}
                         />
                     </Card>
@@ -138,12 +173,28 @@ export default function OrgTicketsPage() {
                         />
                     </Card>
                 </div>
-                <Button type='primary'> Withdraw</Button>
+                <Button
+                    type='primary'
+                    onClick={() => {
+                        if (balanceObj?.balance == 0) message.info("You don't have any tickets to withdraw");
+                        else setIsWithdrawModalOpen(true);
+                    }}
+                >
+                    {' '}
+                    Withdraw
+                </Button>
             </div>
             <Tabs
                 defaultActiveKey='1'
                 items={items}
             />
+            <WithdrawModal
+                balance={balanceObj?.balance}
+                isOpen={isWithdrawModalOpen}
+                onFinish={handleWithdrawFinish}
+                loading={isWithdrawLoading}
+                onCancel={() => setIsWithdrawModalOpen(false)}
+            ></WithdrawModal>
         </div>
     );
 }

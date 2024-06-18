@@ -16,7 +16,7 @@ export default function BadgesModal({ isOpen, myBadges, onClose }) {
             onCancel={onClose}
         >
             <div
-                className='h-[60svh] overflow-auto'
+                className='h-[60svh] overflow-auto px-4'
                 style={{ scrollbarWidth: 'thin' }}
             >
                 <div className='flex justify-center items-center'>
@@ -41,7 +41,7 @@ export default function BadgesModal({ isOpen, myBadges, onClose }) {
                         {myBadges.map((badge) => (
                             <div
                                 key={'modal' + badge.badge_id}
-                                className='flex flex-col justify-center items-center border-x-2 border-gray-200  p-1 '
+                                className='flex flex-col justify-center items-center border-x-4 border-x-secondary  p-1 '
                             >
                                 <img
                                     src={`data:image/svg+xml;utf8,${encodeURIComponent(badge?.badge_shape?.svg)}`}
@@ -65,27 +65,37 @@ export default function BadgesModal({ isOpen, myBadges, onClose }) {
                             .map((badge) => (
                                 <div
                                     key={'modal' + badge.id}
-                                    className='flex flex-col justify-center items-center border-x-2 border-gray-200  p-1 '
+                                    className='flex flex-col justify-between items-center border-t-8 border-t-primary border-b-secondary   p-1 '
                                 >
-                                    <img
-                                        src={`data:image/svg+xml;utf8,${encodeURIComponent(badge?.shape?.svg)}`}
-                                        className='w-[9em]'
-                                    />
-
-                                    <div className='text-lg font-bold bg-gradient-to-r mt-[-1em] from-[#fbaf51] via-[#ce355f] to-[#a986af] inline-block text-transparent bg-clip-text'>
-                                        {badge?.reward?.name}
+                                    <div className='mt-4 text-center'>
+                                        <div className='text-lg font-bold bg-gradient-to-r mt-[-0.5em] from-[#fbaf51] via-[#ce355f] to-[#a986af] inline-block text-transparent bg-clip-text'>
+                                            {badge?.reward?.name}
+                                        </div>
+                                        
+                                        <img
+                                            src={`data:image/svg+xml;utf8,${encodeURIComponent(badge?.shape?.svg)}`}
+                                            className='w-[9em] h-[9em]'
+                                        />
                                     </div>
 
                                     <div
-                                        className={`flex flex-col ${'mt-[-0.5em]'}  w-full justify-center items-center`}
+                                        className={`flex flex-col ${'mt-[-0.5em]'}  w-full justify-start h-full items-center`}
                                     >
-                                        <Divider plain>Rules</Divider>
+                                        <Divider
+                                            plain
+                                            className='text-primary'
+                                        >
+                                            Rules
+                                        </Divider>
                                         <div className='text-pretty text-left text-gray-500'>
                                             {badge?.reward?.rule?.conditions ? (
                                                 <div>
                                                     {badge?.reward?.rule?.conditions.map((condition, condIndex) => (
                                                         <>
-                                                            <span key={condIndex}>
+                                                            <span
+                                                                key={condIndex}
+                                                                className='text-sm'
+                                                            >
                                                                 {`${condIndex + 1}. ${condition.definedData.name} ${
                                                                     condition.operator.name
                                                                 } ${condition.value}`}

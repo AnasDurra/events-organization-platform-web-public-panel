@@ -9,13 +9,14 @@ const CoverImage = ({ org, onNewCoverPic, onRemoveCoverPic }) => {
         <Image
             width={'100%'}
             height={'100%'}
+            
             //TODO only if member
             preview={{
                 mask: (
                     <>
                         <Space>
                             <Button
-                                icon={<FileImageOutlined/>}
+                                icon={<FileImageOutlined />}
                                 type='primary'
                                 onClick={onNewCoverPic}
                             >
@@ -34,9 +35,9 @@ const CoverImage = ({ org, onNewCoverPic, onRemoveCoverPic }) => {
                 ),
                 visible: false,
             }}
-            src={org?.cover_picture ? `${URL}/organization/coverPicture/${org?.cover_picture}` : undefined}
-            className='cover-image'
-            fallback={fallback_img}
+            src={org?.cover_picture ? `${URL}/organization/coverPicture/${org?.cover_picture}` : ''}
+            className=' w-[100%] object-fill rounded-none'
+            fallback={'/public/assets/fakeCover.jpg'}
         />
     );
 };

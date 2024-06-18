@@ -9,38 +9,38 @@ export default function HomeHeaderPoints() {
     const navigate = useNavigate();
 
     const { data: { result: balance } = { result: {} }, isLoading: isBalanceLoading } = useGetAttendeeBalanceQuery(
-        getLoggedInUserV2().attendee_id
+        getLoggedInUserV2()?.attendee_id
     );
     const { data: { result: platformPoints } = { result: {} }, isLoading: isPlatformPointsLoading } =
-        useGetAttendeePointsQuery(getLoggedInUserV2().attendee_id);
+        useGetAttendeePointsQuery(getLoggedInUserV2()?.attendee_id);
     const { data: { result: pointsRp } = { result: {} }, isLoading: isPointRPloading } = useGetAttendeeRPsQuery(
-        getLoggedInUserV2().attendee_id
+        getLoggedInUserV2()?.attendee_id
     );
 
     return (
         <div className='flex  justify-center items-center h-[5svh]'>
             <div
-                onClick={() => navigate('tickets')}
-                className='transition ease-in-out delay-150 hover:-translate-y-[0.1em] hover:cursor-pointer hover:scale-110  duration-300 flex  w-[5em]  items-center space-x-1 border-y-2 p-2 border-rose-600 bg-rose-100  h-[5svh] border-l-2 rounded-l-full'
+                onClick={() => navigate('/home/tickets')}
+                className='transition ease-in-out delay-150 hover:-translate-y-[0.1em] hover:cursor-pointer hover:scale-110  duration-300 flex  w-[5em] justify-center  items-center space-x-1 border-y-2 p-2 border-primary bg-secondary/15  h-[5svh] border-l-2 rounded-l-full'
             >
-                <div className='text-rose-900'>{balance?.balance} </div>
+                <div className='text-textPrimary'>{balance?.balance} </div>
 
-                <TiTicket className='text-rose-600 text-[5em]'></TiTicket>
+                <TiTicket className='text-textPrimary text-[2em]'></TiTicket>
             </div>
 
             <div
-                onClick={() => navigate('RPs')}
-                className='transition ease-in-out delay-150 hover:-translate-y-[0.1em] hover:cursor-pointer hover:scale-110  duration-300  flex  w-[5em]  items-center space-x-1 border-y-2 p-2 border-yellow-600 bg-yellow-100  h-[5svh]'
+                onClick={() => navigate('/home/RPs')}
+                className='transition ease-in-out delay-150 hover:-translate-y-[0.1em] hover:cursor-pointer hover:scale-110  duration-300  flex  justify-center w-[5em]  items-center space-x-1 border-2 p-2 border-primary bg-secondary/15  h-[5svh]'
             >
-                <div className='text-yellow-900'>{pointsRp?.points} </div>
+                <div className='text-textPrimary'>{pointsRp?.points} </div>
                 <img
                     src='/public/assets/points-rp.svg'
                     className='w-[2em] mb-[-0.5em] '
                 ></img>
             </div>
             <div
-                onClick={() => navigate('points')}
-                className='transition ease-in-out delay-150 hover:-translate-y-[0.1em] hover:cursor-pointer hover:scale-110  duration-300  flex w-[5.2em]  items-center space-x-1 border-y-2 border-r-2 rounded-r-full p-2 border-green-700 bg-green-100  h-[5svh]'
+                onClick={() => navigate('/home/points')}
+                className='transition ease-in-out delay-150 hover:-translate-y-[0.1em] hover:cursor-pointer hover:scale-110  duration-300  flex justify-center w-[5.2em]  items-center space-x-1 border-y-2  border-r-2 rounded-r-full p-2 border-primary bg-secondary/15  h-[5svh]'
             >
                 <div className='text-green-900'>{platformPoints?.points} </div>
                 <img

@@ -38,7 +38,6 @@ export default function ViewFormsPage() {
 
     return (
         <div className='h-full'>
-           
             <Row className='my-4'>
                 <Col
                     xs={{ span: 12 }}
@@ -63,7 +62,10 @@ export default function ViewFormsPage() {
                     <Input.Search placeholder='search' />
                 </Col>
             </Row>
-            <Spin spinning={isFetchFormsLoading}  wrapperClassName='h-full'>
+            <Spin
+                spinning={isFetchFormsLoading}
+                wrapperClassName='h-full'
+            >
                 <Row
                     className='h-full'
                     gutter={[
@@ -143,7 +145,14 @@ export default function ViewFormsPage() {
                             </Col>
                         ))
                     ) : (
-                        <Col span={24}>{!isFetchFormsLoading && <Empty description='No forms' />}</Col>
+                        <Col span={24}>
+                            {!isFetchFormsLoading && (
+                                <Empty
+                                    className='mt-10'
+                                    description='No forms'
+                                />
+                            )}
+                        </Col>
                     )}
                 </Row>
             </Spin>

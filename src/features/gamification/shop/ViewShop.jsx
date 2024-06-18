@@ -128,11 +128,11 @@ export default function ViewShop() {
             theme={{
                 components: {
                     Menu: {
-                        itemSelectedBg: '#4E6C50',
+                        itemSelectedBg: '#2A9D8F',
                         itemSelectedColor: 'white',
-                        itemHoverBg: lightenColor('#4E6C50', 40),
+                        itemHoverBg: lightenColor('#F4A261', 20),
                         colorBgContainer: 'transparent',
-                        itemActiveBg: lightenColor('#4E6C50', 40),
+                        itemActiveBg: lightenColor('#F4A261', 20),
                     },
                 },
             }}

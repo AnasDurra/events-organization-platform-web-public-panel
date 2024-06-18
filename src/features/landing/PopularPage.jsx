@@ -60,13 +60,13 @@ export default function PopularPage() {
     return (
         <>
             {console.log(loadedEvents)}
-            <div className='grid grid-cols-8 w-full my-2 mt-8'>
-                <div className='col-span-8 sm:col-span-6 sm:col-start-2'>
+            <div className='grid grid-cols-8 w-full my-2 mt-8 px-4 md:px-0'>
+                <div className='col-span-8 sm:col-span-6 sm:col-start-2 '>
                     <div className='grid grid-cols-3 gap-8'>
                         {loadedEvents.map((event, index) => (
                             <div
                                 key={event.event_id}
-                                className='w-full h-[25svh] bg-primary rounded-3xl'
+                                className='w-full h-[25svh] bg-primary rounded-3xl col-span-3 md:col-span-1 lg:col-span-1 '
                             >
                                 <div
                                     className={`relative flex flex-col items-center justify-center w-full h-full rounded-3xl bg-no-repeat bg-cover bg-center text-white font-bold font-mono`}

@@ -201,6 +201,7 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                             <Button
                                 type='primary'
                                 onClick={() => {
+                                    
                                     handleStepChange(currentStep + 1);
                                 }}
                             >

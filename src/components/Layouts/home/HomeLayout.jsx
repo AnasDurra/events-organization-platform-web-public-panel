@@ -5,15 +5,16 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { useCheckAccessTokenQuery } from '../../../api/services/auth';
 import HomeHeader from './HomeHeader';
 import '../Landing.css';
+import FooterMobileNav from './FooterMobileNav';
 
 const HomeLayout = ({ roles }) => {
     const navigate = useNavigate();
     const [hideContent, setHideContent] = useState(true);
 
     const theme = {
-        token: { colorPrimary: '#4E6C50', fontFamily: 'Roboto' },
+        token: { colorPrimary: '#2A9D8F', fontFamily: 'Playfair Display' },
         components: {
-            Layout: { headerBg: lightenColor('#4E6C50', 70), bodyBg: '#F9F9F9' },
+            Layout: { headerBg: lightenColor('#2A9D8F',100), bodyBg: '#F9F9F9', },
         },
         cssVar: true,
     };
@@ -65,6 +66,8 @@ const HomeLayout = ({ roles }) => {
                         <Outlet />
                     </Content>
                 </Layout>
+
+                <FooterMobileNav></FooterMobileNav>
             </Layout>
         </ConfigProvider>
     );

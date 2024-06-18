@@ -45,6 +45,7 @@ import ViewShop from '../features/gamification/shop/ViewShop';
 import ShopTickets from '../features/gamification/shop/ShopTickets';
 import ViewPointsBalance from '../features/gamification/ViewPointsBalance';
 import ViewRPsBalance from '../features/gamification/ViewRPsBalance';
+import AnimatePrize from '../AnimatePrize';
 
 export const router = createBrowserRouter([
     {
@@ -81,32 +82,33 @@ export const router = createBrowserRouter([
                 path: '/register',
                 element: <RegisterAttendee />,
             },
+        ],
+    },
+    { path: 'animate', element: <AnimatePrize></AnimatePrize> },
+    {
+        path: 'forms',
+        children: [
             {
-                path: 'forms',
+                path: ':form_id',
                 children: [
                     {
-                        path: ':form_id',
+                        path: 'edit',
+                        element: (
+                            <FormLayout>
+                                <EditFormPage />
+                            </FormLayout>
+                        ),
+                    },
+                    {
+                        path: 'event/:event_id',
                         children: [
                             {
-                                path: 'edit',
-                                element: (
-                                    <FormLayout>
-                                        <EditFormPage />
-                                    </FormLayout>
-                                ),
+                                path: 'submit',
+                                element: <SubmitForm />,
                             },
                             {
-                                path: 'event/:event_id',
-                                children: [
-                                    {
-                                        path: 'submit',
-                                        element: <SubmitForm />,
-                                    },
-                                    {
-                                        path: 'submissions',
-                                        element: <ViewFormSubmissions />,
-                                    },
-                                ],
+                                path: 'submissions',
+                                element: <ViewFormSubmissions />,
                             },
                         ],
                     },

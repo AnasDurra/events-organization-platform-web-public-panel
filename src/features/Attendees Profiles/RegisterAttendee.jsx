@@ -126,7 +126,7 @@ export default function RegisterAttendee() {
                         'Registered Successfully',
                         `Welcome to Eventure ${res?.result?.username}!`
                     );
-                    navigate('/home');
+                    navigate('/login');
                 }
             })
             .catch((error) => {

@@ -32,7 +32,7 @@ export default function ProfileImage({ org, onNewProfilePic, onRemoveProfilePic 
                 ),
                 visible: false,
             }}
-            fallback={fallback_img}
+            fallback={'/public/assets/fakeProfile.png'}
         />
     );
 }

@@ -18,7 +18,7 @@ export default function ShopBag({
         <>
             {console.log(items)}
             <div className='w-full flex justify-center items-center flex-col'>
-                <div className='text-lg text-gray-500 flex space-x-2 items-center'>
+                <div className='text-lg text-textPrimary flex space-x-2 items-center'>
                     <div>shopping bag</div>
                     <FiShoppingBag />
                 </div>

@@ -69,63 +69,71 @@ export default function AttendeeTicketsHistory() {
             className='w-full'
             position='right'
         >
-            {updatedTicketsHistory.map((ticket) => (
-                <TimelineItem key={ticket.attendee_tickets_id}>
-                    <TimelineOppositeContent
-                        sx={{ flex: 1, m: 'auto 0' }}
-                        align='right'
-                        variant='body2'
-                        color='text.secondary'
-                    >
-                        {dayjs(ticket.attendee_tickets_created_at).format('YYYY MMM DD')}
-                    </TimelineOppositeContent>
-                    <TimelineSeparator>
-                        <TimelineConnector />
-                        {ticket.attendee_tickets_data?.event_id ? (
-                            <TimelineDot
-                                style={{ color: 'transparent', backgroundColor: 'transparent' }}
-                                onClick={() => handleEventClick(ticket.attendee_tickets_data.event_id)}
-                            >
-                                <FestivalIcon
-                                    style={{
-                                        color: token.colorPrimary,
-                                        backgroundColor: 'transparent',
-                                        fontSize: '1.5em',
-                                    }}
-                                />
-                            </TimelineDot>
-                        ) : (
-                            <TimelineDot style={{ color: 'transparent', backgroundColor: 'transparent' }}>
-                                <TiTicket className='text-rose-500 text-[1.5em]' />
-                            </TimelineDot>
-                        )}
-                        <TimelineConnector />
-                    </TimelineSeparator>
-                    <TimelineContent sx={{ py: '12px', px: 2 }}>
-                        <Typography
-                            variant='h6'
-                            component='span'
+            {[...updatedTicketsHistory]
+                .sort((a, b) => {
+                    const createdAtA = dayjs(a.attendee_tickets_created_at);
+                    const createdAtB = dayjs(b.attendee_tickets_created_at);
+                    return createdAtB.diff(createdAtA);
+                })
+                .map((ticket) => (
+                    <TimelineItem key={ticket.attendee_tickets_id}>
+                        <TimelineOppositeContent
+                            sx={{ flex: 1, m: 'auto 0' }}
+                            align='right'
+                            variant='body2'
+                            color='text.secondary'
                         >
+                            {dayjs(ticket.attendee_tickets_created_at).format('YYYY MMM DD')}
+                        </TimelineOppositeContent>
+                        <TimelineSeparator>
+                            <TimelineConnector />
                             {ticket.attendee_tickets_data?.event_id ? (
-                                <Link to={`/events/${ticket.attendee_tickets_data.event_id}`}>
-                                    {ticket.event_title || 'Event Title'}
-                                </Link>
+                                <TimelineDot
+                                    style={{ color: 'transparent', backgroundColor: 'transparent' }}
+                                    onClick={() => handleEventClick(ticket.attendee_tickets_data.event_id)}
+                                >
+                                    <FestivalIcon
+                                        style={{
+                                            color: token.colorPrimary,
+                                            backgroundColor: 'transparent',
+                                            fontSize: '1.5em',
+                                        }}
+                                    />
+                                </TimelineDot>
                             ) : (
-                                <span>{`Package ${ticket.attendee_tickets_data?.package_name || 'Package name'}`}</span>
+                                <TimelineDot style={{ color: 'transparent', backgroundColor: 'transparent' }}>
+                                    <TiTicket className='text-textPrimary text-[1.5em]' />
+                                </TimelineDot>
                             )}
-                            {console.log(ticket)}
-                        </Typography>
-                        {/* TODO check after event registration */}
-                        <Typography>
-                            {ticket.attendee_tickets_value < 0
-                                ? `You Payed ${Math.abs(ticket.attendee_tickets_value)}`
-                                : `You bought ${Math.abs(ticket.attendee_tickets_value)} tickets for ${
-                                      ticket.attendee_tickets_data?.payed / 1000
-                                  }$`}
-                        </Typography>
-                    </TimelineContent>
-                </TimelineItem>
-            ))}
+                            <TimelineConnector />
+                        </TimelineSeparator>
+                        <TimelineContent sx={{ py: '12px', px: 2 }}>
+                            <Typography
+                                variant='h6'
+                                component='span'
+                            >
+                                {ticket.attendee_tickets_data?.event_id ? (
+                                    <Link to={`/events/${ticket.attendee_tickets_data.event_id}`}>
+                                        {ticket.event_title || 'Event Title'}
+                                    </Link>
+                                ) : (
+                                    <span>{`Package ${
+                                        ticket.attendee_tickets_data?.package_name || 'Package name'
+                                    }`}</span>
+                                )}
+                                {console.log(ticket)}
+                            </Typography>
+                            {/* TODO check after event registration */}
+                            <Typography>
+                                {ticket.attendee_tickets_value < 0
+                                    ? `You Payed ${Math.abs(ticket.attendee_tickets_value)}`
+                                    : `You bought ${Math.abs(ticket.attendee_tickets_value)} tickets for ${
+                                          ticket.attendee_tickets_data?.payed / 1000
+                                      }$`}
+                            </Typography>
+                        </TimelineContent>
+                    </TimelineItem>
+                ))}
 
             {ticketsHistory?.length > 3 && (
                 <div className='flex justify-center'>
