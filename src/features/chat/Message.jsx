@@ -1,4 +1,4 @@
-import { Avatar, Button, Popover, Space, Typography, Dropdown, Menu } from 'antd';
+import { Avatar, Button, Popover, Space, Typography, Dropdown, Menu, Modal } from 'antd';
 import { TYPE_RECEIVED_MESSAGE, TYPE_SENT_MESSAGE, TYPE_SYSTEM_MESSAGE } from './CONSTANTS';
 
 import { useEffect, useState } from 'react';
@@ -9,7 +9,11 @@ import { Icon } from '@iconify/react';
 import MessageReactions from './MessageReactions';
 import ReportMessageModal from './ReportMessageModal';
 import { useLazyIsMessageReportedQuery } from '../../api/services/reports';
+import { useDeleteMessageMutation } from '../../api/services/chats';
 import { useNotification } from '../../utils/NotificationContext';
+
+import './Message.css';
+import Roles from '../../api/Roles';
 
 function Message({
     message,
@@ -18,6 +22,7 @@ function Message({
     replyOnMessage,
     scrollToRepliedMessage,
     isFocused,
+    isDeleted,
     chat_group_id,
     eventID,
     orgID,
@@ -25,6 +30,7 @@ function Message({
     const { openNotification } = useNotification();
 
     const [checkIsMessageReported, { isFetching: isIsMessageReportedFetching }] = useLazyIsMessageReportedQuery();
+    const [deleteMessage, { isLoading: isDeleteMessageIsLoading }] = useDeleteMessageMutation();
 
     const [user] = useState(getLoggedInUserV2());
     const [showDots, setShowDots] = useState(false);
@@ -106,16 +112,30 @@ function Message({
         setShowReactions(false);
     };
 
+    const handleDeleteMessage = () => {
+        deleteMessage(message?.message_id)
+            .unwrap()
+            .then((res) => {
+                console.log(res);
+                openNotification('info', 'Message deleted successfully', null, 'topLeft');
+            })
+            .catch(() => {
+                openNotification('error', 'Failed to delete the message', null, 'bottomRight');
+            });
+    };
+
     const dotsMenu = (
         <Menu>
             <Menu.Item
                 onClick={() => replyOnMessage(message)}
                 key='1'
                 icon={<Icon icon='icomoon-free:reply' style={{ fontSize: '18px' }} />}
+                disabled={isDeleted}
             >
                 Reply
             </Menu.Item>
-            {user.user_id != message.user.user_id && (
+
+            {user.user_id != message.user.user_id && user?.user_role === Roles?.ATTENDEE && (
                 <Menu.Item
                     onClick={() => {
                         checkIsMessageReported(message?.message_id)
@@ -150,12 +170,24 @@ function Message({
                     Report
                 </Menu.Item>
             )}
-            <Menu.Item
-                key='3'
-                icon={<Icon icon='material-symbols:delete' style={{ color: 'red', fontSize: '18px' }} />}
-            >
-                Delete
-            </Menu.Item>
+            {user?.user_role === Roles?.EMPLOYEE && user?.organization_id === orgID && (
+                <Menu.Item
+                    key='3'
+                    icon={<Icon icon='material-symbols:delete' style={{ color: 'red', fontSize: '18px' }} />}
+                    onClick={() => {
+                        Modal.confirm({
+                            title: 'Are you sure you want to delete this message?',
+                            okText: 'Yes, Delete it',
+                            cancelText: 'Cancel',
+                            onOk: () => {
+                                handleDeleteMessage();
+                            },
+                        });
+                    }}
+                >
+                    Delete
+                </Menu.Item>
+            )}
         </Menu>
     );
     const reactionsContent = (
@@ -229,7 +261,12 @@ function Message({
         }
     }, [isFocused]);
     return (
-        <div style={containerStyle} onMouseEnter={() => setShowDots(true)} onMouseLeave={() => setShowDots(false)}>
+        <div
+            className={isDeleted ? 'deleted-message-indicator' : ''}
+            style={containerStyle}
+            onMouseEnter={() => setShowDots(true)}
+            onMouseLeave={() => setShowDots(false)}
+        >
             <Space
                 style={{ display: 'flex', alignItems: 'center', width: '80%' }}
                 onMouseLeave={() => setShowReactions(true)}
@@ -246,7 +283,7 @@ function Message({
                         id={message?.message_id}
                         style={messageStyle}
                         onDoubleClick={() => {
-                            replyOnMessage(message);
+                            !isDeleted ? replyOnMessage(message) : null;
                         }}
                     >
                         {message?.user?.user_id !== user?.user_id && (
@@ -276,7 +313,7 @@ function Message({
                                     </div>
 
                                     <div style={{ fontSize: '14px', direction: 'ltr' }}>
-                                        <Typography.Text ellipsis={{ rows: 1 }}>
+                                        <Typography.Text dir='auto' ellipsis={{ rows: 1 }}>
                                             {message?.replied_message?.message_content}
                                         </Typography.Text>
                                     </div>
@@ -284,7 +321,13 @@ function Message({
                             )}
 
                             <Space direction='vertical'>
-                                <Typography.Text style={{ fontSize: '14px' }}>{message?.text}</Typography.Text>
+                                <Typography.Text dir='auto' style={{ fontSize: '14px' }}>
+                                    {isDeleted ? (
+                                        <span className='deleted-message-text'>This message was deleted</span>
+                                    ) : (
+                                        message.text
+                                    )}
+                                </Typography.Text>
                                 <Space size={20} style={{ marginTop: '1em' }}>
                                     <div style={{ fontSize: '10px', color: 'gray', marginTop: '4px' }}>
                                         {moment(message?.timestamp).format('h:mm A')}
@@ -302,7 +345,7 @@ function Message({
                         placement={type === TYPE_RECEIVED_MESSAGE ? 'bottomLeft' : 'bottomRight'}
                     >
                         <Button
-                            loading={isIsMessageReportedFetching}
+                            loading={isIsMessageReportedFetching || isDeleteMessageIsLoading}
                             type='text'
                             icon={<Icon icon='zondicons:dots-horizontal-triple' />}
                             style={{ fontSize: '18px', marginRight: '20px' }}

@@ -1,0 +1,46 @@
+.deleted-message-indicator {
+    background-color: #fef3f3;
+    /* color: #cc0000; */
+    font-size: 14px;
+    padding: 0px 10px;
+    width: 100%;
+    margin-top: 8px;
+    border-radius: 8px;
+    animation: fadeOut 2s ease-out forwards;
+    opacity: 1;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+.deleted-message-text {
+    background-color: #f9f1f3;
+    color: #f44336;
+    font-size: 14px;
+    padding: 8px;
+    border-radius: 8px;
+    display: inline-block;
+    overflow-wrap: break-word;
+    line-height: 1.4;
+    font-style: italic;
+    /* margin-bottom: 4px; */
+}
+
+.deleted-message-text::before {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    color: #f44336;
+    /* margin-right: 6px; */
+}
+
+.deleted-message-text:hover {
+    background-color: #ffdcdc;
+}

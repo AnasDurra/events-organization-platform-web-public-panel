@@ -26,6 +26,9 @@ import { Icon } from '@iconify/react';
 import DropdownSider from '../DropdownSider';
 
 import { useLogoutMutation } from '../../api/services/auth';
+import { chatSocket, setChatSocketHeader } from '../../chatSocket';
+
+import Cookies from 'js-cookie';
 
 export default function OrganizerLayout({ roles }) {
     const screens = Grid.useBreakpoint();
@@ -245,7 +248,6 @@ export default function OrganizerLayout({ roles }) {
     }, [screens]);
 
     useEffect(() => {
-        // console.log(checkAccessTokenObj);
         if (checkAccessTokenObj) {
             if (!roles?.includes(checkAccessTokenObj?.result?.user_role?.id)) {
                 navigate('/not-found');
@@ -256,25 +258,43 @@ export default function OrganizerLayout({ roles }) {
     }, [checkAccessTokenObj, roles]);
 
     useEffect(() => {
-        console.log(checkAccessTokenError);
+        // console.log(checkAccessTokenError);
         if (checkAccessTokenError) {
             navigate('/login');
         }
     }, [checkAccessTokenError]);
 
+    // start here
+    const authToken = Cookies.get('accessToken');
+    useEffect(() => {
+        function chatRecieved(message) {
+            console.log(message);
+        }
+
+        if (authToken) {
+            console.log(authToken);
+            setChatSocketHeader(authToken);
+        }
+
+        chatSocket.on('notification-received', chatRecieved);
+    }, [authToken]);
+
     return (
         <ConfigProvider theme={theme}>
-            {/* <Spin
-                size='large'
-                spinning={isAccessTokenLoading || isLogoutLoading}
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%',
-                    height: '100%',
-                }}
-            /> */}
+            {(isAccessTokenLoading || isLogoutLoading) && (
+                <Spin
+                    size='large'
+                    spinning={isAccessTokenLoading || isLogoutLoading}
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '100%',
+                        height: '100%',
+                    }}
+                />
+            )}
+
             <Layout hidden={hideContent}>
                 <Header className='h-[8svh] px-2'>
                     <Row justify={'space-between'} className='h-full px-2'>

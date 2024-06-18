@@ -34,6 +34,7 @@ const InputMessage = ({ isReplying, setIsReplying, replyMessage, setReplyMessage
 
             <div style={{ display: 'flex', width: '100%' }}>
                 <Input.TextArea
+                    dir='auto'
                     style={{ flex: 1, marginRight: '10px' }}
                     value={inputValue}
                     onChange={handleInputChange}

@@ -21,6 +21,7 @@ const EventChat = ({ chat_group_id, eventID, orgID }) => {
     const [isReplying, setIsReplying] = useState(false);
     const [replyMessage, setReplyMessage] = useState(null);
     const [focusedMessageId, setFocusedMessageId] = useState(null);
+    const [deletedMessageId, setDeletedMessageId] = useState(null);
 
     const messagesEndRef = useRef(null);
 
@@ -40,7 +41,6 @@ const EventChat = ({ chat_group_id, eventID, orgID }) => {
     };
 
     const fetchMoreData = () => {
-        console.log('next');
         setPage((prevPage) => prevPage + 1);
         refetch({ chat_group_id, pageSize, page });
     };
@@ -59,18 +59,28 @@ const EventChat = ({ chat_group_id, eventID, orgID }) => {
                     message.message_id === newMeesage?.message.message_id ? newMeesage?.message : message
                 )
             );
-            console.log('done');
+        }
+        function messageDeleted(deleted_message) {
+            setDeletedMessageId(deleted_message?.message_id);
+
+            setTimeout(() => {
+                setMessages((prevMessages) =>
+                    prevMessages.filter((message) => message.message_id !== deleted_message.message_id)
+                );
+            }, 2000);
         }
         chatSocket.on(`group-${4}`, messageReceived);
         chatSocket.on(`group-${4}/reaction`, reactionReceived);
+        chatSocket.on(`group-${4}/deletion`, messageDeleted);
 
         return () => {
             chatSocket.off(`group-${4}`, messageReceived);
+            chatSocket.off(`group-${4}/reaction`, reactionReceived);
+            chatSocket.off(`group-${4}/deletion`, messageDeleted);
         };
     }, []);
 
     useEffect(() => {
-        console.log(data);
         if (data) {
             setMessages((prevMessages) => [...prevMessages, ...data.result.messages]);
         }
@@ -152,7 +162,8 @@ const EventChat = ({ chat_group_id, eventID, orgID }) => {
                                         }
                                         replyOnMessage={replyOnMessage}
                                         scrollToRepliedMessage={scrollToRepliedMessage}
-                                        isFocused={focusedMessageId === message.message_id}
+                                        isFocused={focusedMessageId === message?.message_id}
+                                        isDeleted={deletedMessageId === message?.message_id}
                                         chat_group_id={chat_group_id}
                                         eventID={eventID}
                                         orgID={orgID}
