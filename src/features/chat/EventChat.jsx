@@ -115,6 +115,7 @@ const EventChat = ({ chat_group_id, eventID, orgID }) => {
                             dataLength={messages.length}
                             next={fetchMoreData}
                             inverse={true}
+                            scrollThreshold={0.5}
                             hasMore={
                                 data?.result?.meta_data?.current_page === data?.result?.meta_data?.last_page
                                     ? false

@@ -20,14 +20,34 @@ const EventCover = ({ data, setIsUpdateModalOpen }) => {
     const user = getLoggedInUserV2();
     return (
         <div style={coverImageStyle.container}>
-            <Image
-                preview={false}
-                height={'100%'}
-                width={'100%'}
-                style={{ minHeight: '40vh' }}
-                src='https://picsum.photos/1000/300'
-            />
-            <div style={coverImageStyle.overlay}>
+            <div
+            // className='relative -m-2 sm:-m-6 md:-m-8 lg:-m-12 xl:-m-14'
+            >
+                <Image
+                    preview={false}
+                    height={'100%'}
+                    width={'100%'}
+                    style={{ minHeight: '45vh' }}
+                    src='https://picsum.photos/1000/300'
+                />
+                <div style={coverImageStyle.overlay}></div>
+            </div>
+
+            <div
+                style={{
+                    position: 'absolute',
+                    top: -3,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    minHeight: '38vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-end',
+                    padding: '1em',
+                    zIndex: 1,
+                }}
+            >
                 <Space size={10} direction='vertical'>
                     <Space size={10} wrap>
                         <Typography.Title style={{ ...coverImageStyle.text, ...coverImageStyle.title }} level={4}>
