@@ -59,6 +59,12 @@ export const events = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['event'],
         }),
+        attendeeStatusInEvent: builder.query({
+            query: ({ attendee_id, event_id }) => ({
+                url: `attendee/attendee-event-info?event_id=${event_id}&attendee_id=${attendee_id}`,
+                method: 'GET',
+            }),
+        }),
     }),
 });
 
@@ -71,4 +77,5 @@ export const {
     useUpdateAgeGroupsMutation,
     useShowEventAttendeesQuery,
     useRemoveFormMutation,
+    useAttendeeStatusInEventQuery,
 } = events;

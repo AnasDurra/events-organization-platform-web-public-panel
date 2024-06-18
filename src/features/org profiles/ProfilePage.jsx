@@ -3,10 +3,10 @@ import {
     GithubFilled,
     InstagramFilled,
     LinkedinFilled,
-    MinusOutlined,
+    DownOutlined, FileTextOutlined, MinusOutlined,
     PlusOutlined,
 } from '@ant-design/icons';
-import { Button, Col, Row, Typography, message } from 'antd';
+import { Button, Col, Dropdown, Menu, Row, Space, Typography, message } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
@@ -33,11 +33,15 @@ import { useNotification } from '../../utils/NotificationContext';
 import { FaFacebook } from 'react-icons/fa';
 import { WhatsApp } from '@mui/icons-material';
 import { IoIosSettings } from 'react-icons/io';
+import { Icon } from '@iconify/react';
+import ComplaintModal from './reports/ComplaintModal';
 
 export default function ProfilePage() {
     const navigate = useNavigate();
     const { openNotification } = useNotification();
     const [user, setUser] = useState(null);
+
+    const [showComplaintModal, setShowComplaintModal] = useState(false);
 
     let { orgId } = useParams();
     const [messageApi, contextHolder] = message.useMessage();
@@ -227,6 +231,14 @@ export default function ProfilePage() {
                     newProfilePic({ file, orgId });
                 }}
             />
+
+            {showComplaintModal && (
+                <ComplaintModal
+                    organizer={org}
+                    showComplaintModal={showComplaintModal}
+                    setShowComplaintModal={setShowComplaintModal}
+                />
+            )}
             {contextHolder}
         </div>
     );

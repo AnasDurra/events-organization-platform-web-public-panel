@@ -46,6 +46,8 @@ import ShopTickets from '../features/gamification/shop/ShopTickets';
 import ViewPointsBalance from '../features/gamification/ViewPointsBalance';
 import ViewRPsBalance from '../features/gamification/ViewRPsBalance';
 import AnimatePrize from '../AnimatePrize';
+import OrgReports from '../features/org profiles/reports/OrgReports';
+import ReportToAdmin from '../features/Attendees Profiles/ReportToAdmin';
 
 export const router = createBrowserRouter([
     {
@@ -243,6 +245,10 @@ export const router = createBrowserRouter([
                     },
                 ],
             },
+            {
+                path: 'report-to-admin',
+                element: <ReportToAdmin />,
+            },
         ],
     },
 
@@ -274,6 +280,7 @@ export const router = createBrowserRouter([
                 ],
             },
             { path: 'tickets', element: <OrgTicketsPage /> },
+            { path: 'reports', element: <OrgReports /> },
         ],
     },
 ]);

@@ -1,15 +1,23 @@
 import { MoreOutlined } from '@ant-design/icons';
 import { Icon } from '@iconify/react';
-import { Button, Card, Col, Dropdown, Image, Menu, Popover, Row, Space, Tooltip, Typography } from 'antd';
+import { Button, Card, Dropdown, Image, Menu, Popover, Space, Tooltip, Typography } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { getLoggedInUserV2 } from '../../../../api/services/auth';
 
 import useEventHandlers from '../../utils/eventHandlers';
+import { useState } from 'react';
+import ReportEventModal from './ReportEventModal';
+import { useLazyIsEventReportedQuery } from '../../../../api/services/adminReports.js';
+import { useNotification } from '../../../../utils/NotificationContext';
+
 const EventCover = ({ data, setIsUpdateModalOpen }) => {
+    const [checkIsEventReportedReported, { isFetching: isIsEventReportedFetching }] = useLazyIsEventReportedQuery();
+
+    const { openNotification } = useNotification();
+    const [showReportEventModal, setShowReportEventModal] = useState(false);
     const navigate = useNavigate();
     const { handleDeleteEvent } = useEventHandlers();
     const user = getLoggedInUserV2();
-    // console.log(user);
     return (
         <div style={coverImageStyle.container}>
             <Image
@@ -120,10 +128,70 @@ const EventCover = ({ data, setIsUpdateModalOpen }) => {
                                     </Space.Compact>
                                 </div>
                             )}
+                            {user?.user_role == 3 && (
+                                <Dropdown
+                                    overlay={
+                                        <Menu>
+                                            <Menu.Item
+                                                key='report'
+                                                icon={
+                                                    <Icon
+                                                        icon='ic:baseline-report-problem'
+                                                        style={{
+                                                            fontSize: '24px',
+                                                            color: ` #f0bc00`,
+                                                        }}
+                                                    />
+                                                }
+                                                onClick={() => {
+                                                    checkIsEventReportedReported(data?.event_id)
+                                                        .unwrap()
+                                                        .then((res) => {
+                                                            console.log(res);
+                                                            if (res.error) {
+                                                                openNotification(
+                                                                    'error',
+                                                                    'Error',
+                                                                    'There was an error checking the report status. Please try again later.',
+                                                                    'bottomRight'
+                                                                );
+                                                            } else if (res?.result === false) {
+                                                                setShowReportEventModal(true);
+                                                            } else {
+                                                                openNotification(
+                                                                    'info',
+                                                                    'Already Reported',
+                                                                    'You have already reported this event, and its under review.',
+                                                                    'topLeft'
+                                                                );
+                                                            }
+                                                        })
+                                                        .catch((err) => {
+                                                            console.log(err);
+                                                        });
+                                                }}
+                                            >
+                                                Report Event
+                                            </Menu.Item>
+                                        </Menu>
+                                    }
+                                    loading={isIsEventReportedFetching}
+                                    trigger={['click']}
+                                >
+                                    <Button icon={<MoreOutlined />} />
+                                </Dropdown>
+                            )}
                         </div>
                     </Space>
                 </Space>
             </div>
+            {showReportEventModal && (
+                <ReportEventModal
+                    data={data}
+                    showReportEventModal={showReportEventModal}
+                    setShowReportEventModal={setShowReportEventModal}
+                />
+            )}
         </div>
     );
 };

@@ -28,6 +28,7 @@ export const apiSlice = createApi({
         'blocked-list',
         'tickets-balance',
         'rp-balance',
+        'reports',
         'org-withdraws',
         'org-tickets-balance',
     ],

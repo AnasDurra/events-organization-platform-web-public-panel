@@ -9,6 +9,8 @@ import {
     LogoutOutlined,
     ShopOutlined,
     UserOutlined,
+    AlertFilled,
+    AlertOutlined,
 } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { GoNorthStar } from 'react-icons/go';
@@ -45,11 +47,17 @@ const navigationItems = [
         outlinedIcon: <ShopOutlined className='text-[1.2em]' />,
         path: '/home/shop',
     },
+    {
+        label: 'Contact Us',
+        filledIcon: <AlertFilled className='text-[1.2em]' />,
+        outlinedIcon: <AlertOutlined className='text-[1.2em]' />,
+        path: '/home/report-to-admin',
+    },
 ];
 
 export default function HomeHeader() {
     const navigate = useNavigate();
-    const [isRedeemCodeModalOpen, setIsRedeemCodeModalOpen] = useState(true);
+    const [isRedeemCodeModalOpen, setIsRedeemCodeModalOpen] = useState(false);
 
     const menu = (
         <Menu style={{ borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', width: '25svw' }}>
@@ -60,10 +68,7 @@ export default function HomeHeader() {
             >
                 <UserOutlined style={iconStyle} /> My Profile
             </Menu.Item>
-            <Menu.Item
-                key='events'
-                style={menuItemStyle}
-            >
+            <Menu.Item key='events' style={menuItemStyle}>
                 <CalendarOutlined style={iconStyle} /> My Events
             </Menu.Item>
             <Menu.Divider />

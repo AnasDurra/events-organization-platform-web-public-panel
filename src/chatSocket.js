@@ -6,7 +6,7 @@ export let chatSocket = null;
 // Function to reinitialize the socket
 export const setChatSocketHeader = (authToken) => {
     // Close the existing socket connection if it's open
-    if (chatSocket.connected) {
+    if (chatSocket?.connected) {
         chatSocket.disconnect();
     }
 
@@ -28,5 +28,7 @@ export const joinChannel = (channel) => {
 
 export const sendMessage = (messageData) => {
     chatSocket.emit('message-sent', messageData);
-    console.log('done');
+};
+export const userReacted = (reactionData) => {
+    chatSocket.emit('user-reacted', reactionData);
 };

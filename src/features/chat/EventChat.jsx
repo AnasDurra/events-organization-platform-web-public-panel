@@ -1,45 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
-import { List, Input, Button, Avatar, Divider, Space, Spin } from 'antd';
+import { Divider, Spin, Typography } from 'antd';
 import Message from './Message';
 import { TYPE_RECEIVED_MESSAGE, TYPE_SENT_MESSAGE, TYPE_SYSTEM_MESSAGE } from './CONSTANTS';
 import moment from 'moment';
-import ReplyMessage from './ReplyMessage';
 
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useGroupChatListQuery } from '../../api/services/chats';
-import { chatSocket, sendMessage } from '../../chatSocket';
+import { chatSocket } from '../../chatSocket';
 import { getLoggedInUserV2 } from '../../api/services/auth';
+import InputMessage from './InputMessage';
 
-const EventChat = ({ chat_group_id }) => {
-    const [pageSize, setPageSize] = useState(10);
+const EventChat = ({ chat_group_id, eventID, orgID }) => {
+    const pageSize = 10;
     const [page, setPage] = useState(1);
-    const { data, error, isLoading, refetch, isFetching } = useGroupChatListQuery({ chat_group_id, pageSize, page });
+    const { data, isLoading, refetch, isFetching } = useGroupChatListQuery({ chat_group_id, pageSize, page });
 
     const [user] = useState(getLoggedInUserV2());
-    // console.log(user);
     const [messages, setMessages] = useState([]);
-    const [inputValue, setInputValue] = useState('');
 
     const [isReplying, setIsReplying] = useState(false);
     const [replyMessage, setReplyMessage] = useState(null);
     const [focusedMessageId, setFocusedMessageId] = useState(null);
+    const [deletedMessageId, setDeletedMessageId] = useState(null);
 
     const messagesEndRef = useRef(null);
-
-    const handleInputChange = (e) => {
-        setInputValue(e.target.value);
-    };
-
-    const handleSendMessage = () => {
-        if (inputValue.trim() !== '') {
-            const newMessage = {
-                content: inputValue,
-                group_id: chat_group_id,
-            };
-            sendMessage(newMessage);
-            setInputValue('');
-        }
-    };
 
     const replyOnMessage = (replyMessage) => {
         setIsReplying(true);
@@ -49,10 +33,8 @@ const EventChat = ({ chat_group_id }) => {
     const scrollToRepliedMessage = (messageId) => {
         if (messageId) {
             const repliedMessageElement = document.getElementById(messageId);
-            console.log(repliedMessageElement);
             if (repliedMessageElement) {
                 repliedMessageElement.scrollIntoView({ behavior: 'smooth' });
-
                 setFocusedMessageId(messageId);
             }
         }
@@ -64,35 +46,65 @@ const EventChat = ({ chat_group_id }) => {
     };
 
     useEffect(() => {
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
-        }
-
         function messageReceived(message) {
+            console.log('Recived message');
             setMessages((prevMessages) => [message.message, ...prevMessages]);
+            if (messagesEndRef.current) {
+                messagesEndRef.current.scrollTop = 0;
+            }
+        }
+        function reactionReceived(newMeesage) {
+            setMessages((prevMessages) =>
+                prevMessages.map((message) =>
+                    message.message_id === newMeesage?.message.message_id ? newMeesage?.message : message
+                )
+            );
+        }
+        function messageDeleted(deleted_message) {
+            setDeletedMessageId(deleted_message?.message_id);
+
+            setTimeout(() => {
+                setMessages((prevMessages) =>
+                    prevMessages.filter((message) => message.message_id !== deleted_message.message_id)
+                );
+            }, 2000);
         }
         chatSocket.on(`group-${4}`, messageReceived);
+        chatSocket.on(`group-${4}/reaction`, reactionReceived);
+        chatSocket.on(`group-${4}/deletion`, messageDeleted);
 
         return () => {
             chatSocket.off(`group-${4}`, messageReceived);
+            chatSocket.off(`group-${4}/reaction`, reactionReceived);
+            chatSocket.off(`group-${4}/deletion`, messageDeleted);
         };
     }, []);
 
     useEffect(() => {
-        console.log(data);
         if (data) {
             setMessages((prevMessages) => [...prevMessages, ...data.result.messages]);
         }
     }, [data]);
 
     return (
-        <div style={{ width: '100%', margin: '0 auto', padding: '10px' }}>
+        <div
+            style={{
+                width: '100%',
+                margin: '0 auto',
+                padding: '20px',
+                backgroundColor: '#f4f7f6',
+                border: '1px solid #e4e4e4',
+                borderRadius: '8px',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+            }}
+        >
             <Spin spinning={isLoading}>
-                <div ref={messagesEndRef} style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                <div style={{ height: '450px', overflowY: 'auto' }}>
                     <div
+                        ref={messagesEndRef}
                         id='scrollableDiv'
                         style={{
-                            height: 300,
+                            height: 450,
                             overflow: 'auto',
                             display: 'flex',
                             flexDirection: 'column-reverse',
@@ -100,12 +112,35 @@ const EventChat = ({ chat_group_id }) => {
                     >
                         <InfiniteScroll
                             style={{ display: 'flex', flexDirection: 'column-reverse', overflow: 'unset' }}
-                            dataLength={data?.result?.meta_data?.page_size ?? 0}
+                            dataLength={messages.length}
                             next={fetchMoreData}
                             inverse={true}
-                            hasMore={true}
-                            loader={<h4>Loading...</h4>}
-                            endMessage={null} // TODO
+                            hasMore={
+                                data?.result?.meta_data?.current_page === data?.result?.meta_data?.last_page
+                                    ? false
+                                    : true
+                            }
+                            loader={
+                                <Spin
+                                    spinning={true}
+                                    style={{ margin: '20px auto', fontSize: '24px', height: '5em' }}
+                                />
+                            }
+                            endMessage={
+                                <>
+                                    <Typography.Title
+                                        level={3}
+                                        style={{ textAlign: 'center', marginTop: '20px', color: '#555' }}
+                                    >
+                                        Welcome to our platform!
+                                    </Typography.Title>
+                                    <Typography.Paragraph
+                                        style={{ textAlign: 'center', fontSize: '1.2rem', color: '#555' }}
+                                    >
+                                        Thanks for exploring the content.
+                                    </Typography.Paragraph>
+                                </>
+                            } // TODO
                             scrollableTarget='scrollableDiv'
                         >
                             {messages.map((message, index) => (
@@ -127,7 +162,11 @@ const EventChat = ({ chat_group_id }) => {
                                         }
                                         replyOnMessage={replyOnMessage}
                                         scrollToRepliedMessage={scrollToRepliedMessage}
-                                        isFocused={focusedMessageId === message.message_id}
+                                        isFocused={focusedMessageId === message?.message_id}
+                                        isDeleted={deletedMessageId === message?.message_id}
+                                        chat_group_id={chat_group_id}
+                                        eventID={eventID}
+                                        orgID={orgID}
                                     />
                                 </div>
                             ))}
@@ -144,22 +183,13 @@ const EventChat = ({ chat_group_id }) => {
                     borderTop: '1px solid #ccc',
                 }}
             >
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    {isReplying && <ReplyMessage message={replyMessage} setIsReplying={setIsReplying} />}
-
-                    <div style={{ display: 'flex', width: '100%' }}>
-                        <Input.TextArea
-                            style={{ flex: 1, marginRight: '10px' }}
-                            value={inputValue}
-                            onChange={handleInputChange}
-                            onPressEnter={handleSendMessage}
-                            placeholder='Type your message...'
-                        />
-                        <Button style={{ width: '80px' }} type='primary' onClick={handleSendMessage}>
-                            Send
-                        </Button>
-                    </div>
-                </div>
+                <InputMessage
+                    isReplying={isReplying}
+                    setIsReplying={setIsReplying}
+                    replyMessage={replyMessage}
+                    setReplyMessage={setReplyMessage}
+                    chat_group_id={chat_group_id}
+                />
             </div>
         </div>
     );

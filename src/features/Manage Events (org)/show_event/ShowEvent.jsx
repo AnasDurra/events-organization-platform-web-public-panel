@@ -77,7 +77,14 @@ const ShowEvent = () => {
                                     {
                                         key: '2',
                                         label: 'Event Chat',
-                                        children: <EventChat chat_group_id={eventData?.result?.chat_group?.id} />,
+                                        disabled: !eventData?.result?.is_chatting_enabled,
+                                        children: (
+                                            <EventChat
+                                                chat_group_id={eventData?.result?.chat_group?.id}
+                                                eventID={eventData?.result?.id}
+                                                orgID={eventData?.result?.organization?.id}
+                                            />
+                                        ),
                                     },
                                 ]}
                             />

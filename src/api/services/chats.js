@@ -43,7 +43,13 @@ export const chats = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        deleteMessage: builder.mutation({
+            query: (id) => ({
+                url: `chat/delete-message/${id}`,
+                method: 'DELETE',
+            }),
+        }),
     }),
 });
 
-export const { useChattingListQuery, useGroupChatListQuery, useJoinedGroupsQuery } = chats;
+export const { useChattingListQuery, useGroupChatListQuery, useJoinedGroupsQuery, useDeleteMessageMutation } = chats;
