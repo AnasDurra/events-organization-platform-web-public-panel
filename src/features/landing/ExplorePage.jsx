@@ -1,7 +1,6 @@
 import { Button, ConfigProvider, DatePicker, Dropdown, Input, Pagination, Select, Space, Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry';
-import './ExplorePage.css';
 import dayjs from 'dayjs';
 import { useGetAddressesQuery, useGetEventsQuery, useLazyGetEventsQuery } from './feedsSlice';
 import { key } from 'localforage';

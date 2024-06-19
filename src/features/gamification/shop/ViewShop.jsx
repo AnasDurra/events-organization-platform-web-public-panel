@@ -144,7 +144,8 @@ export default function ViewShop() {
                     <CategoriesMenu />
                 </div>
 
-                <div className='col-span-10 sm:col-span-4 lg:col-span-6  p-4 px-8 flex flex-col space-y-8  border-2 border-gray-200 rounded-3xl'>
+
+                <div className='col-span-10 sm:col-span-4 lg:col-span-6  p-2 px-8 flex flex-col space-y-2  border-2 border-gray-200 rounded-3xl'>
                     <ShopHeader rp_value={balanceRP?.points} />
 
                     <Outlet context={[handleAddToBag, prizes]} />

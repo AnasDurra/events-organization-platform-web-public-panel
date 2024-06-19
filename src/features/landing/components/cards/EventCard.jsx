@@ -1,57 +1,53 @@
-import { Button, Card, Typography, theme } from 'antd';
+import { Button, Tag, Typography, theme } from 'antd';
 import React from 'react';
 import { MdLocationOn } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 const { useToken } = theme;
+
 export default function EventCard({ event }) {
+    const navigate = useNavigate();
     const { token } = useToken();
 
     return (
-        <div
-            className={`relative rounded-2xl border-2 shadow-xl  flex flex-col items-center justify-center w-[100%] h-[100%] bg-gray-200 space-y-2 bg-[url('/assets/cover-event.png')] bg-[length:100%_100%]  text-white font-bold `}
-            style={{ borderColor: token.colorPrimary }}
-        >
-        
-            <div className='absolute inset-0 bg-black opacity-40  rounded-2xl'></div>
+        <div className='text-textPrimary w-full h-72 rounded-3xl relative flex flex-col justify-end bg-gradient-to-br from-bgSecondary via-primary to-secondary'>
+            <div className='h-[75%] bg-transparent w-full rounded-3xl py-4 px-4'>
+                <div className='bg-white/55 border-2 border-white/50 w-full h-full rounded-3xl p-4 flex flex-col justify-center space-y-8'>
+                    <div className='w-full h-full flex justify-between items-center'>
+                        <div className='flex flex-col justify-center items-start'>
+                            <div className='text-lg font-semibold'>{event?.title}</div>
+                            <div className='text-md font-semibold text-gray-500'>By some org</div>
+                        </div>
 
-            <div className='w-full px-4 flex justify-between items-start pt-2 flex-1 z-10'>
-                <div className='flex  items-center'>14 sep | 11am</div>
-                <div className='flex  items-center'>
-                    <MdLocationOn />
-                    <span>Damascus</span>
-                </div>
-            </div>
+                        <div>
+                            <div className='bg-white/70 border-4 rounded-3xl w-20 h-20 border-primary/30 flex flex-col justify-center items-center'>
+                                <div className='text-xl'>
+                                    {new Date(event?.registrationStartDate).toLocaleString('default', {
+                                        month: 'short',
+                                    })}
+                                </div>
+                                <div className='text-2xl text-secondary'>
+                                    {new Date(event?.registrationStartDate).getDate()}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <div className='py-2 z-10'>
-                <div className='flex justify-center flex-2'>Event Title</div>
-                <Typography.Text
-                    type='secondary'
-                    className='text-xs'
-                    style={{ color: 'gray' }}
-                >
-                    (organization name)
-                </Typography.Text>
-            </div>
+                    <div className='flex justify-between items-center'>
+                        <div className='h-full flex justify-start items-center'>
+                            <Tag color='blue'>Software</Tag>
+                            <Tag color='red'>Party</Tag>
+                            <Tag color='gold'>Pets</Tag>
+                        </div>
 
-            <div className='flex  items-center w-full flex-1  flex-col justify-end z-10'>
-                <div className='flex space-x-2 justify-center items-end '>
-                    <Typography.Text
-                        type='secondary'
-                        className='text-xs'
-                        style={{ color: 'gray' }}
-                    >
-                        from
-                    </Typography.Text>
-                    <Typography.Text style={{ color: 'white' }}>20k s.p</Typography.Text>
-                </div>
-
-                <div className='flex justify-center pb-4 pt-2'>
-                    <Button
-                        type='primary'
-                        className='rounded-2xl'
-                    >
-                        BUY TICKETS
-                    </Button>
+                        <Button
+                            type='primary'
+                            className='w-20'
+                            onClick={() => navigate(`/event/show/${event?.id}`)}
+                        >
+                            More
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>

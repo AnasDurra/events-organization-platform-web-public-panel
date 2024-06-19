@@ -16,7 +16,6 @@ export default function ViewOrgsPage() {
     const [getOrgs] = useLazyGetOrganizationsSummaryQuery();
 
     const loadMoreData = async () => {
-        console.log('hi load');
         getOrgs({ page: currentPage, pageSize: 9 }).then((response) => {
             setOrgsCount(response?.data?.result?.count);
 

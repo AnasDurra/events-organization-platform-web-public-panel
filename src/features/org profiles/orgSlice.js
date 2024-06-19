@@ -12,9 +12,9 @@ export const orgSlice = apiSlice.injectEndpoints({
         addOrgAddress: builder.mutation({
             query(data) {
                 return {
-                    url: `organization/address/${data.orgId}`,
+                    url: `organization/address/${data?.orgId}`,
                     method: 'POST',
-                    body: { address_id: data.address_id },
+                    body: { address_id: data?.address_id },
                 };
             },
             invalidatesTags: ['one-org'],
@@ -22,9 +22,9 @@ export const orgSlice = apiSlice.injectEndpoints({
         removeOrgAddress: builder.mutation({
             query: (data) => {
                 return {
-                    url: `organization/address/${data.orgId}`,
+                    url: `organization/address/${data?.orgId}`,
                     method: 'DELETE',
-                    body: { address_id: data.address_id },
+                    body: { address_id: data?.address_id },
                 };
             },
             invalidatesTags: ['one-org'],
@@ -40,7 +40,7 @@ export const orgSlice = apiSlice.injectEndpoints({
         newCoverPic: builder.mutation({
             query: (data) => {
                 var bodyFormData = new FormData();
-                bodyFormData.append('cover_picture', data?.file);
+                bodyFormData?.append('cover_picture', data?.file);
 
                 return {
                     url: `organization/updateCoverPicture/${data?.orgId}`,
@@ -54,13 +54,35 @@ export const orgSlice = apiSlice.injectEndpoints({
         newProfilePic: builder.mutation({
             query: (data) => {
                 var bodyFormData = new FormData();
-                bodyFormData.append('main_picture', data?.file);
+                bodyFormData?.append('main_picture', data?.file);
 
                 return {
                     url: `organization/updateMainPicture/${data?.orgId}`,
                     method: 'POST',
                     formData: true,
                     body: bodyFormData,
+                };
+            },
+            invalidatesTags: ['one-org'],
+        }),
+
+        addContact: builder.mutation({
+            query(data) {
+                return {
+                    url: `organization/contact/${data?.orgId}`,
+                    method: 'POST',
+                    body: { contact_id: data?.contact_id, content: data?.content },
+                };
+            },
+            invalidatesTags: ['one-org'],
+        }),
+
+        removeContact: builder.mutation({
+            query(data) {
+                return {
+                    url: `organization/contact/${data?.orgId}`,
+                    method: 'DELETE',
+                    body: { contact_id: data?.contact_id },
                 };
             },
             invalidatesTags: ['one-org'],
@@ -107,4 +129,6 @@ export const {
     useRemoveCoverPicMutation,
     useRemoveProfilePicMutation,
     useOrganizationAttendeesQuery,
+    useAddContactMutation,
+    useRemoveContactMutation
 } = orgSlice;

@@ -157,7 +157,7 @@ export default function RedeemCodeModal({ isOpen, onClose }) {
                     </div>
                 ) : (
                     <>
-                        <ul className='list-disc  list-outside text-left mx-8 text-pretty marker:text-primary'>
+                        <ul className='list-disc  list-outside text-left mx-8 text-pretty marker:text-primary text-[1rem]'>
                             <li>Your code can be found on the back of your gift card.</li>
                             <li>Scratch off the protective covering to reveal your code when ready to use it.</li>
                             <li>Enter the full code below to redeem your gift card.</li>

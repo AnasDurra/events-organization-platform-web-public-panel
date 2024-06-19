@@ -70,6 +70,12 @@ export default function OrganizerLayout({ roles }) {
             menu: [
                 {
                     id: '1',
+                    name: 'Profile',
+                    url: '/org/profile/config',
+                    icon: 'ri:profile-line',
+                },
+                {
+                    id: '1',
                     name: 'Events',
                     url: '/org/our-events',
                     icon: 'twemoji:calendar',
@@ -270,7 +276,8 @@ export default function OrganizerLayout({ roles }) {
         }
     }, [checkAccessTokenError]);
 
-    // start here
+
+   /*  // start here
     const authToken = Cookies.get('accessToken');
     useEffect(() => {
         function chatRecieved(message) {
@@ -282,8 +289,8 @@ export default function OrganizerLayout({ roles }) {
             setChatSocketHeader(authToken);
         }
 
-        chatSocket.on('notification-received', chatRecieved);
-    }, [authToken]);
+        chatSocket?.on('notification-received', chatRecieved);
+    }, [authToken]); */
 
     return (
         <ConfigProvider theme={theme}>

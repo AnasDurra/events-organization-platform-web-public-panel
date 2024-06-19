@@ -1,7 +1,9 @@
 import { FacebookFilled, LinkedinFilled, XOutlined } from '@ant-design/icons';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function WebFooter() {
+    const navigate = useNavigate()
     return (
         <div
             className={`min-h-[40svh] w-full  bg-primary p-8 flex flex-col sm:flex-row sm:justify-between sm:items-center lg:px-40`}
@@ -20,6 +22,13 @@ export default function WebFooter() {
             <div className='flex flex-col space-y-8 sm:space-y-0 sm:flex-row sm:space-x-8'>
                 <div className='flex flex-col space-y-4'>
                     <div className='text-2xl text-white font-semibold mb-4'> About Us</div>
+                    <div
+                        className='text-white text-lg hover:text-secondary hover:cursor-pointer'
+                        onClick={() => navigate('/home/report-to-admin')}
+                    >
+                        Report
+                    </div>
+
                     <div className='text-white text-lg hover:text-secondary hover:cursor-pointer'>Our Blog</div>
                     <div className='text-white text-lg hover:text-secondary hover:cursor-pointer'>Careers </div>
                     <div className='text-white text-lg hover:text-secondary hover:cursor-pointer'>Pricing </div>
