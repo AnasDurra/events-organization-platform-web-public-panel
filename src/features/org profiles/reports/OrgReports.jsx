@@ -56,9 +56,9 @@ const OrgReports = () => {
                     'The reported message has been successfully deleted and the report status has been updated to resolved.',
                     'topRight'
                 );
+                setIsModalVisible(false);
             }
         });
-        // setIsModalVisible(false);
     };
     const handleIgnore = (id) => {
         ignoreReport(id).then((res) => {

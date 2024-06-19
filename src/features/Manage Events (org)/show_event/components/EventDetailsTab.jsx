@@ -1,4 +1,4 @@
-import { Button, Col, Modal, Row, Space, Tooltip, Typography, theme } from 'antd';
+import { Button, Col, Modal, Row, Space, Spin, Tooltip, Typography, theme } from 'antd';
 import { CloseOutlined, InfoCircleOutlined, QrcodeOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { getLoggedInUserV2 } from '../../../../api/services/auth';
 import { useEffect, useState } from 'react';
@@ -8,18 +8,17 @@ import EventRegistratinInfoModal from './EventRegistratinInfoModal';
 import EventScheduleAndMap from './EventScheduleAndMap';
 import EventDetails from './EventDetails';
 import ShowAttendeeQrCode from './ShowAttendeeQrCode';
-import { useAttendeeStatusInEventQuery } from '../../../../api/services/events';
 import { Icon } from '@iconify/react';
 const { useToken } = theme;
 
-const EventDetailsTab = ({ eventData, handleRegisterClicked }) => {
-    const [user] = useState(getLoggedInUserV2());
+const EventDetailsTab = ({
+    eventData,
+    handleRegisterClicked,
+    attendeeStatusInEvent,
+    isAttendeeStatusInEventLoading,
+    user_role,
+}) => {
     const { token } = useToken();
-
-    const { data: attendeeStatusInEvent, isLoading: isAttendeeStatusInEvent } = useAttendeeStatusInEventQuery({
-        event_id: eventData?.result?.id,
-        attendee_id: user?.attendee_id,
-    });
 
     const [tooltipVisible, setTooltipVisible] = useState(true);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -47,13 +46,6 @@ const EventDetailsTab = ({ eventData, handleRegisterClicked }) => {
         ticketId: '123456789',
     };
 
-    const eventInfo = {
-        title: 'Sample Event',
-        date: '2024-06-17',
-        time: '6:00 PM',
-        location: '123 Event Street, City, Country',
-    };
-    const registrationStatus = 'accepted';
     return (
         <>
             <Row gutter={[20, 50]} style={{ direction: 'revert' }}>
@@ -72,7 +64,7 @@ const EventDetailsTab = ({ eventData, handleRegisterClicked }) => {
                     />
                 </Col>
             </Row>
-            {user?.user_role == 3 && (
+            {user_role == 3 && (
                 <div className='sticky bottom-0 bg-white border-t border-gray-300 mt-8'>
                     <div className='bg-white p-3 border border-gray-200 flex flex-col sm:flex-row justify-between w-full'>
                         <div className='hidden sm:flex flex-col sm:flex-row sm:items-center sm:justify-between flex-grow'>
@@ -114,127 +106,129 @@ const EventDetailsTab = ({ eventData, handleRegisterClicked }) => {
                                         className='mt-2 sm:mt-0'
                                     />
                                 </Tooltip>
-                                {registrationStatus === null && (
-                                    <Tooltip title='Click to attend this event'>
-                                        <Button type='primary' size='large' onClick={handleRegisterClicked}>
-                                            <Space size={10}>
-                                                <Icon icon='mdi:register-outline' style={{ fontSize: '24px' }} />
-                                                Attend
-                                            </Space>
-                                        </Button>
-                                    </Tooltip>
-                                )}
-                                {registrationStatus === 'rejected' && (
-                                    <Tooltip
-                                        open={tooltipVisible}
-                                        color='#700000'
-                                        title={
-                                            <div style={{ padding: '5px' }}>
-                                                You have been rejected from this event
-                                                <Button
-                                                    type='link'
-                                                    onClick={() => {
-                                                        setTooltipVisible(false);
-                                                    }}
-                                                    style={{ top: -35, right: -170, color: '#fff' }}
-                                                    icon={<CloseOutlined />}
-                                                />
-                                            </div>
-                                        }
-                                    >
-                                        <Button
-                                            type='default'
-                                            size='large'
-                                            style={{
-                                                backgroundColor: '#f8d7da',
-                                                color: '#721c24',
-                                                borderColor: '#f5c6cb',
-                                                cursor: 'not-allowed',
-                                            }}
-                                            disabled
+                                <Spin spinning={isAttendeeStatusInEventLoading}>
+                                    {attendeeStatusInEvent?.result?.registered === null && (
+                                        <Tooltip title='Click to attend this event'>
+                                            <Button type='primary' size='large' onClick={handleRegisterClicked}>
+                                                <Space size={10}>
+                                                    <Icon icon='mdi:register-outline' style={{ fontSize: '24px' }} />
+                                                    Attend
+                                                </Space>
+                                            </Button>
+                                        </Tooltip>
+                                    )}
+                                    {attendeeStatusInEvent?.result?.registered === 'rejected' && (
+                                        <Tooltip
+                                            open={tooltipVisible}
+                                            color='#700000'
+                                            title={
+                                                <div style={{ padding: '5px' }}>
+                                                    You have been rejected from this event
+                                                    <Button
+                                                        type='link'
+                                                        onClick={() => {
+                                                            setTooltipVisible(false);
+                                                        }}
+                                                        style={{ top: -35, right: -170, color: '#fff' }}
+                                                        icon={<CloseOutlined />}
+                                                    />
+                                                </div>
+                                            }
                                         >
-                                            <Space size={10}>
-                                                <Icon
-                                                    icon='mdi:event-busy'
-                                                    style={{ fontSize: '20px', color: 'black' }}
-                                                />
-                                                Rejected
-                                            </Space>
-                                        </Button>
-                                    </Tooltip>
-                                )}
-                                {registrationStatus === 'waiting' && (
-                                    <Tooltip
-                                        open={tooltipVisible}
-                                        color='#948800'
-                                        title={
-                                            <div style={{ padding: '5px' }}>
-                                                You are currently waiting for approval
-                                                <Button
-                                                    type='link'
-                                                    onClick={() => {
-                                                        setTooltipVisible(false);
-                                                    }}
-                                                    style={{ top: -35, right: -150, color: '#fff' }}
-                                                    icon={<CloseOutlined />}
-                                                />
-                                            </div>
-                                        }
-                                    >
-                                        <Button
-                                            type='default'
-                                            size='large'
-                                            style={{
-                                                backgroundColor: '#fff3cd',
-                                                color: '#856404',
-                                                borderColor: '#ffeeba',
-                                                cursor: 'not-allowed',
-                                            }}
-                                            disabled
+                                            <Button
+                                                type='default'
+                                                size='large'
+                                                style={{
+                                                    backgroundColor: '#f8d7da',
+                                                    color: '#721c24',
+                                                    borderColor: '#f5c6cb',
+                                                    cursor: 'not-allowed',
+                                                }}
+                                                disabled
+                                            >
+                                                <Space size={10}>
+                                                    <Icon
+                                                        icon='mdi:event-busy'
+                                                        style={{ fontSize: '20px', color: 'black' }}
+                                                    />
+                                                    Rejected
+                                                </Space>
+                                            </Button>
+                                        </Tooltip>
+                                    )}
+                                    {attendeeStatusInEvent?.result?.registered === 'waiting' && (
+                                        <Tooltip
+                                            open={tooltipVisible}
+                                            color='#948800'
+                                            title={
+                                                <div style={{ padding: '5px' }}>
+                                                    You are currently waiting for approval
+                                                    <Button
+                                                        type='link'
+                                                        onClick={() => {
+                                                            setTooltipVisible(false);
+                                                        }}
+                                                        style={{ top: -35, right: -150, color: '#fff' }}
+                                                        icon={<CloseOutlined />}
+                                                    />
+                                                </div>
+                                            }
                                         >
-                                            <Space size={10}>
-                                                <Icon
-                                                    icon='guidance:waiting-room'
-                                                    style={{ fontSize: '20px', color: 'black' }}
-                                                />
-                                                Waiting
-                                            </Space>
-                                        </Button>
-                                    </Tooltip>
-                                )}
-                                {registrationStatus === 'accepted' && (
-                                    <Tooltip
-                                        open={tooltipVisible}
-                                        color={token.colorPrimary}
-                                        title={
-                                            <div style={{ padding: '5px' }}>
-                                                You have been accepted to this event
-                                                <Button
-                                                    type='link'
-                                                    onClick={() => {
-                                                        setTooltipVisible(false);
-                                                    }}
-                                                    style={{ top: -35, right: -170, color: '#fff' }}
-                                                    icon={<CloseOutlined />}
-                                                />
-                                            </div>
-                                        }
-                                    >
-                                        <Button
-                                            type='default'
-                                            size='large'
-                                            style={{
-                                                backgroundColor: '#d4edda',
-                                                // color: '#155724',
-                                                borderColor: '#c3e6cb',
-                                            }}
-                                            icon={<QrcodeOutlined />}
-                                            onClick={openQrModal}
+                                            <Button
+                                                type='default'
+                                                size='large'
+                                                style={{
+                                                    backgroundColor: '#fff3cd',
+                                                    color: '#856404',
+                                                    borderColor: '#ffeeba',
+                                                    cursor: 'not-allowed',
+                                                }}
+                                                disabled
+                                            >
+                                                <Space size={10}>
+                                                    <Icon
+                                                        icon='guidance:waiting-room'
+                                                        style={{ fontSize: '20px', color: 'black' }}
+                                                    />
+                                                    Waiting
+                                                </Space>
+                                            </Button>
+                                        </Tooltip>
+                                    )}
+                                    {attendeeStatusInEvent?.result?.registered === 'accepted' && (
+                                        <Tooltip
+                                            open={tooltipVisible}
+                                            color={token.colorPrimary}
+                                            title={
+                                                <div style={{ padding: '5px' }}>
+                                                    You have been accepted to this event
+                                                    <Button
+                                                        type='link'
+                                                        onClick={() => {
+                                                            setTooltipVisible(false);
+                                                        }}
+                                                        style={{ top: -35, right: -170, color: '#fff' }}
+                                                        icon={<CloseOutlined />}
+                                                    />
+                                                </div>
+                                            }
                                         >
-                                            Show QR Code
-                                        </Button>
-                                    </Tooltip>
-                                )}
+                                            <Button
+                                                type='default'
+                                                size='large'
+                                                style={{
+                                                    backgroundColor: '#d4edda',
+                                                    // color: '#155724',
+                                                    borderColor: '#c3e6cb',
+                                                }}
+                                                icon={<QrcodeOutlined />}
+                                                onClick={openQrModal}
+                                            >
+                                                Show QR Code
+                                            </Button>
+                                        </Tooltip>
+                                    )}
+                                </Spin>
                             </Space>
                         </div>
                     </div>
@@ -251,7 +245,7 @@ const EventDetailsTab = ({ eventData, handleRegisterClicked }) => {
                 isVisible={isQrModalVisible}
                 onClose={handleQrModalCancel}
                 attendeeInfo={attendeeInfo}
-                eventInfo={eventInfo}
+                eventInfo={eventData?.result}
             />
         </>
     );

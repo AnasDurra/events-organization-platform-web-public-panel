@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Typography, Space, Button, Divider, Row, Col, theme } from 'antd';
 import QRCode from 'qrcode.react';
 import { Icon } from '@iconify/react';
+
+import { useAttendanceQrCodeQuery } from '../../../../api/services/attendance';
 
 const { Text, Title } = Typography;
 
 const ShowAttendeeQrCode = ({ isVisible, onClose, attendeeInfo, eventInfo }) => {
     const { token } = theme.useToken();
+
+    const { data: attendeeQrCode, isLoading: isAttendeeQrCodeLoading, error } = useAttendanceQrCodeQuery(eventInfo?.id);
+
     const qrValue = `Attendee: ${attendeeInfo.name}, Email: ${attendeeInfo.email}, Ticket ID: ${attendeeInfo.ticketId}`;
 
     const downloadQRCode = () => {
@@ -21,6 +26,11 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, attendeeInfo, eventInfo }) => 
             document.body.removeChild(a);
         }
     };
+
+    useEffect(() => {
+        console.log(attendeeQrCode);
+        console.log(error);
+    }, [attendeeQrCode, error]);
 
     return (
         <Modal

@@ -3,7 +3,7 @@ import { Card, Col, Row, Skeleton, Tabs } from 'antd';
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { useShowQuery } from '../../../api/services/events';
+import { useAttendeeStatusInEventQuery, useShowQuery } from '../../../api/services/events';
 import UpdateEventModal from '../UpdateEventModal';
 
 import EventChat from '../../chat/EventChat';
@@ -11,6 +11,7 @@ import RegistrationModal from '../registration/RegistrationModal';
 
 import EventCover from './components/EventCover';
 import EventDetailsTab from './components/EventDetailsTab';
+import { getLoggedInUserV2 } from '../../../api/services/auth';
 
 const ShowEvent = () => {
     const { id } = useParams();
@@ -18,7 +19,14 @@ const ShowEvent = () => {
     const showChat = searchParams.get('showChat');
     const isEditing = searchParams.get('edit');
 
+    const [user] = useState(getLoggedInUserV2());
+
     const { data: eventData, error, isLoading: eventDataIsLoading, refetch, isFetching } = useShowQuery(id);
+
+    const { data: attendeeStatusInEvent, isLoading: isAttendeeStatusInEventLoading } = useAttendeeStatusInEventQuery({
+        event_id: eventData?.result?.id,
+        attendee_id: user?.attendee_id,
+    });
 
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(isEditing ?? false);
     const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
@@ -71,6 +79,9 @@ const ShowEvent = () => {
                                             <EventDetailsTab
                                                 eventData={eventData}
                                                 handleRegisterClicked={handleRegisterClicked}
+                                                attendeeStatusInEvent={attendeeStatusInEvent}
+                                                isAttendeeStatusInEventLoading={isAttendeeStatusInEventLoading}
+                                                user_role={user?.user_role}
                                             />
                                         ),
                                     },
@@ -79,11 +90,17 @@ const ShowEvent = () => {
                                         label: 'Event Chat',
                                         disabled: !eventData?.result?.is_chatting_enabled,
                                         children: (
-                                            <EventChat
-                                                chat_group_id={eventData?.result?.chat_group?.id}
-                                                eventID={eventData?.result?.id}
-                                                orgID={eventData?.result?.organization?.id}
-                                            />
+                                            <>
+                                                {attendeeStatusInEvent?.result?.registered === 'accepted' ? (
+                                                    <EventChat
+                                                        chat_group_id={eventData?.result?.chat_group?.id}
+                                                        eventID={eventData?.result?.id}
+                                                        orgID={eventData?.result?.organization?.id}
+                                                    />
+                                                ) : (
+                                                    <div>bnoo</div>
+                                                )}
+                                            </>
                                         ),
                                     },
                                 ]}

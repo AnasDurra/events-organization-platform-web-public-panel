@@ -93,6 +93,14 @@ export const orgSlice = apiSlice.injectEndpoints({
                 };
             },
         }),
+        orgEvents: builder.query({
+            query: () => {
+                return {
+                    url: `organization/events`,
+                    method: 'GET',
+                };
+            },
+        }),
     }),
 });
 
@@ -107,4 +115,5 @@ export const {
     useRemoveCoverPicMutation,
     useRemoveProfilePicMutation,
     useOrganizationAttendeesQuery,
+    useOrgEventsQuery,
 } = orgSlice;
