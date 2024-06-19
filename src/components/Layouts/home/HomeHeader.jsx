@@ -18,7 +18,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import TicketsCard from '../../../features/landing/TicketsCard';
 import { Badge, Button, Divider, Dropdown, Layout, Menu, Space } from 'antd';
 import { IoMdNotificationsOutline } from 'react-icons/io';
-import { getLoggedInUserV2 } from '../../../api/services/auth';
+import { getLoggedInUserV2, useLogoutMutation } from '../../../api/services/auth';
 import { useGetAttendeeBalanceQuery } from '../../../features/Ticketing Packages/TicketingPackagesSlice';
 import { SiGamejolt } from 'react-icons/si';
 import { TiTick, TiTicket } from 'react-icons/ti';
@@ -47,17 +47,13 @@ const navigationItems = [
         outlinedIcon: <ShopOutlined className='text-[1.2em]' />,
         path: '/home/shop',
     },
-    {
-        label: 'Contact Us',
-        filledIcon: <AlertFilled className='text-[1.2em]' />,
-        outlinedIcon: <AlertOutlined className='text-[1.2em]' />,
-        path: '/home/report-to-admin',
-    },
 ];
 
 export default function HomeHeader() {
     const navigate = useNavigate();
     const [isRedeemCodeModalOpen, setIsRedeemCodeModalOpen] = useState(false);
+
+    const [logout] = useLogoutMutation();
 
     const menu = (
         <Menu style={{ borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', width: '25svw' }}>
@@ -68,7 +64,10 @@ export default function HomeHeader() {
             >
                 <UserOutlined style={iconStyle} /> My Profile
             </Menu.Item>
-            <Menu.Item key='events' style={menuItemStyle}>
+            <Menu.Item
+                key='events'
+                style={menuItemStyle}
+            >
                 <CalendarOutlined style={iconStyle} /> My Events
             </Menu.Item>
             <Menu.Divider />
@@ -83,6 +82,9 @@ export default function HomeHeader() {
             <Menu.Item
                 key='logout'
                 style={{ ...menuItemStyle, color: '#ff4d4f' }}
+                onClick={() => {
+                    logout().then((res) => navigate('/login'));
+                }}
             >
                 <LogoutOutlined style={iconStyle} /> Logout
             </Menu.Item>

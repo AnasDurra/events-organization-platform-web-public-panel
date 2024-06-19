@@ -46,7 +46,7 @@ export default function CategoriesSection() {
             <div className='col-span-8 sm:col-span-6 sm:col-start-2'>
                 <div className='flex flex-col w-full p-4 min-h-[40svh]'>
                     <div className='flex justify-between items-center my-4'>
-                        <div className='text-2xl m-2 font-extrabold font-serif text-pretty'>Categories</div>
+                        <div className='text-2xl m-2 font-extrabold font-serif text-pretty text-textPrimary'>Categories</div>
                         <div
                             className='text-primary text-xl font-bold hover:cursor-pointer hover:shadow-2xl hover:animate-pulse px-2'
                             onClick={() => navigate('categories')}

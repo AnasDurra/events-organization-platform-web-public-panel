@@ -18,10 +18,10 @@ export default function HomeHeaderPoints() {
     );
 
     return (
-        <div className='flex  justify-center items-center h-[5svh]'>
+        <div className='flex  justify-center items-center h-[5svh] '>
             <div
                 onClick={() => navigate('/home/tickets')}
-                className='transition ease-in-out delay-150 hover:-translate-y-[0.1em] hover:cursor-pointer hover:scale-110  duration-300 flex  w-[5em] justify-center  items-center space-x-1 border-y-2 p-2 border-primary bg-secondary/15  h-[5svh] border-l-2 rounded-l-full'
+                className=' hover:border-secondary hover:cursor-pointer  p-2 flex  w-[5em] justify-center  items-center space-x-1 border-y-2  border-primary bg-secondary/15  h-[5svh] border-l-2 rounded-l-full'
             >
                 <div className='text-textPrimary'>{balance?.balance} </div>
 
@@ -30,7 +30,7 @@ export default function HomeHeaderPoints() {
 
             <div
                 onClick={() => navigate('/home/RPs')}
-                className='transition ease-in-out delay-150 hover:-translate-y-[0.1em] hover:cursor-pointer hover:scale-110  duration-300  flex  justify-center w-[5em]  items-center space-x-1 border-2 p-2 border-primary bg-secondary/15  h-[5svh]'
+                className='hover:border-secondary hover:cursor-pointer  p-2  flex  justify-center w-[5em]  items-center space-x-1 border-2  border-primary bg-secondary/15  h-[5svh]'
             >
                 <div className='text-textPrimary'>{pointsRp?.points} </div>
                 <img
@@ -40,7 +40,7 @@ export default function HomeHeaderPoints() {
             </div>
             <div
                 onClick={() => navigate('/home/points')}
-                className='transition ease-in-out delay-150 hover:-translate-y-[0.1em] hover:cursor-pointer hover:scale-110  duration-300  flex justify-center w-[5.2em]  items-center space-x-1 border-y-2  border-r-2 rounded-r-full p-2 border-primary bg-secondary/15  h-[5svh]'
+                className='hover:border-secondary hover:cursor-pointer  p-2  flex justify-center w-[5.2em]  items-center space-x-1 border-y-2  border-r-2 rounded-r-full  border-primary bg-secondary/15  h-[5svh]'
             >
                 <div className='text-green-900'>{platformPoints?.points} </div>
                 <img

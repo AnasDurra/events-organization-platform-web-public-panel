@@ -30,7 +30,7 @@ const getTabsItems = (data) => {
         {
             key: '2',
             label: <div className='text-textPrimary text-lg'>About us</div>,
-            children: <></>,
+            children: <div className='w-full'></div>,
         },
     ];
 };

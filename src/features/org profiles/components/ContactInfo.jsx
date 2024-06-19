@@ -1,23 +1,31 @@
 import React from 'react';
-import { Button, Col, Typography, Skeleton } from 'antd';
-import { PhoneOutlined, FacebookFilled, WhatsAppOutlined, LinkedinFilled } from '@ant-design/icons';
+import { Button, Typography, Skeleton } from 'antd';
+import { PhoneOutlined, MailOutlined } from '@ant-design/icons';
 
 const ContactInfo = ({ org, isLoading }) => {
     return (
         <Skeleton loading={isLoading}>
-            <Typography.Title level={5}>Contact us</Typography.Title>
-            {org?.contacts?.map((contact) => (
-                <Button
-                    key={contact.id}
-                    icon={getContactIcon(contact.contact.name)}
-                    type='link'
-                    style={getContactStyle(contact.contact.name)}
-                    href={contact.content}
-                    target='_blank'
-                >
-                    {org.name}
-                </Button>
-            ))}
+            <div className='text-lg text-textPrimary font-sans'> Contact us</div>{' '}
+            {org?.contacts
+                ?.filter((contact) => contact.contact.name === 'Phone Number' || contact.contact.name === 'Email')
+                .map((contact) => (
+                    <div
+                        key={contact.id}
+                        className='flex justify-start space-x-0 items-center'
+                    >
+                        {getContactIcon(contact.contact.name)}
+                        <Button
+                            type='link'
+                            style={getContactStyle(contact.contact.name)}
+                            href={
+                                contact.content.includes('@') ? `mailto:${contact.content}` : `tel:${contact.content}`
+                            }
+                            target='_blank'
+                        >
+                            <div className='text-textPrimary'>{contact.content}</div>
+                        </Button>
+                    </div>
+                ))}
         </Skeleton>
     );
 };
@@ -27,16 +35,17 @@ const getContactIcon = (name) => {
         case 'Phone Number':
             return (
                 <PhoneOutlined
-                    rotate='90'
+                    className='text-secondary'
                     style={{ fontSize: '1.5em', marginRight: '0.5em' }}
                 />
             );
-        case 'Facebook':
-            return <FacebookFilled style={{ fontSize: '1.5em', marginRight: '0.5em' }} />;
-        case 'WhatsApp':
-            return <WhatsAppOutlined style={{ fontSize: '1.5em', marginRight: '0.5em' }} />;
-        case 'LinkedIn':
-            return <LinkedinFilled style={{ fontSize: '1.5em', marginRight: '0.5em' }} />;
+        case 'Email':
+            return (
+                <MailOutlined
+                    className='text-secondary'
+                    style={{ fontSize: '1.5em', marginRight: '0.5em' }}
+                />
+            );
         default:
             return null;
     }
@@ -46,10 +55,8 @@ const getContactStyle = (name) => {
     switch (name) {
         case 'Phone Number':
             return { color: 'GrayText' };
-        case 'Facebook':
-            return { color: 'blue' };
-        case 'WhatsApp':
-            return { color: 'green' };
+        case 'Email':
+            return { color: 'GrayText' };
         default:
             return {};
     }

@@ -3,6 +3,7 @@ import { URL } from './constants.js';
 
 export let chatSocket = null;
 
+
 // Function to reinitialize the socket
 export const setChatSocketHeader = (authToken) => {
     // Close the existing socket connection if it's open

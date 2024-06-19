@@ -17,7 +17,7 @@ const HomeLayout = ({ roles }) => {
     const theme = {
         token: { colorPrimary: '#2A9D8F', fontFamily: 'Playfair Display' },
         components: {
-            Layout: { headerBg: lightenColor('#2A9D8F',100), bodyBg: '#F9F9F9', },
+            Layout: { headerBg: lightenColor('#2A9D8F', 100), bodyBg: '#F9F9F9' },
         },
         cssVar: true,
     };
@@ -48,7 +48,7 @@ const HomeLayout = ({ roles }) => {
     }, [checkAccessTokenError]);
 
     // start here
-    const authToken = Cookies.get('accessToken');
+  /*   const authToken = Cookies.get('accessToken');
     useEffect(() => {
         function onGroupsJoined(group) {
             joinChannel(group.channel);
@@ -70,7 +70,7 @@ const HomeLayout = ({ roles }) => {
         return () => {
             chatSocket.off('group-joined', onGroupsJoined);
         };
-    }, [authToken]);
+    }, [authToken]); */
 
     useEffect(() => {
         console.log('layout', joinedGroups);

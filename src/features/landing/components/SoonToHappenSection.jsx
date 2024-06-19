@@ -6,8 +6,8 @@ export default function SoonToHappenSection() {
         <div className={`min-h-[40svh] ${styles.paper}`}>
             <div className='grid grid-cols-8 w-full my-8'>
                 <div className='col-span-8 sm:col-span-6 sm:col-start-2'>
-                    <div className='flex  items-center my-4 justify-center'>
-                        <div className='text-2xl m-2 font-extrabold font-serif text-center '>Soon To Happen Events</div>
+                    <div className='flex  items-center my-4 justify-between'>
+                        <div className='text-2xl m-2 font-extrabold font-serif text-textPrimary '>Soon To Happen Events</div>
                     </div>
                     <div className='grid grid-cols-12 gap-4 w-full'>
                         {fakeEvents.map((event) => (

@@ -265,6 +265,7 @@ export const router = createBrowserRouter([
             { path: 'members', element: <TeamPage /> },
             { path: 'attendees', element: <OrgAttendees /> },
             { path: 'our-events', element: <OrgEvents /> },
+            { path: 'profile/config', element: <ConfigOrgPage /> },
 
             {
                 path: 'forms',
