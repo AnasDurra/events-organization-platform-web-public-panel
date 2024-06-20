@@ -1,36 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { Modal, Typography, Space, Button, Divider, Row, Col, theme } from 'antd';
-import QRCode from 'qrcode.react';
+import { Modal, Typography, Space, Button, Divider, Row, Col, theme, Image, Spin } from 'antd';
 import { Icon } from '@iconify/react';
 
 import { useAttendanceQrCodeQuery } from '../../../../api/services/attendance';
+import moment from 'moment';
 
 const { Text, Title } = Typography;
 
 const ShowAttendeeQrCode = ({ isVisible, onClose, attendeeInfo, eventInfo }) => {
     const { token } = theme.useToken();
 
-    const { data: attendeeQrCode, isLoading: isAttendeeQrCodeLoading, error } = useAttendanceQrCodeQuery(eventInfo?.id);
-
-    const qrValue = `Attendee: ${attendeeInfo.name}, Email: ${attendeeInfo.email}, Ticket ID: ${attendeeInfo.ticketId}`;
+    console.log(eventInfo);
+    const { data: attendeeQrCode, isLoading: isAttendeeQrCodeLoading } = useAttendanceQrCodeQuery(eventInfo?.id);
 
     const downloadQRCode = () => {
-        const canvas = document.getElementById('myqrcode')?.querySelector('canvas');
-        if (canvas) {
-            const url = canvas.toDataURL();
-            const a = document.createElement('a');
-            a.download = 'QRCode.png';
-            a.href = url;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
+        const base64Image = attendeeQrCode?.result?.code;
+        const link = document.createElement('a');
+        link.href = base64Image;
+        link.download = 'qrcode.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
-
-    useEffect(() => {
-        console.log(attendeeQrCode);
-        console.log(error);
-    }, [attendeeQrCode, error]);
 
     return (
         <Modal
@@ -52,11 +42,17 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, attendeeInfo, eventInfo }) => 
                 <Row gutter={20}>
                     <Col xs={{ span: 24 }} sm={{ span: 12 }}>
                         <div id='myqrcode' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <QRCode value={qrValue} size={200} style={{ marginBottom: '15px' }} />
+                            <Spin spinning={isAttendeeQrCodeLoading}>
+                                <Image
+                                    src={attendeeQrCode?.result?.code}
+                                    width={250}
+                                    style={{ marginBottom: '15px' }}
+                                />
+                            </Spin>
                         </div>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 12 }} style={{ display: 'flex', alignItems: 'center' }}>
-                        <Space size={30} direction='vertical'>
+                        <Space size={10} direction='vertical'>
                             <Button type='primary' size='large' onClick={downloadQRCode}>
                                 <Space size={10}>
                                     <Icon icon='line-md:downloading-loop' style={{ fontSize: '28px' }} />
@@ -88,13 +84,15 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, attendeeInfo, eventInfo }) => 
                             <Title level={4} style={{ marginBottom: '16px', color: token.colorPrimary }}>
                                 Event Information
                             </Title>
-                            <Text strong>Title: </Text> <Text>{eventInfo.title}</Text>
+                            <Text strong>Title: </Text> <Text>{eventInfo?.title}</Text>
                             <br />
-                            <Text strong>Date: </Text> <Text>{eventInfo.date}</Text>
+                            <Text strong>Date: </Text>{' '}
+                            <Text>{moment(eventInfo?.days[0]?.day_date).format('MMMM D, YYYY')}</Text>
                             <br />
-                            <Text strong>Time: </Text> <Text>{eventInfo.time}</Text>
+                            <Text strong>Time: </Text>{' '}
+                            <Text>{moment(eventInfo?.days[0]?.slots[0]?.start_time).format('h:mm A')}</Text>
                             <br />
-                            <Text strong>Location: </Text> <Text>{eventInfo.location}</Text>
+                            <Text strong>Location: </Text> <Text>{eventInfo?.address?.label}</Text>
                         </div>
                         <Divider />
                     </Col>

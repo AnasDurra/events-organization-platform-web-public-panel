@@ -1,0 +1,122 @@
+.qr-reader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* background-color: #f9f9f9; */
+    /* padding: 20px; */
+    margin-top: 25px;
+}
+
+.page-title {
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 2rem;
+    color: #4a4a4a;
+    line-height: 1.2;
+    font-family: 'Roboto', sans-serif;
+    position: relative;
+}
+
+.page-title::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 5px;
+    background-color: #000000;
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.scanner-card {
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.qr-reader-wrapper {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+}
+
+.qr-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.qr-box {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
+
+.qr-frame {
+    width: 256px;
+    height: 256px;
+}
+
+.scanned-result {
+    margin-top: 20px;
+    display: block;
+    text-align: center;
+}
+
+.scanning-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+.event-details {
+    margin-top: 20px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .scanner-card {
+        max-width: 100%;
+    }
+
+    .qr-reader-wrapper {
+        height: 300px;
+    }
+
+    .qr-frame {
+        width: 200px;
+        height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .qr-reader-wrapper {
+        height: 250px;
+    }
+
+    .qr-frame {
+        width: 150px;
+        height: 150px;
+    }
+}

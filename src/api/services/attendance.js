@@ -10,12 +10,18 @@ export const attendance = apiSlice.injectEndpoints({
         }),
 
         checkAttendanceRecord: builder.query({
-            query: ({ attendee_id, event_id }) => ({
-                url: `attendance/check-attendance?attendeeId=${attendee_id}&eventId=${event_id}`,
+            query: (path) => ({
+                url: `${path}`,
                 method: 'GET',
+            }),
+        }),
+        confirmAttendance: builder.mutation({
+            query: (id) => ({
+                url: `attendance/confirm-attendance/${id}`,
+                method: 'PUT',
             }),
         }),
     }),
 });
 
-export const { useAttendanceQrCodeQuery, useCheckAttendanceRecordQuery } = attendance;
+export const { useAttendanceQrCodeQuery, useCheckAttendanceRecordQuery, useConfirmAttendanceMutation } = attendance;

@@ -29,7 +29,6 @@ import ResultSuccessPage from '../features/Ticketing Packages/ResultSuccessPage'
 import ConfigOrgPage from '../features/org profiles/configure org/ConfigOrgPage';
 import ViewFollowingPage from '../features/landing/ViewFollowingPage';
 import OrgAttendees from '../features/org profiles/OrgAttendees';
-import OrgEvents from '../features/org profiles/OrgEvents';
 import PublicLayout from '../components/Layouts/PublicLayout';
 import Roles from '../api/Roles';
 import BasicLayout from '../components/Layouts/BasicLayout';
@@ -48,6 +47,8 @@ import ViewRPsBalance from '../features/gamification/ViewRPsBalance';
 import AnimatePrize from '../AnimatePrize';
 import OrgReports from '../features/org profiles/reports/OrgReports';
 import ReportToAdmin from '../features/Attendees Profiles/ReportToAdmin';
+import ScanQRCode from '../features/qrCodes/ScanQRCode';
+import OrgEvents from '../features/org profiles/org events/OrgEvents';
 
 export const router = createBrowserRouter([
     {
@@ -282,6 +283,7 @@ export const router = createBrowserRouter([
             },
             { path: 'tickets', element: <OrgTicketsPage /> },
             { path: 'reports', element: <OrgReports /> },
+            { path: 'attendance/scan-qr', element: <ScanQRCode /> },
         ],
     },
 ]);
