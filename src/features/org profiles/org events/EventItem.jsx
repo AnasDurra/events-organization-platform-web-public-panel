@@ -1,19 +1,39 @@
-import { Card, Col, Image, Typography } from 'antd';
-import { useState } from 'react';
+import { Card, Col, Dropdown, Image, Menu, Typography } from 'antd';
+import { useEffect, useState } from 'react';
 import useEventHandlers from '../../Manage Events (org)/utils/eventHandlers';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import ScanQRCode from '../../qrCodes/ScanQRCode';
+import AttendeeInfoModal from '../../qrCodes/AttendeeInfoModal';
+import AttendeesListModal from '../../qrCodes/AttendeesListModal';
 
-const EventsList = ({ event }) => {
+const EventsItem = ({ event }) => {
     const navigate = useNavigate();
     const { handleDeleteEvent } = useEventHandlers();
 
+    const [isAttendeesListModalVisible, setIsAttendeesListModalVisible] = useState(false);
+
     const [isScanQrModalVisible, setIsScanQrModalVisible] = useState(false);
     const [scanningEvent, setScanningEvent] = useState(null);
+    const [key, setKey] = useState(0);
 
+    const [scannedResult, setScannedResult] = useState('');
+    const [isAttendeeInfoModalVisible, setIsAttendeeInfoModalVisible] = useState(false);
+    const onAttendeesListModalClose = () => {
+        setIsAttendeesListModalVisible(false);
+    };
+    const onAttendeeInfoModalClose = () => {
+        setKey((prevKey) => prevKey + 1);
+        setIsAttendeeInfoModalVisible(false);
+        setIsScanQrModalVisible(true);
+    };
+
+    const handleScanQrModalClose = () => {
+        setIsScanQrModalVisible(false);
+        setKey((prevKey) => prevKey + 1);
+    };
     const handleMouseEnter = (e) => {
         e.currentTarget.style.transform = 'scale(1.1)';
     };
@@ -33,9 +53,20 @@ const EventsList = ({ event }) => {
         }
     };
 
-    const handleScanQrModalClose = () => {
-        setIsScanQrModalVisible(false);
-    };
+    const actionsMenu = (
+        <Menu>
+            <Menu.Item
+                key='manual-attendance'
+                onClick={(e) => {
+                    e.domEvent.stopPropagation();
+                    setIsAttendeesListModalVisible(true);
+                }}
+                icon={<Icon icon='arcticons:one-hand-operation' style={{ fontSize: '24px' }} />}
+            >
+                Manual attendance
+            </Menu.Item>
+        </Menu>
+    );
 
     return (
         <>
@@ -86,6 +117,25 @@ const EventsList = ({ event }) => {
                         }}
                         key='remove'
                     />,
+                    <Dropdown overlay={actionsMenu} key='more' trigger={'click'} arrow>
+                        <Icon
+                            icon='bi:three-dots-vertical'
+                            style={{
+                                ...iconStyle,
+                                fontSize: '16px',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginTop: '6.5px',
+                                width: '100%',
+                            }}
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                            onClick={(e) => {
+                                handleClick(e, 'drop-down', event.event_id);
+                            }}
+                        />
+                    </Dropdown>,
                 ]}
                 onMouseOver={(e) => {
                     e.currentTarget.style.boxShadow =
@@ -113,16 +163,38 @@ const EventsList = ({ event }) => {
                     </Typography.Text>
                 </div>
             </Card>
-            <ScanQRCode
-                visible={isScanQrModalVisible}
-                setIsScanQrModalVisible={setIsScanQrModalVisible}
-                onClose={handleScanQrModalClose}
-                event={scanningEvent}
-            />
+
+            {isScanQrModalVisible && (
+                <ScanQRCode
+                    visible={isScanQrModalVisible}
+                    onClose={handleScanQrModalClose}
+                    event={scanningEvent}
+                    setScannedResult={setScannedResult}
+                    setIsAttendeeInfoModalVisible={setIsAttendeeInfoModalVisible}
+                    setIsScanQrModalVisible={setIsScanQrModalVisible}
+                    key={key}
+                />
+            )}
+
+            {isAttendeeInfoModalVisible && (
+                <AttendeeInfoModal
+                    scannedResult={scannedResult}
+                    visible={isAttendeeInfoModalVisible}
+                    onClose={onAttendeeInfoModalClose}
+                    key={key}
+                />
+            )}
+            {isAttendeesListModalVisible && (
+                <AttendeesListModal
+                    visible={isAttendeesListModalVisible}
+                    onClose={onAttendeesListModalClose}
+                    eventId={event?.event_id}
+                />
+            )}
         </>
     );
 };
 
-export default EventsList;
+export default EventsItem;
 
 const iconStyle = { transition: 'transform 0.3s', cursor: 'pointer' };

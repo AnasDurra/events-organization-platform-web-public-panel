@@ -4,7 +4,7 @@ import { EllipsisOutlined, PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { useOrgEventsQuery } from '../orgSlice.js';
-import EventsList from './EventsList.jsx';
+import EventItem from './EventItem.jsx';
 
 const OrgEvents = () => {
     const navigate = useNavigate();
@@ -146,7 +146,7 @@ const OrgEvents = () => {
                     ) : (
                         filteredEvents?.map((event) => (
                             <Col key={event?.event_id} xs={24} sm={12} md={12} lg={8} xl={8} xxl={6}>
-                                <EventsList event={event} />
+                                <EventItem event={event} />
                             </Col>
                         ))
                     )}

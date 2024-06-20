@@ -21,7 +21,19 @@ export const attendance = apiSlice.injectEndpoints({
                 method: 'PUT',
             }),
         }),
+        attendeesList: builder.query({
+            query: ({ event_day_id, page, pageSize }) => ({
+                url: `attendance/attendance-list?page=${page}&pageSize=${pageSize}`,
+                method: 'POST',
+                body: { event_day_id },
+            }),
+        }),
     }),
 });
 
-export const { useAttendanceQrCodeQuery, useCheckAttendanceRecordQuery, useConfirmAttendanceMutation } = attendance;
+export const {
+    useAttendanceQrCodeQuery,
+    useCheckAttendanceRecordQuery,
+    useConfirmAttendanceMutation,
+    useAttendeesListQuery,
+} = attendance;

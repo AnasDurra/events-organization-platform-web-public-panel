@@ -1,83 +1,32 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Card, message, Typography, Spin, Modal, Row, Col, Tag, Descriptions, Divider } from 'antd';
-import QrScanner from 'qr-scanner';
-import QrFrame from './qr-frame.svg';
+import { useState } from 'react';
+import { Card, Typography, Spin, Modal, Row, Col, Tag, Descriptions, Divider } from 'antd';
 import './QrStyles.css';
 import { useShowQuery } from '../../api/services/events';
 import { Icon } from '@iconify/react';
-import AttendeeInfoModal from './AttendeeInfoModal';
 
-const { Title, Text, Paragraph } = Typography;
+import ScanQrPlacement from './ScanQrPlacement';
 
-const ScanQRCode = ({ visible, setIsScanQrModalVisible, onClose, event }) => {
+const { Title, Text } = Typography;
+
+const ScanQRCode = ({
+    visible,
+    onClose,
+    event,
+    setScannedResult,
+    setIsAttendeeInfoModalVisible,
+    setIsScanQrModalVisible,
+}) => {
     const { data: eventData, isLoading: eventDataIsLoading, isFetching } = useShowQuery(event?.event_id);
 
-    const scanner = useRef(null);
-    const videoEl = useRef(null);
-    const qrBoxEl = useRef(null);
-    const [qrOn, setQrOn] = useState(true);
-    const [scannedResult, setScannedResult] = useState('');
-    const [isReading, setIsReading] = useState(false);
-
-    const [isAttendeeInfoModalVisible, setIsAttendeeInfoModalVisible] = useState(false);
+    const onScanFail = (err) => {
+        console.log(err);
+    };
 
     const onScanSuccess = (result) => {
-        console.log(result);
-        setScannedResult(result?.data);
-        setIsReading(false);
+        setScannedResult(result);
         setIsAttendeeInfoModalVisible(true);
         setIsScanQrModalVisible(false);
-        // message.success('QR Code scanned successfully!');
     };
-
-    const onScanFail = (err) => {
-        console.error(err);
-        // message.error('Error scanning QR code. Please try again.');
-        setIsReading(false);
-    };
-
-    const onAttendeeInfoModalClose = () => {
-        setIsAttendeeInfoModalVisible(false);
-        setIsScanQrModalVisible(true);
-    };
-
-    useEffect(() => {
-        if (videoEl.current && !scanner.current) {
-            scanner.current = new QrScanner(videoEl.current, onScanSuccess, {
-                onDecodeError: onScanFail,
-                preferredCamera: 'environment',
-                highlightScanRegion: true,
-                highlightCodeOutline: true,
-                overlay: qrBoxEl.current || undefined,
-            });
-
-            scanner.current
-                .start()
-                .then(() => {
-                    setQrOn(true);
-                })
-                .catch((err) => {
-                    console.error(err);
-                    setQrOn(false);
-                });
-        }
-
-        return () => {
-            scanner.current?.stop();
-        };
-    }, [visible]);
-
-    useEffect(() => {
-        if (!qrOn) {
-            alert('Camera is blocked or not accessible. Please allow camera in your browser permissions and reload.');
-        }
-    }, [qrOn]);
-
-    useEffect(() => {
-        if (scannedResult) {
-            setIsReading(true);
-        }
-    }, [scannedResult]);
 
     return (
         <>
@@ -95,6 +44,10 @@ const ScanQRCode = ({ visible, setIsScanQrModalVisible, onClose, event }) => {
                 okButtonProps={{ hidden: true }}
                 cancelText={'Back to events'}
                 cancelButtonProps={{ size: 'large' }}
+                destroyOnClose
+                closable={false}
+                maskClosable={false}
+                keyboard={false}
             >
                 <div className='qr-reader-container'>
                     {eventDataIsLoading || isFetching ? (
@@ -115,13 +68,10 @@ const ScanQRCode = ({ visible, setIsScanQrModalVisible, onClose, event }) => {
                                     <Col span={24}>
                                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                                             <Card className='scanner-card' style={{ backgroundColor: '#f9f9f9' }}>
-                                                <div className='qr-reader-wrapper'>
-                                                    <video ref={videoEl} className='qr-video'></video>
-                                                    <div ref={qrBoxEl} className='qr-box'>
-                                                        <img src={QrFrame} alt='Qr Frame' className='qr-frame' />
-                                                    </div>
-                                                    {isReading && <Spin className='scanning-spinner' />}
-                                                </div>
+                                                <ScanQrPlacement
+                                                    onScanSuccess={onScanSuccess}
+                                                    onScanFailure={onScanFail}
+                                                />
                                                 <div style={{ padding: '10px', marginTop: '10px' }}>
                                                     <Text style={{ color: '#888', fontStyle: 'italic' }}>
                                                         Please ensure the QR code is clearly visible within the frame
@@ -150,9 +100,7 @@ const ScanQRCode = ({ visible, setIsScanQrModalVisible, onClose, event }) => {
                                         <Descriptions.Item label='Address'>
                                             {eventData?.result?.address?.label}
                                         </Descriptions.Item>
-                                        <Descriptions.Item label='Address Notes'>
-                                            {eventData?.result?.address_notes}
-                                        </Descriptions.Item>
+
                                         <Descriptions.Item label='Start Date'>
                                             {new Date(eventData?.result?.registration_start_date).toLocaleString()}
                                         </Descriptions.Item>
@@ -192,11 +140,6 @@ const ScanQRCode = ({ visible, setIsScanQrModalVisible, onClose, event }) => {
                     )}
                 </div>
             </Modal>
-            <AttendeeInfoModal
-                scannedResult={scannedResult}
-                visible={isAttendeeInfoModalVisible}
-                onClose={onAttendeeInfoModalClose}
-            />
         </>
     );
 };
