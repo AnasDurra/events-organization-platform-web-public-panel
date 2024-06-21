@@ -18,6 +18,8 @@ import ImgCrop from 'antd-img-crop';
 import { fallback_img } from '../org profiles/fallback_img';
 import { getLoggedInUserV2 } from '../../api/services/auth';
 
+import './CreateEvent.css';
+
 const CreateEvent = () => {
     const navigate = useNavigate();
 
@@ -201,7 +203,7 @@ const CreateEvent = () => {
                     width: '100%',
                 }}
                 cover={
-                    <ImgCrop aspect={16 / 9} showReset showGrid rotationSlider>
+                    <ImgCrop aspect={16 / 5} showReset showGrid rotationSlider>
                         <Upload.Dragger
                             disabled={coverImage}
                             listType='picture'
@@ -212,9 +214,8 @@ const CreateEvent = () => {
                         >
                             {coverImage ? (
                                 <Image
-                                    height={250}
                                     width={'100%'}
-                                    style={{ width: '100%' }}
+                                    style={{ minHeight: '20vh' }}
                                     src={URL.createObjectURL(coverImage)}
                                     fallback={fallback_img}
                                     preview={{
