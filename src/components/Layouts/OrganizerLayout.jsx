@@ -110,6 +110,12 @@ export default function OrganizerLayout({ roles }) {
                     url: '/org/blocklist',
                     icon: 'solar:user-block-bold',
                 },
+                {
+                    id: '6',
+                    name: 'Reports',
+                    url: '/org/reports',
+                    icon: 'fluent-mdl2:report-warning',
+                },
 
                 // {
                 //     id: '7',
@@ -219,10 +225,7 @@ export default function OrganizerLayout({ roles }) {
             <Menu.ItemGroup title='New Notifications' />
             <Divider style={{ margin: '8px 0' }} />
             {notifications.map((notification) => (
-                <Menu.Item
-                    key={notification.id}
-                    style={{ padding: '8px 16px' }}
-                >
+                <Menu.Item key={notification.id} style={{ padding: '8px 16px' }}>
                     <div
                         style={{
                             display: 'flex',
@@ -241,10 +244,7 @@ export default function OrganizerLayout({ roles }) {
             ))}
             <Divider style={{ margin: '8px 0' }} />
             <Menu.Item style={{ textAlign: 'center' }}>
-                <Button
-                    type='link'
-                    onClick={() => {}}
-                >
+                <Button type='link' onClick={() => {}}>
                     View all notifications
                 </Button>
             </Menu.Item>
@@ -310,22 +310,12 @@ export default function OrganizerLayout({ roles }) {
 
             <Layout hidden={hideContent}>
                 <Header className='h-[8svh] px-2'>
-                    <Row
-                        justify={'space-between'}
-                        className='h-full px-2'
-                    >
-                        <Col
-                            xs={{ span: 12 }}
-                            className='h-full flex items-center'
-                        >
+                    <Row justify={'space-between'} className='h-full px-2'>
+                        <Col xs={{ span: 12 }} className='h-full flex items-center'>
                             <div className='md:hidden'>
                                 <DropdownSider menu={userMenu.result.menu} />
                             </div>
-                            <Title
-                                style={{ margin: 0, color: 'whitesmoke' }}
-                                level={3}
-                                className='font-serif'
-                            >
+                            <Title style={{ margin: 0, color: 'whitesmoke' }} level={3} className='font-serif'>
                                 Eventure
                             </Title>
                         </Col>
@@ -364,19 +354,9 @@ export default function OrganizerLayout({ roles }) {
                                         />
                                     }
                                 />
-                                <Badge
-                                    count={5}
-                                    size='small'
-                                >
-                                    <Dropdown
-                                        arrow
-                                        overlay={notificationMenu}
-                                        trigger={['click']}
-                                    >
-                                        <Badge
-                                            count={notifications.length}
-                                            size='small'
-                                        >
+                                <Badge count={5} size='small'>
+                                    <Dropdown arrow overlay={notificationMenu} trigger={['click']}>
+                                        <Badge count={notifications.length} size='small'>
                                             <Button
                                                 type='text'
                                                 style={{ transition: 'transform 0.3s' }}
@@ -402,11 +382,7 @@ export default function OrganizerLayout({ roles }) {
                                         </Badge>
                                     </Dropdown>
                                 </Badge>
-                                <Dropdown
-                                    arrow
-                                    overlay={menu}
-                                    placement='bottomLeft'
-                                >
+                                <Dropdown arrow overlay={menu} placement='bottomLeft'>
                                     <a onClick={(e) => e.preventDefault()}>
                                         <img
                                             src='https://randomuser.me/api/portraits/men/3.jpg'

@@ -77,5 +77,5 @@ export const {
     useUpdateAgeGroupsMutation,
     useShowEventAttendeesQuery,
     useRemoveFormMutation,
-    useAttendeeStatusInEventQuery,
+    useLazyAttendeeStatusInEventQuery,
 } = events;

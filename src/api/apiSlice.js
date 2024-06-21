@@ -31,6 +31,7 @@ export const apiSlice = createApi({
         'reports',
         'org-withdraws',
         'org-tickets-balance',
+        'confirm-attendance',
     ],
 
     endpoints: () => ({}),

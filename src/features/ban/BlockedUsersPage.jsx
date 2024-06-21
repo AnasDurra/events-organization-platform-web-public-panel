@@ -99,7 +99,19 @@ const BlockedUsersPage = () => {
     return (
         <div style={{ padding: '20px' }}>
             <Spin size='large' spinning={blockIsLoading || unBlockIsLoading || blockListIsLoading || isFetching}>
-                <Typography.Title level={2} style={{ marginBottom: '20px', textAlign: 'center' }}>
+                <Typography.Title
+                    level={1}
+                    style={{
+                        color: '#343a40',
+                        fontSize: '32px',
+                        fontWeight: 'bold',
+                        marginBottom: '24px',
+                        textAlign: 'center',
+
+                        textTransform: 'uppercase',
+                        letterSpacing: '2px',
+                    }}
+                >
                     Blocked Users
                 </Typography.Title>
 

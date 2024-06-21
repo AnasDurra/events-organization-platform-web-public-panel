@@ -1,9 +1,9 @@
-import { Card, Col, Row, Skeleton, Tabs } from 'antd';
+import { Card, Col, Popover, Row, Skeleton, Tabs, Tooltip } from 'antd';
 
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
-import { useShowQuery } from '../../../api/services/events';
+import { useLazyAttendeeStatusInEventQuery, useShowQuery } from '../../../api/services/events';
 import UpdateEventModal from '../UpdateEventModal';
 
 import EventChat from '../../chat/EventChat';
@@ -11,6 +11,8 @@ import RegistrationModal from '../registration/RegistrationModal';
 
 import EventCover from './components/EventCover';
 import EventDetailsTab from './components/EventDetailsTab';
+import { getLoggedInUserV2 } from '../../../api/services/auth';
+import Roles from '../../../api/Roles';
 
 const ShowEvent = () => {
     const { id } = useParams();
@@ -18,7 +20,12 @@ const ShowEvent = () => {
     const showChat = searchParams.get('showChat');
     const isEditing = searchParams.get('edit');
 
-    const { data: eventData, error, isLoading: eventDataIsLoading, refetch, isFetching } = useShowQuery(id);
+    const [user] = useState(getLoggedInUserV2());
+
+    const { data: eventData, isLoading: eventDataIsLoading, refetch, isFetching } = useShowQuery(id);
+
+    const [fetchAttendeeStatusInEvent, { data: attendeeStatusInEvent, isLoading: isAttendeeStatusInEventLoading }] =
+        useLazyAttendeeStatusInEventQuery();
 
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(isEditing ?? false);
     const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
@@ -29,9 +36,28 @@ const ShowEvent = () => {
         handleOpenRegistrationModal();
     };
 
+    const [tooltipOpen, setTooltipOpen] = useState(true);
+
     useEffect(() => {
-        console.log(eventData);
-    }, [eventData]);
+        console.log(attendeeStatusInEvent);
+    }, [eventData, attendeeStatusInEvent]);
+
+    useEffect(() => {
+        if (user.user_role === Roles.ATTENDEE && eventData) {
+            fetchAttendeeStatusInEvent({
+                event_id: eventData?.result?.id,
+                attendee_id: user?.attendee_id,
+            });
+        }
+    }, [user, eventData, fetchAttendeeStatusInEvent]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setTooltipOpen(false);
+        }, 4000);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '5em' }}>
@@ -71,19 +97,74 @@ const ShowEvent = () => {
                                             <EventDetailsTab
                                                 eventData={eventData}
                                                 handleRegisterClicked={handleRegisterClicked}
+                                                attendeeStatusInEvent={attendeeStatusInEvent}
+                                                isAttendeeStatusInEventLoading={isAttendeeStatusInEventLoading}
+                                                user_role={user?.user_role}
                                             />
                                         ),
                                     },
                                     {
                                         key: '2',
-                                        label: 'Event Chat',
-                                        disabled: !eventData?.result?.is_chatting_enabled,
+                                        disabled:
+                                            !eventData?.result?.is_chatting_enabled ||
+                                            !attendeeStatusInEvent?.result?.registered,
+                                        label: (
+                                            <Popover
+                                                placement='top'
+                                                content={
+                                                    !eventData?.result?.is_chatting_enabled ? (
+                                                        <div style={{ maxWidth: '220px' }}>
+                                                            <p style={{ margin: 0 }}>
+                                                                🚫 <strong>Sorry! </strong> This event doesn't have an
+                                                                active group chat.
+                                                            </p>
+                                                            <p style={{ margin: 0 }}>
+                                                                Please contact the event organizer for more information
+                                                                or check back later. 🕒
+                                                            </p>
+                                                        </div>
+                                                    ) : !attendeeStatusInEvent?.result?.registered ? (
+                                                        <div style={{ maxWidth: '220px' }}>
+                                                            <p style={{ margin: 0 }}>
+                                                                🚫 <strong>Oops! </strong> You need to be registered for
+                                                                this event to join the group chat.
+                                                            </p>
+                                                            <p style={{ margin: 0 }}>
+                                                                Please complete your registration to gain access to the
+                                                                event's group chat. 📅
+                                                            </p>
+                                                        </div>
+                                                    ) : (
+                                                        'No chat available'
+                                                    )
+                                                }
+                                                trigger='hover'
+                                            >
+                                                {eventData?.result?.is_chatting_enabled &&
+                                                attendeeStatusInEvent?.result?.registered == null ? (
+                                                    <Tooltip
+                                                        title='Join this event to access the exclusive group chat and engage with other attendees! 🎉'
+                                                        placement='right'
+                                                        open={tooltipOpen}
+                                                    >
+                                                        <span>Event Chat</span>
+                                                    </Tooltip>
+                                                ) : (
+                                                    <span>Event Chat</span>
+                                                )}
+                                            </Popover>
+                                        ),
                                         children: (
-                                            <EventChat
-                                                chat_group_id={eventData?.result?.chat_group?.id}
-                                                eventID={eventData?.result?.id}
-                                                orgID={eventData?.result?.organization?.id}
-                                            />
+                                            <>
+                                                {(attendeeStatusInEvent?.result?.registered === 'accepted' ||
+                                                    user.organization_id === eventData?.result?.organization?.id) && (
+                                                    <EventChat
+                                                        chat_group_id={eventData?.result?.chat_group?.id}
+                                                        eventID={eventData?.result?.id}
+                                                        orgID={eventData?.result?.organization?.id}
+                                                    />
+                                                )}
+                                            </>
                                         ),
                                     },
                                 ]}

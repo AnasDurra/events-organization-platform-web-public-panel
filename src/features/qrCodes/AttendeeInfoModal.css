@@ -1,0 +1,20 @@
+.attendee-info-container {
+    padding: 16px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+.info-section {
+    padding: 16px;
+    background-color: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.info-text {
+    display: block;
+    margin-top: 4px;
+    font-size: 16px;
+    color: #595959;
+}

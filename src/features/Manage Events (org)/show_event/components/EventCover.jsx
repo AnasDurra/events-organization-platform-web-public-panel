@@ -27,7 +27,7 @@ const EventCover = ({ data, setIsUpdateModalOpen }) => {
                     preview={false}
                     height={'100%'}
                     width={'100%'}
-                    style={{ minHeight: '45vh' }}
+                    style={{ minHeight: '20vh' }}
                     src='https://picsum.photos/1000/300'
                 />
                 <div style={coverImageStyle.overlay}></div>
@@ -40,7 +40,7 @@ const EventCover = ({ data, setIsUpdateModalOpen }) => {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    minHeight: '38vh',
+                    minHeight: '20vh',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'flex-end',
