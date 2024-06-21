@@ -49,6 +49,7 @@ export const ticketingPackagesSlice = apiSlice.injectEndpoints({
 export const {
     useGetPackagesQuery,
     useGetAttendeeBalanceQuery,
+    useLazyGetAttendeeBalanceQuery,
     useGetOrgBalanceQuery,
     useCheckoutMutation,
     useGetAttendeeTicketsHistoryQuery,

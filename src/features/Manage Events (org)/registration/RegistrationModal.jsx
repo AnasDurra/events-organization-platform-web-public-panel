@@ -1,15 +1,15 @@
-import { FormOutlined, ReloadOutlined, SmileOutlined, WarningOutlined } from '@ant-design/icons';
-import { Button, Modal, Result, Space, Spin, Steps, Typography } from 'antd';
-import Title from 'antd/es/typography/Title';
+import { FormOutlined, SmileOutlined, WarningOutlined } from '@ant-design/icons';
+import { Button, Modal, Result, Spin, Steps, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { TiTicket } from 'react-icons/ti';
-import SubmitForm from '../../dynamic forms/submission/SubmitForm';
 import { useNavigate } from 'react-router-dom';
-import { GiConfirmed } from 'react-icons/gi';
-import { useAttendEventMutation, useGetDidAttendeeFillFormQuery } from './registrationSlice';
-import { useNotification } from '../../../utils/NotificationContext';
 import { getLoggedInUserV2 } from '../../../api/services/auth';
+import { useNotification } from '../../../utils/NotificationContext';
 import { useGetAttendeeBalanceQuery } from '../../Ticketing Packages/TicketingPackagesSlice';
+import {
+    useAttendEventMutation,
+    useLazyGetAttendeeEventStatusQuery,
+} from './registrationSlice';
 
 export default function RegistrationModal({ event, isOpen, onClose }) {
     const navigate = useNavigate();
@@ -21,28 +21,35 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
 
     const [attendEvent, { isLoading: isAttendEventLoading, isSuccess: isAttendEventSuccess }] =
         useAttendEventMutation();
-    const {
-        data: { result: didFillForm } = { result: false },
-        isLoading: isDidFillFormLoading,
-        isFetching: isDidFillFormFetching,
-    } = useGetDidAttendeeFillFormQuery(
-        { event_id: event?.result?.id, attendee_id: getLoggedInUserV2()?.attendee_id },
-        { pollingInterval: pullForm ? 3000 : undefined }
-    );
+    const [
+        queryAttendeeEventStatus,
+        {
+            data: { result: AttendeeEventStatus } = { result: false },
+            isLoading: isAttendeeEventStatusLoading,
+            isFetching: isDidFillFormFetching,
+        },
+    ] = useLazyGetAttendeeEventStatusQuery({ pollingInterval: pullForm ? 3000 : undefined });
+
     const { data: { result: balanceObj } = { result: {} }, isLoading: isBalanceObjLoading } =
         useGetAttendeeBalanceQuery(getLoggedInUserV2()?.attendee_id, {
             pollingInterval: pullBalance ? 3000 : undefined,
         });
 
     useEffect(() => {
-        if (!didFillForm && event?.result?.form) setPullForm(true);
+        if (!AttendeeEventStatus?.filled_form && event?.result?.form) setPullForm(true);
         else setPullForm(false);
-    }, [didFillForm, event]);
+    }, [AttendeeEventStatus, event]);
 
     useEffect(() => {
         if (parseInt(balanceObj.balance) < parseInt(event?.result?.fees)) setPullBalance(true);
         else setPullBalance(false);
     }, [balanceObj, event]);
+
+    useEffect(() => {
+        if (getLoggedInUserV2()?.attendee_id && event?.result?.id) {
+            queryAttendeeEventStatus({ event_id: event?.result?.id, attendee_id: getLoggedInUserV2()?.attendee_id });
+        }
+    }, [queryAttendeeEventStatus, event]);
 
     /*   useEffect(() => {
         let newStep = currentStep;
@@ -115,9 +122,9 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
             title: 'Form',
             icon: <FormOutlined />,
             content: (
-                <Spin spinning={isDidFillFormLoading}>
+                <Spin spinning={isAttendeeEventStatusLoading}>
                     <div className='flex flex-col  items-center justify-center w-full space-y-8 p-8'>
-                        {didFillForm ? (
+                        {AttendeeEventStatus?.filled_form ? (
                             <div className='flex flex-col justify-center items-center'>
                                 <div className='text-lg text-pretty text-primary'>You Have Submitted Event Form</div>
                                 <Button
@@ -201,7 +208,6 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                             <Button
                                 type='primary'
                                 onClick={() => {
-                                    
                                     handleStepChange(currentStep + 1);
                                 }}
                             >

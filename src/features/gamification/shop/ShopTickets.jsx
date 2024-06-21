@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import ShopTicketsCard from './ShopTicketsCard';
 import { useOutletContext } from 'react-router-dom';
 import { useGetPrizesQuery } from '../gamificationSlice';
-import { Pagination } from 'antd';
+import { Pagination, Spin } from 'antd';
 
 export default function ShopTickets() {
-    const [handleAddToBag, prizes] = useOutletContext();
+    const [handleAddToBag, prizes, isPrizesLoading] = useOutletContext();
 
     const ticketsPrizes = prizes.filter((prz) => prz.type_id == 1);
     const [currentPage, setCurrentPage] = useState(1);
@@ -19,9 +19,14 @@ export default function ShopTickets() {
         setCurrentPage(page);
     };
 
-
     return (
-        <div className='flex flex-col items-center justify-between w-full '>
+        <div className='flex flex-col items-center justify-between w-full h-full '>
+            {isPrizesLoading && (
+                <Spin
+                    spinning
+                    className='flex justify-center items-center h-full w-full'
+                ></Spin>
+            )}
             <div className='grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2  xl:grid-cols-3 gap-8 w-full'>
                 {currentItems.map((prz) => (
                     <ShopTicketsCard
@@ -33,7 +38,7 @@ export default function ShopTickets() {
                     />
                 ))}
             </div>
-            
+
             <Pagination
                 current={currentPage}
                 pageSize={itemsPerPage}

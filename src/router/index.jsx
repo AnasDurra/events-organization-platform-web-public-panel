@@ -49,8 +49,18 @@ import OrgReports from '../features/org profiles/reports/OrgReports';
 import ReportToAdmin from '../features/Attendees Profiles/ReportToAdmin';
 import ScanQRCode from '../features/qrCodes/ScanQRCode';
 import OrgEvents from '../features/org profiles/org events/OrgEvents';
+import Blocked from '../pages/Blocked';
 
 export const router = createBrowserRouter([
+    {
+        path: '/not-found',
+        element: <NotFound />,
+    },
+    {
+        path: '/blocked',
+        element: <Blocked />,
+    },
+
     {
         path: '/',
         element: <BasicLayout />,
@@ -65,10 +75,7 @@ export const router = createBrowserRouter([
                 path: '/seed',
                 element: <SeedPage />,
             },
-            {
-                path: '/not-found',
-                element: <NotFound />,
-            },
+
             {
                 path: '/payment/success',
                 element: <ResultSuccessPage />,
