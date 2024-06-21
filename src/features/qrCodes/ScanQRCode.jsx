@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react';
 
 import ScanQrPlacement from './ScanQrPlacement';
 import moment from 'moment';
+import { useNotification } from '../../utils/NotificationContext';
 
 const { Title, Text } = Typography;
 
@@ -17,16 +18,28 @@ const ScanQRCode = ({
     setIsAttendeeInfoModalVisible,
     setIsScanQrModalVisible,
 }) => {
+    const { openNotification } = useNotification();
+
     const { data: eventData, isLoading: eventDataIsLoading, isFetching } = useShowQuery(event?.event_id);
 
     const onScanFail = (err) => {
-        console.log(err);
+        // console.log(err);
     };
 
     const onScanSuccess = (result) => {
-        setScannedResult(result);
-        setIsAttendeeInfoModalVisible(true);
-        setIsScanQrModalVisible(false);
+        const urlParams = new URLSearchParams(new URL(result).search);
+        const scannedEventId = urlParams.get('eventId');
+
+        if (scannedEventId === String(event?.event_id)) {
+            setScannedResult(result);
+            setIsAttendeeInfoModalVisible(true);
+            setIsScanQrModalVisible(false);
+        } else {
+            openNotification(
+                'info',
+                'The QR code you tried to scan is not for this event. Please check the event details and try again.'
+            );
+        }
     };
 
     return (

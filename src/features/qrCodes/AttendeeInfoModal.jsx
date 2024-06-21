@@ -35,9 +35,14 @@ const AttendeeInfoModal = ({ scannedResult, visible, onClose }) => {
     };
 
     useEffect(() => {
-        console.log(data);
-        console.log(error);
-    }, [data, error]);
+        if (error) {
+            openNotification(
+                'info',
+                'Attendance cannot be recorded at this time. Please ensure it is the correct event day and that the QR code is valid.'
+            );
+            onClose();
+        }
+    }, [error]);
     return (
         <Modal
             title={
