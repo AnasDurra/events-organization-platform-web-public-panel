@@ -5,6 +5,8 @@ import { TiTicket } from 'react-icons/ti';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function OrgTicketsPageWithdrawTab({ withdraws, loading }) {
+    const sortedWithdraws = [...withdraws].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
     const columns = [
         {
             key: uuidv4(),
@@ -51,14 +53,16 @@ export default function OrgTicketsPageWithdrawTab({ withdraws, loading }) {
         },
     ];
     return (
-        <div className='grid grid-cols-8'>
-            <div className='col-span-4'>
+        <div className='grid grid-cols-10'>
+            <div className='col-span-5 col-start-3'>
                 <Table
                     className='w-[100%]'
-                    dataSource={withdraws}
+                    dataSource={sortedWithdraws}
                     columns={columns}
                     loading={loading}
                     bordered
+                    size='small'
+                    pagination={{ pageSize: '5' }}
                 />
             </div>
         </div>

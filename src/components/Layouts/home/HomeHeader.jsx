@@ -70,6 +70,7 @@ export default function HomeHeader() {
             >
                 <CalendarOutlined style={iconStyle} /> My Events
             </Menu.Item>
+
             <Menu.Divider />
             <Menu.Item
                 key='redeem card'

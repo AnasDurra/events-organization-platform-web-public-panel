@@ -23,6 +23,10 @@ export const ticketingPackagesSlice = apiSlice.injectEndpoints({
             providesTags: ['org-withdraws'],
         }),
 
+        getOrgTicketsHistory: builder.query({
+            query: (orgID) => `payment/organization/${orgID}/ticketsHistory`,
+        }),
+
         withdraw: builder.mutation({
             query: (body) => ({
                 url: '/payment/organization/withdraw',
@@ -49,5 +53,6 @@ export const {
     useCheckoutMutation,
     useGetAttendeeTicketsHistoryQuery,
     useWithdrawMutation,
+    useGetOrgTicketsHistoryQuery,
     useGetOrgWithdrawsQuery,
 } = ticketingPackagesSlice;
