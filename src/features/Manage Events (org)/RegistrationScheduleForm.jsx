@@ -255,6 +255,7 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                                                         size='small'
                                                         danger
                                                         icon={<DeleteFilled />}
+                                                        hidden={days.length == 1}
                                                         onClick={() => removeDay(dayIndex)}
                                                     >
                                                         Delete Day
@@ -344,6 +345,7 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                                                         size='small'
                                                         danger
                                                         // type="primary"
+                                                        hidden={days[dayIndex]?.slots?.length == 1}
                                                         icon={<DeleteFilled />}
                                                         onClick={() => deleteSlot(dayIndex, slotIndex)}
                                                         style={{

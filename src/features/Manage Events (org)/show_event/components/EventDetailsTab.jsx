@@ -242,7 +242,7 @@ const EventDetailsTab = ({
                 />
             </Modal>
 
-            {user_role === Roles.ATTENDEE && (
+            {user_role === Roles.ATTENDEE && attendeeStatusInEvent?.result?.registered && (
                 <ShowAttendeeQrCode
                     isVisible={isQrModalVisible}
                     onClose={handleQrModalCancel}

@@ -1,30 +1,22 @@
 import {
     CameraOutlined,
-    EllipsisOutlined,
     EyeOutlined,
     FacebookOutlined,
     LinkedinOutlined,
     MailOutlined,
-    MobileOutlined,
     PhoneOutlined,
     TwitterOutlined,
-    UploadOutlined,
     UserOutlined,
-    WarningOutlined,
     WhatsAppOutlined,
 } from '@ant-design/icons';
 import {
-    Avatar,
     Button,
     Card,
     Col,
     DatePicker,
-    Dropdown,
     Empty,
     Form,
     Image,
-    Menu,
-    Popover,
     Row,
     Select,
     Space,
@@ -39,7 +31,7 @@ import TextArea from 'antd/es/input/TextArea';
 import ImgCrop from 'antd-img-crop';
 import { useForm } from 'antd/es/form/Form';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useConfigurationListsQuery } from '../../api/services/lists';
 
 import {

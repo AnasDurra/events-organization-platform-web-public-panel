@@ -19,6 +19,7 @@ import Dragger from 'antd/es/upload/Dragger';
 import ShowMap from './ShowMap';
 import { EnvironmentFilled } from '@ant-design/icons';
 import { useState } from 'react';
+import ReactQuill from 'react-quill';
 
 const EventDetailsForm = ({
     eventDetailsForm,
@@ -57,7 +58,7 @@ const EventDetailsForm = ({
                         },
                     ]}
                 >
-                    <Input />
+                    <ReactQuill modules={modules} formats={formats} />
                 </Form.Item>
 
                 <Form.Item label='Registration Fees'>
@@ -261,3 +262,15 @@ const EventDetailsForm = ({
 };
 
 export default EventDetailsForm;
+
+const modules = {
+    toolbar: [
+        [{ size: ['Normal', 'large'] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+        ['link'],
+        ['clean'],
+    ],
+};
+
+const formats = ['font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'indent', 'link'];
