@@ -38,9 +38,9 @@ const ShowEvent = () => {
 
     const [tooltipOpen, setTooltipOpen] = useState(true);
 
-    useEffect(() => {
-        console.log(attendeeStatusInEvent);
-    }, [eventData, attendeeStatusInEvent]);
+    // useEffect(() => {
+    //     console.log(attendeeStatusInEvent);
+    // }, [eventData, attendeeStatusInEvent]);
 
     useEffect(() => {
         if (user.user_role === Roles.ATTENDEE && eventData) {
@@ -79,6 +79,7 @@ const ShowEvent = () => {
                                 registration_start_date: eventData?.result?.registration_start_date,
                                 organization: eventData?.result?.organization,
                                 event_id: id,
+                                cover_image: eventData?.result?.cover_picture_url,
                             }}
                             setIsUpdateModalOpen={setIsUpdateModalOpen}
                         />

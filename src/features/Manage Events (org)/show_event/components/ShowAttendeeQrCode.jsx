@@ -9,7 +9,6 @@ const { Text, Title } = Typography;
 const ShowAttendeeQrCode = ({ isVisible, onClose, attendeeInfo, eventInfo }) => {
     const { token } = theme.useToken();
 
-    console.log(eventInfo);
     const { data: attendeeQrCode, isLoading: isAttendeeQrCodeLoading } = useAttendanceQrCodeQuery(eventInfo?.id);
 
     const downloadQRCode = () => {

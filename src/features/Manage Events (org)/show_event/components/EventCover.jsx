@@ -20,16 +20,31 @@ const EventCover = ({ data, setIsUpdateModalOpen }) => {
     const user = getLoggedInUserV2();
     return (
         <div style={coverImageStyle.container}>
-            <div
-            // className='relative -m-2 sm:-m-6 md:-m-8 lg:-m-12 xl:-m-14'
-            >
-                <Image
-                    preview={false}
-                    height={'100%'}
-                    width={'100%'}
-                    style={{ minHeight: '20vh' }}
-                    src='https://picsum.photos/1000/300'
-                />
+            <div>
+                {data?.cover_image ? (
+                    <Image
+                        preview={false}
+                        height={'100%'}
+                        width={'100%'}
+                        style={{ minHeight: '30vh', maxHeight: '50vh' }}
+                        src={data?.cover_image}
+                    />
+                ) : (
+                    <div
+                        style={{
+                            height: '100%',
+                            width: '100%',
+                            minHeight: '20vh',
+                            backgroundColor: '#f0f0f0', // Placeholder background color
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        {/* Placeholder content */}
+                        <p>No cover image available</p>
+                    </div>
+                )}
                 <div style={coverImageStyle.overlay}></div>
             </div>
 

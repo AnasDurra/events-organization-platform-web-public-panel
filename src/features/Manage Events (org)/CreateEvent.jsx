@@ -91,7 +91,6 @@ const CreateEvent = () => {
                     };
                 }
 
-                console.log(data);
                 const dataToSend = {
                     title: data?.title,
                     description: data?.description,

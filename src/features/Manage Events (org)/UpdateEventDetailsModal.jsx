@@ -1,19 +1,12 @@
-import {
-    EditOutlined,
-    EnvironmentFilled,
-    InfoCircleOutlined,
-    LoadingOutlined,
-    SettingOutlined,
-    TeamOutlined,
-} from '@ant-design/icons';
+import { EditOutlined, EnvironmentFilled, LoadingOutlined, TeamOutlined } from '@ant-design/icons';
 import { Divider, Modal, Select, Space, Spin, Tooltip, message } from 'antd';
-import { Typography, Form, Input, DatePicker, InputNumber, Button } from 'antd';
+import { Typography, Form, Input, InputNumber, Button } from 'antd';
 import Dragger from 'antd/es/upload/Dragger';
 import { useEffect, useState } from 'react';
 import ShowMap from './ShowMap';
 import LocationOnMapsModal from './LocationOnMapsModal';
 import { useForm } from 'antd/es/form/Form';
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
 import dayjs from 'dayjs';
 
@@ -123,7 +116,7 @@ const UpdateEventDetailsModal = ({
                         });
                 });
             })
-            .catch((error) => {
+            .catch(() => {
                 // console.error('Validation error:', error);
             });
     };

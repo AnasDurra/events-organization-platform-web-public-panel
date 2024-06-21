@@ -90,6 +90,7 @@ const OrgAttendees = () => {
     };
 
     useEffect(() => {
+        console.log(orgAttendees);
         setfilteredAttendees(
             orgAttendees?.result?.filter(
                 (attendee) =>
