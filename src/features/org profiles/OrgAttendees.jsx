@@ -102,7 +102,20 @@ const OrgAttendees = () => {
     return (
         <div className='org-attendees-container'>
             <Button size='large' icon={<ArrowLeftOutlined />} type='text' onClick={() => navigate(-1)} />
-            <Typography.Title level={2} style={{ marginBottom: '20px', textAlign: 'center' }}>
+
+            <Typography.Title
+                level={1}
+                style={{
+                    color: '#343a40',
+                    fontSize: '32px',
+                    fontWeight: 'bold',
+                    marginBottom: '24px',
+                    textAlign: 'center',
+
+                    textTransform: 'uppercase',
+                    letterSpacing: '2px',
+                }}
+            >
                 Organization Attendees
             </Typography.Title>
 

@@ -1,11 +1,13 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useState, useEffect } from 'react';
-import { Modal, Select, Table, Button, Spin, Avatar, Descriptions, Tag, Divider } from 'antd';
+import { Modal, Select, Table, Button, Spin, Avatar, Descriptions, Tag, Divider, Popover } from 'antd';
 import './QrStyles.css';
 import { useShowQuery } from '../../api/services/events';
 import { useAttendeesListQuery, useConfirmAttendanceMutation } from '../../api/services/attendance';
 import Title from 'antd/es/typography/Title';
 import { useNotification } from '../../utils/NotificationContext';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import moment from 'moment';
 
 const { Option } = Select;
 
@@ -55,7 +57,6 @@ const AttendeesModal = ({ visible, onClose, eventId }) => {
                 confirmAttendance(id)
                     .unwrap()
                     .then((res) => {
-                        console.log(res);
                         openNotification('success', 'Attendance has been confirmed successfully!');
                     })
                     .catch((error) => {
@@ -68,36 +69,61 @@ const AttendeesModal = ({ visible, onClose, eventId }) => {
 
     const columns = [
         {
-            title: 'Profile Image',
-            dataIndex: 'profile_image',
-            key: 'profile_image',
-            render: (text, record) => <Avatar src={record.profile_image} size='large' />,
+            title: 'Name',
+            key: 'name',
+            render: (text, record) => (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Avatar src={record.profile_image} size='large' style={{ marginRight: 8 }} />
+                    <span>{record.full_name}</span>
+                </div>
+            ),
+            width: 200,
         },
         {
-            title: 'Full Name',
-            dataIndex: 'full_name',
-            key: 'full_name',
-        },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
+            title: 'Phone Number',
+            dataIndex: 'phone',
+            key: 'phone',
+            width: 100,
+            render: (text) => (text ? text : 'N/A'),
         },
         {
             title: 'Attendance Status',
             dataIndex: 'attendance_status',
             key: 'attendance_status',
+            width: 110,
         },
         {
             title: 'Last Reviewed',
             dataIndex: 'last_review',
             key: 'last_review',
-            render: (text) => (text ? new Date(text).toLocaleString() : 'N/A'),
+            render: (text) => (text ? moment(text).format('MMMM Do YYYY, h:mm:ss a') : 'N/A'),
+            width: 100,
         },
         {
             title: 'Reviewed By',
             dataIndex: 'checked_by',
             key: 'checked_by',
+            width: 100,
+            render: (text, record) => (
+                <Popover
+                    content={
+                        <Descriptions size='small' column={1} bordered>
+                            <Descriptions.Item label='Name'>
+                                {record.checked_by.employee.first_name} {record.checked_by.employee.last_name}
+                            </Descriptions.Item>
+                            <Descriptions.Item label='Email'>{record.checked_by.user_email}</Descriptions.Item>
+                            <Descriptions.Item label='Phone'>
+                                {record.checked_by.employee.phone_number}
+                            </Descriptions.Item>
+                            <Descriptions.Item label='Role'>{record.checked_by.user_role.role_name}</Descriptions.Item>
+                        </Descriptions>
+                    }
+                    title='Employee Info'
+                    trigger='hover'
+                >
+                    <span style={{ cursor: 'pointer', color: '#1890ff' }}>@{record.checked_by.username}</span>
+                </Popover>
+            ),
         },
         {
             title: 'Action',
@@ -112,7 +138,7 @@ const AttendeesModal = ({ visible, onClose, eventId }) => {
                         record.checked_by
                     }
                 >
-                    Confirm
+                    {record?.checked_by ? 'Confirmed' : 'Confirm'}
                 </Button>
             ),
         },
@@ -121,10 +147,10 @@ const AttendeesModal = ({ visible, onClose, eventId }) => {
     const tableData = attendeesData?.result.data.map((item) => ({
         key: item.id,
         full_name: item.attendee.full_name,
-        email: item.attendee.email,
+        phone: item.attendee.phone_number,
         attendance_status: item.attendance_status,
         last_review: item.last_review,
-        checked_by: '@' + item.checked_by.username || 'N/A',
+        checked_by: item.checked_by,
         profile_image: item.attendee.profile_image || 'default-profile.png',
         attendee: item.attendee,
     }));
@@ -159,7 +185,7 @@ const AttendeesModal = ({ visible, onClose, eventId }) => {
             {eventDataIsLoading ? (
                 <Spin size='large' />
             ) : (
-                <div className='space-y-6' style={{ padding: '20px' }}>
+                <div className='space-y-6'>
                     <Title level={2} className='page-title'>
                         {eventData?.result?.title}
                     </Title>
@@ -175,10 +201,12 @@ const AttendeesModal = ({ visible, onClose, eventId }) => {
                         </Descriptions.Item>
                         <Descriptions.Item label='Address'>{eventData?.result?.address?.label}</Descriptions.Item>
                         <Descriptions.Item label='Start Date'>
-                            {new Date(eventData?.result?.registration_start_date).toLocaleString()}
+                            {moment(eventData?.result?.days[0]?.day_date).format('YYYY-MM-DD')}
                         </Descriptions.Item>
                         <Descriptions.Item label='End Date'>
-                            {new Date(eventData?.result?.registration_end_date).toLocaleString()}
+                            {moment(eventData?.result?.days[eventData?.result?.days.length - 1]?.day_date).format(
+                                'YYYY-MM-DD'
+                            )}
                         </Descriptions.Item>
                         <Descriptions.Item label='Capacity'>{eventData?.result?.capacity}</Descriptions.Item>
                         <Descriptions.Item label='Event Type'>{eventData?.result?.event_type}</Descriptions.Item>
@@ -220,7 +248,7 @@ const AttendeesModal = ({ visible, onClose, eventId }) => {
                         >
                             {eventData?.result?.days.map((day) => (
                                 <Option key={day.id} value={day.id}>
-                                    {new Date(day.day_date).toLocaleDateString()}
+                                    {moment(day.day_date).format('YYYY-MM-DD')}
                                     {day.day_date === today && <span className='text-green-500 ml-2'>(Today)</span>}
                                 </Option>
                             ))}
@@ -250,6 +278,8 @@ const AttendeesModal = ({ visible, onClose, eventId }) => {
                                         },
                                     }}
                                     className='bg-white shadow rounded'
+                                    scroll={{ x: 'max-content', y: 'max-content' }}
+                                    style={{ overflowX: 'auto' }}
                                 />
                             )}
                             <div style={{ color: 'gray', fontSize: '12px', textAlign: 'center', marginTop: '10px' }}>

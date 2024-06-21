@@ -9,6 +9,7 @@ import EventScheduleAndMap from './EventScheduleAndMap';
 import EventDetails from './EventDetails';
 import ShowAttendeeQrCode from './ShowAttendeeQrCode';
 import { Icon } from '@iconify/react';
+import Roles from '../../../../api/Roles';
 const { useToken } = theme;
 
 const EventDetailsTab = ({
@@ -241,12 +242,14 @@ const EventDetailsTab = ({
                 />
             </Modal>
 
-            <ShowAttendeeQrCode
-                isVisible={isQrModalVisible}
-                onClose={handleQrModalCancel}
-                attendeeInfo={attendeeInfo}
-                eventInfo={eventData?.result}
-            />
+            {user_role === Roles.ATTENDEE && (
+                <ShowAttendeeQrCode
+                    isVisible={isQrModalVisible}
+                    onClose={handleQrModalCancel}
+                    attendeeInfo={attendeeInfo}
+                    eventInfo={eventData?.result}
+                />
+            )}
         </>
     );
 };

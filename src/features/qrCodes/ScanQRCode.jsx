@@ -5,6 +5,7 @@ import { useShowQuery } from '../../api/services/events';
 import { Icon } from '@iconify/react';
 
 import ScanQrPlacement from './ScanQrPlacement';
+import moment from 'moment';
 
 const { Title, Text } = Typography;
 
@@ -40,7 +41,7 @@ const ScanQRCode = ({
                 open={visible}
                 onOk={onClose}
                 onCancel={onClose}
-                width={600}
+                width={650}
                 okButtonProps={{ hidden: true }}
                 cancelText={'Back to events'}
                 cancelButtonProps={{ size: 'large' }}
@@ -96,16 +97,21 @@ const ScanQRCode = ({
                                         column={{ xxl: 2, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 }}
                                     >
                                         <Descriptions.Item label='Title'>{eventData?.result?.title}</Descriptions.Item>
-
+                                        <Descriptions.Item label='Organization'>
+                                            {eventData?.result?.organization?.name || 'N/A'}
+                                        </Descriptions.Item>
                                         <Descriptions.Item label='Address'>
                                             {eventData?.result?.address?.label}
                                         </Descriptions.Item>
 
                                         <Descriptions.Item label='Start Date'>
-                                            {new Date(eventData?.result?.registration_start_date).toLocaleString()}
+                                            {console.log(eventData?.result)}
+                                            {moment(eventData?.result?.days[0]?.day_date).format('YYYY-MM-DD')}
                                         </Descriptions.Item>
                                         <Descriptions.Item label='End Date'>
-                                            {new Date(eventData?.result?.registration_end_date).toLocaleString()}
+                                            {moment(
+                                                eventData?.result?.days[eventData?.result?.days.length - 1]?.day_date
+                                            ).format('YYYY-MM-DD')}
                                         </Descriptions.Item>
                                         <Descriptions.Item label='Capacity'>
                                             {eventData?.result?.capacity}

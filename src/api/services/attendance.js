@@ -7,6 +7,7 @@ export const attendance = apiSlice.injectEndpoints({
                 url: `attendance/get-attendance-code/${id}`,
                 method: 'GET',
             }),
+            providesTags: ['confirm-attendance'],
         }),
 
         checkAttendanceRecord: builder.query({
@@ -14,12 +15,14 @@ export const attendance = apiSlice.injectEndpoints({
                 url: `${path}`,
                 method: 'GET',
             }),
+            providesTags: ['confirm-attendance'],
         }),
         confirmAttendance: builder.mutation({
             query: (id) => ({
                 url: `attendance/confirm-attendance/${id}`,
                 method: 'PUT',
             }),
+            invalidatesTags: ['confirm-attendance'],
         }),
         attendeesList: builder.query({
             query: ({ event_day_id, page, pageSize }) => ({
@@ -27,6 +30,7 @@ export const attendance = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: { event_day_id },
             }),
+            providesTags: ['confirm-attendance'],
         }),
     }),
 });

@@ -1,5 +1,18 @@
-import { useState } from 'react';
-import { Table, Tag, Dropdown, Menu, Modal, Button, Avatar, Typography, Space, Divider } from 'antd';
+import { useEffect, useState } from 'react';
+import {
+    Table,
+    Tag,
+    Dropdown,
+    Menu,
+    Modal,
+    Button,
+    Avatar,
+    Typography,
+    Space,
+    Divider,
+    Descriptions,
+    Popover,
+} from 'antd';
 import moment from 'moment';
 import {
     useIgnoreReportMutation,
@@ -11,6 +24,7 @@ import './OrgReports.css';
 import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 import { useNotification } from '../../../utils/NotificationContext';
+import Title from 'antd/es/typography/Title';
 
 const OrgReports = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -21,6 +35,9 @@ const OrgReports = () => {
     const { openNotification } = useNotification();
 
     const { data, isLoading, refetch, isFetching } = useOrgReportsQuery({ page: currentPage, pageSize: pageSize });
+    useEffect(() => {
+        console.log(data);
+    }, [data]);
     const total = data?.result?.metadata?.total || 0;
 
     const [resolveMessageReport, { isLoading: isResolveMessageReportLoading }] = useResolveMessageReportMutation();
@@ -33,8 +50,8 @@ const OrgReports = () => {
         refetch(currentPage, pageSize);
     };
 
-    const showModal = (id, type, message, description, event, status, date, isDisabled) => {
-        setModalContent({ id, type, message, description, event, status, date, isDisabled });
+    const showModal = (id, type, message, description, event, status, date, resolved_at, resolved_by, isDisabled) => {
+        setModalContent({ id, type, message, description, event, status, date, resolved_at, resolved_by, isDisabled });
         setIsModalVisible(true);
     };
 
@@ -166,6 +183,8 @@ const OrgReports = () => {
                         record?.event,
                         record?.status,
                         record?.date,
+                        record?.resolved_at,
+                        record?.resolved_by,
                         isDisabled
                     )
                 }
@@ -274,7 +293,23 @@ const OrgReports = () => {
 
     return (
         <>
+            <Title
+                level={1}
+                style={{
+                    color: '#343a40',
+                    fontSize: '32px',
+                    fontWeight: 'bold',
+                    marginBottom: '24px',
+                    textAlign: 'center',
+                    margin: '20px 0px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '2px',
+                }}
+            >
+                Org Reports
+            </Title>
             <Table
+                className='custom-table'
                 columns={columns}
                 dataSource={data?.result?.data}
                 rowKey='id'
@@ -420,7 +455,44 @@ const OrgReports = () => {
                             </Tag>
                         </div>
                     )}
+                    {modalContent?.resolved_at && (
+                        <div style={{ marginBottom: '2.5em' }}>
+                            <Descriptions title='Resolution Details' bordered column={1}>
+                                <Descriptions.Item label='Resolved By'>
+                                    <Popover
+                                        content={
+                                            <Descriptions size='small' column={1} bordered>
+                                                <Descriptions.Item label='Name'>
+                                                    {modalContent?.resolved_by?.employee?.first_name}{' '}
+                                                    {modalContent?.resolved_by?.employee?.last_name}
+                                                </Descriptions.Item>
+                                                <Descriptions.Item label='Email'>
+                                                    {modalContent?.resolved_by?.user_email}
+                                                </Descriptions.Item>
+                                                <Descriptions.Item label='Phone'>
+                                                    {modalContent?.resolved_by?.employee.phone_number}
+                                                </Descriptions.Item>
+                                                <Descriptions.Item label='Role'>
+                                                    {modalContent?.resolved_by?.user_role?.role_name}
+                                                </Descriptions.Item>
+                                            </Descriptions>
+                                        }
+                                        title='Employee Info'
+                                        trigger='hover'
+                                    >
+                                        <span style={{ cursor: 'pointer', color: '#1890ff' }}>
+                                            @{modalContent?.resolved_by?.username}
+                                        </span>
+                                    </Popover>
+                                </Descriptions.Item>
+                                <Descriptions.Item label='Resolved At'>
+                                    {moment(modalContent?.resolved_at).format('dddd, MMMM Do YYYY, h:mm A')}
+                                </Descriptions.Item>
+                            </Descriptions>
+                        </div>
+                    )}
                 </Space>
+                {console.log(modalContent)}
             </Modal>
         </>
     );
