@@ -39,7 +39,7 @@ export default function WithdrawModal({ isOpen, onFinish, balance, loading, onCa
                         <InputNumber
                             className='min-w-[60%] border-4 border-x-primary border-y-primary/50 rounded-lg '
                             addonBefore={'Amount'}
-                            addonAfter={`/${balance}`}
+                            addonAfter={`/${balance || 0}`}
                             max={balance}
                             min={1}
                         />

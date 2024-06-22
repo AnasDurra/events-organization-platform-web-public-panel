@@ -13,10 +13,7 @@ const authMiddleware = (store) => (next) => async (action) => {
 
             response = await next(action);
         }
-        if (
-            (response.payload?.status == 401 || response.payload?.status == 403) && // TODO check if its work fine
-            !window.location.pathname.startsWith('/login')
-        ) {
+        if (response.payload?.status == 401 && !window.location.pathname.startsWith('/login')) {
             console.log('Here');
             console.log(response);
             errorMessage({ content: 'Session Timeout.. login again' });

@@ -21,7 +21,7 @@ export default function ViewShop() {
     const [bagPrizeIDs, setBagPrizeIDs] = useState([]);
     const [modal, contextHolder] = Modal.useModal();
 
-    const { data: { result: prizes } = { result: [] } } = useGetPrizesQuery();
+    const { data: { result: prizes } = { result: [] },isLoading:isPrizesLoading } = useGetPrizesQuery();
     const { data: { result: hist } = { result: [] } } = useGetAttendeePrizeHistoryQuery(getLoggedInUserV2()?.attendee_id);
 
     const { data: { result: balanceRP } = { result: null } } = useGetAttendeeRPsQuery(getLoggedInUserV2()?.attendee_id);
@@ -147,8 +147,7 @@ export default function ViewShop() {
 
                 <div className='col-span-10 sm:col-span-4 lg:col-span-6  p-2 px-8 flex flex-col space-y-2  border-2 border-gray-200 rounded-3xl'>
                     <ShopHeader rp_value={balanceRP?.points} />
-
-                    <Outlet context={[handleAddToBag, prizes]} />
+                    <Outlet context={[handleAddToBag, prizes,isPrizesLoading]} />
                 </div>
                 <div className='hidden sm:block sm:col-span-3 lg:col-span-2 flex flex-col justify-start space-y-8 items-center'>
                     <ShopBag
