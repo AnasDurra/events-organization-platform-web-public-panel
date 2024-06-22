@@ -136,7 +136,7 @@ const ShowEvent = () => {
                                                             </p>
                                                         </div>
                                                     ) : (
-                                                        'No chat available'
+                                                        'Click to join the Chat Group'
                                                     )
                                                 }
                                                 trigger='hover'

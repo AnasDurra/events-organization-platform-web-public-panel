@@ -26,7 +26,7 @@ const EventCover = ({ data, setIsUpdateModalOpen }) => {
                         preview={false}
                         height={'100%'}
                         width={'100%'}
-                        style={{ minHeight: '30vh', maxHeight: '50vh' }}
+                        style={{ minHeight: '20vh', maxHeight: '55vh' }}
                         src={data?.cover_image}
                     />
                 ) : (

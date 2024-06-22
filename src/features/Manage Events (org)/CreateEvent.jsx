@@ -202,7 +202,7 @@ const CreateEvent = () => {
                     width: '100%',
                 }}
                 cover={
-                    <ImgCrop aspect={16 / 5} showReset showGrid rotationSlider>
+                    <ImgCrop aspect={16 / 4} showReset showGrid rotationSlider>
                         <Upload.Dragger
                             disabled={coverImage}
                             listType='picture'
