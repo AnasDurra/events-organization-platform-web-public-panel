@@ -23,7 +23,6 @@ export default function AttendeeLoginPage() {
         loginMutation(data)
             .unwrap()
             .then((res) => {
-                console.log(res);
                 openNotification(
                     'success',
                     'Login Successfully',

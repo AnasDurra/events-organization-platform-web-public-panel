@@ -279,7 +279,8 @@ const coverImageStyle = {
     },
 };
 
-const OrgPopoverContent = ({ organization }) => {
+export const OrgPopoverContent = ({ organization }) => {
+    console.log(organization);
     return (
         <Card bordered={false} style={{}}>
             <Link to={`/org/${organization?.id}`} style={coverImageStyle.link}>
@@ -289,7 +290,7 @@ const OrgPopoverContent = ({ organization }) => {
                             preview={false}
                             width={50}
                             height={50}
-                            src='https://randomuser.me/api/portraits/men/4.jpg'
+                            src={organization?.cover_picture}
                             alt={organization.name}
                             style={{ borderRadius: '50%' }}
                         />

@@ -19,6 +19,7 @@ import HomeHeaderPoints from './HomeHeaderPoints';
 import { CardGiftcardOutlined } from '@mui/icons-material';
 import RedeemCodeModal from '../../../features/giftcards/RedeemCodeModal';
 import { useLogoutMutation } from '../../../api/services/auth';
+import { getLoggedInUserV2 } from '../../../api/services/auth';
 
 const navigationItems = [
     { label: 'Home', filledIcon: <HomeFilled />, outlinedIcon: <HomeOutlined />, path: '/home' },
@@ -48,17 +49,11 @@ const ProfileDropdownContent = () => {
         <Menu style={{ width: '100vw', padding: '0', borderRadius: '0' }}>
             <HomeHeaderPoints />
 
-            <Menu.Item
-                key='profile'
-                onClick={() => navigate('profile')}
-            >
+            <Menu.Item key='profile' onClick={() => navigate('profile')}>
                 <UserOutlined style={{ fontSize: '1.2rem' }} /> My Profile
             </Menu.Item>
 
-            <Menu.Item
-                key='redeem card'
-                onClick={() => setIsRedeemCodeModalOpen(true)}
-            >
+            <Menu.Item key='redeem card' onClick={() => setIsRedeemCodeModalOpen(true)}>
                 <CardGiftcardOutlined style={{ fontSize: '1.4rem' }} /> Redeem code
             </Menu.Item>
             <Menu.Divider />
@@ -71,10 +66,7 @@ const ProfileDropdownContent = () => {
                 <LogoutOutlined style={{ fontSize: '1.2rem' }} /> Logout
             </Menu.Item>
 
-            <RedeemCodeModal
-                isOpen={isRedeemCodeModalOpen}
-                onClose={() => setIsRedeemCodeModalOpen(false)}
-            />
+            <RedeemCodeModal isOpen={isRedeemCodeModalOpen} onClose={() => setIsRedeemCodeModalOpen(false)} />
         </Menu>
     );
 };
@@ -85,12 +77,11 @@ export default function FooterMobileNav() {
 
     const [navIndex, setNavIndex] = useState(0);
     const [profileOpen, setProfileOpen] = useState(false);
+    const user = getLoggedInUserV2();
 
     const handleNavigationClick = (index) => {
         index--;
-        console.log(index);
-        setNavIndex(index);
-        navigate(navigationItems[index].path);
+        navigate(navigationItems[index]?.path);
     };
 
     const handleProfileClick = () => {
@@ -98,10 +89,7 @@ export default function FooterMobileNav() {
     };
 
     return (
-        <Footer
-            className='h-[8svh] p-0 lg:hidden'
-            style={{ backgroundColor: token?.colorPrimary }}
-        >
+        <Footer className='h-[8svh] p-0 lg:hidden' style={{ backgroundColor: token?.colorPrimary }}>
             <BottomNavigation
                 showLabels
                 value={navIndex}

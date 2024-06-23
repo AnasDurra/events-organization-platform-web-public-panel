@@ -1,11 +1,13 @@
 // src/components/LastThreeEvents.jsx
 
 import React from 'react';
-import { List, Avatar, Typography, Image, Row, Col } from 'antd';
+import { List, Avatar, Typography, Image, Row, Col, Space, Popover } from 'antd';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import './LastThreeEvents.css';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { OrgPopoverContent } from '../../Manage Events (org)/show_event/components/EventCover';
 
 const { Title, Text } = Typography;
 
@@ -37,8 +39,26 @@ const LastThreeEvents = ({ events }) => {
                                             <ClockCircleOutlined />{' '}
                                             {moment(event.registration_end_date).format('YYYY-MM-DD')}
                                         </span>
-                                        <span>{event.organization.name}</span>
-                                        <span>{event.description}</span>
+                                        <div style={{ fontSize: '14px', color: '#666', marginTop: '0.5em' }}>
+                                            <Space>
+                                                <Icon icon='grommet-icons:organization' />
+                                                <span>
+                                                    Hosted by:{' '}
+                                                    <strong style={{ color: '#333' }}>
+                                                        <Popover
+                                                            content={
+                                                                <OrgPopoverContent organization={event?.organization} />
+                                                            }
+                                                            title='Organizer Info'
+                                                        >
+                                                            <Link to={`/org/${event?.organization?.id}`}>
+                                                                @{event?.organization?.name}
+                                                            </Link>
+                                                        </Popover>
+                                                    </strong>
+                                                </span>
+                                            </Space>
+                                        </div>
                                     </div>
                                 </div>
                             </Col>

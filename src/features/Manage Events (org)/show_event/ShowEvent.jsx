@@ -13,6 +13,7 @@ import EventCover from './components/EventCover';
 import EventDetailsTab from './components/EventDetailsTab';
 import { getLoggedInUserV2 } from '../../../api/services/auth';
 import Roles from '../../../api/Roles';
+import EventCountdown from './components/EventCountdown';
 
 const ShowEvent = () => {
     const { id } = useParams();
@@ -38,9 +39,9 @@ const ShowEvent = () => {
 
     const [tooltipOpen, setTooltipOpen] = useState(true);
 
-    // useEffect(() => {
-    //     console.log(attendeeStatusInEvent);
-    // }, [eventData, attendeeStatusInEvent]);
+    useEffect(() => {
+        console.log(eventData);
+    }, [eventData]);
 
     useEffect(() => {
         if (user.user_role === Roles.ATTENDEE && eventData) {
@@ -184,6 +185,8 @@ const ShowEvent = () => {
                     />
                 )}
             </Skeleton>
+
+            {/* <EventCountdown eventData={eventData} attendeeStatusInEvent={attendeeStatusInEvent} /> */}
         </div>
     );
 };
