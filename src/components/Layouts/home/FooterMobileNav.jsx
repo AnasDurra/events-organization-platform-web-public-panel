@@ -1,17 +1,24 @@
 import {
+    CalendarOutlined,
     ExperimentFilled,
     ExperimentOutlined,
     FireFilled,
     FireOutlined,
     HomeFilled,
     HomeOutlined,
+    LogoutOutlined,
+    UserOutlined,
 } from '@ant-design/icons';
 import { BottomNavigation, BottomNavigationAction } from '@mui/material';
-import { theme } from 'antd';
+import { theme, Popover, Menu } from 'antd';
 import { Footer } from 'antd/es/layout/layout';
 import React, { useState } from 'react';
 import { GoNorthStar } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
+import HomeHeaderPoints from './HomeHeaderPoints';
+import { CardGiftcardOutlined } from '@mui/icons-material';
+import RedeemCodeModal from '../../../features/giftcards/RedeemCodeModal';
+import { useLogoutMutation } from '../../../api/services/auth';
 
 const navigationItems = [
     { label: 'Home', filledIcon: <HomeFilled />, outlinedIcon: <HomeOutlined />, path: '/home' },
@@ -31,22 +38,68 @@ const navigationItems = [
 ];
 const { useToken } = theme;
 
+const ProfileDropdownContent = () => {
+    const navigate = useNavigate();
+    const [isRedeemCodeModalOpen, setIsRedeemCodeModalOpen] = useState(false);
+
+    const [logout] = useLogoutMutation();
+
+    return (
+        <Menu style={{ width: '100vw', padding: '0', borderRadius: '0' }}>
+            <HomeHeaderPoints />
+
+            <Menu.Item
+                key='profile'
+                onClick={() => navigate('profile')}
+            >
+                <UserOutlined style={{ fontSize: '1.2rem' }} /> My Profile
+            </Menu.Item>
+
+            <Menu.Item
+                key='redeem card'
+                onClick={() => setIsRedeemCodeModalOpen(true)}
+            >
+                <CardGiftcardOutlined style={{ fontSize: '1.4rem' }} /> Redeem code
+            </Menu.Item>
+            <Menu.Divider />
+            <Menu.Item
+                key='logout'
+                onClick={() => {
+                    logout().then((res) => navigate('/login'));
+                }}
+            >
+                <LogoutOutlined style={{ fontSize: '1.2rem' }} /> Logout
+            </Menu.Item>
+
+            <RedeemCodeModal
+                isOpen={isRedeemCodeModalOpen}
+                onClose={() => setIsRedeemCodeModalOpen(false)}
+            />
+        </Menu>
+    );
+};
 
 export default function FooterMobileNav() {
     const { token } = useToken();
     const navigate = useNavigate();
 
     const [navIndex, setNavIndex] = useState(0);
+    const [profileOpen, setProfileOpen] = useState(false);
 
     const handleNavigationClick = (index) => {
         index--;
-        console.log(index)
+        console.log(index);
         setNavIndex(index);
         navigate(navigationItems[index].path);
     };
+
+    const handleProfileClick = () => {
+        setProfileOpen(!profileOpen);
+    };
+
     return (
         <Footer
-            className='h-[8svh] p-0 md:hidden'
+            className='h-[8svh] p-0 lg:hidden'
             style={{ backgroundColor: token?.colorPrimary }}
         >
             <BottomNavigation
@@ -64,17 +117,27 @@ export default function FooterMobileNav() {
                         icon={navIndex === index ? item.filledIcon : item.outlinedIcon}
                     />
                 ))}
-                <BottomNavigationAction
-                    label='Profile'
-                    style={{ color: 'white' }}
-                    icon={
-                        <img
-                            className='w-[2em] aspect-square rounded-full'
-                            src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
-                            alt='Profile'
-                        />
-                    }
-                />
+                <Popover
+                    content={<ProfileDropdownContent />}
+                    trigger='click'
+                    open={profileOpen}
+                    onOpenChange={setProfileOpen}
+                    placement='top'
+                    overlayStyle={{ width: '100vw', padding: 0 }}
+                >
+                    <BottomNavigationAction
+                        label='Profile'
+                        style={{ color: 'white' }}
+                        icon={
+                            <img
+                                onClick={handleProfileClick}
+                                className='w-[2em] aspect-square rounded-full'
+                                src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+                                alt='Profile'
+                            />
+                        }
+                    />
+                </Popover>
             </BottomNavigation>
         </Footer>
     );

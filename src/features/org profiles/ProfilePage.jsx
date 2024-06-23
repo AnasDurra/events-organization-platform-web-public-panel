@@ -1,11 +1,4 @@
-import {
-    EditOutlined,
-    GithubFilled,
-    InstagramFilled,
-    LinkedinFilled,
-    MinusOutlined,
-    PlusOutlined,
-} from '@ant-design/icons';
+import { GithubFilled, InstagramFilled, LinkedinFilled, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Typography, message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -18,22 +11,16 @@ import './ProfilePage.css';
 import AddressInfo from './components/AddressInfo';
 import ContactInfo from './components/ContactInfo';
 import EventsTab from './components/EventsTabs';
-import {
-    useGetOrgQuery,
-    useNewCoverPicMutation,
-    useNewProfilePicMutation,
-    useRemoveCoverPicMutation,
-    useRemoveProfilePicMutation,
-} from './orgSlice';
+import { useGetOrgQuery, useNewCoverPicMutation, useNewProfilePicMutation } from './orgSlice';
 import cover from '/public/TimelineCovers.pro_beautiful-abstract-colors-facebook-cover.jpg';
 const { Text } = Typography;
 
+import { WhatsApp } from '@mui/icons-material';
+import { FaFacebook } from 'react-icons/fa';
 import { getLoggedInUser } from '../../api/services/auth';
 import { useNotification } from '../../utils/NotificationContext';
-import { FaFacebook } from 'react-icons/fa';
-import { WhatsApp } from '@mui/icons-material';
-import ComplaintModal from './reports/ComplaintModal';
 import { contactTypeIds } from './constants';
+import ComplaintModal from './reports/ComplaintModal';
 
 export default function ProfilePage() {
     const navigate = useNavigate();
@@ -66,13 +53,11 @@ export default function ProfilePage() {
             case contactTypeIds.instagram:
             case contactTypeIds.linkedin:
             case contactTypeIds.github:
-                // Ensure URL is absolute
                 if (!/^https?:\/\//i.test(url)) {
                     url = `https://${url}`;
                 }
                 break;
             case contactTypeIds.whatsapp:
-                // Ensure WhatsApp link is properly formatted
                 url = `https://wa.me/${content}`;
                 break;
             default:
@@ -303,28 +288,28 @@ const fakeData = [
     {
         title: 'Programming for kids',
         tags: ['programming', 'social', 'kids'],
-        date: 'jan 7 | 2024',
+        date: '2024-07-01T18:00:00Z', 
         pricing: '150',
         img: cover,
     },
     {
         title: 'Programming for kids',
         tags: ['programming', 'social', 'kids'],
-        date: 'jan 7 | 2024',
+        date: '2024-07-01T18:00:00Z', 
         pricing: '150',
         img: cover,
     },
     {
         title: 'Programming for kids',
         tags: ['programming', 'social', 'kids'],
-        date: 'jan 7 | 2024',
+        date: '2024-07-01T18:00:00Z', 
         pricing: '150',
         img: cover,
     },
     {
         title: 'Programming for kids',
         tags: ['programming', 'social', 'kids'],
-        date: 'jan 7 | 2024',
+        date: '2024-07-01T18:00:00Z', 
         pricing: '150',
         img: cover,
     },

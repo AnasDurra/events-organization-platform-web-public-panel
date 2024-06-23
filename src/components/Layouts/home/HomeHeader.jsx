@@ -9,22 +9,16 @@ import {
     LogoutOutlined,
     ShopOutlined,
     UserOutlined,
-    AlertFilled,
-    AlertOutlined,
 } from '@ant-design/icons';
+import { CardGiftcardOutlined } from '@mui/icons-material';
+import { Badge, Button, Dropdown, Layout, Menu } from 'antd';
 import React, { useState } from 'react';
 import { GoNorthStar } from 'react-icons/go';
-import { Link, useNavigate } from 'react-router-dom';
-import TicketsCard from '../../../features/landing/TicketsCard';
-import { Badge, Button, Divider, Dropdown, Layout, Menu, Space } from 'antd';
 import { IoMdNotificationsOutline } from 'react-icons/io';
-import { getLoggedInUserV2, useLogoutMutation } from '../../../api/services/auth';
-import { useGetAttendeeBalanceQuery } from '../../../features/Ticketing Packages/TicketingPackagesSlice';
-import { SiGamejolt } from 'react-icons/si';
-import { TiTick, TiTicket } from 'react-icons/ti';
-import HomeHeaderPoints from './HomeHeaderPoints';
-import { CardGiftcardOutlined } from '@mui/icons-material';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLogoutMutation } from '../../../api/services/auth';
 import RedeemCodeModal from '../../../features/giftcards/RedeemCodeModal';
+import HomeHeaderPoints from './HomeHeaderPoints';
 
 const navigationItems = [
     { label: 'Home', filledIcon: <HomeFilled />, outlinedIcon: <HomeOutlined />, path: '/home' },
@@ -107,7 +101,7 @@ export default function HomeHeader() {
                         Eventure
                     </div>
                     <div className='flex items-center gap-x-4 w-full justify-end  sm:justify-between w-full   '>
-                        <div className=' items-center gap-x-4 hidden sm:flex'>
+                        <div className=' items-center gap-x-4 hidden lg:flex'>
                             {navigationItems.map((item, index) => (
                                 <div
                                     key={index}
@@ -119,7 +113,9 @@ export default function HomeHeader() {
                             ))}
                         </div>
                         <div className='flex items-center justify-end gap-x-2 w-full '>
-                            <HomeHeaderPoints />
+                            <div className='hidden lg:flex'>
+                                <HomeHeaderPoints />
+                            </div>
                             {/*  <div
                                 onClick={() => navigate('tickets')}
                                 className='flex items-center  border-2 bg-primary/10 border-primary shadow-sm rounded-3xl h-[4svh] px-2 hover:shadow-lg hover:cursor-pointer'
@@ -141,13 +137,14 @@ export default function HomeHeader() {
                                 />
                             </Badge>
                             <Dropdown
+                                className='hidden lg:flex'
                                 overlay={menu}
                                 placement='bottomLeft'
                                 arrow
                             >
                                 <Link onClick={(e) => e.preventDefault()}>
                                     <img
-                                        className='w-[2.5em] aspect-square rounded-full hidden md:block md:ml-4'
+                                        className='w-[2.5em] aspect-square rounded-full hidden lg:block md:ml-4'
                                         src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
                                         alt='Profile'
                                         style={{ transition: 'transform 0.3s', padding: '1px' }}

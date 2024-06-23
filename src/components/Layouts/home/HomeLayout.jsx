@@ -91,7 +91,7 @@ const HomeLayout = ({ roles }) => {
             )}
 
             <Layout
-                className='h-[100svh]'
+                className='h-[100svh] max-w-[100svw]'
                 style={{ scrollbarWidth: 0 }}
                 hidden={hideContent}
             >

@@ -1,19 +1,76 @@
 import React from 'react';
-import { List, Row, Col, Typography, Image, Tabs } from 'antd';
+import { List, Row, Col, Typography, Image, Tabs, Tag } from 'antd';
+import { TwitterCircleFilled } from '@ant-design/icons';
+import { TiTicket } from 'react-icons/ti';
+import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
 const EventsTab = ({ data }) => {
+    const navigate = useNavigate();
+
+    const renderEventItem = (item) => {
+        return (
+            <List.Item
+                onClick={() => {}}
+                style={{ borderBottomColor: 'transparent' }}
+            >
+                <div
+                    onClick={() => navigate(`/event/show/${item.id}`)}
+                    className='border-2 border-primary/25   hover:border-primary  hover:cursor-pointer  p-4 rounded-lg min-h-[18svh] flex justify-center items-center'
+                >
+                    <div className='grid grid-cols-4 w-full h-full'>
+                        <div>
+                            <Image
+                                preview={false}
+                                width='100%'
+                                height='100%'
+                                src={item.img}
+                                style={{ borderRadius: '5%', objectFit: 'cover' }}
+                            />
+                        </div>
+
+                        <div className='flex flex-col space-y-8 h-full w-full col-span-3 px-4 '>
+                            <div className='flex flex-col '>
+                                <div className='text-gray-500 text-md font-sans'>
+                                    {dayjs(item.date).format('dddd - MMM DD, YYYY. h:mm A')}
+                                </div>
+                                <div className='font-semibold text-lg'>{item.title}</div>
+                            </div>
+                            <div className='flex justify-between'>
+                                <div>
+                                    {item.tags.map((tag) => (
+                                        <Tag
+                                            color='green'
+                                            key={tag}
+                                        >
+                                            {tag}
+                                        </Tag>
+                                    ))}
+                                </div>
+
+                                <div className='flex gap-x-1 font-mono justify-center items-center text-lg'>
+                                    150 <TiTicket className='text-yellow-500 text-lg'></TiTicket>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </List.Item>
+        );
+    };
+
     return (
         <Tabs
             defaultActiveKey='1'
-            items={getTabsItems(data)}
+            items={getTabsItems(data, renderEventItem, navigate)}
             onChange={() => {}}
         />
     );
 };
 
-const getTabsItems = (data) => {
+const getTabsItems = (data, renderEventItem, navigate) => {
     return [
         {
             key: '1',
@@ -21,8 +78,9 @@ const getTabsItems = (data) => {
             children: (
                 <List
                     pagination={{ position: 'bottom', align: 'center', pageSize: '3' }}
-                    itemLayout='horizontal'
+                    itemLayout='vertical'
                     dataSource={data}
+                    bordered={false}
                     renderItem={renderEventItem}
                 />
             ),
@@ -33,89 +91,6 @@ const getTabsItems = (data) => {
             children: <div className='w-full'></div>,
         },
     ];
-};
-
-const renderEventItem = (item) => {
-    return (
-        <List.Item
-            onClick={() => {}}
-            style={{}}
-        >
-            <Row
-                align='top'
-                gutter={20}
-                style={{ height: '100%' }}
-            >
-                <Col
-                    sm={{ span: 24 }}
-                    xs={{ span: 24 }}
-                    lg={{ span: 8 }}
-                    style={{ display: 'inline-flex', alignSelf: 'stretch' }}
-                >
-                    <div>
-                        <Image
-                            preview={false}
-                            width='100%'
-                            height='100%'
-                            src={item.img}
-                            style={{ borderRadius: '5%', objectFit: 'cover' }}
-                        />
-                    </div>
-                </Col>
-                <Col
-                    sm={{ span: 24 }}
-                    xs={{ span: 24 }}
-                    lg={{ span: 16 }}
-                >
-                    <Row
-                        justify='start'
-                        style={{ height: '100%' }}
-                    >
-                        <Col
-                            sm={{ span: 24 }}
-                            xs={{ span: 24 }}
-                            lg={{ span: 16 }}
-                        >
-                            <Title
-                                level={5}
-                                style={{ margin: 0, marginTop: '0.5em' }}
-                            >
-                                {item.title}
-                            </Title>
-                        </Col>
-                        <Col
-                            sm={{ span: 24 }}
-                            xs={{ span: 24 }}
-                            lg={{ span: 6 }}
-                            style={{ fontWeight: 'bold', color: 'green', marginTop: '0.6em' }}
-                        >
-                            {item.pricing + ' Tokens'}
-                        </Col>
-                    </Row>
-                    <Row
-                        justify='start'
-                        style={{ marginTop: '1.5em', color: 'GrayText' }}
-                    >
-                        <Col
-                            sm={{ span: 16 }}
-                            xs={{ span: 16 }}
-                            lg={{ span: 16 }}
-                        >
-                            {item.tags.map((tag) => `#${tag} `)}
-                        </Col>
-                        <Col
-                            sm={{ span: 8 }}
-                            xs={{ span: 8 }}
-                            lg={{ span: 4 }}
-                            style={{ color: 'GrayText', textAlign: 'end' }}
-                        >
-                            <Text type='secondary'>{item.date}</Text>
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
-        </List.Item>
-    );
 };
 
 export default EventsTab;

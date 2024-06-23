@@ -3,6 +3,7 @@ import { setRef } from '@mui/material';
 import { Input, Modal, Space, Button, Divider } from 'antd';
 import React, { useRef, useEffect, useState } from 'react';
 import { AiFillGift } from 'react-icons/ai';
+import { useGetGiftCardInfoMutation, useRedeemGiftCardMutation } from './giftCardsSlice';
 
 const fakeGiftCardData = {
     'AAAAA-AAAAA-AAAAA-AAAAA-AAAAA': { tickets: 10 },
@@ -12,11 +13,13 @@ const fakeGiftCardData = {
 export default function RedeemCodeModal({ isOpen, onClose }) {
     const inputRefs = useRef([]);
     const [giftCode, setGiftCode] = useState(['', '', '', '', '']);
-    const [verificationResult, setVerificationResult] = useState(null);
     const [isVerifying, setIsVerifying] = useState(false);
     const [error, setError] = useState(null);
     const [isConfirming, setIsConfirming] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+
+    const [getGiftCardInfo, { data: { result: giftCardInfo } = { result: {} } }] = useGetGiftCardInfoMutation();
+    const [redeemGiftCard] = useRedeemGiftCardMutation();
 
     const handleInputChange = (e, index) => {
         const newCode = [...giftCode];
@@ -29,12 +32,32 @@ export default function RedeemCodeModal({ isOpen, onClose }) {
     };
 
     const handleVerifyCode = () => {
-        const code = giftCode.join('-');
+        const code = giftCode.join('');
         setIsVerifying(true);
         setError(null);
 
-        // Simulate an API call
-        setTimeout(() => {
+        getGiftCardInfo({ code })
+            .unwrap()
+            .then((res) => {
+                console.log(res);
+
+                if (!res?.result?.active) {
+                    setError('Expired Code');
+                } else if (res?.result?.redeemed) {
+                    setError('Code has been redeemed already');
+                } else {
+                    setIsConfirming(true);
+                }
+
+                setIsVerifying(false);
+            })
+            .catch((e) => {
+                console.log(e);
+                setError(e?.data?.result?.message);
+                setIsVerifying(false);
+            });
+
+        /*   setTimeout(() => {
             setIsVerifying(false);
             if (fakeGiftCardData[code]) {
                 setVerificationResult(fakeGiftCardData[code]);
@@ -42,13 +65,27 @@ export default function RedeemCodeModal({ isOpen, onClose }) {
             } else {
                 setError('Invalid gift card code');
             }
-        }, 1000);
+        }, 1000); */
     };
 
     const handleConfirm = () => {
+        const code = giftCode.join('');
+
         setIsVerifying(true);
         setError(null);
-        setTimeout(() => {
+
+        redeemGiftCard({code})
+            .unwrap()
+            .then((res) => {
+                setIsVerifying(false);
+                setIsConfirming(false);
+                setIsSuccess(true);
+            })
+            .catch((e) => {
+                setIsVerifying(false);
+                setError(' Error Redeeming your code, try again');
+            });
+        /*  setTimeout(() => {
             setIsVerifying(false);
             if (true) {
                 setIsConfirming(false);
@@ -57,7 +94,7 @@ export default function RedeemCodeModal({ isOpen, onClose }) {
             } else {
                 setError(' Error confirming');
             }
-        }, 1000);
+        }, 1000); */
     };
 
     const handleKeyPress = (e) => {
@@ -90,7 +127,6 @@ export default function RedeemCodeModal({ isOpen, onClose }) {
             afterClose={() => {
                 setIsConfirming(false);
                 setIsSuccess(false);
-                setVerificationResult(null);
                 setGiftCode(['', '', '', '', '']);
                 setError(null);
                 setIsVerifying(false);
@@ -132,7 +168,7 @@ export default function RedeemCodeModal({ isOpen, onClose }) {
                     <div className='mt-8 text-center'>
                         <div className='text-lg'>
                             You Are About To Receive
-                            <div className='text-secondary'>{verificationResult.tickets} tickets</div>
+                            <div className='text-secondary'>{giftCardInfo?.variant?.tickets} tickets</div>
                         </div>
 
                         {error && <div className='mt-4 text-center text-red-500'>{error}</div>}

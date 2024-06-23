@@ -3,15 +3,12 @@ import { TiTicket } from 'react-icons/ti';
 import { useNavigate } from 'react-router-dom';
 import { getLoggedInUserV2 } from '../../../api/services/auth';
 import {
-    useGetAttendeePointsQuery,
-    useGetAttendeeRPsQuery,
-    useLazyGetAttendeePointsQuery,
-    useLazyGetAttendeeRPsQuery,
-} from '../../../features/gamification/gamificationSlice';
-import {
-    useGetAttendeeBalanceQuery,
-    useLazyGetAttendeeBalanceQuery,
+    useLazyGetAttendeeBalanceQuery
 } from '../../../features/Ticketing Packages/TicketingPackagesSlice';
+import {
+    useLazyGetAttendeePointsQuery,
+    useLazyGetAttendeeRPsQuery
+} from '../../../features/gamification/gamificationSlice';
 
 export default function HomeHeaderPoints() {
     const navigate = useNavigate();
@@ -38,7 +35,7 @@ export default function HomeHeaderPoints() {
                 queryAttendeeRPs(getLoggedInUserV2().attendee_id);
                 queryAttendeeBalance(getLoggedInUserV2().attendee_id);
             }
-        }, [5000]);
+        }, []);
 
         
     }, [queryAttendeeBalance, queryAttendeePoints, queryAttendeeRPs]);
