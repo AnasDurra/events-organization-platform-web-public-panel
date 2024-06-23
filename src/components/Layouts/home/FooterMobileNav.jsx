@@ -120,7 +120,7 @@ export default function FooterMobileNav() {
                             <img
                                 onClick={handleProfileClick}
                                 className='w-[2em] aspect-square rounded-full'
-                                src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+                                src={user?.profile_picture}
                                 alt='Profile'
                             />
                         }

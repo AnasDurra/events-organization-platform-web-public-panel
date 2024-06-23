@@ -16,7 +16,7 @@ import React, { useState } from 'react';
 import { GoNorthStar } from 'react-icons/go';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { Link, useNavigate } from 'react-router-dom';
-import { useLogoutMutation } from '../../../api/services/auth';
+import { getLoggedInUserV2, useLogoutMutation } from '../../../api/services/auth';
 import RedeemCodeModal from '../../../features/giftcards/RedeemCodeModal';
 import HomeHeaderPoints from './HomeHeaderPoints';
 
@@ -120,7 +120,13 @@ export default function HomeHeader() {
                                     onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
                                 />
                             </Badge>
-                            <Dropdown overlay={menu} placement='bottomLeft' arrow trigger={'click'}>
+                            <Dropdown
+                                className='hidden lg:flex'
+                                overlay={menu}
+                                placement='bottomLeft'
+                                arrow
+                                trigger={'click'}
+                            >
                                 <Link onClick={(e) => e.preventDefault()}>
                                     <img
                                         className='w-[3em] aspect-square rounded-full hidden lg:block md:ml-6'
