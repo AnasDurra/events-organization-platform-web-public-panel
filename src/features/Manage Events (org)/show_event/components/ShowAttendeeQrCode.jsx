@@ -1,4 +1,4 @@
-import { Modal, Typography, Space, Button, Divider, Row, Col, theme, Image, Spin } from 'antd';
+import { Modal, Typography, Space, Button, Divider, Row, Col, theme, Image, Spin, Descriptions } from 'antd';
 import { Icon } from '@iconify/react';
 import { useAttendanceQrCodeQuery } from '../../../../api/services/attendance';
 import moment from 'moment';
@@ -65,12 +65,16 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                 }}
             >
                 <Row gutter={[20, 10]}>
-                    <Col span={24}>
-                        <div style={{ borderRadius: '8px', padding: '10px' }}>
-                            <Image src={eventInfo?.cover_picture_url} style={{ borderRadius: '8px' }} preview={false} />
+                    <Col span={24} style={{ padding: '0px' }}>
+                        <div style={{ borderRadius: '8px' }}>
+                            <Image
+                                src={eventInfo?.cover_picture_url}
+                                style={{ borderRadius: '10px', left: 0, right: 0 }}
+                                preview={false}
+                            />
                         </div>
                         <div>
-                            <Title level={3} style={{ margin: 0 }}>
+                            <Title level={3} style={{ margin: 10 }}>
                                 {eventInfo?.title}
                             </Title>
                             <Text style={{ fontSize: '14px', color: '#bbbbbb' }}>
@@ -78,37 +82,46 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                             </Text>
                         </div>
                     </Col>
-                    <Divider />
-                    <Col span={24}>
-                        <div style={{ textAlign: 'left', width: '100%' }}>
-                            <Title level={4} style={{ marginBottom: '16px', color: token.colorPrimary }}>
-                                Attendee Information
-                            </Title>
-                            <Text strong>Name: </Text> <Text>{attendeeQrCode?.result?.attendee?.name}</Text>
-                            <br />
-                            <Text strong>Email: </Text> <Text>{attendeeQrCode?.result?.attendee?.email}</Text>
-                            <br />
-                            <Text strong>Ticket ID: </Text> <Text>{attendeeQrCode?.result?.attendee?.ticket_id}</Text>
-                        </div>
+                    <Divider style={{ margin: '10px' }} />
+                    <Col span={12}>
+                        <Descriptions
+                            // title={
+                            //     <Title level={4} style={{ marginBottom: '16px', color: token.colorPrimary }}>
+                            //         Event Information
+                            //     </Title>
+                            // }
+                            column={1}
+                        >
+                            <Descriptions.Item label='Location'>{eventInfo?.address?.label}</Descriptions.Item>
+                            <Descriptions.Item label='Date'>
+                                {moment(eventInfo?.days[0]?.day_date).format('MMMM D, YYYY')}
+                            </Descriptions.Item>
+                            <Descriptions.Item label='Time'>
+                                {moment(eventInfo?.days[0]?.slots[0]?.start_time).format('h:mm A')}
+                            </Descriptions.Item>
+                        </Descriptions>
                     </Col>
-                    <Divider />
-                    <Col span={24}>
-                        <div style={{ textAlign: 'left', width: '100%' }}>
-                            <Title level={4} style={{ marginBottom: '16px', color: token.colorPrimary }}>
-                                Event Information
-                            </Title>
-                            <Text strong>Title: </Text> <Text>{eventInfo?.title}</Text>
-                            <br />
-                            <Text strong>Date: </Text>{' '}
-                            <Text>{moment(eventInfo?.days[0]?.day_date).format('MMMM D, YYYY')}</Text>
-                            <br />
-                            <Text strong>Time: </Text>{' '}
-                            <Text>{moment(eventInfo?.days[0]?.slots[0]?.start_time).format('h:mm A')}</Text>
-                            <br />
-                            <Text strong>Location: </Text> <Text>{eventInfo?.address?.label}</Text>
-                        </div>
-                        <Divider />
+                    <Col span={12}>
+                        <Descriptions
+                            // title={
+                            //     <Title level={4} style={{ marginBottom: '16px', color: token.colorPrimary }}>
+                            //         Attendee Information
+                            //     </Title>
+                            // }
+                            column={1}
+                        >
+                            <Descriptions.Item label='Name'>{attendeeQrCode?.result?.attendee?.name}</Descriptions.Item>
+                            <Descriptions.Item label='Email'>
+                                {attendeeQrCode?.result?.attendee?.email}
+                            </Descriptions.Item>
+                            <Descriptions.Item label='Ticket ID'>
+                                {attendeeQrCode?.result?.attendee?.ticket_id}
+                            </Descriptions.Item>
+                        </Descriptions>
                     </Col>
+                    {/* <Divider style={{margin:"10px"}}   /> */}
+
+                    <Divider style={{ margin: '10px' }} />
                     <Col xs={{ span: 24 }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <Space size={10} direction='vertical'>
                             <Text style={{ marginTop: '15px', color: '#888', fontStyle: 'italic' }}>SCAN QR-CODE</Text>
@@ -134,7 +147,7 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                             </Text>
                         </Space>
                     </Col>
-                    <Divider />
+                    <Divider style={{ margin: '10px' }} />
                 </Row>
             </Space>
         </Modal>
