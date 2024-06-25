@@ -21,6 +21,7 @@ import { getLoggedInUser } from '../../api/services/auth';
 import { useNotification } from '../../utils/NotificationContext';
 import { contactTypeIds } from './constants';
 import ComplaintModal from './reports/ComplaintModal';
+import { URL } from '../../api/constants';
 
 export default function ProfilePage() {
     const navigate = useNavigate();
@@ -129,13 +130,17 @@ export default function ProfilePage() {
             <div className='col-start-1 col-span-12 p-2 sm:p-0  sm:col-start-3 sm:col-span-8'>
                 <img
                     className='h-48 w-full object-cover rounded-md border-b-8 border-secondary'
-                    src={'/public/assets/fakeCover.jpg'}
+                    src={`${URL}/organization/coverPicture/${org?.cover_picture}`}
+
+                    // src={'/public/assets/fakeCover.jpg'}
                 />
                 <div className='flex flex-col sm:flex-row justify-start items-center'>
                     <img
                         className='h-48 sm:h-56 w-48 sm:w-56 aspect-square border-8 border-primary rounded-full -mt-24 sm:-mt-28 ml-4 sm:ml-8 object-cover'
-                        src={'/public/assets/fakeProfile.png'}
+                        src={`${URL}/organization/mainPicture/${org?.main_picture}`}
                     />
+
+                    {console.log(org)}
 
                     <div className='flex flex-col sm:flex-row justify-between items-center w-full mt-4 sm:mt-0'>
                         <div className='flex flex-col justify-center items-center sm:items-start mx-4'>
@@ -288,28 +293,28 @@ const fakeData = [
     {
         title: 'Programming for kids',
         tags: ['programming', 'social', 'kids'],
-        date: '2024-07-01T18:00:00Z', 
+        date: '2024-07-01T18:00:00Z',
         pricing: '150',
         img: cover,
     },
     {
         title: 'Programming for kids',
         tags: ['programming', 'social', 'kids'],
-        date: '2024-07-01T18:00:00Z', 
+        date: '2024-07-01T18:00:00Z',
         pricing: '150',
         img: cover,
     },
     {
         title: 'Programming for kids',
         tags: ['programming', 'social', 'kids'],
-        date: '2024-07-01T18:00:00Z', 
+        date: '2024-07-01T18:00:00Z',
         pricing: '150',
         img: cover,
     },
     {
         title: 'Programming for kids',
         tags: ['programming', 'social', 'kids'],
-        date: '2024-07-01T18:00:00Z', 
+        date: '2024-07-01T18:00:00Z',
         pricing: '150',
         img: cover,
     },

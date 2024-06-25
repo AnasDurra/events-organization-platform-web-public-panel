@@ -11,7 +11,7 @@ export default function OrganizerCard({ orgName, orgID, attendanceCount, eventsC
 
     return (
         <div
-            className='rounded-2xl min-h-[21svh] shadow-xl hover:shadow-2xl flex flex-col items-center justify-center w-[100%] bg-gray-100/85 space-y-2 hover:cursor-pointer'
+            className='rounded-2xl min-h-[21svh] px-1 shadow-xl hover:shadow-2xl flex flex-col items-center justify-center w-[100%] bg-gray-100/85 space-y-2 hover:cursor-pointer'
             style={{ borderColor: token.colorPrimary }}
             onClick={() => navigate(`/org/${orgID}`)}
         >

@@ -17,14 +17,14 @@ import {
     useRemoveOrgAddressMutation,
 } from '../orgSlice';
 import { contactTypeIds } from '../constants';
+import { getLoggedInUserV2 } from '../../../api/services/auth';
 
 export default function ConfigOrgPage() {
-    let { orgId = 1 } = useParams();
-
     const [basicForm] = Form.useForm();
     const [addressForm] = Form.useForm();
     const [contactInfoForm] = Form.useForm();
 
+    const orgId = getLoggedInUserV2().organization_id;
     const {
         data: { result: org } = { result: {} },
         isLoading: isGetOrgLoading,
@@ -215,7 +215,7 @@ export default function ConfigOrgPage() {
 
     return (
         <div className='grid grid-cols-10 w-full'>
-            <div className='md:col-span-10 lg:col-span-8 md:col-start-2 lg:col-start-1 '>
+            <div className='col-span-10 md:col-span-8 md:col-start-2'>
                 {/*                 <Header />
                  */}{' '}
                 <Skeleton loading={isGetOrgLoading}>

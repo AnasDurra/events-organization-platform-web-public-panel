@@ -16,7 +16,7 @@ import React, { useState } from 'react';
 import { GoNorthStar } from 'react-icons/go';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { Link, useNavigate } from 'react-router-dom';
-import { useLogoutMutation } from '../../../api/services/auth';
+import { getLoggedInUserV2, useLogoutMutation } from '../../../api/services/auth';
 import RedeemCodeModal from '../../../features/giftcards/RedeemCodeModal';
 import HomeHeaderPoints from './HomeHeaderPoints';
 
@@ -48,29 +48,19 @@ export default function HomeHeader() {
     const [isRedeemCodeModalOpen, setIsRedeemCodeModalOpen] = useState(false);
 
     const [logout] = useLogoutMutation();
+    const user = getLoggedInUserV2();
 
     const menu = (
         <Menu style={{ borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', width: '25svw' }}>
-            <Menu.Item
-                key='profile'
-                style={menuItemStyle}
-                onClick={() => navigate('profile')}
-            >
+            <Menu.Item key='profile' style={menuItemStyle} onClick={() => navigate('/home/profile')}>
                 <UserOutlined style={iconStyle} /> My Profile
             </Menu.Item>
-            <Menu.Item
-                key='events'
-                style={menuItemStyle}
-            >
+            <Menu.Item key='events' style={menuItemStyle} onClick={() => navigate('/home/profile/events')}>
                 <CalendarOutlined style={iconStyle} /> My Events
             </Menu.Item>
 
             <Menu.Divider />
-            <Menu.Item
-                key='redeem card'
-                style={menuItemStyle}
-                onClick={() => setIsRedeemCodeModalOpen(true)}
-            >
+            <Menu.Item key='redeem card' style={menuItemStyle} onClick={() => setIsRedeemCodeModalOpen(true)}>
                 <CardGiftcardOutlined style={iconStyle} /> Redeem code
             </Menu.Item>
             <Menu.Divider />
@@ -88,10 +78,7 @@ export default function HomeHeader() {
 
     return (
         <>
-            <RedeemCodeModal
-                isOpen={isRedeemCodeModalOpen}
-                onClose={() => setIsRedeemCodeModalOpen(false)}
-            />
+            <RedeemCodeModal isOpen={isRedeemCodeModalOpen} onClose={() => setIsRedeemCodeModalOpen(false)} />
             <Layout.Header className='h-[8svh] px-2 shadow-secondary shadow-2xl '>
                 <div className='flex justify-between items-center h-full w-full font-serif px-4 space-x-8'>
                     <div
@@ -125,10 +112,7 @@ export default function HomeHeader() {
                             >
                                 <TicketsCard ticketsCount={balance?.balance} />
                             </div> */}
-                            <Badge
-                                count={5}
-                                size='small'
-                            >
+                            <Badge count={5} size='small'>
                                 <Button
                                     type='text'
                                     icon={<IoMdNotificationsOutline className='text-2xl ' />}
@@ -141,11 +125,12 @@ export default function HomeHeader() {
                                 overlay={menu}
                                 placement='bottomLeft'
                                 arrow
+                                trigger={'click'}
                             >
                                 <Link onClick={(e) => e.preventDefault()}>
                                     <img
-                                        className='w-[2.5em] aspect-square rounded-full hidden lg:block md:ml-4'
-                                        src='https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+                                        className='w-[3em] aspect-square rounded-full hidden lg:block md:ml-6'
+                                        src={user?.profile_picture}
                                         alt='Profile'
                                         style={{ transition: 'transform 0.3s', padding: '1px' }}
                                         onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')}

@@ -1,18 +1,16 @@
 import { Card, Col, Popover, Row, Skeleton, Tabs, Tooltip } from 'antd';
-
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-
 import { useLazyAttendeeStatusInEventQuery, useShowQuery } from '../../../api/services/events';
 import UpdateEventModal from '../UpdateEventModal';
-
 import EventChat from '../../chat/EventChat';
 import RegistrationModal from '../registration/RegistrationModal';
-
 import EventCover from './components/EventCover';
 import EventDetailsTab from './components/EventDetailsTab';
 import { getLoggedInUserV2 } from '../../../api/services/auth';
 import Roles from '../../../api/Roles';
+import EventCountdown from './components/EventCountdown';
+import EventRegisterButton from './components/EventRegisterButton';
 
 const ShowEvent = () => {
     const { id } = useParams();
@@ -38,9 +36,9 @@ const ShowEvent = () => {
 
     const [tooltipOpen, setTooltipOpen] = useState(true);
 
-    // useEffect(() => {
-    //     console.log(attendeeStatusInEvent);
-    // }, [eventData, attendeeStatusInEvent]);
+    useEffect(() => {
+        console.log(eventData);
+    }, [eventData]);
 
     useEffect(() => {
         if (user.user_role === Roles.ATTENDEE && eventData) {
@@ -62,7 +60,10 @@ const ShowEvent = () => {
     return (
         <div className='grid grid-cols-12'>
             <div className='col-start-1 col-span-12 p-2 sm:p-0  sm:col-start-3 sm:col-span-8'>
-                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '5em' }}>
+                <div
+                    className='w-full'
+                    style={{ marginBottom: '5em' }}
+                >
                     <RegistrationModal
                         isOpen={isRegistrationModalOpen}
                         event={eventData}
@@ -76,6 +77,7 @@ const ShowEvent = () => {
                         paragraph={{ rows: 10 }}
                     >
                         <Card
+                            className='w-full'
                             style={{ backgroundColor: 'transparent', width: '100%' }}
                             bodyStyle={{ padding: '10px 20px' }}
                             cover={
@@ -101,15 +103,7 @@ const ShowEvent = () => {
                                             {
                                                 key: '1',
                                                 label: 'Event Details',
-                                                children: (
-                                                    <EventDetailsTab
-                                                        eventData={eventData}
-                                                        handleRegisterClicked={handleRegisterClicked}
-                                                        attendeeStatusInEvent={attendeeStatusInEvent}
-                                                        isAttendeeStatusInEventLoading={isAttendeeStatusInEventLoading}
-                                                        user_role={user?.user_role}
-                                                    />
-                                                ),
+                                                children: <EventDetailsTab eventData={eventData} />,
                                             },
                                             {
                                                 key: '2',
@@ -192,6 +186,16 @@ const ShowEvent = () => {
                                 isFetching={isFetching}
                             />
                         )}
+
+                        <div className='sticky bottom-0 bg-white border-t border-gray-300 mt-8 w-full'>
+                            <EventRegisterButton
+                                eventData={eventData}
+                                handleRegisterClicked={handleRegisterClicked}
+                                attendeeStatusInEvent={attendeeStatusInEvent}
+                                isAttendeeStatusInEventLoading={isAttendeeStatusInEventLoading}
+                                user_role={user?.user_role}
+                            />
+                        </div>
                     </Skeleton>
                 </div>
             </div>

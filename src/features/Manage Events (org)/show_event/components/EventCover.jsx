@@ -26,7 +26,7 @@ const EventCover = ({ data, setIsUpdateModalOpen }) => {
                         preview={false}
                         height={'100%'}
                         width={'100%'}
-                        style={{ minHeight: '20vh', maxHeight: '55vh' }}
+                        style={{ minHeight: '20vh', maxHeight: '55vh', borderRadius: '0%' }}
                         src={data?.cover_image}
                     />
                 ) : (
@@ -41,7 +41,6 @@ const EventCover = ({ data, setIsUpdateModalOpen }) => {
                             justifyContent: 'center',
                         }}
                     >
-                        {/* Placeholder content */}
                         <p>No cover image available</p>
                     </div>
                 )}
@@ -279,7 +278,8 @@ const coverImageStyle = {
     },
 };
 
-const OrgPopoverContent = ({ organization }) => {
+export const OrgPopoverContent = ({ organization }) => {
+    console.log(organization);
     return (
         <Card bordered={false} style={{}}>
             <Link to={`/org/${organization?.id}`} style={coverImageStyle.link}>
@@ -289,7 +289,7 @@ const OrgPopoverContent = ({ organization }) => {
                             preview={false}
                             width={50}
                             height={50}
-                            src='https://randomuser.me/api/portraits/men/4.jpg'
+                            src={organization?.cover_picture}
                             alt={organization.name}
                             style={{ borderRadius: '50%' }}
                         />
