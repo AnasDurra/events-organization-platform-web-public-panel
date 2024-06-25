@@ -72,7 +72,6 @@ export default function EditFormPage() {
     const debounceUpdateFieldOption = debounce(updateFieldOption, debounceTime);
 
     const handleUpdateProperties = (updatedField) => {
-        console.log("1433: ",updatedField)
         if (updatedField?.validationRules?.length) {
             console.log(updatedField);
             if (updatedField.validationRules[0].delete) {
@@ -134,7 +133,6 @@ export default function EditFormPage() {
             debounceUpdateGroupField({ fields: { field_id: updatedField?.id, ...fieldsToUpdate } });
         }
 
-        console.log(updatedField);
         if (updatedField?.fieldType?.id == SidebarItemsIDs.RADIO) {
             if (updatedField.options) {
                 DBform.groups.forEach((group) => {
@@ -151,7 +149,10 @@ export default function EditFormPage() {
                         const optionsToRemove = field.options.filter((option) => !updatedOptionsMap.has(option.id));
 
                         optionsToAdd.forEach((option) => {
-                            addNewFieldOption({ field_id: updatedField?.id, name: option.name });
+                            addNewFieldOption({
+                                field_id: updatedField?.id,
+                                name: option.name,
+                            });
                         });
 
                         optionsToRemove.forEach((option) => {

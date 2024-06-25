@@ -199,7 +199,7 @@ export default function RedeemCodeModal({ isOpen, onClose }) {
                             <li>Enter the full code below to redeem your gift card.</li>
                             <li>
                                 If you encounter any issues, please contact us at{' '}
-                                <span className='text-secondary'>support@eventure.com</span>.
+                                <span className='text-secondary'>support@WEEVENTS.com</span>.
                             </li>
                         </ul>
                         <div className='mt-8'>

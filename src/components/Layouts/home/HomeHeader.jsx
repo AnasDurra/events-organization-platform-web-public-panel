@@ -98,7 +98,7 @@ export default function HomeHeader() {
                         className='text-nowrap text-3xl  font-[bangers]  hover:cursor-pointer text-primary'
                         onClick={() => navigate('/home')}
                     >
-                        Eventure
+                        WEEVENTS
                     </div>
                     <div className='flex items-center gap-x-4 w-full justify-end  sm:justify-between w-full   '>
                         <div className=' items-center gap-x-4 hidden lg:flex'>

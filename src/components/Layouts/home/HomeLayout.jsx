@@ -15,7 +15,7 @@ const HomeLayout = ({ roles }) => {
     const [hideContent, setHideContent] = useState(true);
 
     const theme = {
-        token: { colorPrimary: '#2A9D8F', fontFamily: 'Playfair Display' },
+        token: { colorPrimary: '#2A9D8F', fontFamily: 'Roboto' },
         components: {
             Layout: { headerBg: lightenColor('#2A9D8F', 100), bodyBg: '#F9F9F9' },
         },

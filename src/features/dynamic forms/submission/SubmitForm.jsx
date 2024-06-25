@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import FormGroup from './FormGroup';
-import { Typography, Form, Button, Badge, Spin } from 'antd';
+import { Typography, Form, Button, Badge, Spin, ConfigProvider } from 'antd';
 import './SubmitForm.css';
 import { useGetFormQuery, useSubmitFormMutation } from '../dynamicFormsSlice';
 import dayjs from 'dayjs';
@@ -65,87 +65,117 @@ export default function SubmitForm({ prop_event_id, prop_form_id }) {
         });
     };
 
+    const theme = {
+        token: { colorPrimary: '#2A9D8F', fontFamily: 'Playfair Display' },
+        components: {
+            Layout: { headerBg: lightenColor('#2A9D8F', 100), bodyBg: '#F9F9F9' },
+        },
+        cssVar: true,
+    };
     return (
-        <div className='min-h-[100vh] paper '>
-            {isLoading ? (
-                <Spin
-                    size='large'
-                    spinning
-                    fullscreen
-                    tip={
-                        <div className='m-2 flex flex-col justify-between h-full '>
-                            <span>loading form...</span>
-                            {/* TODO link */}
-                            <Button type='primary'>Back to event</Button>
-                        </div>
-                    }
-                />
-            ) : (
-                <div className='grid grid-cols-12 pb-4'>
-                    <div className='sm:col-start-4 sm:col-span-6  col-span-12'>
-                        <Typography.Title
+        <ConfigProvider theme={theme}>
+            <div className='min-h-[100vh] paper '>
+                {isLoading ? (
+                    <Spin
+                        size='large'
+                        spinning
+                        fullscreen
+                        tip={
+                            <div className='m-2 flex flex-col justify-between h-full '>
+                                <span>loading form...</span>
+                                {/* TODO link */}
+                                <Button type='primary'>Back to event</Button>
+                            </div>
+                        }
+                    />
+                ) : (
+                    <div className='grid grid-cols-12 pb-4'>
+                        <div className='sm:col-start-4 sm:col-span-6  col-span-12'>
+                            {/*  <Typography.Title
                             level={2}
                             className='text-center mt-2'
                         >
                             {' '}
                             Event name
-                        </Typography.Title>
-                        <Form
-                            form={form}
-                            onFinish={handleFormFinish}
-                            requiredMark={'optional'}
-                            layout='vertical'
-                        >
-                            {DBform?.groups?.map((group, index) => (
-                                <div
-                                    key={group.id}
-                                    style={{ display: index == currentGroupIndex ? 'block' : 'none' }}
-                                >
-                                    <FormGroup
-                                        group={group}
-                                        groupsLength={DBform.groups?.length}
-                                        groupIndex={index}
-                                    />
+                        </Typography.Title> */}
+                            <Form
+                                form={form}
+                                onFinish={handleFormFinish}
+                                requiredMark={'optional'}
+                                layout='vertical'
+                            >
+                                {DBform?.groups?.map((group, index) => (
+                                    <div
+                                        key={group.id}
+                                        style={{ display: index == currentGroupIndex ? 'block' : 'none' }}
+                                    >
+                                        <FormGroup
+                                            group={group}
+                                            groupsLength={DBform.groups?.length}
+                                            groupIndex={index}
+                                        />
+                                    </div>
+                                ))}
+
+                                <div className='text-gray-500 text-center'>
+                                    {' '}
+                                    {`<${currentGroupIndex + 1}/${DBform?.groups?.length}>`}
                                 </div>
-                            ))}
+                                <div className='flex justify-center space-x-2 m-4'>
+                                    <Button
+                                        onClick={handlePrevious}
+                                        disabled={currentGroupIndex === 0}
+                                    >
+                                        Previous
+                                    </Button>
+                                    <Button
+                                        type='primary'
+                                        htmlType='submit'
+                                        style={{
+                                            display:
+                                                currentGroupIndex + 1 === DBform?.groups?.length ? 'block' : 'none',
+                                        }}
+                                    >
+                                        Submit
+                                    </Button>
 
-                            <div className='text-gray-500 text-center'>
-                                {' '}
-                                {`<${currentGroupIndex + 1}/${DBform?.groups?.length}>`}
-                            </div>
-                            <div className='flex justify-center space-x-2 m-4'>
-                                <Button
-                                    onClick={handlePrevious}
-                                    disabled={currentGroupIndex === 0}
-                                >
-                                    Previous
-                                </Button>
-                                <Button
-                                    type='primary'
-                                    htmlType='submit'
-                                    style={{
-                                        display: currentGroupIndex + 1 === DBform?.groups?.length ? 'block' : 'none',
-                                    }}
-                                >
-                                    Submit
-                                </Button>
-
-                                <Button
-                                    onClick={handleNext}
-                                    type='primary'
-                                    style={{
-                                        display: currentGroupIndex + 1 === DBform?.groups?.length ? 'none' : 'block',
-                                    }}
-                                >
-                                    Next
-                                </Button>
-                            </div>
-                        </Form>
+                                    <Button
+                                        onClick={handleNext}
+                                        type='primary'
+                                        style={{
+                                            display:
+                                                currentGroupIndex + 1 === DBform?.groups?.length ? 'none' : 'block',
+                                        }}
+                                    >
+                                        Next
+                                    </Button>
+                                </div>
+                            </Form>
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
+        </ConfigProvider>
     );
+}
+
+export function lightenColor(color, amount) {
+    const colorValue = color.replace('#', '');
+    const num = parseInt(colorValue, 16);
+    const amt = Math.round(2.55 * amount);
+    const R = (num >> 16) + amt;
+    const B = ((num >> 8) & 0x00ff) + amt;
+    const G = (num & 0x0000ff) + amt;
+    const newColor = (
+        0x1000000 +
+        (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+        (B < 255 ? (B < 1 ? 0 : B) : 255) * 0x100 +
+        (G < 255 ? (G < 1 ? 0 : G) : 255)
+    )
+        .toString(16)
+        .slice(1);
+
+    return `#${newColor}`;
 }
 
 const fakeForm = {

@@ -23,7 +23,7 @@ const BasicLayout = () => {
                     <div className='flex items-center space-x-2'>
                         <Icon icon='line-md:calendar' style={{ fontSize: '32px', marginRight: '10px' }} />
                         <Title style={{ margin: 0, color: 'black' }} level={3} className='font-serif'>
-                            Eventure
+                            WEEVENTS
                         </Title>
                     </div>
                     <div>

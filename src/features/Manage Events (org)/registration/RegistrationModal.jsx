@@ -82,7 +82,7 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
         if (event?.result?.form) stepsLength++;
         if (event?.result?.fees) stepsLength++;
 
-        if (step == stepsLength - 1) {
+        if (step == stepsLength) {
             attendEvent({ event_id: event?.result?.id })
                 .unwrap()
                 .then((res) => {
@@ -125,11 +125,11 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                 <Spin spinning={isAttendeeEventStatusLoading}>
                     <div className='flex flex-col  items-center justify-center w-full space-y-8 p-8'>
                         {AttendeeEventStatus?.filled_form ? (
-                            <div className='flex flex-col justify-center items-center'>
-                                <div className='text-lg text-pretty text-primary'>You Have Submitted Event Form</div>
+                            <div className='flex flex-col justify-between h-full space-y-7 items-center'>
+                                <div className='text-lg text-pretty text-textPrimary my-2'>You Have Submitted Event Form</div>
                                 <Button
                                     type='primary'
-                                    onClick={handleStepChange(currentStep + 1)}
+                                    onClick={()=>handleStepChange(currentStep + 1)}
                                 >
                                     {' '}
                                     Next
@@ -168,7 +168,7 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                     <div className='flex flex-col  h-full space-y-8'>
                         <div className='flex flex-col space-y-4 md:flex-row md:space-y-0  space-x-4 justify-center items-center mt-4'>
                             <div className='w-full h-full text-center'>
-                                <Typography.Text className='text-[1.2em] font-semibold font-mono text-center'>
+                                <Typography.Text className='text-lg font-semibold font-mono text-center'>
                                     {' '}
                                     Your Tickets Balance
                                 </Typography.Text>
@@ -181,7 +181,7 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                                     >
                                         <Typography.Text
                                             code
-                                            className='text-[1.2em]'
+                                            className='text-lg'
                                         >
                                             {balanceObj?.balance}
                                         </Typography.Text>
@@ -189,7 +189,7 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                                 </div>
                             </div>
                             <div className='w-full h-full text-center'>
-                                <Typography.Text className='text-[1.2em] font-semibold font-mono text-center'>
+                                <Typography.Text className='text-lg font-semibold font-mono text-center'>
                                     {' '}
                                     Cost
                                 </Typography.Text>
@@ -197,7 +197,7 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                                     <TiTicket className='text-[2em] text-yellow-500' />
                                     <Typography.Text
                                         code
-                                        className='text-[1.2em]'
+                                        className='text-lg'
                                     >
                                         {event?.result?.fees}
                                     </Typography.Text>
@@ -217,9 +217,9 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                     </div>
                 ) : (
                     <div className='flex flex-col justify-center items-center space-y-4 mt-4'>
-                        <Typography.Text className='text-[1.2em] font-semibold font-mono text-center'>
+                        <Typography.Text className='text-lg font-semibold font-mono text-center'>
                             {' '}
-                            Your Tickets Balance <Typography.Text type='danger'>NOT SUFFICIENT</Typography.Text>
+                            Your Tickets Balance Is <Typography.Text type='danger'>NOT SUFFICIENT</Typography.Text>
                         </Typography.Text>
                         <TiTicket className='text-[5em] text-yellow-500' />
                         <Spin
@@ -229,7 +229,7 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                         >
                             <Typography.Text
                                 code
-                                className='text-[1.2em]'
+                                className='text-lg'
                             >
                                 {balanceObj?.balance}
                             </Typography.Text>
@@ -277,10 +277,10 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
 
     return (
         <Modal
-            title={'registering for event x'}
+            title={'Registration'}
             centered={true}
             open={isOpen}
-            width={'80svw'}
+            width={'60svw'}
             footer={null}
             onCancel={() => {
                 onClose();

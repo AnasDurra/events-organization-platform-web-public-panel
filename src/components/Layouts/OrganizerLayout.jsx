@@ -316,7 +316,7 @@ export default function OrganizerLayout({ roles }) {
                                 <DropdownSider menu={userMenu.result.menu} />
                             </div>
                             <Title style={{ margin: 0, color: 'whitesmoke' }} level={3} className='font-serif'>
-                                Eventure
+                                WEEVENTS
                             </Title>
                         </Col>
                         <Col xs={{ span: 12 }}>

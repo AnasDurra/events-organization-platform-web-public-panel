@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const handleReorderGroupItems = ({ form_id, currentGroups, source, destination, updateGroupField }) => {
     /*  return currentGroups.map((group) => {
-        if (destination.droppableId === group.id) {
+        if (destination.droppableId == group.id) {
             const newFields = [...group.fields];
 
             newFields.splice(source.index, 1);
@@ -45,7 +45,7 @@ export const handleReorderGroups = ({ form_id, currentGroups, source, destinatio
 
 export const handleSidebarToForm = ({ form_id, currentGroups, source, destination, addNewField, addNewGroup }) => {
     const itemType = SidebarItemsTypeByID[source.index];
-    if (itemType === itemTypes.GROUP) {
+    if (itemType == itemTypes.GROUP) {
         console.log(source);
         console.log(destination);
 
@@ -62,7 +62,8 @@ export const handleSidebarToForm = ({ form_id, currentGroups, source, destinatio
     } else {
         let options = [];
 
-        if (source.index === SidebarItemsIDs.RADIO) {
+        console.log('hop hop', source.index, SidebarItemsIDs.RADIO);
+        if (source.index == SidebarItemsIDs.RADIO) {
             options = [{ name: 'default 1' }, { name: 'default 2' }];
         }
         const destinationGroupIndex = destination.droppableId.split('-')[2];
@@ -75,18 +76,24 @@ export const handleSidebarToForm = ({ form_id, currentGroups, source, destinatio
                 required: false,
                 name: 'deafult name',
                 label: 'default label',
-                ...(source.index === SidebarItemsIDs.RADIO && { options }),
+                ...(source.index == SidebarItemsIDs.RADIO && { options }),
             },
             form_id,
         });
     }
 };
 
-export const handleMoveItemFromGroupToAnotherGroup = ({form_id, currentGroups, source, destination, updateGroupField }) => {
+export const handleMoveItemFromGroupToAnotherGroup = ({
+    form_id,
+    currentGroups,
+    source,
+    destination,
+    updateGroupField,
+}) => {
     /*  let newGroups = [...currentGroups];
 
-    const sourceGroup = newGroups.find((group) => group.id === source.droppableId);
-    const destinationGroup = newGroups.find((group) => group.id === destination.droppableId);
+    const sourceGroup = newGroups.find((group) => group.id == source.droppableId);
+    const destinationGroup = newGroups.find((group) => group.id == destination.droppableId);
 
     const removedItem = sourceGroup.fields.splice(source.index, 1)[0];
 
@@ -128,20 +135,20 @@ export const onDragEnd = ({
 
     if (!destination) {
         return;
-    } else if (destination.droppableId === source.droppableId && destination.index === source.index) {
+    } else if (destination.droppableId == source.droppableId && destination.index == source.index) {
         return;
-    } else if (destination.droppableId === source.droppableId && type === 'group-item') {
+    } else if (destination.droppableId == source.droppableId && type == 'group-item') {
         console.log('same droppable / group-item');
 
         return handleReorderGroupItems({ form_id, currentGroups, source, destination, updateGroupField });
-    } else if (destination.droppableId === source.droppableId && type === 'group') {
+    } else if (destination.droppableId == source.droppableId && type == 'group') {
         console.log('same droppable / group');
 
         return handleReorderGroups({ form_id, currentGroups, source, destination, updateGroup });
     } else if (destination.droppableId !== source.droppableId && currentGroups[sourceGroupIndex] !== undefined) {
         console.log('group to group');
         return handleMoveItemFromGroupToAnotherGroup({ form_id, currentGroups, source, destination, updateGroupField });
-    } else if (destination.droppableId !== source.droppableId && (type === 'group-item' || type === 'group')) {
+    } else if (destination.droppableId !== source.droppableId && (type == 'group-item' || type == 'group')) {
         console.log('sidebar to group');
         return handleSidebarToForm({ currentGroups, source, destination, addNewField, addNewGroup, form_id });
     } else return;
