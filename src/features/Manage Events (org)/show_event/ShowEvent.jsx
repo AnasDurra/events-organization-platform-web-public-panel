@@ -1,14 +1,10 @@
 import { Card, Col, Popover, Row, Skeleton, Tabs, Tooltip } from 'antd';
-
 import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-
 import { useLazyAttendeeStatusInEventQuery, useShowQuery } from '../../../api/services/events';
 import UpdateEventModal from '../UpdateEventModal';
-
 import EventChat from '../../chat/EventChat';
 import RegistrationModal from '../registration/RegistrationModal';
-
 import EventCover from './components/EventCover';
 import EventDetailsTab from './components/EventDetailsTab';
 import { getLoggedInUserV2 } from '../../../api/services/auth';
