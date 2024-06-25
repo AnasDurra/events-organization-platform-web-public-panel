@@ -34,7 +34,9 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
         <Modal
             title={
                 <Title level={3} style={{ marginBottom: 0 }}>
-                    Attendee Information
+                    <Space>
+                        <Icon icon='fxemoji:ticket' style={{ color: token.colorPrimary, fontSize: '32px' }} /> My Ticket
+                    </Space>
                 </Title>
             }
             open={isVisible}
@@ -45,7 +47,10 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                         Close
                     </Button>
                     <Button key='download' size='large' onClick={downloadTicket} type='primary'>
-                        Download Ticket
+                        <Space>
+                            <Icon icon='line-md:download-outline-loop' style={{ fontSize: '24px' }} />
+                            Download Ticket
+                        </Space>
                     </Button>
                 </Space>
             }
@@ -74,7 +79,18 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                             />
                         </div>
                         <div>
-                            <Title level={3} style={{ margin: 10 }}>
+                            <Title
+                                level={2}
+                                style={{
+                                    margin: '20px 0',
+                                    padding: '10px 20px',
+                                    backgroundColor: '#f9f9f9',
+                                    borderRadius: '8px',
+                                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                                    textAlign: 'center',
+                                    color: '#333',
+                                }}
+                            >
                                 {eventInfo?.title}
                             </Title>
                             <Text style={{ fontSize: '14px', color: '#bbbbbb' }}>
@@ -92,11 +108,13 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                             // }
                             column={1}
                         >
-                            <Descriptions.Item label='Location'>{eventInfo?.address?.label}</Descriptions.Item>
-                            <Descriptions.Item label='Date'>
+                            <Descriptions.Item labelStyle={{ color: token.colorPrimary }} label='Location'>
+                                {eventInfo?.address?.label}
+                            </Descriptions.Item>
+                            <Descriptions.Item labelStyle={{ color: token.colorPrimary }} label='Date'>
                                 {moment(eventInfo?.days[0]?.day_date).format('MMMM D, YYYY')}
                             </Descriptions.Item>
-                            <Descriptions.Item label='Time'>
+                            <Descriptions.Item labelStyle={{ color: token.colorPrimary }} label='Time'>
                                 {moment(eventInfo?.days[0]?.slots[0]?.start_time).format('h:mm A')}
                             </Descriptions.Item>
                         </Descriptions>
@@ -110,16 +128,17 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                             // }
                             column={1}
                         >
-                            <Descriptions.Item label='Name'>{attendeeQrCode?.result?.attendee?.name}</Descriptions.Item>
-                            <Descriptions.Item label='Email'>
+                            <Descriptions.Item labelStyle={{ color: token.colorPrimary }} label='Name'>
+                                {attendeeQrCode?.result?.attendee?.name}
+                            </Descriptions.Item>
+                            <Descriptions.Item labelStyle={{ color: token.colorPrimary }} label='Email'>
                                 {attendeeQrCode?.result?.attendee?.email}
                             </Descriptions.Item>
-                            <Descriptions.Item label='Ticket ID'>
+                            <Descriptions.Item labelStyle={{ color: token.colorPrimary }} label='Ticket ID'>
                                 {attendeeQrCode?.result?.attendee?.ticket_id}
                             </Descriptions.Item>
                         </Descriptions>
                     </Col>
-                    {/* <Divider style={{margin:"10px"}}   /> */}
 
                     <Divider style={{ margin: '10px' }} />
                     <Col xs={{ span: 24 }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
