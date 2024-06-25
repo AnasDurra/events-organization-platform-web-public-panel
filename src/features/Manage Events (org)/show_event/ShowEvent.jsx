@@ -14,6 +14,7 @@ import EventDetailsTab from './components/EventDetailsTab';
 import { getLoggedInUserV2 } from '../../../api/services/auth';
 import Roles from '../../../api/Roles';
 import EventCountdown from './components/EventCountdown';
+import EventRegisterButton from './components/EventRegisterButton';
 
 const ShowEvent = () => {
     const { id } = useParams();
@@ -61,12 +62,21 @@ const ShowEvent = () => {
     }, []);
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '5em' }}>
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                alignItems: 'center',
+                marginBottom: '5em',
+            }}
+        >
             <RegistrationModal
                 isOpen={isRegistrationModalOpen}
                 event={eventData}
                 onClose={handleCloseRegistrationModal}
             />
+            {attendeeStatusInEvent?.result?.registered === 'accepted' && <EventCountdown eventData={eventData} />}
 
             <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}>
                 <Card
@@ -95,15 +105,7 @@ const ShowEvent = () => {
                                     {
                                         key: '1',
                                         label: 'Event Details',
-                                        children: (
-                                            <EventDetailsTab
-                                                eventData={eventData}
-                                                handleRegisterClicked={handleRegisterClicked}
-                                                attendeeStatusInEvent={attendeeStatusInEvent}
-                                                isAttendeeStatusInEventLoading={isAttendeeStatusInEventLoading}
-                                                user_role={user?.user_role}
-                                            />
-                                        ),
+                                        children: <EventDetailsTab eventData={eventData} />,
                                     },
                                     {
                                         key: '2',
@@ -184,9 +186,17 @@ const ShowEvent = () => {
                         isFetching={isFetching}
                     />
                 )}
-            </Skeleton>
 
-            {/* <EventCountdown eventData={eventData} attendeeStatusInEvent={attendeeStatusInEvent} /> */}
+                <div className='sticky bottom-0 bg-white border-t border-gray-300 mt-8 w-full'>
+                    <EventRegisterButton
+                        eventData={eventData}
+                        handleRegisterClicked={handleRegisterClicked}
+                        attendeeStatusInEvent={attendeeStatusInEvent}
+                        isAttendeeStatusInEventLoading={isAttendeeStatusInEventLoading}
+                        user_role={user?.user_role}
+                    />
+                </div>
+            </Skeleton>
         </div>
     );
 };

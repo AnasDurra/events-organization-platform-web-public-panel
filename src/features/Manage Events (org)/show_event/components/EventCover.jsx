@@ -26,7 +26,7 @@ const EventCover = ({ data, setIsUpdateModalOpen }) => {
                         preview={false}
                         height={'100%'}
                         width={'100%'}
-                        style={{ minHeight: '20vh', maxHeight: '55vh' }}
+                        style={{ minHeight: '20vh', maxHeight: '55vh', borderRadius: '0%' }}
                         src={data?.cover_image}
                     />
                 ) : (
@@ -41,7 +41,6 @@ const EventCover = ({ data, setIsUpdateModalOpen }) => {
                             justifyContent: 'center',
                         }}
                     >
-                        {/* Placeholder content */}
                         <p>No cover image available</p>
                     </div>
                 )}

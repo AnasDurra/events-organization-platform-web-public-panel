@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Row, Col, Typography } from 'antd';
 
 const { Text, Title } = Typography;
 
-const EventCountdown = ({ eventData, attendeeStatusInEvent }) => {
-    // Uncomment these lines if you need to check registration or event date availability
-    // if (!attendeeStatusInEvent?.result?.registered || !eventData?.result?.days[0]?.start_day) {
-    //     return null;
-    // }
-    console.log(eventData);
-    const eventDate = new Date(eventData?.result?.days[0]?.day_date);
+const EventCountdown = ({ eventData }) => {
+    const daysArray = eventData?.result?.days || [];
+
+    const getLastEventDate = () => {
+        if (daysArray.length === 0) return new Date();
+        return new Date(daysArray[daysArray.length - 1]?.day_date);
+    };
+
     const calculateTimeLeft = () => {
         const now = new Date();
+        const eventDate = getLastEventDate();
         const timeDifference = eventDate - now;
 
         const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
@@ -32,60 +34,56 @@ const EventCountdown = ({ eventData, attendeeStatusInEvent }) => {
         return () => clearInterval(timer);
     }, []);
 
+    const now = new Date();
+    const isBeforeEvent = now < getLastEventDate();
+    const isEventStarted = daysArray.some((day) => new Date(day.day_date).toDateString() === now.toDateString());
+
+    const textStyle = {
+        color: 'white',
+        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.6)',
+    };
+
     return (
-        <div style={fixedTopStyle}>
-            <Row justify='center' align='middle' style={countdownStyle}>
-                <Col>
-                    <Title level={2} style={timeStyle}>
-                        {timeLeft.days} : {timeLeft.hours} : {timeLeft.minutes} : {timeLeft.seconds}
-                    </Title>
-                </Col>
-            </Row>
-            <Row justify='center' align='middle'>
-                <Col>
-                    <Text style={labelStyle}>Days</Text>
-                </Col>
-                <Col>
-                    <Text style={labelStyle}>Hours</Text>
-                </Col>
-                <Col>
-                    <Text style={labelStyle}>Minutes</Text>
-                </Col>
-                <Col>
-                    <Text style={labelStyle}>Seconds</Text>
-                </Col>
-            </Row>
+        <div className='sticky top-0 left-0 right-0 w-full bg-black p-2 shadow-md text-center z-50'>
+            <div className='inline-block bg-black rounded-lg'>
+                {isBeforeEvent ? (
+                    <Row justify='center' align='middle' className='flex-nowrap overflow-hidden'>
+                        {['days', 'hours', 'minutes', 'seconds'].map((unit, index) => (
+                            <Col
+                                key={index}
+                                className='flex flex-col items-center mx-0.5 flex-shrink-0 min-w-[8px] sm:min-w-[10px] md:min-w-[12px]'
+                            >
+                                <div className='bg-gray-800 p-0.5 sm:p-0.5 md:p-1 rounded-lg text-center'>
+                                    <Title
+                                        level={4}
+                                        className='text-white m-0 text-xxs sm:text-xxxs md:text-xs'
+                                        style={{ color: 'white', marginBottom: '5px' }}
+                                    >
+                                        {timeLeft[unit]}
+                                    </Title>
+                                    <Text className='text-gray-300 text-xxxs sm:text-xxxxs md:text-xxs capitalize'>
+                                        {unit}
+                                    </Text>
+                                </div>
+                            </Col>
+                        ))}
+                    </Row>
+                ) : isEventStarted ? (
+                    <div>
+                        <Title level={4} style={textStyle}>
+                            The event has started!
+                        </Title>
+                    </div>
+                ) : (
+                    <div>
+                        <Title level={4} style={textStyle}>
+                            The event has ended.
+                        </Title>
+                    </div>
+                )}
+            </div>
         </div>
     );
-};
-
-const fixedTopStyle = {
-    position: 'fixed',
-    // top: '10',
-    right: '0',
-    // width: '100%',
-    backgroundColor: 'transparent', // Ant Design background color
-    padding: '10px 0',
-    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-    textAlign: 'center',
-    zIndex: 1000,
-};
-
-const countdownStyle = {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '0 20px',
-};
-
-const labelStyle = {
-    fontSize: '16px',
-    color: '#595959',
-    margin: '0 10px',
-    textAlign: 'center',
-};
-
-const timeStyle = {
-    color: '#1890ff', // Ant Design primary color
 };
 
 export default EventCountdown;
