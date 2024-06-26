@@ -6,7 +6,7 @@ export const registrationSlice = apiSlice.injectEndpoints({
             query: ({ attendee_id, event_id }) =>
                 `attendee/attendee-event-info?event_id=${event_id}&attendee_id=${attendee_id}`,
 
-            providesTags:['did-fill-form']
+            providesTags: ['did-fill-form'],
         }),
 
         attendEvent: builder.mutation({
@@ -15,9 +15,9 @@ export const registrationSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: { event_id },
             }),
-            invalidatesTags:['confirm-attendance']
+            invalidatesTags: ['confirm-attendance', 'attendee-status'],
         }),
     }),
 });
 
-export const { useAttendEventMutation,useLazyGetAttendeeEventStatusQuery ,} = registrationSlice;
+export const { useAttendEventMutation, useLazyGetAttendeeEventStatusQuery } = registrationSlice;

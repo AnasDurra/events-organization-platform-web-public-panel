@@ -64,6 +64,7 @@ export const events = apiSlice.injectEndpoints({
                 url: `attendee/attendee-event-info?event_id=${event_id}&attendee_id=${attendee_id}`,
                 method: 'GET',
             }),
+            providesTags: ['attendee-status'],
         }),
     }),
 });
