@@ -5,11 +5,11 @@ import { TiTicket } from 'react-icons/ti';
 import { useNavigate } from 'react-router-dom';
 import { getLoggedInUserV2 } from '../../../api/services/auth';
 import { useNotification } from '../../../utils/NotificationContext';
-import { useGetAttendeeBalanceQuery } from '../../Ticketing Packages/TicketingPackagesSlice';
 import {
-    useAttendEventMutation,
-    useLazyGetAttendeeEventStatusQuery,
-} from './registrationSlice';
+    useGetAttendeeBalanceQuery,
+    useLazyGetAttendeeBalanceQuery,
+} from '../../Ticketing Packages/TicketingPackagesSlice';
+import { useAttendEventMutation, useLazyGetAttendeeEventStatusQuery } from './registrationSlice';
 
 export default function RegistrationModal({ event, isOpen, onClose }) {
     const navigate = useNavigate();
@@ -30,9 +30,9 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
         },
     ] = useLazyGetAttendeeEventStatusQuery({ pollingInterval: pullForm ? 3000 : undefined });
 
-    const { data: { result: balanceObj } = { result: {} }, isLoading: isBalanceObjLoading } =
-        useGetAttendeeBalanceQuery(getLoggedInUserV2()?.attendee_id, {
-            pollingInterval: pullBalance ? 3000 : undefined,
+    const [getAttendeeBalance, { data: { result: balanceObj } = { result: {} }, isLoading: isBalanceObjLoading }] =
+        useLazyGetAttendeeBalanceQuery(getLoggedInUserV2()?.attendee_id, {
+            pollingInterval: 3000,
         });
 
     useEffect(() => {
@@ -44,6 +44,14 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
         if (parseInt(balanceObj.balance) < parseInt(event?.result?.fees)) setPullBalance(true);
         else setPullBalance(false);
     }, [balanceObj, event]);
+
+    useEffect(() => {
+        if (pullBalance && getLoggedInUserV2()?.attendee_id) {
+            getAttendeeBalance(getLoggedInUserV2().attendee_id);
+        } else {
+            getAttendeeBalance(getLoggedInUserV2().attendee_id).abort();
+        }
+    }, [pullBalance]);
 
     useEffect(() => {
         if (getLoggedInUserV2()?.attendee_id && event?.result?.id) {
@@ -82,7 +90,7 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
         if (event?.result?.form) stepsLength++;
         if (event?.result?.fees) stepsLength++;
 
-        if (step == stepsLength) {
+        if (step == stepsLength-1) {
             attendEvent({ event_id: event?.result?.id })
                 .unwrap()
                 .then((res) => {
@@ -95,7 +103,7 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
             setCurrentStep(step);
         }
     };
-
+    console.log(event, balanceObj);
     const steps = [
         !event?.result?.form &&
             !event?.result?.fees && {
@@ -126,10 +134,12 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                     <div className='flex flex-col  items-center justify-center w-full space-y-8 p-8'>
                         {AttendeeEventStatus?.filled_form ? (
                             <div className='flex flex-col justify-between h-full space-y-7 items-center'>
-                                <div className='text-lg text-pretty text-textPrimary my-2'>You Have Submitted Event Form</div>
+                                <div className='text-lg text-pretty text-textPrimary my-2'>
+                                    You Have Submitted Event Form
+                                </div>
                                 <Button
                                     type='primary'
-                                    onClick={()=>handleStepChange(currentStep + 1)}
+                                    onClick={() => handleStepChange(currentStep + 1)}
                                 >
                                     {' '}
                                     Next
@@ -166,7 +176,7 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
             content:
                 parseInt(balanceObj.balance) >= parseInt(event?.result?.fees) ? (
                     <div className='flex flex-col  h-full space-y-8'>
-                        <div className='flex flex-col space-y-4 md:flex-row md:space-y-0  space-x-4 justify-center items-center mt-4'>
+                        <div className='flex flex-col space-y-8 text-center text-pretty  justify-center items-center mt-4'>
                             <div className='w-full h-full text-center'>
                                 <Typography.Text className='text-lg font-semibold font-mono text-center'>
                                     {' '}
@@ -180,7 +190,6 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                                         spinning={isBalanceObjLoading}
                                     >
                                         <Typography.Text
-                                            code
                                             className='text-lg'
                                         >
                                             {balanceObj?.balance}
@@ -191,15 +200,14 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                             <div className='w-full h-full text-center'>
                                 <Typography.Text className='text-lg font-semibold font-mono text-center'>
                                     {' '}
-                                    Cost
+                                    Event Cost
                                 </Typography.Text>
                                 <div className='flex w-full justify-center items-center'>
                                     <TiTicket className='text-[2em] text-yellow-500' />
                                     <Typography.Text
-                                        code
                                         className='text-lg'
                                     >
-                                        {event?.result?.fees}
+                                       {event?.result?.fees}
                                     </Typography.Text>
                                 </div>
                             </div>
@@ -236,7 +244,11 @@ export default function RegistrationModal({ event, isOpen, onClose }) {
                         </Spin>
                         <Typography.Text className='font-semibold'>
                             {' '}
-                            you need <Typography.Text type='danger'>150</Typography.Text> more tickets
+                            you need{' '}
+                            <Typography.Text type='danger'>
+                                {parseInt(event?.result?.fees) - parseInt(balanceObj.balance)}
+                            </Typography.Text>{' '}
+                            more tickets
                         </Typography.Text>
                         <div className='flex w-full space-x-2 justify-center'>
                             {/* <Button

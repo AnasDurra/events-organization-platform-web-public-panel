@@ -14,6 +14,7 @@ import { TiTicket } from 'react-icons/ti';
 import { useGetAttendeeTicketsHistoryQuery } from './TicketingPackagesSlice';
 import { getLoggedInUserV2 } from '../../api/services/auth';
 import dayjs from 'dayjs';
+import { CardGiftcard, PaymentOutlined, Shop2Outlined, ShopOutlined } from '@mui/icons-material';
 
 const { useToken } = theme;
 
@@ -31,10 +32,10 @@ export default function AttendeeTicketsHistory() {
         navigate(`/events/${eventId}`);
     };
 
-    const displayedTickets = showAll ? ticketsHistory : ticketsHistory.slice(0, 3);
+    
 
     const fakeHistoryEntries = [
-        {
+        /*     {
             attendee_tickets_id: '1',
             attendee_tickets_created_at: '2024-05-14',
             attendee_tickets_data: {
@@ -57,12 +58,22 @@ export default function AttendeeTicketsHistory() {
             },
             event_title: 'Event Title',
             attendee_tickets_value: -40,
-        },
+        }, */
     ];
 
     const updatedTicketsHistory = showAll
-        ? [...displayedTickets, ...fakeHistoryEntries]
-        : [...displayedTickets, ...fakeHistoryEntries].slice(0, 3);
+        ? [...ticketsHistory, ...fakeHistoryEntries].sort((a, b) => {
+              const createdAtA = dayjs(a.attendee_tickets_created_at);
+              const createdAtB = dayjs(b.attendee_tickets_created_at);
+              return createdAtB.diff(createdAtA);
+          })
+        : [...ticketsHistory, ...fakeHistoryEntries]
+              .sort((a, b) => {
+                  const createdAtA = dayjs(a.attendee_tickets_created_at);
+                  const createdAtB = dayjs(b.attendee_tickets_created_at);
+                  return createdAtB.diff(createdAtA);
+              })
+              .slice(0, 3);
 
     return (
         <Timeline
@@ -87,11 +98,23 @@ export default function AttendeeTicketsHistory() {
                         </TimelineOppositeContent>
                         <TimelineSeparator>
                             <TimelineConnector />
+
+                            <TimelineDot style={{ color: 'transparent', backgroundColor: 'transparent' }}>
+                                {ticket.attendee_tickets_event_type_id == 4 ? (
+                                    <CardGiftcard className='text-primary'></CardGiftcard>
+                                ) : ticket.attendee_tickets_event_type_id == 3 ? (
+                                    <Shop2Outlined className='text-primary'></Shop2Outlined>
+                                ) : ticket.attendee_tickets_event_type_id == 2 ? (
+                                    <FestivalIcon className='text-primary'></FestivalIcon>
+                                ) : ticket.attendee_tickets_event_type_id == 1 ? (
+                                    <PaymentOutlined className='text-primary'></PaymentOutlined>
+                                ) : (
+                                    'Error'
+                                )}
+                            </TimelineDot>
+                            {/* 
                             {ticket.attendee_tickets_data?.event_id ? (
-                                <TimelineDot
-                                    style={{ color: 'transparent', backgroundColor: 'transparent' }}
-                                    onClick={() => handleEventClick(ticket.attendee_tickets_data.event_id)}
-                                >
+                                <TimelineDot style={{ color: 'transparent', backgroundColor: 'transparent' }}>
                                     <FestivalIcon
                                         style={{
                                             color: token.colorPrimary,
@@ -104,7 +127,7 @@ export default function AttendeeTicketsHistory() {
                                 <TimelineDot style={{ color: 'transparent', backgroundColor: 'transparent' }}>
                                     <TiTicket className='text-textPrimary text-[1.5em]' />
                                 </TimelineDot>
-                            )}
+                            )} */}
                             <TimelineConnector />
                         </TimelineSeparator>
                         <TimelineContent sx={{ py: '12px', px: 2 }}>
@@ -112,7 +135,17 @@ export default function AttendeeTicketsHistory() {
                                 variant='h6'
                                 component='span'
                             >
-                                {ticket.attendee_tickets_data?.event_id ? (
+                                {ticket.attendee_tickets_event_type_id == 4
+                                    ? `Giftcard`
+                                    : ticket.attendee_tickets_event_type_id == 3
+                                    ? 'Shop'
+                                    : ticket.attendee_tickets_event_type_id == 2
+                                    ? 'Event'
+                                    : ticket.attendee_tickets_event_type_id == 1
+                                    ? '1'
+                                    : 'Error'}
+
+                                {/*    {ticket.attendee_tickets_data?.event_id ? (
                                     <Link to={`/events/${ticket.attendee_tickets_data.event_id}`}>
                                         {ticket.event_title || 'Event Title'}
                                     </Link>
@@ -120,16 +153,24 @@ export default function AttendeeTicketsHistory() {
                                     <span>{`Package ${
                                         ticket.attendee_tickets_data?.package_name || 'Package name'
                                     }`}</span>
-                                )}
-                                {console.log(ticket)}
+                                )} */}
                             </Typography>
                             {/* TODO check after event registration */}
                             <Typography>
-                                {ticket.attendee_tickets_value < 0
+                                {ticket.attendee_tickets_event_type_id == 4
+                                    ? `${ticket.attendee_tickets_value} Tickets`
+                                    : ticket.attendee_tickets_event_type_id == 3
+                                    ? `${ticket.prize_name} (${ticket.prize_rp_value} Tickets)`
+                                    : ticket.attendee_tickets_event_type_id == 2
+                                    ? `${ticket.event_title} By ${ticket.event_organization_id} (${ticket.event_fees} Tickets)`
+                                    : ticket.attendee_tickets_event_type_id == 1
+                                    ? '1'
+                                    : 'Error'}
+                                {/* {ticket.attendee_tickets_value < 0
                                     ? `You Payed ${Math.abs(ticket.attendee_tickets_value)}`
                                     : `You bought ${Math.abs(ticket.attendee_tickets_value)} tickets for ${
                                           ticket.attendee_tickets_data?.payed / 1000
-                                      }$`}
+                                      }$`} */}
                             </Typography>
                         </TimelineContent>
                     </TimelineItem>
