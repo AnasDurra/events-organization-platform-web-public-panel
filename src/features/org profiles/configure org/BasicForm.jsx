@@ -3,6 +3,7 @@ import { UploadOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import React, { useEffect } from 'react';
 import { useConfigureOrgMutation, useGetOrgQuery } from '../orgSlice';
+import { URL } from '../../../api/constants';
 
 export default function BasicForm({ form, orgData, onFinish, loading }) {
     return (
@@ -26,11 +27,11 @@ export default function BasicForm({ form, orgData, onFinish, loading }) {
             <div className='mb-8'>
                 <img
                     className='h-[32svh] w-full object-fill rounded-md border-b-8 border-b-secondary border-separate'
-                    src={'/public/assets/fakeCover.jpg'}
+                    src={`${URL}/organization/coverPicture/${orgData?.cover_picture}`}
                 />
                 <img
                     className='h-[28svh] ml-8 aspect-square border-8 z-10 border-x-secondary border-t-secondary border-b-secondary rounded-full mt-[-16svh] object-fill'
-                    src={'/public/assets/fakeProfile.png'}
+                    src={`${URL}/organization/mainPicture/${orgData?.main_picture}`}
                 />
             </div>
 

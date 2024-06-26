@@ -7,15 +7,15 @@ export default function ResultSuccessPage() {
     return (
         <Result
             status='success'
-            title='Successfully Purchased Ticketing Package for Eventure'
-            subTitle='Your request to buy tickets in eventure platform went through successfully. visit Eventure to check your balance.'
+            title='Successfully Purchased Ticketing Package for WEEVENTS'
+            subTitle='Your request to buy tickets in WEEVENTS platform went through successfully. visit WEEVENTS to check your balance.'
             extra={[
                 <Button
                     type='primary'
                     key='back'
                     onClick={() => navigate('/home', { replace: true })}
                 >
-                    Go Back To Eventure
+                    Go Back To WEEVENTS
                 </Button>,
             ]}
         />

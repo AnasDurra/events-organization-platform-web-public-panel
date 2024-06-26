@@ -124,7 +124,7 @@ export default function RegisterAttendee() {
                     openNotification(
                         'success',
                         'Registered Successfully',
-                        `Welcome to Eventure ${res?.result?.username}!`
+                        `Welcome to WEEVENTS ${res?.result?.username}!`
                     );
                     navigate('/login');
                 }
@@ -155,7 +155,7 @@ export default function RegisterAttendee() {
             <div className='w-full max-w-md p-8 space-y-8 bg-white shadow-md rounded-lg'>
                 <div className='text-center'>
                     <h2 className='text-3xl font-extrabold text-gray-900'>Register</h2>
-                    <p className='mt-2 text-sm text-gray-600'>Join us for Eventure 🚀</p>
+                    <p className='mt-2 text-sm text-gray-600'>Join us for WEEVENTS 🚀</p>
                 </div>
                 <Spin spinning={false}>
                     <div className='flex items-center justify-center my-4'>

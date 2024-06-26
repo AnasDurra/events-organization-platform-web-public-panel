@@ -316,7 +316,7 @@ export default function OrganizerLayout({ roles }) {
                                 <DropdownSider menu={userMenu.result.menu} />
                             </div>
                             <Title style={{ margin: 0, color: 'whitesmoke' }} level={3} className='font-serif'>
-                                Eventure
+                                WEEVENTS
                             </Title>
                         </Col>
                         <Col xs={{ span: 12 }}>
@@ -407,16 +407,16 @@ export default function OrganizerLayout({ roles }) {
                     </Row>
                 </Header>
 
-                <Layout>
+                <Layout >
                     <Sider
                         isSiderOpen={isSiderOpen}
                         setIsSiderOpen={setIsSiderOpen}
                         userMenu={userMenu?.result?.menu}
                         userMenuIsLoading={userMenuIsLoading}
                     />
-                    <div className='lg:grid lg:grid-cols-9 w-full'>
+                    <div className='w-full'>
                         <Content
-                            className='col-span-7 col-start-2 h-[84svh] lg:h-[92svh] overflow-y-scroll scrollbar-hide'
+                            className='h-[84svh] lg:h-[92svh] overflow-y-scroll scrollbar-hide w-full'
                             style={{ scrollbarWidth: 'none' }}
                         >
                             <Outlet />

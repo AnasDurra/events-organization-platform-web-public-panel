@@ -267,17 +267,59 @@ export const router = createBrowserRouter([
         children: [
             { index: true, element: <ProfilePage /> },
             { path: ':orgId', element: <ProfilePage /> },
-            { path: 'blocklist', element: <BlockedUsersPage /> },
+            {
+                path: 'blocklist',
+                element: (
+                    <div className='grid grid-cols-10 w-full'>
+                        <div className='col-span-10 md:col-span-8 md:col-start-2'>
+                            <BlockedUsersPage />{' '}
+                        </div>
+                    </div>
+                ),
+            },
 
             { path: ':orgId/config', element: <ConfigOrgPage /> },
-            { path: 'members', element: <TeamPage /> },
-            { path: 'attendees', element: <OrgAttendees /> },
-            { path: 'our-events', element: <OrgEvents /> },
+            {
+                path: 'members',
+                element: (
+                    <div className='grid grid-cols-10 w-full'>
+                        <div className='col-span-10 md:col-span-8 md:col-start-2'>
+                            <TeamPage />
+                        </div>
+                    </div>
+                ),
+            },
+            {
+                path: 'attendees',
+                element: (
+                    <div className='grid grid-cols-10 w-full'>
+                        <div className='col-span-10 md:col-span-8 md:col-start-2'>
+                            <OrgAttendees />
+                        </div>
+                    </div>
+                ),
+            },
+            {
+                path: 'our-events',
+                element: (
+                    <div className='grid grid-cols-10 w-full'>
+                        <div className='col-span-10 md:col-span-8 md:col-start-2'>
+                            <OrgEvents />
+                        </div>
+                    </div>
+                ),
+            },
             { path: 'profile/config', element: <ConfigOrgPage /> },
 
             {
                 path: 'forms',
-                element: <ViewFormsPage />,
+                element: (
+                    <div className='grid grid-cols-10 w-full'>
+                        <div className='col-span-10 md:col-span-8 md:col-start-2'>
+                            <ViewFormsPage />
+                        </div>
+                    </div>
+                ),
             },
             {
                 path: 'event',
@@ -288,8 +330,26 @@ export const router = createBrowserRouter([
                     },
                 ],
             },
-            { path: 'tickets', element: <OrgTicketsPage /> },
-            { path: 'reports', element: <OrgReports /> },
+            {
+                path: 'tickets',
+                element: (
+                    <div className='grid grid-cols-10 w-full'>
+                        <div className='col-span-10 md:col-span-8 md:col-start-2'>
+                            <OrgTicketsPage />
+                        </div>
+                    </div>
+                ),
+            },
+            {
+                path: 'reports',
+                element: (
+                    <div className='grid grid-cols-10 w-full'>
+                        <div className='col-span-10 md:col-span-8 md:col-start-2'>
+                            <OrgReports />
+                        </div>
+                    </div>
+                ),
+            },
             { path: 'attendance/scan-qr', element: <ScanQRCode /> },
         ],
     },
