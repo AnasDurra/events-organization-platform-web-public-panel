@@ -79,12 +79,7 @@ const MainProfileCard = ({
                 }}
                 cover={
                     <div style={{ position: 'relative' }}>
-                        <Image
-                            width={'100%'}
-                            height={200}
-                            alt='example'
-                            src={profile_img ?? 'https://picsum.photos/300/300'}
-                        />
+                        <Image width={'100%'} alt='example' src={profile_img ?? 'https://picsum.photos/300/300'} />
                         <div className='md:hidden absolute bottom-2.5 left-2.5 flex justify-end'>
                             <Space size={10} direction='vertical'>
                                 <Typography.Title

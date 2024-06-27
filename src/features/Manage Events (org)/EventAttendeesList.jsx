@@ -7,6 +7,7 @@ import { Icon } from '@iconify/react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUpdateSubmissionStatusMutation } from '../dynamic forms/dynamicFormsSlice';
 import { useNotification } from '../../utils/NotificationContext';
+import { URL } from '../../api/constants';
 
 const EventAttendeesList = ({ attendees, type }) => {
     const { openNotification } = useNotification();
@@ -84,7 +85,10 @@ const EventAttendeesList = ({ attendees, type }) => {
                             <List.Item.Meta
                                 avatar={
                                     <Avatar
-                                        src={attendee.attendee.profilePictureUrl || '/default-avatar.jpg'}
+                                        src={
+                                            `${URL}${attendee.attendee.profilePictureUrl}`.replace('/api/', '/') ||
+                                            '/default-avatar.jpg'
+                                        }
                                         size={48}
                                     />
                                 }

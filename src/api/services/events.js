@@ -51,6 +51,7 @@ export const events = apiSlice.injectEndpoints({
                 url: `event/attendees/${id}`,
                 method: 'GET',
             }),
+            providesTags: ['event-attendees'],
         }),
         removeForm: builder.mutation({
             query: (event_id) => ({

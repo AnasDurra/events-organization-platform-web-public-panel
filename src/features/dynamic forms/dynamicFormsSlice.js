@@ -258,7 +258,7 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: body,
             }),
-            invalidatesTags: ['form-query'],
+            invalidatesTags: ['form-query', 'event-attendees'],
         }),
         removeGroup: builder.mutation({
             query: ({ group_id, form_id }) => ({

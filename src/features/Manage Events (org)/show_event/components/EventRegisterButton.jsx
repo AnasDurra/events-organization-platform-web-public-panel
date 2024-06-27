@@ -1,5 +1,4 @@
 import { CloseOutlined, InfoCircleOutlined, QrcodeOutlined } from '@ant-design/icons';
-import { Icon } from '@mui/material';
 import { Button, Modal, Space, Spin, Tooltip, Typography } from 'antd';
 import moment from 'moment';
 import { useState } from 'react';
@@ -7,6 +6,7 @@ import EventRegistratinInfoModal from './EventRegistratinInfoModal';
 import ShowAttendeeQrCode from './ShowAttendeeQrCode';
 import Roles from '../../../../api/Roles';
 import useToken from 'antd/es/theme/useToken';
+import { Icon } from '@iconify/react';
 
 const EventRegisterButton = ({
     eventData,

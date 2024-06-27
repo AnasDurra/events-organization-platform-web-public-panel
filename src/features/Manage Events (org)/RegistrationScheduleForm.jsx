@@ -162,6 +162,19 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                     <Checkbox>Direct Register</Checkbox>
                 </Form.Item>
                 <Form.Item
+                    name='support_attendance'
+                    valuePropName='checked'
+                    initialValue={false}
+                    extra={
+                        <Typography.Text type='secondary'>
+                            If checked, this event supports attendance. If unchecked, there is no attendance for this
+                            event.
+                        </Typography.Text>
+                    }
+                >
+                    <Checkbox>Support Attendance</Checkbox>
+                </Form.Item>
+                <Form.Item
                     label={<Typography.Text strong>Registration Date (Start - End)</Typography.Text>}
                     name='registration_start_end_date'
                     rules={[
@@ -203,7 +216,7 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                             marginTop: '1em',
                         }}
                     >
-                        <Row style={{ width: '100%' }} gutter={[25, 16]}>
+                        <Row style={{ width: '100%' }} gutter={[25, 50]}>
                             {days?.map((_, dayIndex) => (
                                 <div key={dayIndex} style={{ display: 'flex', width: '100%' }}>
                                     <Col span={10}>
@@ -276,6 +289,7 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                                                     <Form.Item
                                                         name={`day_${days[dayIndex]?.id}_slotName_${slot?.id}`}
                                                         initialValue={slot?.label ?? null}
+                                                        label={`Slot ${slotIndex + 1}`}
                                                         rules={[
                                                             {
                                                                 required: true,

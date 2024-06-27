@@ -1,7 +1,5 @@
-import { List, Avatar, Typography, Button, Space, Badge, Input, Select, Dropdown, Menu, Spin, Tabs } from 'antd';
-import { LeftOutlined, RightOutlined, EllipsisOutlined } from '@ant-design/icons';
-
-import moment from 'moment';
+import { Typography, Button, Input, Select, Dropdown, Menu, Spin, Tabs } from 'antd';
+import { LeftOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 
 const { Search } = Input;
@@ -19,8 +17,7 @@ const ShowEventAttendees = () => {
     const { data, error, isLoading } = useShowEventAttendeesQuery(id);
     const navigate = useNavigate();
 
-    const [filteredAttendees, setFilteredAttendees] = useState(attendees);
-    const [searchText, setSearchText] = useState('');
+    const [filteredAttendees, setFilteredAttendees] = useState(data?.result);
     const [searchType, setSearchType] = useState('name');
 
     const tabItems = [
@@ -52,9 +49,9 @@ const ShowEventAttendees = () => {
 
     const handleSearch = (value) => {
         if (searchType === 'status' && !value) {
-            setFilteredAttendees(attendees);
+            setFilteredAttendees(data?.result);
         } else {
-            const filtered = attendees.filter((attendee) => {
+            const filtered = data?.result.filter((attendee) => {
                 if (searchType === 'name') {
                     return (
                         attendee.attendee.firstName.toLowerCase().includes(value.toLowerCase()) ||
@@ -80,9 +77,10 @@ const ShowEventAttendees = () => {
         </Menu>
     );
 
-    // useEffect(() => {
-    //     console.log(data);
-    // }, [data]);
+    useEffect(() => {
+        console.log(data);
+        setFilteredAttendees(data?.result);
+    }, [data]);
     return (
         <div style={{ padding: '20px', width: '100%', margin: '0 auto' }}>
             <Button type='text' size='large' style={{ padding: '0px' }}>
@@ -174,147 +172,3 @@ const ShowEventAttendees = () => {
 };
 
 export default ShowEventAttendees;
-
-const attendees = [
-    {
-        id: '1',
-        createdAt: '2024-03-30T00:15:02.526Z',
-        status: 'accepted',
-        attendee: {
-            id: '1',
-            createdAt: '2024-03-29T23:52:32.860Z',
-            firstName: 'John',
-            lastName: 'Doe',
-            profilePictureUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-            coverPictureUrl: 'https://via.placeholder.com/300',
-            bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        },
-    },
-    {
-        id: '2',
-        createdAt: '2024-03-31T10:30:00.000Z',
-        status: 'accepted',
-        attendee: {
-            id: '2',
-            createdAt: '2024-03-28T12:00:00.000Z',
-            firstName: 'Jane',
-            lastName: 'Smith',
-            profilePictureUrl: 'https://randomuser.me/api/portraits/women/2.jpg',
-            coverPictureUrl: 'https://via.placeholder.com/300',
-            bio: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        },
-    },
-    {
-        id: '3',
-        createdAt: '2024-03-29T13:45:00.000Z',
-        status: 'accepted',
-        attendee: {
-            id: '3',
-            createdAt: '2024-03-25T08:00:00.000Z',
-            firstName: 'Alice',
-            lastName: 'Johnson',
-            profilePictureUrl: 'https://randomuser.me/api/portraits/women/3.jpg',
-            coverPictureUrl: 'https://via.placeholder.com/300',
-            bio: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        },
-    },
-    {
-        id: '4',
-        createdAt: '2024-03-25T17:20:00.000Z',
-        status: 'accepted',
-        attendee: {
-            id: '4',
-            createdAt: '2024-03-20T09:30:00.000Z',
-            firstName: 'Michael',
-            lastName: 'Brown',
-            profilePictureUrl: 'https://randomuser.me/api/portraits/men/4.jpg',
-            coverPictureUrl: 'https://via.placeholder.com/300',
-            bio: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-        },
-    },
-    {
-        id: '5',
-        createdAt: '2024-03-23T09:00:00.000Z',
-        status: 'accepted',
-        attendee: {
-            id: '5',
-            createdAt: '2024-03-18T16:45:00.000Z',
-            firstName: 'Emily',
-            lastName: 'Taylor',
-            profilePictureUrl: 'https://randomuser.me/api/portraits/women/5.jpg',
-            coverPictureUrl: 'https://via.placeholder.com/300',
-            bio: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        },
-    },
-    {
-        id: '6',
-        createdAt: '2024-03-21T11:10:00.000Z',
-        status: 'accepted',
-        attendee: {
-            id: '6',
-            createdAt: '2024-03-15T14:20:00.000Z',
-            firstName: 'David',
-            lastName: 'Martinez',
-            profilePictureUrl: 'https://randomuser.me/api/portraits/men/6.jpg',
-            coverPictureUrl: 'https://via.placeholder.com/300',
-            bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        },
-    },
-    {
-        id: '7',
-        createdAt: '2024-03-20T08:30:00.000Z',
-        status: 'accepted',
-        attendee: {
-            id: '7',
-            createdAt: '2024-03-10T10:00:00.000Z',
-            firstName: 'Sarah',
-            lastName: 'Garcia',
-            profilePictureUrl: 'https://randomuser.me/api/portraits/women/7.jpg',
-            coverPictureUrl: 'https://via.placeholder.com/300',
-            bio: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-        },
-    },
-    {
-        id: '8',
-        createdAt: '2024-03-18T14:45:00.000Z',
-        status: 'waiting',
-        attendee: {
-            id: '8',
-            createdAt: '2024-03-05T13:15:00.000Z',
-            firstName: 'Daniel',
-            lastName: 'Rodriguez',
-            profilePictureUrl: 'https://randomuser.me/api/portraits/men/8.jpg',
-            coverPictureUrl: 'https://via.placeholder.com/300',
-            bio: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
-        },
-    },
-    {
-        id: '9',
-        createdAt: '2024-03-16T12:20:00.000Z',
-        status: 'waiting',
-        attendee: {
-            id: '9',
-            createdAt: '2024-03-01T09:30:00.000Z',
-            firstName: 'Jessica',
-            lastName: 'Lopez',
-            profilePictureUrl: 'https://randomuser.me/api/portraits/women/9.jpg',
-            coverPictureUrl: 'https://via.placeholder.com/300',
-            bio: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-        },
-    },
-    {
-        id: '10',
-        createdAt: '2024-03-14T10:00:00.000Z',
-        status: 'rejected',
-        attendee: {
-            id: '10',
-            createdAt: '2024-02-27T14:00:00.000Z',
-            firstName: 'Christopher',
-            lastName: 'Hernandez',
-            profilePictureUrl: 'https://randomuser.me/api/portraits/men/10.jpg',
-            coverPictureUrl: 'https://via.placeholder.com/300',
-            bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        },
-    },
-    // Continue adding more attendees as needed
-];

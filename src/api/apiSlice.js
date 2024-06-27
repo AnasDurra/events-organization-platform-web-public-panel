@@ -33,6 +33,7 @@ export const apiSlice = createApi({
         'org-tickets-balance',
         'confirm-attendance',
         'attendee-status',
+        'event-attendees',
     ],
 
     endpoints: () => ({}),

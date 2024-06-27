@@ -8,6 +8,7 @@ import moment from 'moment';
 import ScanQRCode from '../../qrCodes/ScanQRCode';
 import AttendeeInfoModal from '../../qrCodes/AttendeeInfoModal';
 import AttendeesListModal from '../../qrCodes/AttendeesListModal';
+import { URL } from '../../../api/constants';
 
 const EventsItem = ({ event }) => {
     const navigate = useNavigate();
@@ -82,7 +83,7 @@ const EventsItem = ({ event }) => {
                     boxShadow: '0 2px 2px rgba(0, 0, 0, 0.1)',
                 }}
                 hoverable
-                cover={<Image preview={false} src={event.event_cover_picture_url} />}
+                cover={<Image preview={false} src={`${URL}${event?.event_cover_picture_url}`.replace('/api/', '/')} />}
                 actions={[
                     <EditOutlined
                         style={iconStyle}
