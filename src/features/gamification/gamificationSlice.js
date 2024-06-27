@@ -18,6 +18,7 @@ export const gamificationSlice = apiSlice.injectEndpoints({
 
         getAttendeeRPsHistory: builder.query({
             query: (attendee_id) => `gamification/attendee/${attendee_id}/redeemable-points-history`,
+            providesTags: ['rp-attendee-history'],
         }),
 
         getAttendeeBadges: builder.query({
@@ -45,7 +46,7 @@ export const gamificationSlice = apiSlice.injectEndpoints({
                     body: body,
                 };
             },
-            invalidatesTags: ['tickets-balance', 'rp-balance'],
+            invalidatesTags: ['tickets-balance', 'rp-attendee-balance','rp-attendee-history'],
         }),
     }),
 });

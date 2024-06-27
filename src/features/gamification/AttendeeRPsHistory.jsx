@@ -23,14 +23,14 @@ export default function AttendeeRPsHistory() {
 
     const displayedTickets = showAll
         ? [...pointsHistory].sort((a, b) => {
-              const createdAtA = dayjs(a.createdAt);
-              const createdAtB = dayjs(b.createdAt);
+              const createdAtA = dayjs(a.rps_created_at);
+              const createdAtB = dayjs(b.rps_created_at);
               return createdAtB.diff(createdAtA);
           })
         : [...pointsHistory]
               .sort((a, b) => {
-                  const createdAtA = dayjs(a.createdAt);
-                  const createdAtB = dayjs(b.createdAt);
+                  const createdAtA = dayjs(a.rps_created_at);
+                  const createdAtB = dayjs(b.rps_created_at);
                   return createdAtB.diff(createdAtA);
               })
               .slice(0, 3);
@@ -68,7 +68,7 @@ export default function AttendeeRPsHistory() {
                         variant='body2'
                         color='text.secondary'
                     >
-                        {dayjs(rp.createdAt).format('YYYY MMM DD')}
+                        {dayjs(rp.rps_created_at).format('YYYY MMM DD')}
                     </TimelineOppositeContent>
                     <TimelineSeparator>
                         <TimelineConnector />
@@ -84,12 +84,14 @@ export default function AttendeeRPsHistory() {
                             variant='h6'
                             component='span'
                         >
-                            {getTimeAgo(rp.createdAt)}
+                            {/* {getTimeAgo(rp.ticketsPrize_created_at)} */}
+                            {rp.rps_value > 0 ? 'Win' : `Shop (${rp.prize_name})`}
                         </Typography>
-                        <Typography className={`${rp.value > 0 ? 'text-emerald-700' : 'text-red-700'} `}>{`${
-                            rp.value > 0 ? '+' + rp.value : rp.value
+                        <Typography className={`${rp.rps_value > 0 ? 'text-emerald-700' : 'text-red-700'} `}>{`${
+                            rp.rps_value > 0 ? '+' + rp.rps_value : rp.rps_value
                         } points`}</Typography>
                     </TimelineContent>
+                    {console.log('rp:', rp)}
                 </TimelineItem>
             ))}
 
