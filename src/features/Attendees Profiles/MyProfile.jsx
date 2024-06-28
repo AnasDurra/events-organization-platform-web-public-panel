@@ -48,7 +48,7 @@ const AttendeeProfile = () => {
                                 <Image
                                     // height={'40vh'}
                                     width={'100%'}
-                                    style={{ minHeight: '30vh', maxHeight: '50vh' }}
+                                    // style={{ minHeight: '30vh', maxHeight: '50vh' }}
                                     src={data?.result?.cover_img ?? 'https://picsum.photos/1000/300'}
                                     preview={{
                                         mask: (

@@ -1,19 +1,14 @@
-import { Button, Card, Checkbox, Form, Image, Input, Space, Spin, Steps, Typography } from 'antd';
-
-import Link from 'antd/es/typography/Link';
+import { Button, Form, Spin, Steps } from 'antd';
 import { message } from 'antd';
 
-import image1 from './assets/Hybrid-illu.png';
 import './styles/styles.css';
 import { useSignupMutation } from '../../api/services/auth';
 import BasicInfoRegistrationForm from '../Form/BasicInfoRegistrationForm';
 import AdditionalInfoRegistrationForm from '../Form/AdditionalInfoRegistrationForm';
 import ContactInfoRegistrationForm from '../Form/ContactInfoRegistrationForm';
-import FormWelcomeTitle from '../Form/FormWelcomeTitle';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../../utils/NotificationContext';
-import { GoogleOutlined, LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 
 export default function RegisterAttendee() {
     const [signupMutation, { isLoading }] = useSignupMutation();
@@ -157,7 +152,7 @@ export default function RegisterAttendee() {
                     <h2 className='text-3xl font-extrabold text-gray-900'>Register</h2>
                     <p className='mt-2 text-sm text-gray-600'>Join us for WEEVENTS 🚀</p>
                 </div>
-                <Spin spinning={false}>
+                <Spin spinning={isLoading}>
                     <div className='flex items-center justify-center my-4'>
                         <span className='text-gray-500 mx-2'>
                             Register today for exclusive offers and a seamless event experience.

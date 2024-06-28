@@ -276,8 +276,7 @@ export default function OrganizerLayout({ roles }) {
         }
     }, [checkAccessTokenError]);
 
-
-   /*  // start here
+    /*  // start here
     const authToken = Cookies.get('accessToken');
     useEffect(() => {
         function chatRecieved(message) {
@@ -385,7 +384,7 @@ export default function OrganizerLayout({ roles }) {
                                 <Dropdown arrow overlay={menu} placement='bottomLeft'>
                                     <a onClick={(e) => e.preventDefault()}>
                                         <img
-                                            src='https://randomuser.me/api/portraits/men/3.jpg'
+                                            src='http://localhost:3000/api/organization/mainPicture/images8fb03f6c-6c84-4e1a-b0a5-927551254774.png'
                                             alt='Profile'
                                             style={{
                                                 width: '3em',
@@ -407,7 +406,7 @@ export default function OrganizerLayout({ roles }) {
                     </Row>
                 </Header>
 
-                <Layout >
+                <Layout>
                     <Sider
                         isSiderOpen={isSiderOpen}
                         setIsSiderOpen={setIsSiderOpen}

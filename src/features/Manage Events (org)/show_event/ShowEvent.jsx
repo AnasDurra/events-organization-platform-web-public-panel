@@ -60,22 +60,14 @@ const ShowEvent = () => {
     return (
         <div className='grid grid-cols-12'>
             <div className='col-start-1 col-span-12 p-2 sm:p-0  sm:col-start-3 sm:col-span-8'>
-                <div
-                    className='w-full'
-                    style={{ marginBottom: '5em' }}
-                >
+                <div className='w-full' style={{ marginBottom: '5em' }}>
                     <RegistrationModal
                         isOpen={isRegistrationModalOpen}
                         event={eventData}
                         onClose={handleCloseRegistrationModal}
                     />
 
-                    <Skeleton
-                        loading={eventDataIsLoading}
-                        active
-                        round
-                        paragraph={{ rows: 10 }}
-                    >
+                    <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}>
                         <Card
                             className='w-full'
                             style={{ backgroundColor: 'transparent', width: '100%' }}
@@ -143,7 +135,8 @@ const ShowEvent = () => {
                                                         }
                                                         trigger='hover'
                                                     >
-                                                        {eventData?.result?.is_chatting_enabled &&
+                                                        {user?.user_role === 3 &&
+                                                        eventData?.result?.is_chatting_enabled &&
                                                         attendeeStatusInEvent?.result?.registered == null ? (
                                                             <Tooltip
                                                                 title='Join this event to access the exclusive group chat and engage with other attendees! 🎉'

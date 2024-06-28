@@ -6,7 +6,7 @@ import EventRegistratinInfoModal from './EventRegistratinInfoModal';
 import ShowAttendeeQrCode from './ShowAttendeeQrCode';
 import Roles from '../../../../api/Roles';
 import useToken from 'antd/es/theme/useToken';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import { Icon } from '@iconify/react';
 
 const EventRegisterButton = ({
     eventData,
@@ -157,7 +157,6 @@ const EventRegisterButton = ({
                                                     borderColor: '#ffeeba',
                                                     cursor: 'not-allowed',
                                                 }}
-
                                                 disabled
                                             >
                                                 <Space size={10}>

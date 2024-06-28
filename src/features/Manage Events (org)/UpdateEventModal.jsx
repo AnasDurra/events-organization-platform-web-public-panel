@@ -289,6 +289,7 @@ const UpdateEventModal = ({
                             }
                         </div>
                     </div>
+                    <Divider />
                     <div className='pl p-2 bg-gray-100/50 my-2'>
                         <Title level={2} className='my-2 '>
                             Attached Form

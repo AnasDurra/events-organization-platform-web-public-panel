@@ -80,8 +80,13 @@ const EventDetailsForm = ({
                     </Form.Item>
                 )}
 
-                <Form.Item initialValue={1} label='Event Capacity' name='capacity'>
-                    <Slider min={1} />
+                <Form.Item
+                    label='Event Capacity'
+                    name='capacity'
+                    initialValue={1}
+                    tooltip='Set the maximum number of participants for the event'
+                >
+                    <Slider min={1} max={500} step={1} tooltip={{ formatter: (value) => `${value} participants` }} />
                 </Form.Item>
                 <Form.Item name='isChatEnabled' valuePropName='checked' initialValue={false}>
                     <Checkbox onChange={() => setIsChatEnabled(!isChatEnabled)}>Is Chatting Enabled?</Checkbox>

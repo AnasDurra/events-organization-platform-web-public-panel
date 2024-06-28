@@ -451,7 +451,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                 <Form.Item
                                     label='Address'
                                     name='address_id'
-                                    initialValue={data?.result.job?.value ?? null}
+                                    initialValue={data?.result.address?.value ?? null}
                                 >
                                     <Select
                                         size='large'

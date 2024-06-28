@@ -273,7 +273,9 @@ const CreateEvent = () => {
                                 <Avatar
                                     size={60}
                                     icon={<UserOutlined />}
-                                    src={'https://api.dicebear.com/7.x/miniavs/svg?seed=8'}
+                                    src={
+                                        'http://localhost:3000/api/organization/mainPicture/images8fb03f6c-6c84-4e1a-b0a5-927551254774.png'
+                                    }
                                     style={{
                                         textAlign: 'center',
                                         border: '0.5px solid black',
@@ -281,7 +283,7 @@ const CreateEvent = () => {
                                     }}
                                 />
                             }
-                            title={<div style={{ marginTop: '10px' }}>Anas Durra</div>}
+                            title={<div style={{ marginTop: '10px' }}>{user?.username.toUpperCase()}</div>}
                             description={' Host - Your Profile'}
                         />
                     </Skeleton>
