@@ -54,6 +54,7 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                     </Button>
                 </Space>
             }
+            width={600}
             centered
         >
             <Space
@@ -74,7 +75,15 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                         <div style={{ borderRadius: '8px' }}>
                             <Image
                                 src={eventInfo?.cover_picture_url}
-                                style={{ borderRadius: '10px', left: 0, right: 0 }}
+                                // style={{ borderRadius: '10px', left: 0, right: 0 }}
+                                style={{
+                                    borderRadius: '10px',
+                                    left: 0,
+                                    right: 0,
+                                    width: '100%',
+                                    height: '170px',
+                                    objectFit: 'cover',
+                                }}
                                 preview={false}
                             />
                         </div>

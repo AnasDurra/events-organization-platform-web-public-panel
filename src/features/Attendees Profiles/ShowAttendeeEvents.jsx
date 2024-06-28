@@ -82,7 +82,7 @@ const AttendeeEvents = () => {
                                     cover={
                                         <Image
                                             preview={false}
-                                            style={{}}
+                                            style={{ width: '100%', height: '150px', objectFit: 'cover' }}
                                             src={`${URL}${event?.event?.coverPictureUrl}`.replace('/api/', '/')}
                                         />
                                     }
@@ -136,8 +136,13 @@ const AttendeeEvents = () => {
                                             </Typography.Text>
                                         }
                                     />
-                                    <Space size={30} style={{ marginTop: '10px' }}>
-                                        <Space align='center' size={0} direction='vertical'>
+                                    <Space size={20} style={{ marginTop: '10px' }}>
+                                        <Space
+                                            align='center'
+                                            size={10}
+                                            direction='vertical'
+                                            style={{ minWidth: '2em' }}
+                                        >
                                             <Typography.Text
                                                 style={{ color: 'red', fontSize: '13px', fontWeight: 'bold' }}
                                             >

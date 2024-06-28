@@ -47,39 +47,41 @@ const HomeLayout = ({ roles }) => {
         }
     }, [checkAccessTokenError]);
 
-    // start here
-  /*   const authToken = Cookies.get('accessToken');
-    useEffect(() => {
-        function onGroupsJoined(group) {
-            joinChannel(group.channel);
-            console.log('joined group !!', group);
-        }
+    // TODO: Uncomment this
 
-        function chatRecieved(message) {
-            console.log(message);
-        }
+    // const authToken = Cookies.get('accessToken');
+    // useEffect(() => {
+    //     function onGroupsJoined(group) {
+    //         joinChannel(group.channel);
+    //         console.log('joined group !!', group);
+    //     }
 
-        if (authToken) {
-            console.log(authToken);
-            setChatSocketHeader(authToken);
-        }
+    //     function chatRecieved(message) {
+    //         console.log(message);
+    //     }
 
-        chatSocket.on('group-joined', onGroupsJoined);
-        chatSocket.on('notification-received', chatRecieved);
+    //     if (authToken) {
+    //         console.log(authToken);
+    //         setChatSocketHeader(authToken);
+    //     }
 
-        return () => {
-            chatSocket.off('group-joined', onGroupsJoined);
-        };
-    }, [authToken]); */
+    //     chatSocket.on('group-joined', onGroupsJoined);
+    //     chatSocket.on('notification-received', chatRecieved);
 
-    useEffect(() => {
-        console.log('layout', joinedGroups);
+    //     return () => {
+    //         chatSocket.off('group-joined', onGroupsJoined);
+    //     };
+    // }, [authToken]);
 
-        joinedGroups?.map((group) => {
-            const { channel } = group;
-            joinChannel(channel);
-        });
-    }, [joinedGroups]);
+    // useEffect(() => {
+    //     console.log('layout', joinedGroups);
+
+    //     joinedGroups?.map((group) => {
+    //         const { channel } = group;
+    //         joinChannel(channel);
+    //     });
+    // }, [joinedGroups]);
+
     return (
         <ConfigProvider theme={theme}>
             {isAccessTokenLoading && (
@@ -90,11 +92,7 @@ const HomeLayout = ({ roles }) => {
                 />
             )}
 
-            <Layout
-                className='h-[100svh] max-w-[100svw]'
-                style={{ scrollbarWidth: 0 }}
-                hidden={hideContent}
-            >
+            <Layout className='h-[100svh] max-w-[100svw]' style={{ scrollbarWidth: 0 }} hidden={hideContent}>
                 <HomeHeader />
 
                 <Layout>

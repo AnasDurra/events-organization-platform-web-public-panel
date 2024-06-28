@@ -83,7 +83,13 @@ const EventsItem = ({ event }) => {
                     boxShadow: '0 2px 2px rgba(0, 0, 0, 0.1)',
                 }}
                 hoverable
-                cover={<Image preview={false} src={`${URL}${event?.event_cover_picture_url}`.replace('/api/', '/')} />}
+                cover={
+                    <Image
+                        style={{ width: '100%', height: '150px', objectFit: 'cover' }}
+                        preview={false}
+                        src={`${URL}${event?.event_cover_picture_url}`.replace('/api/', '/')}
+                    />
+                }
                 actions={[
                     <EditOutlined
                         style={iconStyle}

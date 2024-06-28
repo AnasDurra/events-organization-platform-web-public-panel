@@ -164,7 +164,7 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                 <Form.Item
                     name='support_attendance'
                     valuePropName='checked'
-                    initialValue={false}
+                    initialValue={[eventData?.result?.support_attendance]}
                     extra={
                         <Typography.Text type='secondary'>
                             If checked, this event supports attendance. If unchecked, there is no attendance for this

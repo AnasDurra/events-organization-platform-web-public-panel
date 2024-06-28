@@ -12,6 +12,15 @@ export const auth = apiSlice.injectEndpoints({
             }),
             invalidatesTags: ['auth'],
             transformResponse: (responseData) => {
+                console.log(responseData?.result);
+
+                Cookies.remove('user', { path: '/' });
+                Cookies.remove('accessToken', { path: '/' });
+                Cookies.remove('refreshToken', { path: '/' });
+
+                Cookies.set('user', JSON.stringify(responseData?.result), {
+                    expires: 12,
+                });
                 Cookies.set('accessToken', responseData?.result?.access_token, {
                     expires: 12,
                 });
@@ -31,6 +40,10 @@ export const auth = apiSlice.injectEndpoints({
             invalidatesTags: ['auth'],
             transformResponse: (responseData) => {
                 console.log(responseData?.result);
+                Cookies.remove('user', { path: '/' });
+                Cookies.remove('accessToken', { path: '/' });
+                Cookies.remove('refreshToken', { path: '/' });
+
                 Cookies.set('user', JSON.stringify(responseData?.result), {
                     expires: 12,
                 });
