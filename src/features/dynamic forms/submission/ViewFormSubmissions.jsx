@@ -13,7 +13,7 @@ import AttendeeBrief from './components/AttendeeBrief';
 import { useNotification } from '../../../utils/NotificationContext';
 
 export default function ViewFormSubmissions() {
-    let { form_id, event_id = 24 } = useParams();
+    let { form_id, event_id } = useParams();
     const navigate = useNavigate();
     const { openNotification } = useNotification();
 
@@ -70,13 +70,12 @@ export default function ViewFormSubmissions() {
     };
 
     useEffect(() => {
-        if (DBform)
-            querySubmissions({ event_id: parseInt(event_id), groups: [] }).then((response) => {
-                const mappedSubmission = mapSubmissions(response, DBform);
+        querySubmissions({ event_id: parseInt(event_id), groups: [] }).then((response) => {
+            const mappedSubmission = mapSubmissions(response, DBform);
 
-                setSubmissions(mappedSubmission);
-            });
-    }, [DBform]);
+            setSubmissions(mappedSubmission);
+        });
+    }, []);
 
     useEffect(() => {
         if (Array.isArray(submissions) && submissionsIdx < submissions.length) {

@@ -50,7 +50,7 @@ export default function EditFormPage() {
 
     const handleSelectField = (field) => {
         setSelectedField((prevSelectedField) =>
-            prevSelectedField && prevSelectedField.id === field.id ? null : field
+            prevSelectedField && prevSelectedField.id == field.id ? null : field
         );
     };
     const handleDeselectField = (field) => {
@@ -65,7 +65,7 @@ export default function EditFormPage() {
     const handleDescriptionChange = (groupId, newDescription) => {
         debounceUpdateGroup({ fields: { description: newDescription }, group_id: groupId });
 
-        // setGroups(groups.map((group) => (group.id === groupId ? { ...group, description: newDescription } : group)));
+        // setGroups(groups.map((group) => (group.id == groupId ? { ...group, description: newDescription } : group)));
     };
 
     const debounceUpdateGroupField = debounce(updateGroupField, debounceTime);
@@ -77,10 +77,10 @@ export default function EditFormPage() {
             if (updatedField.validationRules[0].delete) {
                 removeValidationRule(updatedField.validationRules[0].validation_rule_id);
             } else {
+                console.log(updatedField)
                 addValidationRule({ field_id: updatedField.id, ...updatedField.validationRules[0] })
                     .unwrap()
                     .catch((e) => {
-                        console.log('e: ', e, updatedField);
                         if (e?.data?.statusCode == 409) {
                             removeValidationRule(
                                 selectedField?.validationRules?.find(
@@ -108,7 +108,7 @@ export default function EditFormPage() {
         let currentFieldValues;
 
         DBform.groups.forEach((group) => {
-            const field = group.fields.find((field) => field.id === updatedField.id);
+            const field = group.fields.find((field) => field.id == updatedField.id);
 
             if (field) {
                 currentFieldValues = {
@@ -136,7 +136,7 @@ export default function EditFormPage() {
         if (updatedField?.fieldType?.id == SidebarItemsIDs.RADIO) {
             if (updatedField.options) {
                 DBform.groups.forEach((group) => {
-                    const field = group.fields.find((field) => field.id === updatedField.id);
+                    const field = group.fields.find((field) => field.id == updatedField.id);
 
                     if (field) {
                         const updatedOptionsMap = new Map(
@@ -147,6 +147,13 @@ export default function EditFormPage() {
                         const optionsToAdd = updatedField.options.filter((option) => !currentOptionsMap.has(option.id));
 
                         const optionsToRemove = field.options.filter((option) => !updatedOptionsMap.has(option.id));
+
+                        console.log('toadd: ',optionsToAdd)
+                        console.log('recm: ',optionsToRemove)
+                        console.log('recm: ',currentOptionsMap)
+                        console.log('upda: ',updatedField)
+
+
 
                         optionsToAdd.forEach((option) => {
                             addNewFieldOption({
@@ -161,7 +168,8 @@ export default function EditFormPage() {
 
                         updatedField.options.forEach((updatedOption) => {
                             const currentOptionName = currentOptionsMap.get(updatedOption.id);
-                            if (currentOptionName && updatedOption.name !== currentOptionName) {
+                            console.log(currentOptionName)
+                            if ( updatedOption.name !== currentOptionName) {
                                 debounceUpdateFieldOption({ option_id: updatedOption.id, name: updatedOption.name });
                             }
                         });

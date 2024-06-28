@@ -15,7 +15,7 @@ export const registrationSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: { event_id },
             }),
-            invalidatesTags: ['confirm-attendance', 'attendee-status'],
+            invalidatesTags: ['confirm-attendance', 'attendee-status', 'tickets-balance'],
         }),
     }),
 });

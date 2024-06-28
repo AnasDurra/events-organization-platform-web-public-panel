@@ -13,22 +13,14 @@ import React, { useState } from 'react';
 import AddFormModal from './modals/AddFormModal';
 import { useAddNewFormMutation, useGetFormsQuery } from './dynamicFormsSlice';
 import { useNavigate, useParams } from 'react-router-dom';
+import SelectFormEventModal from './submission/SelectFormEventModal';
 const { useToken } = theme;
-
-const fakeCardsData = [
-    { id: 1, name: 'Card 1', description: 'description of Card 1' },
-    { id: 2, name: 'Card 2', description: 'description of Card 2' },
-    { id: 3, name: 'Card 3', description: 'description of Card 3' },
-    { id: 4, name: 'Card 4', description: 'description of Card 4' },
-    { id: 5, name: 'Card 5', description: 'description of Card 5' },
-    { id: 6, name: 'Card 6', description: 'description of Card 6' },
-    { id: 7, name: 'Card 7', description: 'description of Card 7' },
-    { id: 8, name: 'Card 8', description: 'description of Card 8' },
-];
 
 export default function ViewFormsPage() {
     const { token } = useToken();
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isSelectEventModalOpen, setIsSelectEventModalOpen] = useState(false);
+    const [selectedFormID, setSelectedFormID] = useState(null);
     let { organization_id = 1 } = useParams();
     const navigate = useNavigate();
 
@@ -95,6 +87,10 @@ export default function ViewFormsPage() {
                                         <div
                                             key={'actions-div-1'}
                                             className='flex flex-row justify-center items-center space-x-2'
+                                            onClick={() => {
+                                                setSelectedFormID(form.id);
+                                                setIsSelectEventModalOpen(true);
+                                            }}
                                         >
                                             <ContainerOutlined />
                                             <span>submissions</span>
@@ -161,6 +157,19 @@ export default function ViewFormsPage() {
                 onClose={() => setIsAddModalOpen(false)}
                 onSubmit={(fields) => {
                     addNewForm(fields).then(() => setIsAddModalOpen(false));
+                }}
+            />
+
+            <SelectFormEventModal
+                form_id={selectedFormID}
+                isOpen={isSelectEventModalOpen}
+                onClose={() => {
+                    setSelectedFormID(null);
+                    setIsSelectEventModalOpen(false);
+                }}
+                onSelectEvent={(eventID) => {
+                    setIsSelectEventModalOpen(false);
+                    navigate(`/forms/${selectedFormID}/event/${eventID}/submissions`);
                 }}
             />
         </div>

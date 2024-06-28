@@ -50,6 +50,7 @@ import ReportToAdmin from '../features/Attendees Profiles/ReportToAdmin';
 import ScanQRCode from '../features/qrCodes/ScanQRCode';
 import OrgEvents from '../features/org profiles/org events/OrgEvents';
 import Blocked from '../pages/Blocked';
+import ViewSubmitSuccess from '../features/dynamic forms/submission/ViewSubmitSuccess';
 
 export const router = createBrowserRouter([
     {
@@ -119,6 +120,10 @@ export const router = createBrowserRouter([
                             {
                                 path: 'submissions',
                                 element: <ViewFormSubmissions />,
+                            },
+                            {
+                                path: 'success',
+                                element: <ViewSubmitSuccess />,
                             },
                         ],
                     },

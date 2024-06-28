@@ -140,7 +140,7 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: data,
             }),
-            invalidatesTags: ['did-fill-form'],
+            invalidatesTags: ['did-fill-form', 'tickets-balance'],
         }),
         updateForm: builder.mutation({
             query: ({ fields, form_id }) => ({

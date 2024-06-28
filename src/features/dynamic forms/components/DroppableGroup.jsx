@@ -42,26 +42,29 @@ export default function DroppableGroup({
     };
 
     return (
-        <div className='w-full bg-gray-50 bg-slate-100 p-4 my-2 rounded-2xl relative border-2 border-slate-500'>
+        <div className='w-full  bg-gray-50 bg-slate-100 p-4 my-2 rounded-2xl relative border-2 border-slate-500'>
             <Popconfirm
                 title='Delete this group?'
                 onConfirm={handleDeleteGroup}
                 okText='Yes'
                 cancelText='No'
                 placement='bottom'
+                className='absolute top-2 left-2 cursor-pointer'
             >
-                <IoMdClose className='absolute hover:cursor-default hover:text-red-600	' />
+                <IoMdClose className=' hover:cursor-pointer hover:text-red-600	' />
             </Popconfirm>
 
             <div className='flex flex-col items-center'>
-                <Divider>Group </Divider>
+                <Divider style={{marginTop:0}}>Group </Divider>
 
                 <Form.Item
                     className='w-[80%]'
                     name={['groups', groupIndex, 'name']}
                     label={'name'}
                     wrapperCol={{ span: 16 }}
-                    labelCol={{ span: 8 }}
+                    labelCol={{ span: 5 }}
+                    colon={false}
+
                 >
                     <Input
                         className='w-full'
@@ -79,7 +82,8 @@ export default function DroppableGroup({
                     label={'description'}
                     required={false}
                     wrapperCol={{ span: 16 }}
-                    labelCol={{ span: 8 }}
+                    labelCol={{ span: 5 }}
+                    colon={false}
                 >
                     <Input.TextArea
                         rows={2}
@@ -118,12 +122,12 @@ export default function DroppableGroup({
                                         ref={provided.innerRef}
                                         style={{
                                             ...provided.draggableProps.style,
-                                            opacity: selectedField?.id !== field.id && selectedField ? 0.5 : 1,
+                                            opacity: selectedField?.id !== field.id && selectedField ? 0.26 : 1,
                                         }}
                                         className={
-                                            'relative bg-transparent w-[90%] rounded-3xl my-2 ' +
+                                            'relative bg-transparent w-[90%] rounded-xl my-2 ' +
                                             (selectedField?.id === field.id
-                                                ? 'border-4 border-slate-500 animate-pulse'
+                                                ? 'border-2 border-slate-500'
                                                 : '')
                                         }
                                         onClick={() => handleClickField(field)}
@@ -160,7 +164,7 @@ export default function DroppableGroup({
                                             />
                                         ) : null}
                                         {hoveredField === field.id && (
-                                            <div className='absolute top-0 left-0 bg-pink-950 bg-opacity-30 text-gray-800 py-2 w-full h-[100%] flex justify-center items-center cursor-pointer rounded-3xl'>
+                                            <div className='absolute top-0 left-0 bg-pink-950 bg-opacity-30 text-gray-800 py-2 w-full h-[100%] flex justify-center items-center cursor-pointer rounded-xl'>
                                                 <span className='text-white font-semibold'>
                                                     {selectedField?.id === field.id
                                                         ? 'Click to unselect'

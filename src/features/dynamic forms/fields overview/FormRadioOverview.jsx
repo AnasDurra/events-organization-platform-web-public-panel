@@ -12,12 +12,12 @@ export default function FormRadioOverview({ isDragging, field, groupIndex, field
 
     return (
         <div
-            className='bg-gray-100 w-full px-4 border-4 border-zinc-200 rounded-3xl'
+            className='bg-gray-50 w-full px-4 border-4 border-zinc-200 rounded-xl'
             style={{
                 opacity: isDragging ? 0.5 : 1,
             }}
         >
-            <div className='text-gray-500 flex items-center space-x-2  w-full my-2'>
+            <div className='text-gray-700 font-semibold flex items-center space-x-2  w-full my-2'>
                 <span>{field?.label}</span>
                 {field?.required && <WiStars className='ml-2' />}
             </div>

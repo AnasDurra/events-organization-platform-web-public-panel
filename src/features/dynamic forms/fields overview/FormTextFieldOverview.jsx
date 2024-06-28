@@ -22,7 +22,7 @@ export default function FormTextFieldOverview({ isDragging, field, groupIndex, f
 
     return (
         <div
-            className='bg-gray-100 w-full px-4 border-4 border-zinc-200 rounded-3xl'
+            className='bg-gray-50 w-full px-4 border-4 border-zinc-200 rounded-xl'
             style={{
                 opacity: isDragging ? 0.5 : 1,
             }}
@@ -31,7 +31,7 @@ export default function FormTextFieldOverview({ isDragging, field, groupIndex, f
                 direction='vertical'
                 className='w-full'
             >
-                <div className='text-gray-500 flex items-center space-x-2  w-full my-2'>
+                <div className='text-gray-700 font-semibold flex items-center space-x-2  w-full my-2'>
                     <span>{label}</span>
                     {required && <WiStars className='ml-2' />}
                 </div>
@@ -48,7 +48,7 @@ export default function FormTextFieldOverview({ isDragging, field, groupIndex, f
                         suffix={<FieldStringOutlined />}
                     />
                 </Form.Item>
-                {validationRules?.length > 0 && <div className='text-xs text-gray-500 p-2'>{getValidationRulesText()}</div>}
+                {validationRules?.length > 0 && <div className='text-xs text-gray-700 font-semibold p-2'>{getValidationRulesText()}</div>}
             </Space.Compact>
         </div>
     );

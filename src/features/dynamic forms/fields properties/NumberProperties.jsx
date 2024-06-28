@@ -44,7 +44,11 @@ export default function NumberProperties({
         if (ruleWithVal.rule == 'max') {
             setMaxValue(ruleWithVal.value);
         }
-        onValidationRulesChange(ruleWithVal);
+        if (!ruleWithVal.value) {
+            onValidationRulesChange({ ...ruleWithVal, delete: true });
+        } else {
+            onValidationRulesChange(ruleWithVal);
+        }
     };
 
     useEffect(() => {
@@ -126,7 +130,16 @@ export default function NumberProperties({
                                 }
                             />
                         }
-                        onBlur={(e) => handleValidationRulesChange({ rule: 'min', value: e.target.value })}
+                        onBlur={(e) => {
+                            if (e.target.value) handleValidationRulesChange({ rule: 'min', value: e.target.value });
+                            else {
+                                handleValidationRulesChange({
+                                    rule: 'min',
+                                    delete: true,
+                                    validation_rule_id: field.validationRules.find((rule) => rule.rule === 'min').id,
+                                });
+                            }
+                        }}
                     />
                 </div>
                 <div className='flex items-start'>
@@ -150,7 +163,16 @@ export default function NumberProperties({
                                 }
                             />
                         }
-                        onBlur={(e) => handleValidationRulesChange({ rule: 'max', value: e.target.value })}
+                        onBlur={(e) => {
+                            if (e.target.value) handleValidationRulesChange({ rule: 'max', value: e.target.value });
+                            else {
+                                handleValidationRulesChange({
+                                    rule: 'max',
+                                    delete: true,
+                                    validation_rule_id: field.validationRules.find((rule) => rule.rule === 'max').id,
+                                });
+                            }
+                        }}
                     />
                 </div>
             </div>

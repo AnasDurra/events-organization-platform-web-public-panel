@@ -147,11 +147,13 @@ export default function RadioProperties({
                         placeholder={`Option ${index + 1}`}
                         style={{ flex: 1 }}
                     />
-                    <Button
-                        type='danger'
-                        icon={<CloseCircleOutlined />}
-                        onClick={() => handleOptionRemove(index)}
-                    />
+                    {options.length == 1 && index == 0 ? null : (
+                        <Button
+                            type='danger'
+                            icon={<CloseCircleOutlined />}
+                            onClick={() => handleOptionRemove(index)}
+                        />
+                    )}
                 </div>
             ))}
 
