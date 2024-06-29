@@ -57,7 +57,7 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
             width={600}
             centered
         >
-            <Space
+            <div
                 id='ticket-modal'
                 direction='vertical'
                 size='large'
@@ -158,12 +158,18 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                     <Col xs={{ span: 24 }}>
                         <div id='myqrcode' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                             <Spin spinning={isAttendeeQrCodeLoading}>
-                                <Image
-                                    src={attendeeQrCode?.result?.code}
-                                    width={250}
-                                    style={{ marginBottom: '15px', border: '1px solid #f0f0f0', borderRadius: '4px' }}
-                                    preview={false}
-                                />
+                                {attendeeQrCode?.result?.code && (
+                                    <Image
+                                        src={attendeeQrCode?.result?.code}
+                                        width={250}
+                                        style={{
+                                            marginBottom: '15px',
+                                            border: '1px solid #f0f0f0',
+                                            borderRadius: '4px',
+                                        }}
+                                        preview={false}
+                                    />
+                                )}
                             </Spin>
                         </div>
                     </Col>
@@ -177,7 +183,7 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                     </Col>
                     <Divider style={{ margin: '10px' }} />
                 </Row>
-            </Space>
+            </div>
         </Modal>
     );
 };
