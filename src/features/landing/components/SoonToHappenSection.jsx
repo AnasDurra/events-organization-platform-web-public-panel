@@ -7,18 +7,17 @@ export default function SoonToHappenSection() {
             <div className='grid grid-cols-8 w-full my-8'>
                 <div className='col-span-8 sm:col-span-6 sm:col-start-2'>
                     <div className='flex  items-center my-4 justify-between'>
-                        <div className='text-2xl m-2 font-extrabold font-serif text-textPrimary '>Soon To Happen Events</div>
+                        <div className='text-2xl m-2 font-extrabold font-serif text-textPrimary '>
+                            Soon To Happen Events
+                        </div>
                     </div>
                     <div className='grid grid-cols-12 gap-4 w-full'>
                         {fakeEvents.map((event) => (
-                            <div
-                                key={event.id}
-                                className='col-start-2 col-span-10 md:col-span-3'
-                            >
+                            <div key={event.id} className='col-start-2 col-span-10 md:col-span-3'>
                                 <EventCardWithImage
                                     id={event.id}
                                     title={event.title}
-                                    description={event.description}
+                                    // description={event.description}
                                     tags={event.tags.map((tag) => tag.tag.label)}
                                     organizationProfilePictureURL={
                                         URL + '/organization/mainPicture/' + event.organization.main_picture

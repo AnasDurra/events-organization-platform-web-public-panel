@@ -30,7 +30,7 @@ const EventCover = ({ data, setIsUpdateModalOpen }) => {
                         style={{
                             width: '100%',
                             minHeight: '30vh',
-                            maxHeight: '42vh',
+                            // maxHeight: '42vh',
                             objectFit: 'cover',
                         }}
                         src={data?.cover_image}

@@ -32,7 +32,7 @@ const EventPhotosAndFiles = ({ photos, attachments }) => {
                 Gallery & Attachments
             </Typography.Title>
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4'>
-                {photos.map((photo) => (
+                {photos?.map((photo) => (
                     <div key={photo.id} className='cursor-pointer'>
                         <img
                             src={photo.photo_url}

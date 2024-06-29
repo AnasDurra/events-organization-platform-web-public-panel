@@ -56,8 +56,9 @@ const EventRegisterButton = ({
 
                         <div className='flex flex-col sm:flex-row items-center justify-between sm:justify-end flex-grow text-center'>
                             <Space direction='vertical' className='text-center sm:text-right mt-2 sm:mt-0 sm:mr-4'>
-                                <Typography.Text className='font-bold text-2xl text-red-500'>£12.50</Typography.Text>
-                                <Typography.Text className='text-base text-gray-600'>8 tickets left</Typography.Text>
+                                <Typography.Text className='font-bold text-2xl text-red-500'>
+                                    {eventData?.result?.fees ? eventData?.result?.fees : 'FREE!'}
+                                </Typography.Text>
                             </Space>
 
                             <Space size={10} className='flex justify-end mt-2 sm:mt-0'>

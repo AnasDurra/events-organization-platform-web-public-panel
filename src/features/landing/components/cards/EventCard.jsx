@@ -10,11 +10,8 @@ export default function EventCard({ event }) {
     const { token } = useToken();
 
     return (
-        <div
-            className='text-textPrimary w-full h-72 rounded-3xl relative flex flex-col justify-end bg-gradient-to-br from-bgSecondary via-primary to-secondary '
-        >
+        <div className='text-textPrimary w-full h-72 rounded-3xl relative flex flex-col justify-end bg-gradient-to-br from-bgSecondary via-primary to-secondary '>
             <div className='h-[75%] bg-transparent w-full rounded-3xl py-4 px-4'>
-                {console.log(event)}
                 <div className='bg-white/55 border-2 border-white/50 w-full h-full rounded-3xl p-4 flex flex-col justify-center space-y-8'>
                     <div className='w-full h-full flex justify-between items-center'>
                         <div className='flex flex-col justify-center items-start'>
@@ -39,23 +36,15 @@ export default function EventCard({ event }) {
                     <div className='flex justify-between items-center'>
                         <div className='h-full flex justify-start items-center'>
                             {event?.tags?.map((tag) => (
-                                <Tag
-                                    color='green'
-                                    key={tag.id}
-                                >
+                                <Tag color='green' key={tag.id}>
                                     {tag?.tag?.tagName}
                                 </Tag>
                             ))}
                         </div>
-                          <Button
-                            type='primary'
-                            className='w-20'
-                            onClick={() => navigate(`/event/show/${event?.id}`)}
-                        >
+                        <Button type='primary' className='w-20' onClick={() => navigate(`/event/show/${event?.id}`)}>
                             More
                         </Button>
                     </div>
-                    
                 </div>
             </div>
         </div>
