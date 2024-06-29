@@ -22,12 +22,14 @@ const EventDetailsTab = ({ eventData }) => {
                         location={eventData?.result?.location}
                     />
                 </Col>
-                <Col xs={{ span: 24, order: 3 }} sm={{ span: 24, order: 3 }} lg={{ span: 24, order: 3 }}>
-                    <EventPhotosAndFiles
-                        photos={eventData?.result?.photos}
-                        attachments={eventData?.result?.attachments}
-                    />
-                </Col>
+                {(eventData?.result?.photos || eventData?.result?.attachments) && (
+                    <Col xs={{ span: 24, order: 3 }} sm={{ span: 24, order: 3 }} lg={{ span: 24, order: 3 }}>
+                        <EventPhotosAndFiles
+                            photos={eventData?.result?.photos}
+                            attachments={eventData?.result?.attachments}
+                        />
+                    </Col>
+                )}
             </Row>
         </>
     );
