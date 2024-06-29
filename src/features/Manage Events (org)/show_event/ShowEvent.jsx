@@ -58,7 +58,7 @@ const ShowEvent = () => {
     }, []);
 
     return (
-        <div className='grid grid-cols-12'>
+        <div className='grid grid-cols-24'>
             <div className='col-start-1 col-span-12 p-2 sm:p-0  sm:col-start-3 sm:col-span-8'>
                 <div className='w-full' style={{ marginBottom: '5em' }}>
                     <RegistrationModal
@@ -106,7 +106,7 @@ const ShowEvent = () => {
                                                     <Popover
                                                         placement='top'
                                                         content={
-                                                            user?.user_role === 2 ? (
+                                                            user?.user_role === 3 ? (
                                                                 ''
                                                             ) : !eventData?.result?.is_chatting_enabled ? (
                                                                 <div style={{ maxWidth: '220px' }}>

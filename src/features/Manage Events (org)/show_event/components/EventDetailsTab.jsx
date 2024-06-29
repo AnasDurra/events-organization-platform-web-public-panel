@@ -22,7 +22,7 @@ const EventDetailsTab = ({ eventData }) => {
                         location={eventData?.result?.location}
                     />
                 </Col>
-                {(eventData?.result?.photos || eventData?.result?.attachments) && (
+                {(eventData?.result?.photos?.length > 0 || eventData?.result?.attachments?.length > 0) && (
                     <Col xs={{ span: 24, order: 3 }} sm={{ span: 24, order: 3 }} lg={{ span: 24, order: 3 }}>
                         <EventPhotosAndFiles
                             photos={eventData?.result?.photos}
