@@ -13,6 +13,7 @@ const MainProfileCard = ({
     bio,
     profile_img,
     contacts,
+    address,
     join_date,
     blockMutation,
     unBlockMutation,
@@ -79,7 +80,12 @@ const MainProfileCard = ({
                 }}
                 cover={
                     <div style={{ position: 'relative' }}>
-                        <Image width={'100%'} alt='example' src={profile_img ?? 'https://picsum.photos/300/300'} />
+                        <Image
+                            style={{ minHeight: '20vh', objectFit: 'cover' }}
+                            width={'100%'}
+                            alt='example'
+                            src={profile_img ?? 'https://picsum.photos/300/300'}
+                        />
                         <div className='md:hidden absolute bottom-2.5 left-2.5 flex justify-end'>
                             <Space size={10} direction='vertical'>
                                 <Typography.Title
@@ -100,7 +106,7 @@ const MainProfileCard = ({
                                     }}
                                     level={5}
                                 >
-                                    {'Syria, Damascus'}
+                                    {address?.label}
                                 </Typography.Title>
                             </Space>
                         </div>

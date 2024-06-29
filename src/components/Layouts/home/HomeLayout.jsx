@@ -50,38 +50,38 @@ const HomeLayout = ({ roles }) => {
 
     // TODO: Uncomment this
 
-    // const authToken = Cookies.get('accessToken');
-    // useEffect(() => {
-    //     function onGroupsJoined(group) {
-    //         joinChannel(group.channel);
-    //         console.log('joined group !!', group);
-    //     }
+    const authToken = Cookies.get('accessToken');
+    useEffect(() => {
+        function onGroupsJoined(group) {
+            joinChannel(group.channel);
+            console.log('joined group !!', group);
+        }
 
-    //     function chatRecieved(message) {
-    //         console.log(message);
-    //     }
+        function chatRecieved(message) {
+            console.log(message);
+        }
 
-    //     if (authToken) {
-    //         console.log(authToken);
-    //         setChatSocketHeader(authToken);
-    //     }
+        if (authToken) {
+            console.log(authToken);
+            setChatSocketHeader(authToken);
+        }
 
-    //     chatSocket.on('group-joined', onGroupsJoined);
-    //     chatSocket.on('notification-received', chatRecieved);
+        chatSocket.on('group-joined', onGroupsJoined);
+        chatSocket.on('notification-received', chatRecieved);
 
-    //     return () => {
-    //         chatSocket.off('group-joined', onGroupsJoined);
-    //     };
-    // }, [authToken]);
+        return () => {
+            chatSocket.off('group-joined', onGroupsJoined);
+        };
+    }, [authToken]);
 
-    // useEffect(() => {
-    //     console.log('layout', joinedGroups);
+    useEffect(() => {
+        console.log('layout', joinedGroups);
 
-    //     joinedGroups?.map((group) => {
-    //         const { channel } = group;
-    //         joinChannel(channel);
-    //     });
-    // }, [joinedGroups]);
+        joinedGroups?.map((group) => {
+            const { channel } = group;
+            joinChannel(channel);
+        });
+    }, [joinedGroups]);
 
     return (
         <ConfigProvider theme={theme}>

@@ -106,7 +106,9 @@ const ShowEvent = () => {
                                                     <Popover
                                                         placement='top'
                                                         content={
-                                                            !eventData?.result?.is_chatting_enabled ? (
+                                                            user?.user_role === 2 ? (
+                                                                ''
+                                                            ) : !eventData?.result?.is_chatting_enabled ? (
                                                                 <div style={{ maxWidth: '220px' }}>
                                                                     <p style={{ margin: 0 }}>
                                                                         🚫 <strong>Sorry! </strong> This event doesn't
