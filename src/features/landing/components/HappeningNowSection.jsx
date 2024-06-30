@@ -30,7 +30,7 @@ export default function HappeningNowSection() {
                         </div> */}
                     </div>
                     <Skeleton loading={isLoading}>
-                        <div className='grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-2'>
+                        <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-2'>
                             {Array.isArray(events) && events.length > 0 ? (
                                 events.slice(0, 3).map((event) => (
                                     <EventCard

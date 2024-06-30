@@ -41,7 +41,7 @@ const TeamPage = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [isImageloading, setIsImageLoading] = useState(false);
-    const [imageUrl, setImageUrl] = useState();
+    const [imageUrl, setImageUrl] = useState({ employee_id: null, url: null });
 
     const { data: { result: org } = { result: {} }, isLoading: isGetOrgLoading } = useGetOrgQuery(
         getLoggedInUserV2().organization_id
@@ -78,17 +78,17 @@ const TeamPage = () => {
     const handleChange = (info) => {
         console.log('info: ', info);
         if (info.file.status === 'uploading') {
-            setIsImageLoading(true);
+            setIsImageLoading(info.employee_id);
             return;
         }
         if (info.file.status === 'done') {
             getBase64(info.file.originFileObj, (url) => {
                 setIsImageLoading(false);
-                setImageUrl(url);
+                setImageUrl({ employee_id: info?.employee_id, url });
             });
         }
     };
-    const uploadButton = (
+/*     const uploadButton = (
         <button
             style={{
                 border: 0,
@@ -105,11 +105,7 @@ const TeamPage = () => {
                 Upload
             </div>
         </button>
-    );
-
-    useEffect(() => {
-        console.log(org);
-    }, [org]);
+    ); */
 
     return (
         <>
@@ -202,11 +198,14 @@ const TeamPage = () => {
                                             showUploadList={false}
                                             action={`${URL}/employee/updateProfilePicture/${employee.id}`}
                                             beforeUpload={beforeUpload}
-                                            onChange={handleChange}
+                                            onChange={(e) => handleChange({ ...e, employee_id: employee.id })}
                                         >
-                                            {imageUrl ? (
+                                            {imageUrl?.employee_id == employee?.id || employee.profile_picture ? (
                                                 <Image
-                                                    src={imageUrl}
+                                                    src={
+                                                        (imageUrl?.employee_id == employee.id && imageUrl.url) ||
+                                                        `${URL}/employee/profileImage/${employee.profile_picture}`
+                                                    }
                                                     preview={{
                                                         visible: false,
                                                         mask: (
@@ -242,7 +241,26 @@ const TeamPage = () => {
                                                     style={{ borderRadius: '9999px' }}
                                                 />
                                             ) : (
-                                                uploadButton
+                                                <button
+                                                    style={{
+                                                        border: 0,
+                                                        background: 'none',
+                                                    }}
+                                                    type='button'
+                                                >
+                                                    {isImageloading == employee.id ? (
+                                                        <LoadingOutlined />
+                                                    ) : (
+                                                        <PlusOutlined />
+                                                    )}
+                                                    <div
+                                                        style={{
+                                                            marginTop: 8,
+                                                        }}
+                                                    >
+                                                        Upload
+                                                    </div>
+                                                </button>
                                             )}{' '}
                                         </Upload>
                                     }

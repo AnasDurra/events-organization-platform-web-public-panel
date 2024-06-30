@@ -158,7 +158,7 @@ export default function ModalEditMember({ isOpen, onOk, onCancel, employee, orgI
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item
+                       {/*  <Form.Item
                             label='permissions'
                             name='permissions'
                             rules={[
@@ -180,7 +180,7 @@ export default function ModalEditMember({ isOpen, onOk, onCancel, employee, orgI
                                     },
                                 ]}
                             />
-                        </Form.Item>
+                        </Form.Item> */}
                     </Col>
                 </Row>
             </Form>

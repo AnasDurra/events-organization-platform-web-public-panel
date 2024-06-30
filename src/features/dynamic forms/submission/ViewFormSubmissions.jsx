@@ -70,12 +70,13 @@ export default function ViewFormSubmissions() {
     };
 
     useEffect(() => {
-        querySubmissions({ event_id: parseInt(event_id), groups: [] }).then((response) => {
-            const mappedSubmission = mapSubmissions(response, DBform);
+        if (DBform)
+            querySubmissions({ event_id: parseInt(event_id), groups: [] }).then((response) => {
+                const mappedSubmission = mapSubmissions(response, DBform);
 
-            setSubmissions(mappedSubmission);
-        });
-    }, []);
+                setSubmissions(mappedSubmission);
+            });
+    }, [DBform]);
 
     useEffect(() => {
         if (Array.isArray(submissions) && submissionsIdx < submissions.length) {

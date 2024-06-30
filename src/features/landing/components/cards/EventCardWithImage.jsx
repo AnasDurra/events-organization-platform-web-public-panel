@@ -1,10 +1,9 @@
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Divider, Tag, theme } from 'antd';
+import { Avatar, Button, Card, Tag, theme } from 'antd';
 import Meta from 'antd/es/card/Meta';
-import React from 'react';
-import { MdLocationOn } from 'react-icons/md';
 import dayjs from 'dayjs';
 import minMax from 'dayjs/plugin/minMax';
+import React from 'react';
+import { MdLocationOn } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 dayjs.extend(minMax);
 
@@ -18,7 +17,7 @@ export default function EventCardWithImage({
     event_type,
     organizationProfilePictureURL,
     eventImageURL,
-    days,
+    regStartDate,
 }) {
     const { token } = useToken();
     const navigate = useNavigate();
@@ -28,14 +27,13 @@ export default function EventCardWithImage({
         borderColor: token.colorPrimary,
     };
 
-    const minDate = days?.length > 0 ? dayjs.min(days.map((day) => dayjs(day.day_date))) : null;
-
-    const formattedDate = minDate ? minDate.format('DD MMM | HH:mm') : '';
-
+    const formattedDate = regStartDate ? dayjs(regStartDate).format('DD MMM | HH:mm') : '';
+    console.log(tags);
     return (
         <div
-            className={`bg-red bg-white flex flex-col border-0 border-[${token.colorPrimary}] justify-between h-full rounded-xl transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 duration-300`}
+            className={`bg-red hover:cursor-pointer bg-white flex flex-col border-0 border-[${token.colorPrimary}] justify-between h-full rounded-xl transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 duration-300`}
             style={{ borderColor: '#00474f' }}
+            onClick={() => navigate(`/event/show/${id}`)}
         >
             <div>
                 <Card

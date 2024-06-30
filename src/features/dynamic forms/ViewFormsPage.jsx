@@ -77,13 +77,13 @@ export default function ViewFormsPage() {
                                 <Card
                                     className={`shadow-md hover:shadow-sm shadow-[${token.colorPrimary}] border-6 border-[${token.colorPrimary}]`}
                                     actions={[
-                                        <div
+                                        /*<div
                                             key={'actions-div-3'}
                                             className='flex flex-row justify-center items-center space-x-2'
                                         >
                                             <PaperClipOutlined />
                                             <span>event</span>
-                                        </div>,
+                                        </div>,*/
                                         <div
                                             key={'actions-div-1'}
                                             className='flex flex-row justify-center items-center space-x-2'

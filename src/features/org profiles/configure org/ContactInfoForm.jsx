@@ -117,7 +117,7 @@ export default function ContactInfoForm({ form, onFinish, loading }) {
                     </Form.Item>
                 </Col>
             </Row>
-            <Row justify={'start'}>
+           {/*  <Row justify={'start'}>
                 <Col span={24}>
                     <Form.Item
                         label={
@@ -137,7 +137,7 @@ export default function ContactInfoForm({ form, onFinish, loading }) {
                         <Input placeholder='URL link' />
                     </Form.Item>
                 </Col>
-            </Row>
+            </Row> */}
             <Row justify={'start'}>
                 <Col span={24}>
                     <Form.Item

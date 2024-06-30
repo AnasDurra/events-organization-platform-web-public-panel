@@ -20,13 +20,16 @@ export default function OrganizersSection() {
             <div className='grid grid-cols-8 w-full  mb-4'>
                 <div className='col-span-8 sm:col-span-6 sm:col-start-2 '>
                     <div className='flex justify-between items-center my-2'>
-                        <div className='text-2xl m-2 font-extrabold font-serif text-pretty text-textPrimary'>Discover New Organizations</div>
+                        <div className='text-2xl m-2 font-extrabold font-serif text-pretty text-textPrimary'>
+                            Discover New Organizations
+                        </div>
                         <div
                             className='text-[#4E6C50] text-primary  text-xl font-bold  hover:cursor-pointer hover:shadow-2xl hover:animate-pulse px-2'
                             onClick={() => navigate('orgs')}
                         >
                             see more
                         </div>
+                        {console.log(orgs)}
                     </div>
                     <Skeleton loading={isLoading}>
                         {Array.isArray(orgs) && orgs.length > 0 ? (
@@ -38,9 +41,11 @@ export default function OrganizersSection() {
                                         orgName={org?.org_name}
                                         attendanceCount={org?.attendees_num}
                                         eventsCount={org?.events_num}
-                                        
+                                        follower_count={org?.followers}
+                                        profilePicURL={null}
                                     />
                                 ))}
+                                {console.log(orgs)}
                             </div>
                         ) : (
                             <Empty description='No Organizers could be found!' />

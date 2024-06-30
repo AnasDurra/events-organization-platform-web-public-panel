@@ -67,17 +67,40 @@ export default function ProfilePage() {
 
         switch (typeId) {
             case contactTypeIds.facebook:
-                return <FaFacebook className='text-2xl text-blue-500' onClick={() => window.open(url, '_blank')} />;
+                return (
+                    <FaFacebook
+                        className='text-2xl text-blue-500'
+                        onClick={() => window.open(url, '_blank')}
+                    />
+                );
             case contactTypeIds.instagram:
                 return (
-                    <InstagramFilled className='text-2xl text-[#C1358E]' onClick={() => window.open(url, '_blank')} />
+                    <InstagramFilled
+                        className='text-2xl text-[#C1358E]'
+                        onClick={() => window.open(url, '_blank')}
+                    />
                 );
             case contactTypeIds.linkedin:
-                return <LinkedinFilled className='text-2xl text-blue-800' onClick={() => window.open(url, '_blank')} />;
-            case contactTypeIds.github:
-                return <GithubFilled className='text-2xl text-blue-950' onClick={() => window.open(url, '_blank')} />;
+                return (
+                    <LinkedinFilled
+                        className='text-2xl text-blue-800'
+                        onClick={() => window.open(url, '_blank')}
+                    />
+                );
+         /*    case contactTypeIds.github:
+                return (
+                    <GithubFilled
+                        className='text-2xl text-blue-950'
+                        onClick={() => window.open(url, '_blank')}
+                    />
+                ); */
             case contactTypeIds.whatsapp:
-                return <WhatsApp className='text-2xl text-green-600' onClick={() => window.open(url, '_blank')} />;
+                return (
+                    <WhatsApp
+                        className='text-2xl text-green-600'
+                        onClick={() => window.open(url, '_blank')}
+                    />
+                );
             default:
                 return null;
         }
@@ -208,12 +231,20 @@ export default function ProfilePage() {
 
                 <div className='flex flex-col sm:flex-row justify-between space-x-2 mt-4'>
                     <div className='flex flex-col space-y-4 min-w-full sm:min-w-0 sm:w-1/3 ml-8 sm:ml-0'>
-                        {org?.addresses?.length != 0 && <AddressInfo org={org} isLoading={isLoading} />}
-                        <ContactInfo org={org} isLoading={isLoading} />
+                        {org?.addresses?.length != 0 && (
+                            <AddressInfo
+                                org={org}
+                                isLoading={isLoading}
+                            />
+                        )}
+                        <ContactInfo
+                            org={org}
+                            isLoading={isLoading}
+                        />
                     </div>
 
                     <div className=' mt-4 sm:mt-0 w-full'>
-                        <EventsTab data={fakeData} />
+                        <EventsTab data={org} />
                     </div>
                 </div>
             </div>

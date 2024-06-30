@@ -52,10 +52,10 @@ export default function TextFieldProperties({
             document.getElementById('tf-prop-label').value = field.label || '';
             document.getElementById('tf-prop-isRequired').checked = !!field.isRequired;
 
-            const minRule = field.validationRules.find((rule) => rule.rule == 'min');
+            const minRule = field.validationRules?.find((rule) => rule.rule == 'min');
             setMinValue(minRule?.value || '');
 
-            const maxRule = field.validationRules.find((rule) => rule.rule == 'max');
+            const maxRule = field.validationRules?.find((rule) => rule.rule == 'max');
             setMaxValue(maxRule?.value || '');
         }
     }, [field]);
@@ -118,7 +118,7 @@ export default function TextFieldProperties({
                                     handleValidationRulesChange({
                                         rule: 'min',
                                         delete: true,
-                                        validation_rule_id: field.validationRules.find((rule) => rule.rule === 'min')
+                                        validation_rule_id: field.validationRules?.find((rule) => rule.rule === 'min')
                                             .id,
                                     })
                                 }
@@ -142,7 +142,7 @@ export default function TextFieldProperties({
                                     handleValidationRulesChange({
                                         rule: 'max',
                                         delete: true,
-                                        validation_rule_id: field.validationRules.find((rule) => rule.rule === 'max')
+                                        validation_rule_id: field.validationRules?.find((rule) => rule.rule === 'max')
                                             .id,
                                     })
                                 }

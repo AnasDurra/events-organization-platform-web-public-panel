@@ -57,10 +57,10 @@ export default function NumberProperties({
             document.getElementById('num-prop-label').value = field.label || '';
             document.getElementById('num-prop-isRequired').checked = !!field.required;
 
-            const minRule = field.validationRules.find((rule) => rule.rule == 'min');
+            const minRule = field.validationRules?.find((rule) => rule.rule == 'min');
             setMinValue(minRule?.value || '');
 
-            const maxRule = field.validationRules.find((rule) => rule.rule == 'max');
+            const maxRule = field.validationRules?.find((rule) => rule.rule == 'max');
             setMaxValue(maxRule?.value || '');
         }
     }, [field, isErrorRemovingValidationRule, isErrorAddingValidationRule]);
@@ -124,7 +124,7 @@ export default function NumberProperties({
                                     handleValidationRulesChange({
                                         rule: 'min',
                                         delete: true,
-                                        validation_rule_id: field.validationRules.find((rule) => rule.rule === 'min')
+                                        validation_rule_id: field.validationRules?.find((rule) => rule.rule === 'min')
                                             .id,
                                     })
                                 }
@@ -136,7 +136,7 @@ export default function NumberProperties({
                                 handleValidationRulesChange({
                                     rule: 'min',
                                     delete: true,
-                                    validation_rule_id: field.validationRules.find((rule) => rule.rule === 'min').id,
+                                    validation_rule_id: field.validationRules?.find((rule) => rule.rule === 'min').id,
                                 });
                             }
                         }}
@@ -157,7 +157,7 @@ export default function NumberProperties({
                                     handleValidationRulesChange({
                                         rule: 'max',
                                         delete: true,
-                                        validation_rule_id: field.validationRules.find((rule) => rule.rule === 'max')
+                                        validation_rule_id: field.validationRules?.find((rule) => rule.rule === 'max')
                                             .id,
                                     })
                                 }
@@ -169,7 +169,7 @@ export default function NumberProperties({
                                 handleValidationRulesChange({
                                     rule: 'max',
                                     delete: true,
-                                    validation_rule_id: field.validationRules.find((rule) => rule.rule === 'max').id,
+                                    validation_rule_id: field.validationRules?.find((rule) => rule.rule === 'max').id,
                                 });
                             }
                         }}

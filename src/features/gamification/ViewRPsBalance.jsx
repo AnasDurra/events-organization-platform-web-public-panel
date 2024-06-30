@@ -21,7 +21,7 @@ export default function ViewRPsBalance() {
                             Redeemable Points Balance
                         </Typography.Text>
                         <img
-                            src='/public/assets/points-rp.svg'
+                            src='/static/images/points-rp.svg'
                             className='w-[5em] text-green-500'
                         />
                         <Spin spinning={isBalanceLoading}>

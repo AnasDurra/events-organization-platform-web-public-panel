@@ -5,6 +5,7 @@ import { Carousel } from 'react-responsive-carousel';
 import Title from 'antd/es/typography/Title';
 import { useGetFeaturedEventsQuery } from '../../feedsSlice';
 import './MainCarousel.css';
+import { URL } from '../../../../api/constants';
 export default function MainCarousel() {
     const navigate = useNavigate();
 
@@ -36,18 +37,17 @@ export default function MainCarousel() {
                 showArrows={false}
                 showIndicators={false}
             >
-                {fakeFeaturedEvents.map((item, index) => (
+                {featuredEvents.map((item, index) => (
                     <div
                         key={index}
                         className='relative hover:cursor-pointer'
                         onClick={() => navigate('event')}
                     >
-                        {console.log(item.event.coverPictureUrl)}
                         <div className=' overflow-hidden shadow-md'>
                             <div className='absolute inset-0 bg-black opacity-30' />
                             <img
-                                className='h-[40svh] aspect-square object-cover   '
-                                src={item.event.coverPictureUrl}
+                                className='h-[40svh] aspect-square object-cover aspect-video   '
+                                src={`${URL.slice(0, -4)}${item.event?.coverPictureUrl}`}
                                 alt={`Carousel Item ${index + 1}`}
                             />
                             <div className='absolute inset-0'>

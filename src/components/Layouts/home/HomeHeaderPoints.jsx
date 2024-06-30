@@ -2,12 +2,10 @@ import React, { useEffect } from 'react';
 import { TiTicket } from 'react-icons/ti';
 import { useNavigate } from 'react-router-dom';
 import { getLoggedInUserV2 } from '../../../api/services/auth';
-import {
-    useLazyGetAttendeeBalanceQuery
-} from '../../../features/Ticketing Packages/TicketingPackagesSlice';
+import { useLazyGetAttendeeBalanceQuery } from '../../../features/Ticketing Packages/TicketingPackagesSlice';
 import {
     useLazyGetAttendeePointsQuery,
-    useLazyGetAttendeeRPsQuery
+    useLazyGetAttendeeRPsQuery,
 } from '../../../features/gamification/gamificationSlice';
 
 export default function HomeHeaderPoints() {
@@ -36,8 +34,6 @@ export default function HomeHeaderPoints() {
                 queryAttendeeBalance(getLoggedInUserV2().attendee_id);
             }
         }, []);
-
-        
     }, [queryAttendeeBalance, queryAttendeePoints, queryAttendeeRPs]);
     return (
         <>
@@ -49,7 +45,7 @@ export default function HomeHeaderPoints() {
                     >
                         <div className='text-textPrimary'>{balance?.balance} </div>
 
-                        <TiTicket className='text-textPrimary text-[2em]'></TiTicket>
+                        <TiTicket className='text-textPrimary text-[2rem]'></TiTicket>
                     </div>
 
                     <div
@@ -58,7 +54,7 @@ export default function HomeHeaderPoints() {
                     >
                         <div className='text-textPrimary'>{pointsRp?.points} </div>
                         <img
-                            src='/public/assets/points-rp.svg'
+                            src='/static/images/points-rp.svg'
                             className='w-[2em] mb-[-0.5em] '
                         ></img>
                     </div>
@@ -68,7 +64,7 @@ export default function HomeHeaderPoints() {
                     >
                         <div className='text-green-900'>{platformPoints?.points} </div>
                         <img
-                            src='/public/assets/game-point.svg'
+                            src='/static/images/game-point.svg'
                             className='w-[2em] mb-[-0.5em] '
                         ></img>
                     </div>

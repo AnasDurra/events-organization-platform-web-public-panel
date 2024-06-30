@@ -5,7 +5,15 @@ import { useNavigate } from 'react-router-dom';
 
 const { useToken } = theme;
 
-export default function OrganizerCard({ orgName, orgID, attendanceCount, eventsCount, className }) {
+export default function OrganizerCard({
+    orgName,
+    orgID,
+    profilePicURL,
+    attendanceCount,
+    eventsCount,
+    follower_count,
+    className,
+}) {
     const { token } = useToken();
     const navigate = useNavigate();
 
@@ -23,7 +31,7 @@ export default function OrganizerCard({ orgName, orgID, attendanceCount, eventsC
                 />
                 <div className='absolute inset-0 flex items-center justify-center'>
                     <img
-                        src='/assets/5.jpeg'
+                        src={`${profilePicURL ? profilePicURL : '/assets/5.jpeg'}`}
                         alt='Profile Image'
                         className='h-[12svh] aspect-square rounded-full object-fill border-4 border-t-primary border-b-primary border-r-primary border-l-primary'
                     />
@@ -36,15 +44,15 @@ export default function OrganizerCard({ orgName, orgID, attendanceCount, eventsC
 
                 <div className='flex justify-center space-x-8 p-4'>
                     <div className='flex flex-col space-y-1'>
-                        <div className='text-lg font-bold font-mono'>800k</div>
+                        <div className='text-lg font-bold font-mono'>{follower_count || 0}k</div>
                         <div className='text-md text-gray-500'>Followers</div>
                     </div>
                     <div className='flex flex-col space-y-1'>
-                        <div className='text-lg font-bold font-mono'>140</div>
+                        <div className='text-lg font-bold font-mono'>{eventsCount || 0}</div>
                         <div className='text-md text-gray-500'>Events</div>
                     </div>
                     <div className='flex flex-col space-y-1'>
-                        <div className='text-lg font-bold font-mono'>250</div>
+                        <div className='text-lg font-bold font-mono'>{attendanceCount || 0}</div>
                         <div className='text-md text-gray-500'>Attendees</div>
                     </div>
                 </div>

@@ -12,8 +12,6 @@ export default function ViewPointsBalance() {
         getLoggedInUserV2()?.attendee_id
     );
 
- 
-
     return (
         <div className='grid grid-cols-8 w-full  mb-4'>
             <div className='col-span-8 sm:col-span-6 sm:col-start-2 '>
@@ -23,7 +21,10 @@ export default function ViewPointsBalance() {
                             {' '}
                             Points Balance
                         </Typography.Text>
-                        <img src='/public/assets/game-point.svg' className='w-[5em] text-green-500' />
+                        <img
+                            src='/static/images/game-point.svg'
+                            className='w-[5em] text-green-500'
+                        />
                         <Spin spinning={isBalanceLoading}>
                             <Typography.Text
                                 code
@@ -36,8 +37,6 @@ export default function ViewPointsBalance() {
 
                     <Divider>History</Divider>
                     <AttendeePointsHistory />
-
-                  
                 </div>
             </div>
         </div>

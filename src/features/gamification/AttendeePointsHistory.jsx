@@ -13,6 +13,11 @@ import { TiTicket } from 'react-icons/ti';
 import { Link, useNavigate } from 'react-router-dom'; // Import Link or useNavigate
 import { getLoggedInUserV2 } from '../../api/services/auth';
 import { useGetAttendeePointsHistoryQuery } from './gamificationSlice';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const { useToken } = theme;
 
@@ -64,12 +69,12 @@ export default function AttendeePointsHistory() {
     ];
 
     const updatedPointsHistory = showAll
-        ? [...displayedTickets, ...fakeHistoryEntries].sort((a, b) => {
+        ? [...displayedTickets].sort((a, b) => {
               const createdAtA = dayjs(a.createdAt);
               const createdAtB = dayjs(b.createdAt);
               return createdAtB.diff(createdAtA);
           })
-        : [...displayedTickets, ...fakeHistoryEntries]
+        : [...displayedTickets]
               .sort((a, b) => {
                   const createdAtA = dayjs(a.createdAt);
                   const createdAtB = dayjs(b.createdAt);
@@ -77,12 +82,13 @@ export default function AttendeePointsHistory() {
               })
               .slice(0, 3);
 
-    const getTimeAgo = (createdAt) => {
-        const now = dayjs();
-        const created = dayjs(createdAt);
-        const diff = now.diff(created, 'second');
+  /*   const getTimeAgo = (createdAt) => {
+        const now = dayjs()
+        const diff = now.diff(createdAt, 'second');
 
-        if (diff < 60) {
+        if (diff < 0) {
+            return `In the future`;
+        } else if (diff < 60) {
             return `${diff} seconds ago`;
         } else if (diff < 3600) {
             return `${Math.floor(diff / 60)} minutes ago`;
@@ -95,28 +101,28 @@ export default function AttendeePointsHistory() {
         } else {
             return `${Math.floor(diff / 31536000)} years ago`;
         }
-    };
+    }; */
 
     return (
         <Timeline
             className='w-full'
             position='right'
         >
-            {updatedPointsHistory.map((ticket) => (
-                <TimelineItem key={ticket.attendee_tickets_id}>
+            {updatedPointsHistory.map((pointHis) => (
+                <TimelineItem key={pointHis.id}>
                     <TimelineOppositeContent
                         sx={{ flex: 1, m: 'auto 0' }}
                         align='right'
                         variant='body2'
                         color='text.secondary'
                     >
-                        {dayjs(ticket.createdAt).format('YYYY MMM DD')}
+                        {dayjs(pointHis.createdAt).format('YYYY MMM DD')}
                     </TimelineOppositeContent>
                     <TimelineSeparator>
                         <TimelineConnector />
                         <Image
                             preview={false}
-                            src='/public/assets/game-point.svg'
+                            src='/static/images/game-point.svg'
                             width={'2.5em'}
                         />
                         <TimelineConnector />
@@ -126,14 +132,16 @@ export default function AttendeePointsHistory() {
                             variant='h6'
                             component='span'
                         >
-                            {getTimeAgo(ticket.createdAt)}
+                            {/* {console.log('pointhis: ', pointHis)}
+                            {getTimeAgo(pointHis.createdAt)} */}
+                            Win
                         </Typography>
-                        <Typography className='text-emerald-700'>{`+${ticket.value} points`}</Typography>
+                        <Typography className='text-emerald-700'>{`+${pointHis.value} points`}</Typography>
                     </TimelineContent>
                 </TimelineItem>
             ))}
 
-            {pointsHistory.length + fakeHistoryEntries.length > 3 && (
+            {pointsHistory.length > 3 && (
                 <div className='flex justify-center'>
                     <Button
                         type='text'

@@ -363,7 +363,7 @@ export default function ViewFollowingPage() {
                         size='large'
                     >
                         <div className='grid grid-cols-12 gap-4 p-4'>
-                            {[...events, ...fakeEvents].map((event) => (
+                            {[...events].map((event) => (
                                 <div
                                     key={event.id}
                                     className='col-start-2 col-span-10 md:col-span-3'
@@ -374,10 +374,12 @@ export default function ViewFollowingPage() {
                                         description={event.description}
                                         tags={event.tags.map((tag) => tag.tag.label)}
                                         organizationProfilePictureURL={
-                                            URL + '/organization/mainPicture/' + event.organization.main_picture
+                                            URL +
+                                            '/organization/mainPicture/' +
+                                            event.organization?.main_picture?.split('/').pop()
                                         }
                                         eventImageURL={event.cover_picture_url}
-                                        days={event.days}
+                                        regStartDate={event.registration_start_date}
                                         event_type={event.event_type}
                                     />
                                 </div>

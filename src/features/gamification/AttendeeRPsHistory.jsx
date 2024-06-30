@@ -74,7 +74,7 @@ export default function AttendeeRPsHistory() {
                         <TimelineConnector />
                         <Image
                             preview={false}
-                            src='/public/assets/points-rp.svg'
+                            src='/static/images/points-rp.svg'
                             width={'2.5em'}
                         />
                         <TimelineConnector />

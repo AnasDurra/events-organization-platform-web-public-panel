@@ -135,7 +135,8 @@ export default function ModalNewMember({ isOpen, onOk, onCancel }) {
                             rules={[
                                 {
                                     required: true,
-                                    pattern: new RegExp(/^[0-9]+$/),
+                                    pattern: new RegExp(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/),
+                                    message: 'Please enter a valid phone number',
                                 },
                             ]}
                         >
