@@ -41,7 +41,7 @@ export default function MainCarousel() {
                     <div
                         key={index}
                         className='relative hover:cursor-pointer'
-                        onClick={() => navigate('event')}
+                        onClick={() => navigate(`/event/show/${item.event?.id}`)}
                     >
                         <div className=' overflow-hidden shadow-md'>
                             <div className='absolute inset-0 bg-black opacity-30' />
