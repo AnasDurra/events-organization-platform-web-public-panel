@@ -15,7 +15,7 @@ export default function EventCard({ event }) {
                 <div className='bg-white/55 border-2 border-white/50 w-full h-full rounded-3xl p-4 flex flex-col justify-center space-y-8'>
                     <div className='w-full h-full flex justify-between items-center'>
                         <div className='flex flex-col justify-center items-start'>
-                            <div className='text-lg font-semibold'>{event?.title}</div>
+                            <div className='text-lg font-semibold line-clamp-2'>{event?.title}</div>
                             <div className='text-md font-semibold text-gray-500'>By {event?.organization?.name}</div>
                         </div>
 
