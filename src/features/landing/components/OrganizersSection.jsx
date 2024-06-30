@@ -42,7 +42,7 @@ export default function OrganizersSection() {
                                         attendanceCount={org?.attendees_num}
                                         eventsCount={org?.events_num}
                                         follower_count={org?.followers}
-                                        profilePicURL={null}
+                                        profilePicURL={org?.main_picture}
                                     />
                                 ))}
                                 {console.log(orgs)}

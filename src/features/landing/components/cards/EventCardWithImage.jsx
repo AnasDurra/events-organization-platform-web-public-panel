@@ -73,22 +73,14 @@ export default function EventCardWithImage({
                 </Card>
                 <div className='flex flex-wrap w-full mx-2'>
                     {tags.map((tag, index) => (
-                        <Tag
-                            key={index}
-                            className='my-1'
-                            bordered={false}
-                        >
+                        <Tag key={index} className='my-1' bordered={false}>
                             {tag}
                         </Tag>
                     ))}
                 </div>
             </div>
             <div className='p-4'>
-                <Button
-                    className='w-full'
-                    type='primary'
-                    onClick={() => navigate(`/event/show/${id}`)}
-                >
+                <Button className='w-full' type='primary' onClick={() => navigate(`/event/show/${id}`)}>
                     REGISTER
                 </Button>
             </div>
