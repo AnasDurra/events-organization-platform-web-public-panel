@@ -158,6 +158,7 @@ const ShowEvent = () => {
                                                             chat_group_id={eventData?.result?.chat_group?.id}
                                                             eventID={eventData?.result?.id}
                                                             orgID={eventData?.result?.organization?.id}
+                                                            group_id={eventData?.result?.chat_group?.id}
                                                         />
                                                     )}
                                                 </>

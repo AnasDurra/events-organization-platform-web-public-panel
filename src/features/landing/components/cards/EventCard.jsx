@@ -35,7 +35,7 @@ export default function EventCard({ event }) {
 
                     <div className='flex justify-between items-center'>
                         <div className='h-full flex justify-start items-center'>
-                            {event?.tags?.map((tag) => (
+                            {event?.tags?.slice(0.2)?.map((tag) => (
                                 <Tag color='green' key={tag.id}>
                                     {tag?.tag?.tagName}
                                 </Tag>

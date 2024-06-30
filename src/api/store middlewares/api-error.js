@@ -9,7 +9,7 @@ const apiError = (store) => (next) => async (action) => {
 
     if (statusCode === 404) {
         if (!window.location.pathname.startsWith('/login')) {
-            router.navigate('/not-found', { replace: true });
+            // router.navigate('/not-found', { replace: true });
         } else errorMessage({ content: 'ERROR 404' });
     } else if (statusCode == 403) {
         Object.keys(Cookies.get()).forEach((cookieName) => {
