@@ -5,46 +5,12 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFollowedOrgsQuery } from '../../api/services/following';
+import { URL } from '../../api/constants';
 const { Meta } = Card;
 const { Text } = Typography;
 
 const ShowFollowingOrgsList = () => {
-    console.log(1111);
-    const { data: data2, error, isLoading } = useFollowedOrgsQuery();
-    const data = {
-        status: true,
-        path: '/api/attendee/followed-organizations',
-        statusCode: 200,
-        result: [
-            {
-                organization: {
-                    name: 'ORG1',
-                    bio: 'Hi, here is Road Ride Organization',
-                    description: 'An offside event organizer',
-                    cover_image: 'https://picsum.photos/300/200?random=1', // Fake cover image URL
-                },
-                following_date: '2024-04-14 15:19:05',
-            },
-            {
-                organization: {
-                    name: 'ORG2',
-                    bio: 'Hello, here is Adventure Seekers Club',
-                    description: 'A club for adventure enthusiasts',
-                    cover_image: 'https://picsum.photos/300/200?random=2', // Fake cover image URL
-                },
-                following_date: '2024-04-14 15:19:05',
-            },
-            {
-                organization: {
-                    name: 'ORG3',
-                    bio: 'Hey, here is Sports Enthusiasts Association',
-                    description: 'A community for sports lovers',
-                    cover_image: 'https://picsum.photos/300/200?random=3', // Fake cover image URL
-                },
-                following_date: '2024-04-14 15:19:05',
-            },
-        ],
-    };
+    const { data: data, isLoading } = useFollowedOrgsQuery();
     const navigate = useNavigate();
 
     const [filteredOrgs, setFilteredOrgs] = useState([]);
@@ -75,7 +41,7 @@ const ShowFollowingOrgsList = () => {
     }, []);
 
     return (
-        <div>
+        <div className='grid grid-cols-24 p-4 md:p-12'>
             <Button size='large' icon={<ArrowLeftOutlined />} type='text' onClick={() => navigate(-1)} />
 
             <Typography.Title level={2} style={{ marginBottom: '20px', textAlign: 'center' }}>
@@ -121,7 +87,16 @@ const ShowFollowingOrgsList = () => {
                             <Card
                                 hoverable
                                 style={{ width: '100%', height: '100%' }}
-                                cover={<img alt='organization cover' src={org?.organization?.cover_image} />}
+                                cover={
+                                    <img
+                                        alt='organization cover'
+                                        src={(
+                                            URL +
+                                            '/organizations/pictures/' +
+                                            org?.organization?.cover_picture
+                                        ).replace('/api/', '/')}
+                                    />
+                                }
                                 onClick={() => {
                                     navigate(`/org/${org?.organization?.id}`);
                                 }}

@@ -65,6 +65,9 @@ const LastThreeEvents = ({ events }) => {
                         </Row>
                     </List.Item>
                 )}
+                locale={{
+                    emptyText: 'No events attended in the last 3 events',
+                }}
             />
         </div>
     );

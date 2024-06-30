@@ -1,13 +1,17 @@
-import { CheckOutlined, StarFilled, UserOutlined } from '@ant-design/icons';
+import { CalendarOutlined, CheckOutlined, StarFilled, UserOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import { Avatar, Button, Col, Row, Statistic, Tooltip, Typography } from 'antd';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useGetAttendeeBadgesQuery } from '../../gamification/gamificationSlice';
 import { getLoggedInUserV2 } from '../../../api/services/auth';
 import BadgesModal from './BadgesModal';
+import { useFollowedOrgsQuery } from '../../../api/services/following';
+import { useShowAttendeeEventsQuery } from '../../../api/services/attendeeProfile';
 
 const ProfileDescreption = () => {
     const [isBadgesModalOpen, setIsBadgesModalOpen] = useState(false);
+    const { data: followedOrgs, isLoading: isFollowedOrgsLoading } = useFollowedOrgsQuery();
+    const { data: attendeeEvents, isLoading: isAttendeeEventsLoading } = useShowAttendeeEventsQuery();
 
     const { data: { result: badges } = { result: [] } } = useGetAttendeeBadgesQuery(getLoggedInUserV2()?.attendee_id);
 
@@ -39,9 +43,10 @@ const ProfileDescreption = () => {
                                         <h3>Following</h3>
                                     </div>
                                 }
-                                value={1128}
+                                loading={isFollowedOrgsLoading}
+                                value={followedOrgs?.result.length}
                                 prefix={
-                                    <UserOutlined
+                                    <UsergroupAddOutlined
                                         style={{
                                             fontSize: '20px',
                                         }}
@@ -84,21 +89,36 @@ const ProfileDescreption = () => {
                     sm={{ span: 24 }}
                     lg={{ span: 12 }}
                 >
-                    <Statistic
-                        title={
-                            <div>
-                                <h3>Events</h3>
-                            </div>
-                        }
-                        value={1128}
-                        prefix={
-                            <CheckOutlined
-                                style={{
-                                    fontSize: '20px',
-                                }}
+                    <Link
+                        to={`events`}
+                        style={{
+                            textDecoration: 'none',
+                            display: 'inline-block',
+                        }}
+                    >
+                        <div
+                            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.06)')}
+                            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                            style={{ transition: 'transform 0.2s' }}
+                        >
+                            <Statistic
+                                title={
+                                    <div>
+                                        <h3>Events</h3>
+                                    </div>
+                                }
+                                loading={isAttendeeEventsLoading}
+                                value={attendeeEvents?.result?.length}
+                                prefix={
+                                    <CalendarOutlined
+                                        style={{
+                                            fontSize: '20px',
+                                        }}
+                                    />
+                                }
                             />
-                        }
-                    />
+                        </div>
+                    </Link>
                 </Col>
 
                 <Col
@@ -141,11 +161,7 @@ const ProfileDescreption = () => {
                                     </Tooltip>
                                 ))} */}
                                 {badges.slice(0, 3).map((bdg) => (
-                                    <Avatar
-                                        key={bdg.badge_id}
-                                        size={50}
-                                        className='bg-stone-100'
-                                    >
+                                    <Avatar key={bdg.badge_id} size={50} className='bg-stone-100'>
                                         <img
                                             src={`data:image/svg+xml;utf8,${encodeURIComponent(bdg?.badge_shape?.svg)}`}
                                             width={50}
@@ -157,10 +173,7 @@ const ProfileDescreption = () => {
                                     className='bg-stone-100 hover:bg-gray-200 hover:cursor-pointer text-black border-2 border-red-400 '
                                     onClick={() => setIsBadgesModalOpen(true)}
                                 >
-                                    <div
-                                        className='text-lg  p-1 font-bold text-gray-600 '
-                                        type='text'
-                                    >
+                                    <div className='text-lg  p-1 font-bold text-gray-600 ' type='text'>
                                         View all
                                     </div>
                                 </Avatar>

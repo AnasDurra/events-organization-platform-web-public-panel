@@ -11,7 +11,7 @@ import { useShowAttendeeEventsQuery } from '../../api/services/attendeeProfile';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { URL } from '../../api/constants';
 const AttendeeEvents = () => {
-    const { data, error, isLoading } = useShowAttendeeEventsQuery();
+    const { data, isLoading } = useShowAttendeeEventsQuery();
 
     const navigate = useNavigate();
     const [selectedRange, setSelectedRange] = useState(null);
@@ -38,7 +38,7 @@ const AttendeeEvents = () => {
             <Spin size='large' spinning={isLoading}>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Row gutter={[36, 30]} style={{ display: 'flex', justifyContent: 'flex-start', width: '70%' }}>
-                        <Col style={{ marginTop: '20px' }} span={24}>
+                        <Col style={{ marginTop: '20px', padding: '0px' }} span={24}>
                             <Space style={{ width: '100%' }} direction='vertical' size={12}>
                                 <label style={{ fontWeight: 'bold' }}>Select Date Range:</label>
                                 <DatePicker.RangePicker

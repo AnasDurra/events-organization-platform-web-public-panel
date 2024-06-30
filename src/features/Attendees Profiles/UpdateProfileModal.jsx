@@ -2,6 +2,7 @@ import {
     CameraOutlined,
     EyeOutlined,
     FacebookOutlined,
+    InstagramOutlined,
     LinkedinOutlined,
     MailOutlined,
     PhoneOutlined,
@@ -43,9 +44,9 @@ import {
 import moment from 'moment';
 
 const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
-    const [updateMyProfileMutation, { isLoading }] = useUpdateMyProfileMutation();
-    const [updateProfilePicMutation] = useUpdateProfilePicMutation();
-    const [updateCoverPicMutation] = useUpdateCoverPicMutation();
+    const [updateMyProfileMutation, { isLoading: isUpdateMyProfileLoading }] = useUpdateMyProfileMutation();
+    const [updateProfilePicMutation, { isLoading: isUpdateProfilePicLoading }] = useUpdateProfilePicMutation();
+    const [updateCoverPicMutation, { isLoading: isUpdateCoverPicLoading }] = useUpdateCoverPicMutation();
 
     const { data: listsData, isLoading: listsIsLoading } = useConfigurationListsQuery();
 
@@ -128,7 +129,6 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                             });
                     } else {
                         if (coverImageFile[0]) {
-                            console.log(22);
                             formdata.append('cover_img', coverImageFile[0]?.originFileObj);
                             updateCoverPicMutation(formdata)
                                 .unwrap()
@@ -143,7 +143,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                     });
                                 });
                         } else {
-                            message.success('Updated Successfully !');
+                            message.success('Updated Successfullyww !');
                             modalOk();
                         }
                     }
@@ -158,7 +158,11 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
     };
 
     return (
-        <Spin spinning={isLoading || listsIsLoading}>
+        <Spin
+            spinning={
+                isUpdateMyProfileLoading || isUpdateCoverPicLoading || isUpdateProfilePicLoading || listsIsLoading
+            }
+        >
             <div>
                 <Row
                     style={{
@@ -388,6 +392,14 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                                             }}
                                                         />
                                                     )}
+                                                    {contact.contact_name === 'Instagram' && (
+                                                        <InstagramOutlined
+                                                            style={{
+                                                                fontSize: '24px',
+                                                                color: '#d62976',
+                                                            }}
+                                                        />
+                                                    )}
                                                     {contact.contact_name === 'Phone Number' && (
                                                         <PhoneOutlined
                                                             style={{ fontSize: '24px' }}
@@ -524,7 +536,12 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                         <Button
                                             className='w-full'
                                             size='large'
-                                            loading={isLoading}
+                                            loading={
+                                                isUpdateMyProfileLoading ||
+                                                isUpdateCoverPicLoading ||
+                                                isUpdateProfilePicLoading ||
+                                                listsIsLoading
+                                            }
                                             type='primary'
                                             htmlType='submit'
                                         >

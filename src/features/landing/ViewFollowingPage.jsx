@@ -350,18 +350,11 @@ export default function ViewFollowingPage() {
             <div className='col-span-8 sm:col-span-6 sm:col-start-2'>
                 <div className='flex flex-col h-full justify-between'>
                     <div className='w-full text-center'>
-                        <Title
-                            level={3}
-                            className='my-2 text-pretty'
-                        >
+                        <Title level={3} className='my-2 text-pretty'>
                             Events From Organizations You Follow
                         </Title>
                     </div>
-                    <Spin
-                        spinning={isEventsLoading}
-                        tip={'loading'}
-                        size='large'
-                    >
+                    <Spin spinning={isEventsLoading} tip={'loading'} size='large'>
                         <div className='grid grid-cols-12 gap-4 p-4'>
                             {[...events].map((event) => (
                                 <div
@@ -371,7 +364,7 @@ export default function ViewFollowingPage() {
                                     <EventCardWithImage
                                         id={event.id}
                                         title={event.title}
-                                        description={event.description}
+                                        // description={event.description}
                                         tags={event.tags.map((tag) => tag.tag.label)}
                                         organizationProfilePictureURL={
                                             URL +

@@ -2,6 +2,7 @@ import { Col, Row, theme } from 'antd';
 
 import EventScheduleAndMap from './EventScheduleAndMap';
 import EventDetails from './EventDetails';
+import EventPhotosAndFiles from './EventPhotosAndFiles';
 
 const EventDetailsTab = ({ eventData }) => {
     return (
@@ -21,6 +22,14 @@ const EventDetailsTab = ({ eventData }) => {
                         location={eventData?.result?.location}
                     />
                 </Col>
+                {(eventData?.result?.photos?.length > 0 || eventData?.result?.attachments?.length > 0) && (
+                    <Col xs={{ span: 24, order: 3 }} sm={{ span: 24, order: 3 }} lg={{ span: 24, order: 3 }}>
+                        <EventPhotosAndFiles
+                            photos={eventData?.result?.photos}
+                            attachments={eventData?.result?.attachments}
+                        />
+                    </Col>
+                )}
             </Row>
         </>
     );

@@ -54,7 +54,7 @@ const AttendeeProfile = () => {
                                 <Image
                                     // height={'40vh'}
                                     width={'100%'}
-                                    style={{ minHeight: '30vh', maxHeight: '50vh' }}
+                                    style={{ minHeight: '30vh', objectFit: 'cover', maxHeight: '70vh' }}
                                     src={data?.result?.cover_img ?? 'https://picsum.photos/1000/300'}
                                     preview={{
                                         mask: (
@@ -136,6 +136,7 @@ const AttendeeProfile = () => {
                                         bio={data?.result?.bio}
                                         profile_img={data?.result?.profile_img}
                                         contacts={data?.result?.contacts}
+                                        address={data?.result?.address}
                                         join_date={data?.result?.join_date}
                                         blockMutation={blockMutation}
                                         unBlockMutation={unBlockMutation}
@@ -182,7 +183,7 @@ const AttendeeProfile = () => {
                                                         }}
                                                         level={5}
                                                     >
-                                                        {'Syria, Damascus'}
+                                                        {data?.result?.address?.label}
                                                     </Typography.Title>
                                                 </Space>
                                             </div>

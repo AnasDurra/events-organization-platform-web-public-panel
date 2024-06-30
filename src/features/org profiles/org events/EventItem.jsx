@@ -11,6 +11,7 @@ import AttendeesListModal from '../../qrCodes/AttendeesListModal';
 import { URL } from '../../../api/constants';
 
 const EventsItem = ({ event }) => {
+    console.log(event);
     const navigate = useNavigate();
     const { handleDeleteEvent } = useEventHandlers();
 
@@ -166,7 +167,7 @@ const EventsItem = ({ event }) => {
                     }}
                 >
                     <Typography.Text style={{ color: 'white', fontWeight: 'bold', fontSize: '10px' }}>
-                        {event.start_day ? moment(event.start_day).format('MMM DD, YYYY, hh:mm A') : 'Date not set'}
+                        {event.start_day ? moment(event.start_day).format('MMM DD, YYYY') : 'Date not set'}
                     </Typography.Text>
                 </div>
             </Card>

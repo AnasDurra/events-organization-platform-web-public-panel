@@ -16,7 +16,6 @@ const AttendeeProfile = () => {
     const [fetchMyProfile, { data: myProfile, isLoading, isFetching: myProfileIsFetching }] =
         useLazyViewMyProfileQuery();
 
-    const navigate = useNavigate();
     const [data, setData] = useState(null);
 
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
@@ -46,9 +45,8 @@ const AttendeeProfile = () => {
                         {data?.result?.cover_img ? (
                             <div className='relative -m-2 sm:-m-6 md:-m-8 lg:-m-12 xl:-m-14'>
                                 <Image
-                                    // height={'40vh'}
                                     width={'100%'}
-                                    // style={{ minHeight: '30vh', maxHeight: '50vh' }}
+                                    style={{ minHeight: '30vh', objectFit: 'cover', maxHeight: '70vh' }}
                                     src={data?.result?.cover_img ?? 'https://picsum.photos/1000/300'}
                                     preview={{
                                         mask: (
@@ -129,6 +127,7 @@ const AttendeeProfile = () => {
                                         full_name={data?.result?.full_name}
                                         bio={data?.result?.bio}
                                         profile_img={data?.result?.profile_img}
+                                        address={data?.result?.address}
                                         contacts={data?.result?.contacts}
                                         join_date={data?.result?.join_date}
                                         setIsUpdateModalOpen={setIsUpdateModalOpen}
@@ -173,7 +172,7 @@ const AttendeeProfile = () => {
                                                         }}
                                                         level={5}
                                                     >
-                                                        {'Syria, Damascus'}
+                                                        {data?.result?.address?.label}
                                                     </Typography.Title>
                                                 </Space>
                                             </div>

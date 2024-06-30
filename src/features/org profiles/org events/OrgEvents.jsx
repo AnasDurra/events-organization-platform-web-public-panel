@@ -57,7 +57,6 @@ const OrgEvents = () => {
     }, [orgEvents]);
 
     return (
-     
         <div style={{ padding: '24px' }}>
             <Spin spinning={isOrgEventsLoading}>
                 <Row gutter={[15, 30]} justify='start'>
@@ -154,7 +153,6 @@ const OrgEvents = () => {
                 </Row>
             </Spin>
         </div>
-        
     );
 };
 
