@@ -3,7 +3,7 @@ import { Avatar, Typography, Input, Divider, Space, Button, Empty, Card, Image, 
 import { MessageOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, Navigate } from 'react-router-dom';
 import { useChattingListQuery } from '../../api/services/chats';
-import { URL } from '../../constants';
+import { URL } from '../../api/constants';
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -70,10 +70,7 @@ const ChatsList = () => {
                                                     <Image
                                                         width={'100%'}
                                                         height={'100%'}
-                                                        // src={`${URL}${item?.event_cover}`.replace('/api/', '/')}
-                                                        src={
-                                                            'http://localhost:3000/event_files/cover_picture-1719479234678-97757803.png'
-                                                        }
+                                                        src={`${URL}${item?.event_cover}`.replace('/api/', '/')}
                                                         alt={item?.group_title}
                                                         style={styles.eventCover}
                                                     />

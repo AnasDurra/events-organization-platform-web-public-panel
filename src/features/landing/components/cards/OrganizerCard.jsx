@@ -44,7 +44,7 @@ export default function OrganizerCard({
 
                 <div className='flex justify-center space-x-8 p-4'>
                     <div className='flex flex-col space-y-1'>
-                        <div className='text-lg font-bold font-mono'>{follower_count || 0}k</div>
+                        <div className='text-lg font-bold font-mono'>{follower_count || 0}</div>
                         <div className='text-md text-gray-500'>Followers</div>
                     </div>
                     <div className='flex flex-col space-y-1'>

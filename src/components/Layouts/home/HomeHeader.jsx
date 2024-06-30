@@ -7,6 +7,7 @@ import {
     HomeFilled,
     HomeOutlined,
     LogoutOutlined,
+    MessageOutlined,
     ShopOutlined,
     UserOutlined,
 } from '@ant-design/icons';
@@ -19,9 +20,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getLoggedInUserV2, useLogoutMutation } from '../../../api/services/auth';
 import RedeemCodeModal from '../../../features/giftcards/RedeemCodeModal';
 import HomeHeaderPoints from './HomeHeaderPoints';
+import { Icon } from '@iconify/react';
 
 const navigationItems = [
     { label: 'Home', filledIcon: <HomeFilled />, outlinedIcon: <HomeOutlined />, path: '/home' },
+    // { label: 'Chats', filledIcon: <MessageOutlined />, outlinedIcon: <HomeOutlined />, path: '/home/chats' },
     {
         label: 'Following',
         filledIcon: <GoNorthStar className='text-[1.2em]' />,
@@ -115,11 +118,20 @@ export default function HomeHeader() {
                             <Badge count={5} size='small'>
                                 <Button
                                     type='text'
-                                    icon={<IoMdNotificationsOutline className='text-2xl ' />}
+                                    icon={<IoMdNotificationsOutline className='text-2xl' />}
                                     onMouseEnter={(e) => (e.target.style.transform = 'scale(1.2)')}
                                     onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
                                 />
                             </Badge>
+                            <Button
+                                type='text'
+                                onClick={() => {
+                                    navigate('/home/chats');
+                                }}
+                                icon={<Icon icon='ph:chats-circle-fill' style={{ fontSize: '24px' }} />}
+                                onMouseEnter={(e) => (e.target.style.transform = 'scale(1.2)')}
+                                onMouseLeave={(e) => (e.target.style.transform = 'scale(1)')}
+                            />
                             <Dropdown
                                 className='hidden lg:flex'
                                 overlay={menu}

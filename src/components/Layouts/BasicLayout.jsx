@@ -26,14 +26,14 @@ const BasicLayout = () => {
                             WEEVENTS
                         </Title>
                     </div>
-                    <div>
+                    {/* <div>
                         <Button type='primary' size='large' className='mr-2'>
                             Login
                         </Button>
                         <Button type='default' size='large'>
                             Register
                         </Button>
-                    </div>
+                    </div> */}
                 </header>
                 <main className='flex-grow p-6 mt-16'>
                     <Outlet />
