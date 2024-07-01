@@ -153,7 +153,7 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
         updateGroup: builder.mutation({
             query: ({ fields, group_id, isNewPosition, form_id }) => ({
                 url: `/forms/group/${group_id}`,
-                method: 'PATCH',
+                method: 'POST',
                 body: fields,
             }),
             invalidatesTags: ['form'],
@@ -190,7 +190,7 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
         updateGroupField: builder.mutation({
             query: ({ fields, form_id, isNewPosition, isNewGroup }) => ({
                 url: `/forms/field`,
-                method: 'PATCH',
+                method: 'POST',
                 body: fields,
             }),
             invalidatesTags: ['form'],
@@ -247,7 +247,7 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
         updateFieldOptionName: builder.mutation({
             query: (data) => ({
                 url: `/forms/field/option`,
-                method: 'PATCH',
+                method: 'Put',
                 body: data,
             }),
             invalidatesTags: ['form'],

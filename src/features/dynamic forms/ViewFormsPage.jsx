@@ -1,27 +1,21 @@
-import {
-    ContainerOutlined,
-    FileAddOutlined,
-    FileOutlined,
-    PaperClipOutlined,
-    PlusOutlined,
-    SettingOutlined,
-} from '@ant-design/icons';
-import { Badge, Button, Card, Col, Divider, Empty, Input, Row, Tag, theme, Spin, Skeleton } from 'antd';
+import { ContainerOutlined, PlusOutlined, SettingOutlined } from '@ant-design/icons';
+import { Button, Card, Col, Empty, Input, Row, Spin, theme } from 'antd';
 import Meta from 'antd/es/card/Meta';
-import Title from 'antd/es/typography/Title';
 import React, { useState } from 'react';
-import AddFormModal from './modals/AddFormModal';
+import { useNavigate } from 'react-router-dom';
 import { useAddNewFormMutation, useGetFormsQuery } from './dynamicFormsSlice';
-import { useNavigate, useParams } from 'react-router-dom';
+import AddFormModal from './modals/AddFormModal';
 import SelectFormEventModal from './submission/SelectFormEventModal';
 const { useToken } = theme;
+
+import { getLoggedInUserV2 } from '../../api/services/auth';
 
 export default function ViewFormsPage() {
     const { token } = useToken();
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isSelectEventModalOpen, setIsSelectEventModalOpen] = useState(false);
     const [selectedFormID, setSelectedFormID] = useState(null);
-    let { organization_id = 1 } = useParams();
+    let organization_id = getLoggedInUserV2().organization_id;
     const navigate = useNavigate();
 
     const { data: { result: forms } = { result: [] }, isLoading: isFetchFormsLoading } =
@@ -31,33 +25,16 @@ export default function ViewFormsPage() {
     return (
         <div className='h-full'>
             <Row className='my-4'>
-                <Col
-                    xs={{ span: 12 }}
-                    sm={{ span: 12 }}
-                    md={{ span: 8 }}
-                    lg={{ span: 12 }}
-                >
-                    <Button
-                        type='primary'
-                        icon={<PlusOutlined />}
-                        onClick={() => setIsAddModalOpen(true)}
-                    >
+                <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 8 }} lg={{ span: 12 }}>
+                    <Button type='primary' icon={<PlusOutlined />} onClick={() => setIsAddModalOpen(true)}>
                         Add
                     </Button>
                 </Col>
-                <Col
-                    xs={{ span: 12 }}
-                    sm={{ span: 12 }}
-                    md={{ span: 10, offset: 6 }}
-                    lg={{ span: 8, offset: 4 }}
-                >
+                <Col xs={{ span: 12 }} sm={{ span: 12 }} md={{ span: 10, offset: 6 }} lg={{ span: 8, offset: 4 }}>
                     <Input.Search placeholder='search' />
                 </Col>
             </Row>
-            <Spin
-                spinning={isFetchFormsLoading}
-                wrapperClassName='h-full'
-            >
+            <Spin spinning={isFetchFormsLoading} wrapperClassName='h-full'>
                 <Row
                     className='h-full'
                     gutter={[
@@ -67,13 +44,7 @@ export default function ViewFormsPage() {
                 >
                     {forms.length ? (
                         forms.map((form) => (
-                            <Col
-                                xs={{ span: 24 }}
-                                sm={{ span: 24 }}
-                                md={{ span: 12 }}
-                                lg={{ span: 8 }}
-                                key={form.id}
-                            >
+                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} key={form.id}>
                                 <Card
                                     className={`shadow-md hover:shadow-sm shadow-[${token.colorPrimary}] border-6 border-[${token.colorPrimary}]`}
                                     actions={[
@@ -142,12 +113,7 @@ export default function ViewFormsPage() {
                         ))
                     ) : (
                         <Col span={24}>
-                            {!isFetchFormsLoading && (
-                                <Empty
-                                    className='mt-10'
-                                    description='No forms'
-                                />
-                            )}
+                            {!isFetchFormsLoading && <Empty className='mt-10' description='No forms' />}
                         </Col>
                     )}
                 </Row>

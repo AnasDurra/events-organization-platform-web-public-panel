@@ -33,7 +33,7 @@ export default function SoonToHappenSection() {
                                         URL + '/organization/mainPicture/' + event.organization?.main_picture
                                     }
                                     eventImageURL={`${URL.slice(0, -4)}${event.coverPictureUrl}`}
-                                    regStartDate={event.registrationStartDate}
+                                    regStartDate={event.registrationEndDate}
                                     event_type={event.eventType}
                                 />
                                 {console.log(`${URL.slice(0, -4)}${event.coverPictureUrl}`)}
