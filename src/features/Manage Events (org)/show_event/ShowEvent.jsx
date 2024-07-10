@@ -14,7 +14,7 @@ import EventRegisterButton from './components/EventRegisterButton';
 const ShowEvent = () => {
     const { id } = useParams();
     const [searchParams] = useSearchParams();
-    const showChat = searchParams.get('showChat');
+    const [showChat, setShowChat] = useState(searchParams.get('showChat'));
     const isEditing = searchParams.get('edit');
 
     const [user] = useState(getLoggedInUserV2());
@@ -56,6 +56,9 @@ const ShowEvent = () => {
         return () => clearTimeout(timer);
     }, []);
 
+    useEffect(() => {
+        console.log(showChat);
+    }, [showChat]);
     return (
         <div>
             <div className='w-full' style={{ marginBottom: '5em' }}>
@@ -89,6 +92,7 @@ const ShowEvent = () => {
                                 <Tabs
                                     defaultActiveKey={showChat === 'true' ? '2' : '1'}
                                     tabBarStyle={{ marginBottom: '2em' }}
+                                    onChange={(tab) => (tab == 2 ? setShowChat(true) : setShowChat(false))}
                                     items={[
                                         {
                                             key: '1',
@@ -158,6 +162,7 @@ const ShowEvent = () => {
                                                             chat_group_id={eventData?.result?.chat_group?.id}
                                                             eventID={eventData?.result?.id}
                                                             orgID={eventData?.result?.organization?.id}
+                                                            group_id={eventData?.result?.chat_group?.id}
                                                         />
                                                     )}
                                                 </>
@@ -178,16 +183,17 @@ const ShowEvent = () => {
                             isFetching={isFetching}
                         />
                     )}
-
-                    <div className='sticky bottom-0 bg-white border-t border-gray-300 mt-8 w-full'>
-                        <EventRegisterButton
-                            eventData={eventData}
-                            handleRegisterClicked={handleRegisterClicked}
-                            attendeeStatusInEvent={attendeeStatusInEvent}
-                            isAttendeeStatusInEventLoading={isAttendeeStatusInEventLoading}
-                            user_role={user?.user_role}
-                        />
-                    </div>
+                    {!showChat && (
+                        <div className='sticky bottom-0 bg-white border-t border-gray-300 mt-8 w-full'>
+                            <EventRegisterButton
+                                eventData={eventData}
+                                handleRegisterClicked={handleRegisterClicked}
+                                attendeeStatusInEvent={attendeeStatusInEvent}
+                                isAttendeeStatusInEventLoading={isAttendeeStatusInEventLoading}
+                                user_role={user?.user_role}
+                            />
+                        </div>
+                    )}
                 </Skeleton>
             </div>
         </div>

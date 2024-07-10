@@ -33,7 +33,7 @@ const AttendeeEvents = () => {
                 <Button size='large' icon={<ArrowLeftOutlined />} type='text' onClick={() => navigate(-1)} />
             </Col>
             <Typography.Title level={3} style={{ marginBottom: '20px', textAlign: 'center' }}>
-                My Previous Events
+                My Events
             </Typography.Title>
             <Spin size='large' spinning={isLoading}>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>

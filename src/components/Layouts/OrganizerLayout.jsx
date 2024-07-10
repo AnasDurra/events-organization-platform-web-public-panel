@@ -276,7 +276,7 @@ export default function OrganizerLayout({ roles }) {
         }
     }, [checkAccessTokenError]);
 
-    /*  // start here
+    // start here
     const authToken = Cookies.get('accessToken');
     useEffect(() => {
         function chatRecieved(message) {
@@ -289,7 +289,7 @@ export default function OrganizerLayout({ roles }) {
         }
 
         chatSocket?.on('notification-received', chatRecieved);
-    }, [authToken]); */
+    }, [authToken]);
 
     return (
         <ConfigProvider theme={theme}>

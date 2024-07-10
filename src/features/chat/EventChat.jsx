@@ -10,10 +10,10 @@ import { chatSocket } from '../../chatSocket';
 import { getLoggedInUserV2 } from '../../api/services/auth';
 import InputMessage from './InputMessage';
 
-const EventChat = ({ chat_group_id, eventID, orgID }) => {
+const EventChat = ({ chat_group_id, eventID, orgID, group_id }) => {
     const pageSize = 10;
     const [page, setPage] = useState(1);
-    const { data, isLoading, refetch, isFetching } = useGroupChatListQuery({ chat_group_id, pageSize, page });
+    const { data, isLoading, refetch } = useGroupChatListQuery({ chat_group_id, pageSize, page });
 
     const [user] = useState(getLoggedInUserV2());
     const [messages, setMessages] = useState([]);
@@ -69,19 +69,21 @@ const EventChat = ({ chat_group_id, eventID, orgID }) => {
                 );
             }, 2000);
         }
-        chatSocket.on(`group-${4}`, messageReceived);
-        chatSocket.on(`group-${4}/reaction`, reactionReceived);
-        chatSocket.on(`group-${4}/deletion`, messageDeleted);
+
+        chatSocket.on(`group-${group_id}`, messageReceived);
+        chatSocket.on(`group-${group_id}/reaction`, reactionReceived);
+        chatSocket.on(`group-${group_id}/deletion`, messageDeleted);
 
         return () => {
-            chatSocket.off(`group-${4}`, messageReceived);
-            chatSocket.off(`group-${4}/reaction`, reactionReceived);
-            chatSocket.off(`group-${4}/deletion`, messageDeleted);
+            chatSocket.off(`group-${group_id}`, messageReceived);
+            chatSocket.off(`group-${group_id}/reaction`, reactionReceived);
+            chatSocket.off(`group-${group_id}/deletion`, messageDeleted);
         };
     }, []);
 
     useEffect(() => {
         if (data) {
+            console.log(data);
             setMessages((prevMessages) => [...prevMessages, ...data.result.messages]);
         }
     }, [data]);
@@ -98,7 +100,7 @@ const EventChat = ({ chat_group_id, eventID, orgID }) => {
                 boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
             }}
         >
-            <Spin spinning={isLoading}>
+            <Spin spinning={false}>
                 <div style={{ height: '450px', overflowY: 'auto' }}>
                     <div
                         ref={messagesEndRef}
@@ -123,7 +125,7 @@ const EventChat = ({ chat_group_id, eventID, orgID }) => {
                             }
                             loader={
                                 <Spin
-                                    spinning={true}
+                                    spinning={false}
                                     style={{ margin: '20px auto', fontSize: '24px', height: '5em' }}
                                 />
                             }

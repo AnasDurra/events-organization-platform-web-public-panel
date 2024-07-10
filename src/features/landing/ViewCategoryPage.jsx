@@ -4,6 +4,7 @@ import Title from 'antd/es/typography/Title';
 import { Pagination, Spin } from 'antd';
 import EventCardWithImage from './components/cards/EventCardWithImage';
 import { useParams } from 'react-router-dom';
+import { URL } from '../../api/constants';
 
 export default function ViewCategoryPage() {
     let { category_name, category_id } = useParams();
@@ -44,6 +45,7 @@ export default function ViewCategoryPage() {
                         />
                     )}
                     <div className='grid grid-cols-12 gap-4 p-4'>
+                        {console.log(events)}
                         {events?.map((event) => (
                             <div key={event.id} className='col-start-2 col-span-10 md:col-span-3'>
                                 <EventCardWithImage
@@ -54,7 +56,7 @@ export default function ViewCategoryPage() {
                                     organizationProfilePictureURL={
                                         URL + '/organization/mainPicture/' + event.organization?.main_picture
                                     }
-                                    eventImageURL={event.cover_picture_url}
+                                    eventImageURL={(URL + event.coverPictureUrl).replace('/api/', '/')}
                                     days={event.days}
                                     event_type={event.event_type}
                                 />

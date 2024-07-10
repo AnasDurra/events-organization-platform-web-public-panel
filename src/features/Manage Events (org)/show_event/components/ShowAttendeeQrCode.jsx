@@ -12,8 +12,6 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
     const { token } = theme.useToken();
     const { data: attendeeQrCode, isLoading: isAttendeeQrCodeLoading } = useAttendanceQrCodeQuery(eventInfo?.id);
 
-    console.log(eventInfo);
-
     const downloadTicket = () => {
         const node = document.getElementById('ticket-modal');
         htmlToImage
@@ -73,9 +71,9 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                 <Row gutter={[20, 10]}>
                     <Col span={24} style={{ padding: '0px' }}>
                         <div style={{ borderRadius: '8px' }}>
-                            <Image
+                            <img
+                                id='awda2'
                                 src={eventInfo?.cover_picture_url}
-                                // style={{ borderRadius: '10px', left: 0, right: 0 }}
                                 style={{
                                     borderRadius: '10px',
                                     left: 0,
@@ -84,7 +82,6 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                                     height: '170px',
                                     objectFit: 'cover',
                                 }}
-                                preview={false}
                             />
                         </div>
                         <div>
@@ -150,29 +147,40 @@ const ShowAttendeeQrCode = ({ isVisible, onClose, eventInfo }) => {
                     </Col>
 
                     <Divider style={{ margin: '10px' }} />
-                    <Col xs={{ span: 24 }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Space size={10} direction='vertical'>
-                            <Text style={{ marginTop: '15px', color: '#888', fontStyle: 'italic' }}>SCAN QR-CODE</Text>
-                        </Space>
-                    </Col>
-                    <Col xs={{ span: 24 }}>
-                        <div id='myqrcode' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <Spin spinning={isAttendeeQrCodeLoading}>
-                                {attendeeQrCode?.result?.code && (
-                                    <Image
-                                        src={attendeeQrCode?.result?.code}
-                                        width={250}
-                                        style={{
-                                            marginBottom: '15px',
-                                            border: '1px solid #f0f0f0',
-                                            borderRadius: '4px',
-                                        }}
-                                        preview={false}
-                                    />
-                                )}
-                            </Spin>
-                        </div>
-                    </Col>
+                    {eventInfo?.is_chatting_enabled && (
+                        <>
+                            <Col
+                                xs={{ span: 24 }}
+                                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            >
+                                <Space size={10} direction='vertical'>
+                                    <Text style={{ marginTop: '15px', color: '#888', fontStyle: 'italic' }}>
+                                        SCAN QR-CODE
+                                    </Text>
+                                </Space>
+                            </Col>
+                            <Col xs={{ span: 24 }}>
+                                <div
+                                    id='myqrcode'
+                                    style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+                                >
+                                    <Spin spinning={isAttendeeQrCodeLoading}>
+                                        <img
+                                            id='awda'
+                                            src={attendeeQrCode?.result?.code}
+                                            width={250}
+                                            style={{
+                                                marginBottom: '15px',
+                                                border: '1px solid #f0f0f0',
+                                                borderRadius: '4px',
+                                            }}
+                                        />
+                                    </Spin>
+                                </div>
+                            </Col>
+                        </>
+                    )}
+
                     <Col xs={{ span: 24 }} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <Space size={10} direction='vertical'>
                             <Text style={{ marginTop: '15px', color: '#888', fontStyle: 'italic' }}>

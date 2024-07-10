@@ -470,7 +470,7 @@ const OrgReports = () => {
                                                     {modalContent?.resolved_by?.user_email}
                                                 </Descriptions.Item>
                                                 <Descriptions.Item label='Phone'>
-                                                    {modalContent?.resolved_by?.employee.phone_number}
+                                                    {modalContent?.resolved_by?.employee?.phone_number}
                                                 </Descriptions.Item>
                                                 <Descriptions.Item label='Role'>
                                                     {modalContent?.resolved_by?.user_role?.role_name}

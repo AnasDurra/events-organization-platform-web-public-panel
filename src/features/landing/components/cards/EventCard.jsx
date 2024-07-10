@@ -22,21 +22,21 @@ export default function EventCard({ event }) {
                         <div>
                             <div className='bg-white/70 border-4 rounded-3xl w-20 h-20 border-primary/30 flex flex-col justify-center items-center'>
                                 <div className='text-xl'>
-                                    {new Date(event?.registrationStartDate).toLocaleString('default', {
+                                    {new Date(event?.registrationEndDate).toLocaleString('default', {
                                         month: 'short',
                                     })}
                                 </div>
-                                <div className='text-2xl text-secondary '>
-                                    {new Date(event?.registrationStartDate).getDate()}
+                                <div className='text-2xl text-secondary'>
+                                    {new Date(event?.registrationEndDate).getDate()}
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div className='flex justify-between items-center'>
-                        <div className='h-full flex justify-start items-center wrap'>
-                            {event?.tags?.map((tag) => (
-                                <Tag color='green' key={tag.id}>
+                        <div className='h-full flex justify-start items-center flex-wrap'>
+                            {event?.tags?.slice(0, 2)?.map((tag) => (
+                                <Tag color='green' key={tag.id} style={{ marginBottom: '6px' }}>
                                     {tag?.tag?.tagName}
                                 </Tag>
                             ))}

@@ -199,7 +199,7 @@ const EventRegisterButton = ({
                                                 icon={<QrcodeOutlined />}
                                                 onClick={openQrModal}
                                             >
-                                                Show QR Code
+                                                Show My Ticket
                                             </Button>
                                         </Tooltip>
                                     )}

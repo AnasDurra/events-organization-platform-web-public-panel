@@ -42,23 +42,22 @@ const useEventHandlers = () => {
                     okButtonProps: { style: styles.okButton },
                     cancelButtonProps: { style: styles.cancelButton },
                     onOk: () => {
-                        try {
-                            deleteEvent(eventId)
-                                .unwrap()
-                                .then((res) => {
-                                    console.log(res);
-                                    if (res.statusCode === 200) {
-                                        openNotification(
-                                            'success',
-                                            'Event Deleted Successfully',
-                                            `The event has been deleted successfully.`
-                                        );
-                                        navigate('/org/our-events');
-                                    }
-                                });
-                        } catch (error) {
-                            message.error('Error deleting event: ' + error.message);
-                        }
+                        deleteEvent(eventId)
+                            .unwrap()
+                            .then((res) => {
+                                console.log(res);
+                                if (res.statusCode === 200) {
+                                    openNotification(
+                                        'success',
+                                        'Event Deleted Successfully',
+                                        `The event has been deleted successfully.`
+                                    );
+                                    navigate('/org/our-events');
+                                }
+                            })
+                            .catch((error) => {
+                                openNotification('warning', 'Event Deleted can not be deleted', error?.data?.message);
+                            });
                     },
                 });
             },

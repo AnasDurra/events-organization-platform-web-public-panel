@@ -22,21 +22,18 @@ export default function SoonToHappenSection() {
                     </div>
                     <div className='grid grid-cols-12 gap-4 w-full'>
                         {events?.map((event) => (
-                            <div
-                                key={event.id}
-                                className='col-start-2 col-span-10 lg:col-span-4 xl:col-span-3'
-                            >
+                            <div key={event.id} className='col-start-2 col-span-10 lg:col-span-4 xl:col-span-3'>
                                 {console.log(event)}
                                 <EventCardWithImage
                                     id={event.id}
                                     title={event.title}
-                                    description={event.description}
+                                    // description={event.description}
                                     tags={event.tags.map((tag) => tag.tag?.tagName)}
                                     organizationProfilePictureURL={
                                         URL + '/organization/mainPicture/' + event.organization?.main_picture
                                     }
-                                    eventImageURL={`${URL.slice(0,-4)}${event.coverPictureUrl}`}
-                                    regStartDate={event.registrationStartDate}
+                                    eventImageURL={`${URL.slice(0, -4)}${event.coverPictureUrl}`}
+                                    regStartDate={event.registrationEndDate}
                                     event_type={event.eventType}
                                 />
                                 {console.log(`${URL.slice(0, -4)}${event.coverPictureUrl}`)}
