@@ -26,7 +26,7 @@ export default function EventCard({ event }) {
                                         month: 'short',
                                     })}
                                 </div>
-                                <div className='text-2xl text-secondary'>
+                                <div className='text-2xl text-secondary '>
                                     {new Date(event?.registrationStartDate).getDate()}
                                 </div>
                             </div>
@@ -34,7 +34,7 @@ export default function EventCard({ event }) {
                     </div>
 
                     <div className='flex justify-between items-center'>
-                        <div className='h-full flex justify-start items-center'>
+                        <div className='h-full flex justify-start items-center wrap'>
                             {event?.tags?.map((tag) => (
                                 <Tag color='green' key={tag.id}>
                                     {tag?.tag?.tagName}
