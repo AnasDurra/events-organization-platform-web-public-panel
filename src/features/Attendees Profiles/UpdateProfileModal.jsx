@@ -2,6 +2,7 @@ import {
     CameraOutlined,
     EyeOutlined,
     FacebookOutlined,
+    GithubOutlined,
     InstagramOutlined,
     LinkedinOutlined,
     MailOutlined,
@@ -403,6 +404,14 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                                     {contact.contact_name === 'Phone Number' && (
                                                         <PhoneOutlined
                                                             style={{ fontSize: '24px' }}
+                                                            onClick={() =>
+                                                                (window.location.href = `tel:${contact.value}`)
+                                                            }
+                                                        />
+                                                    )}
+                                                    {contact.contact_name === 'Github' && (
+                                                        <GithubOutlined
+                                                            style={{ fontSize: '24px', color: 'black' }}
                                                             onClick={() =>
                                                                 (window.location.href = `tel:${contact.value}`)
                                                             }

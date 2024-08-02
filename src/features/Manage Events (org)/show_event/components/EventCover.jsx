@@ -9,6 +9,7 @@ import { useState } from 'react';
 import ReportEventModal from './ReportEventModal';
 import { useLazyIsEventReportedQuery } from '../../../../api/services/adminReports.js';
 import { useNotification } from '../../../../utils/NotificationContext';
+import { URL } from '../../../../api/constants.js';
 
 const EventCover = ({ data, setIsUpdateModalOpen }) => {
     const [checkIsEventReportedReported, { isFetching: isIsEventReportedFetching }] = useLazyIsEventReportedQuery();
@@ -99,7 +100,7 @@ const EventCover = ({ data, setIsUpdateModalOpen }) => {
                             </Typography.Text>
                             <Popover
                                 content={<OrgPopoverContent organization={data?.organization} />}
-                                title='Organizer Info'
+                                title='Organization Info'
                             >
                                 <Link to={`/org/${data?.organization?.id}`} style={coverImageStyle.link}>
                                     <Typography.Text
@@ -288,20 +289,34 @@ export const OrgPopoverContent = ({ organization }) => {
     console.log(organization);
     return (
         <Card bordered={false} style={{}}>
-            <Link to={`/org/${organization?.id}`} style={coverImageStyle.link}>
+            <Link
+                onClick={(e) => {
+                    e.stopPropagation();
+                }}
+                to={`/org/${organization?.id}`}
+                style={coverImageStyle.link}
+            >
                 <Card.Meta
+                    style={{ maxWidth: '300px' }}
                     avatar={
                         <Image
                             preview={false}
                             width={50}
                             height={50}
-                            src={organization?.cover_picture}
+                            src={`${URL}/organization/mainPicture/${organization?.main_picture.split('/').pop()}`}
                             alt={organization.name}
                             style={{ borderRadius: '50%' }}
                         />
                     }
                     title={organization.name}
-                    description={organization.description || 'No description available'}
+                    // description={organization.description || 'No description available'}
+                    description={
+                        <Typography.Paragraph ellipsis={{ rows: 2, expandable: false }}>
+                            <Typography.Text type='secondary'>
+                                {organization.description || 'No description available'}
+                            </Typography.Text>
+                        </Typography.Paragraph>
+                    }
                 />
             </Link>
         </Card>

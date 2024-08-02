@@ -177,7 +177,7 @@ const AttendeesModal = ({ visible, onClose, eventId }) => {
                     Back to events
                 </Button>,
             ]}
-            closable={false}
+            // closable={false}
             destroyOnClose
             maskClosable={false}
             keyboard={false}

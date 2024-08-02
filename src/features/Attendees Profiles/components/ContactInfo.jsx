@@ -1,5 +1,6 @@
 import {
     FacebookOutlined,
+    GithubOutlined,
     InstagramOutlined,
     LinkedinOutlined,
     MailOutlined,
@@ -53,6 +54,12 @@ const ContactInfo = ({ contacts }) => {
                                 onClick={() => (window.location.href = `tel:${contact.value}`)}
                             />
                         )}
+                        {contact.contact_name === 'Github' && (
+                            <GithubOutlined
+                                style={getIconStyle(contact.contact_name)}
+                                onClick={() => (window.location.href = `tel:${contact.value}`)}
+                            />
+                        )}
                     </a>
                 </Tooltip>
             ))}
@@ -90,6 +97,8 @@ const getIconStyle = (contactName) => {
         case 'Twitter':
             return { color: '#1DA1F2', fontSize: '24px' };
         case 'Email':
+            return { color: 'black', fontSize: '24px' };
+        case 'Github':
             return { color: 'black', fontSize: '24px' };
         default:
             return { fontSize: '24px' };

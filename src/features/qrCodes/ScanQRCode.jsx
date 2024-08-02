@@ -59,7 +59,7 @@ const ScanQRCode = ({
                 cancelText={'Back to events'}
                 cancelButtonProps={{ size: 'large' }}
                 destroyOnClose
-                closable={false}
+                // closable={false}
                 maskClosable={false}
                 keyboard={false}
             >
