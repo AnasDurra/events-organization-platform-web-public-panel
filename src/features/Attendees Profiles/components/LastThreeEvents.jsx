@@ -24,45 +24,55 @@ const LastThreeEvents = ({ events }) => {
                 dataSource={lastThreeEvents}
                 renderItem={(event) => (
                     <List.Item className='list-item' onClick={() => navigate(`/event/show/${event?.id}`)}>
-                        <Row gutter={10} align={'middle'}>
-                            <Col xs={24} sm={10} xl={8}>
-                                <img className='avatar-image' shape='square' src={event.cover_picture_url} />
-                            </Col>
-                            <Col xs={24} sm={14} xl={16}>
-                                <div className='list-content'>
-                                    <Title level={4} className='list-item-meta-title'>
-                                        {event.title}
-                                    </Title>
+                        <a>
+                            <Row gutter={10} align={'middle'}>
+                                <Col xs={24} sm={10} xl={8}>
+                                    <img className='avatar-image' shape='square' src={event.cover_picture_url} />
+                                </Col>
+                                <Col xs={24} sm={14} xl={16}>
+                                    <div className='list-content'>
+                                        <Title level={4} className='list-item-meta-title'>
+                                            {event.title}
+                                        </Title>
 
-                                    <div className='list-item-meta-description'>
-                                        <span className='event-date'>
-                                            <ClockCircleOutlined />{' '}
-                                            {moment(event.registration_end_date).format('YYYY-MM-DD')}
-                                        </span>
-                                        <div style={{ fontSize: '14px', color: '#666', marginTop: '0.5em' }}>
-                                            <Space>
-                                                <Icon icon='grommet-icons:organization' />
-                                                <span>
-                                                    Hosted by:{' '}
-                                                    <strong style={{ color: '#333' }}>
-                                                        <Popover
-                                                            content={
-                                                                <OrgPopoverContent organization={event?.organization} />
-                                                            }
-                                                            title='Organizer Info'
-                                                        >
-                                                            <Link to={`/org/${event?.organization?.id}`}>
-                                                                @{event?.organization?.name}
-                                                            </Link>
-                                                        </Popover>
-                                                    </strong>
-                                                </span>
-                                            </Space>
+                                        <div className='list-item-meta-description'>
+                                            <span className='event-date'>
+                                                <ClockCircleOutlined />{' '}
+                                                {moment(event.registration_end_date).format('YYYY-MM-DD')}
+                                            </span>
+                                            <div style={{ fontSize: '14px', color: '#666', marginTop: '0.5em' }}>
+                                                <Space>
+                                                    <Icon icon='grommet-icons:organization' />
+                                                    <span>
+                                                        Hosted by:{' '}
+                                                        <strong style={{ color: '#333' }}>
+                                                            <Popover
+                                                                content={
+                                                                    <OrgPopoverContent
+                                                                        organization={event?.organization}
+                                                                    />
+                                                                }
+                                                                title='Organization Info'
+                                                                mouseEnterDelay={1}
+                                                            >
+                                                                <Link
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                    }}
+                                                                    to={`/org/${event?.organization?.id}`}
+                                                                >
+                                                                    @{event?.organization?.name}
+                                                                </Link>
+                                                            </Popover>
+                                                        </strong>
+                                                    </span>
+                                                </Space>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </Col>
-                        </Row>
+                                </Col>
+                            </Row>
+                        </a>
                     </List.Item>
                 )}
                 locale={{

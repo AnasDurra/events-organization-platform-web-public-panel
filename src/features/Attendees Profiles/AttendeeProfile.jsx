@@ -225,7 +225,7 @@ const AttendeeProfile = () => {
                                                 </span>{' '}
                                                 Events
                                             </Typography.Title>
-                                            <Link to={'events'}>show all</Link>
+                                            {/* <Link to={'events'}>show all</Link> */}
                                         </div>
                                     </Col>
                                     <Col span={24}>

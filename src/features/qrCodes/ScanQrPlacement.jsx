@@ -13,7 +13,7 @@ const ScanQrPlacement = ({ onScanSuccess, onScanFailure }) => {
             qrbox: 250,
         };
 
-        html5QrCode.start({ facingMode: 'environment' }, createConfig, onScanSuccess, onScanFailure).catch((err) => {
+        html5QrCode?.start({ facingMode: 'environment' }, createConfig, onScanSuccess, onScanFailure).catch((err) => {
             console.error('Failed to start scanning:', err);
             if (err.name === 'NotAllowedError') {
                 openNotification(
@@ -23,15 +23,18 @@ const ScanQrPlacement = ({ onScanSuccess, onScanFailure }) => {
             } else if (err.name === 'NotFoundError') {
                 openNotification('info', 'No camera device found. Please ensure your device has a camera.');
             } else {
-                openNotification('info', 'Failed to start the QR code scanner. Please try again.');
+                openNotification(
+                    'info',
+                    'Camera access is not allowed. Please enable camera permissions in your browser settings to the website.'
+                );
             }
         });
 
         return () => {
-            if (html5QrCode) {
+            if (html5QrCode && html5QrCode.isScanning) {
                 html5QrCode
-                    .stop()
-                    .then(() => {
+                    ?.stop()
+                    ?.then(() => {
                         html5QrCode?.clear();
                     })
                     .catch((err) => {

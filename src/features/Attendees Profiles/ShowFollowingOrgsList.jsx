@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFollowedOrgsQuery } from '../../api/services/following';
 import { URL } from '../../api/constants';
+import Paragraph from 'antd/es/typography/Paragraph';
 const { Meta } = Card;
 const { Text } = Typography;
 
@@ -41,7 +42,7 @@ const ShowFollowingOrgsList = () => {
     }, []);
 
     return (
-        <div className='grid grid-cols-24 p-4 md:p-12'>
+        <div className='grid grid-cols-24 p-4 md:p-10'>
             <Button size='large' icon={<ArrowLeftOutlined />} type='text' onClick={() => navigate(-1)} />
 
             <Typography.Title level={2} style={{ marginBottom: '20px', textAlign: 'center' }}>
@@ -105,9 +106,12 @@ const ShowFollowingOrgsList = () => {
                                     title={org.organization.name}
                                     description={
                                         <div>
-                                            <Text>{org.organization.bio}</Text>
-                                            <br />
-                                            <Text type='secondary'>{org.organization.description}</Text>
+                                            <Paragraph ellipsis={{ rows: 2, expandable: false }}>
+                                                <Text>{org.organization.bio}</Text>
+                                            </Paragraph>
+                                            <Paragraph ellipsis={{ rows: 2, expandable: false }}>
+                                                <Text type='secondary'>{org.organization.description}</Text>
+                                            </Paragraph>
                                             <Divider style={{ margin: '10px 0px' }} />
                                             <Text type='secondary' style={{ fontSize: '12px' }}>
                                                 Following since {moment(org.following_date).format('MMMM D, YYYY')}
