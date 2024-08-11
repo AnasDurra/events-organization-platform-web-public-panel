@@ -381,7 +381,7 @@ export default function OrganizerLayout({ roles }) {
                                         </Badge>
                                     </Dropdown>
                                 </Badge>
-                                <Dropdown arrow overlay={menu} placement='bottomLeft'>
+                                <Dropdown arrow overlay={menu} placement='bottomLeft' trigger={['click']}>
                                     <a onClick={(e) => e.preventDefault()}>
                                         <img
                                             src='http://localhost:3000/api/organization/mainPicture/images8fb03f6c-6c84-4e1a-b0a5-927551254774.png'

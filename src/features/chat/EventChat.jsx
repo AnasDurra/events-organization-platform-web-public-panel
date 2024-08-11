@@ -9,6 +9,7 @@ import { useGroupChatListQuery } from '../../api/services/chats';
 import { chatSocket } from '../../chatSocket';
 import { getLoggedInUserV2 } from '../../api/services/auth';
 import InputMessage from './InputMessage';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 const EventChat = ({ chat_group_id, eventID, orgID, group_id }) => {
     const pageSize = 10;
@@ -124,10 +125,9 @@ const EventChat = ({ chat_group_id, eventID, orgID, group_id }) => {
                                     : true
                             }
                             loader={
-                                <Spin
-                                    spinning={false}
-                                    style={{ margin: '20px auto', fontSize: '24px', height: '5em' }}
-                                />
+                                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Icon icon='line-md:loading-alt-loop' style={{ fontSize: '42px' }} />
+                                </div>
                             }
                             endMessage={
                                 <>
@@ -135,15 +135,15 @@ const EventChat = ({ chat_group_id, eventID, orgID, group_id }) => {
                                         level={3}
                                         style={{ textAlign: 'center', marginTop: '20px', color: '#555' }}
                                     >
-                                        Welcome to our platform!
+                                        Welcome to our Event!
                                     </Typography.Title>
                                     <Typography.Paragraph
                                         style={{ textAlign: 'center', fontSize: '1.2rem', color: '#555' }}
                                     >
-                                        Thanks for exploring the content.
+                                        Thanks for Joining Us.
                                     </Typography.Paragraph>
                                 </>
-                            } // TODO
+                            }
                             scrollableTarget='scrollableDiv'
                         >
                             {messages.map((message, index) => (

@@ -145,11 +145,12 @@ const UpdateEventModal = ({
                             </Paragraph>
                             <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
                                 <CalendarOutlined style={{ marginRight: '8px', color: '#1890ff' }} />{' '}
-                                <strong>Start Date & Time:</strong> {eventData?.result?.registration_start_date}
+                                <strong>Registration Start Date & Time:</strong>{' '}
+                                {eventData?.result?.registration_start_date}
                             </Paragraph>
                             <Paragraph style={{ marginBottom: '12px', color: '#666' }}>
                                 <CalendarOutlined style={{ marginRight: '8px', color: '#1890ff' }} />{' '}
-                                <strong>End Date & Time:</strong>
+                                <strong>Registration End Date & Time:</strong>
                                 {eventData?.result?.registration_end_date}
                             </Paragraph>
 

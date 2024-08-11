@@ -67,7 +67,7 @@ export default function Sider({ isSiderOpen, userMenu, userMenuIsLoading }) {
                 mode='inline'
                 items={items}
                 onClick={handleMenuClick}
-                defaultSelectedKeys={1}
+                defaultSelectedKeys={['/org/our-events']}
                 style={{ backgroundColor: 'transparent', height: '100vh' }}
                 className='custom-menu'
             />
