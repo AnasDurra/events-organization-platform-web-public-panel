@@ -17,7 +17,7 @@ const authMiddleware = (store) => (next) => async (action) => {
             console.log('Here');
             console.log(response);
             errorMessage({ content: 'Session Timeout.. login again' });
-            router.navigate('/login', { replace: true });
+            router.navigate('/', { replace: true });
         }
     }
 

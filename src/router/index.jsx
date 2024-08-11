@@ -67,7 +67,7 @@ export const router = createBrowserRouter([
         element: <BasicLayout />,
         //errorElement: <ErrorPage />,
         children: [
-            //  { index: true, element: </> }, // TODO make a landing page for all types of users
+            { index: true, element: <PublicLayout /> }, // TODO make a landing page for all types of users
             {
                 path: '/badge',
                 element: <DesignBadge />,

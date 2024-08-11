@@ -21,6 +21,8 @@ import { getLoggedInUserV2, useLogoutMutation } from '../../../api/services/auth
 import RedeemCodeModal from '../../../features/giftcards/RedeemCodeModal';
 import HomeHeaderPoints from './HomeHeaderPoints';
 import { Icon } from '@iconify/react';
+import { useDispatch } from 'react-redux';
+import { apiSlice } from '../../../api/apiSlice';
 
 const navigationItems = [
     { label: 'Home', filledIcon: <HomeFilled />, outlinedIcon: <HomeOutlined />, path: '/home' },
@@ -48,6 +50,8 @@ const navigationItems = [
 
 export default function HomeHeader() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const [isRedeemCodeModalOpen, setIsRedeemCodeModalOpen] = useState(false);
 
     const [logout] = useLogoutMutation();
@@ -71,7 +75,10 @@ export default function HomeHeader() {
                 key='logout'
                 style={{ ...menuItemStyle, color: '#ff4d4f' }}
                 onClick={() => {
-                    logout().then((res) => navigate('/login'));
+                    logout().then((res) => {
+                        dispatch(apiSlice.util.resetApiState());
+                        navigate('/login');
+                    });
                 }}
             >
                 <LogoutOutlined style={iconStyle} /> Logout

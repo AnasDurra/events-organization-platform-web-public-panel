@@ -101,7 +101,7 @@ const EventChat = ({ chat_group_id, eventID, orgID, group_id }) => {
                 boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
             }}
         >
-            <Spin spinning={false}>
+            <Spin spinning={isLoading}>
                 <div style={{ height: '450px', overflowY: 'auto' }}>
                     <div
                         ref={messagesEndRef}

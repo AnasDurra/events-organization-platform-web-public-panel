@@ -116,7 +116,11 @@ const ReportMessageModal = ({ message, eventID, orgID, showReportMessageModal, s
                                         <Text>{message.text}</Text>
                                     </Space>
                                     <Text type='secondary' style={{ fontSize: '12px' }}>
-                                        Sent by {message?.user?.username || 'Unknown User'} on {formattedDate}
+                                        Sent by{' '}
+                                        <Text style={{ fontSize: '12px' }}>
+                                            {message?.user?.username || 'Unknown User'}
+                                        </Text>{' '}
+                                        on {formattedDate}
                                     </Text>
                                 </Space>
                             </Space>

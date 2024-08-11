@@ -25,34 +25,36 @@ const MessageReactions = ({ message, handleReaction }) => {
                                         title={'Reactions'}
                                         content={<ReactedUsersList reactedUsers={item?.reacted_users} />}
                                     >
-                                        <Button
-                                            size='small'
-                                            type='text'
-                                            icon={
-                                                <Icon
-                                                    icon={item?.reaction?.icon.split('/').pop()}
-                                                    style={{
-                                                        fontSize: '18px',
-                                                        color:
-                                                            item?.reaction?.label === 'Like' ||
-                                                            item?.reaction?.label === 'Dislike'
-                                                                ? 'blue'
-                                                                : item?.reaction?.label === 'Love'
-                                                                ? 'red'
-                                                                : 'black',
-                                                    }}
-                                                />
-                                            }
-                                            onClick={() =>
-                                                handleReaction(
-                                                    item?.reaction?.label?.toLowerCase(),
-                                                    message?.message_id
-                                                )
-                                            }
-                                        />
-                                        <span style={{ marginLeft: '4px', fontSize: '14px' }}>
-                                            {item?.no_reactions}
-                                        </span>
+                                        <Space size={0}>
+                                            <Button
+                                                size='small'
+                                                type='text'
+                                                icon={
+                                                    <Icon
+                                                        icon={item?.reaction?.icon.split('/').pop()}
+                                                        style={{
+                                                            fontSize: '18px',
+                                                            color:
+                                                                item?.reaction?.label === 'Like' ||
+                                                                item?.reaction?.label === 'Dislike'
+                                                                    ? 'blue'
+                                                                    : item?.reaction?.label === 'Love'
+                                                                    ? 'red'
+                                                                    : 'black',
+                                                        }}
+                                                    />
+                                                }
+                                                onClick={() =>
+                                                    handleReaction(
+                                                        item?.reaction?.label?.toLowerCase(),
+                                                        message?.message_id
+                                                    )
+                                                }
+                                            />
+                                            <div style={{ marginLeft: '2px', fontSize: '14px' }}>
+                                                {item?.no_reactions}
+                                            </div>
+                                        </Space>
                                     </Popover>
                                 </>
                             </div>

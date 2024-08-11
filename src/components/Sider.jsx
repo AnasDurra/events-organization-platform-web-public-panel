@@ -1,6 +1,6 @@
 import { Button, Image, Layout, Menu } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 const { Sider: AntDSider } = Layout;
 
@@ -8,6 +8,9 @@ import './menuStyles.css';
 
 export default function Sider({ isSiderOpen, userMenu, userMenuIsLoading }) {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const [selectedKey, setSelectedKey] = useState('/org/our-events');
 
     const [collapsed, setCollapsed] = useState(false);
 
@@ -48,6 +51,10 @@ export default function Sider({ isSiderOpen, userMenu, userMenuIsLoading }) {
         }
     }, [userMenu]);
 
+    useEffect(() => {
+        const currentPath = location.pathname;
+        setSelectedKey(currentPath);
+    }, [location.pathname]);
     return (
         <AntDSider
             style={{
@@ -67,7 +74,7 @@ export default function Sider({ isSiderOpen, userMenu, userMenuIsLoading }) {
                 mode='inline'
                 items={items}
                 onClick={handleMenuClick}
-                defaultSelectedKeys={['/org/our-events']}
+                selectedKeys={[selectedKey]}
                 style={{ backgroundColor: 'transparent', height: '100vh' }}
                 className='custom-menu'
             />

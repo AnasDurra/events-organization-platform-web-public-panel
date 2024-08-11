@@ -44,7 +44,7 @@ const HomeLayout = ({ roles }) => {
 
     useEffect(() => {
         if (checkAccessTokenError) {
-            navigate('/login');
+            navigate('/');
         }
     }, [checkAccessTokenError]);
 

@@ -42,7 +42,8 @@ const InputMessage = ({ isReplying, setIsReplying, replyMessage, setReplyMessage
                         if (e.key === 'Enter') {
                             if (e.ctrlKey) {
                                 e.preventDefault();
-                                setInputValue(inputValue + '\n');
+                                const newValue = inputValue + '\n';
+                                setInputValue(newValue);
                             } else {
                                 e.preventDefault();
                                 handleSendMessage();

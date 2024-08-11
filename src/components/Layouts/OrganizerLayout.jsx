@@ -29,6 +29,8 @@ import { useLogoutMutation } from '../../api/services/auth';
 import { chatSocket, setChatSocketHeader } from '../../chatSocket';
 
 import Cookies from 'js-cookie';
+import { useDispatch } from 'react-redux';
+import { apiSlice } from '../../api/apiSlice';
 
 export default function OrganizerLayout({ roles }) {
     const screens = Grid.useBreakpoint();
@@ -45,6 +47,7 @@ export default function OrganizerLayout({ roles }) {
     const [isSiderOpen, setIsSiderOpen] = useState(true);
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const { data: userMenu2, isLoading: userMenuIsLoading } = useUserMenuQuery();
 
@@ -155,6 +158,7 @@ export default function OrganizerLayout({ roles }) {
                             message: 'Logout Successful',
                             description: 'You have been logged out successfully.',
                         });
+                        dispatch(apiSlice.util.resetApiState());
                         navigate('/login');
                     })
                     .catch((error) => {
@@ -272,7 +276,7 @@ export default function OrganizerLayout({ roles }) {
     useEffect(() => {
         // console.log(checkAccessTokenError);
         if (checkAccessTokenError) {
-            navigate('/login');
+            navigate('/');
         }
     }, [checkAccessTokenError]);
 
@@ -314,9 +318,12 @@ export default function OrganizerLayout({ roles }) {
                             <div className='md:hidden'>
                                 <DropdownSider menu={userMenu.result.menu} />
                             </div>
-                            <Title style={{ margin: 0, color: 'whitesmoke' }} level={3} className='font-serif'>
+                            <div
+                                className='text-nowrap text-3xl  font-[bangers]  hover:cursor-pointer text-white'
+                                onClick={() => navigate('/org/our-events')}
+                            >
                                 WEEVENTS
-                            </Title>
+                            </div>
                         </Col>
                         <Col xs={{ span: 12 }}>
                             <div

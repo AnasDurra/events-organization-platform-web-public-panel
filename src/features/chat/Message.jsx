@@ -325,7 +325,12 @@ function Message({
                                     {isDeleted ? (
                                         <span className='deleted-message-text'>This message was deleted</span>
                                     ) : (
-                                        message.text
+                                        message.text.split('\n').map((line, index) => (
+                                            <span key={index}>
+                                                {line}
+                                                <br />
+                                            </span>
+                                        ))
                                     )}
                                 </Typography.Text>
                                 <Space size={20} style={{ marginTop: '1em' }}>

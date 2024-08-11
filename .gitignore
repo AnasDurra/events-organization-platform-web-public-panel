@@ -24,3 +24,4 @@ dist-ssr
 *.sln
 *.sw?
 src/api/constants.js
+src/api/constants.js

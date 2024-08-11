@@ -18,11 +18,18 @@ export default function PublicLayout() {
 
     useEffect(() => {
         if (checkAccessTokenError) {
-            navigate('/login');
+            navigate('/');
         }
     }, [checkAccessTokenError]);
+
     useEffect(() => {
-        // console.log(checkAccessTokenObj);
+        console.log(checkAccessTokenObj?.result?.user_role?.id);
+
+        if (checkAccessTokenObj?.result?.user_role?.id == 2) {
+            navigate('/org/our-events');
+        } else if (checkAccessTokenObj?.result?.user_role?.id == 3) {
+            navigate('/home');
+        }
     }, [checkAccessTokenObj]);
     return (
         <>

@@ -20,6 +20,8 @@ import { CardGiftcardOutlined } from '@mui/icons-material';
 import RedeemCodeModal from '../../../features/giftcards/RedeemCodeModal';
 import { useLogoutMutation } from '../../../api/services/auth';
 import { getLoggedInUserV2 } from '../../../api/services/auth';
+import { useDispatch } from 'react-redux';
+import { apiSlice } from '../../../api/apiSlice';
 
 const navigationItems = [
     { label: 'Home', filledIcon: <HomeFilled />, outlinedIcon: <HomeOutlined />, path: '/home' },
@@ -43,6 +45,7 @@ const ProfileDropdownContent = () => {
     const navigate = useNavigate();
     const [isRedeemCodeModalOpen, setIsRedeemCodeModalOpen] = useState(false);
 
+    const dispatch = useDispatch();
     const [logout] = useLogoutMutation();
 
     return (
@@ -60,7 +63,10 @@ const ProfileDropdownContent = () => {
             <Menu.Item
                 key='logout'
                 onClick={() => {
-                    logout().then((res) => navigate('/login'));
+                    logout().then((res) => {
+                        dispatch(apiSlice.util.resetApiState());
+                        navigate('/login');
+                    });
                 }}
             >
                 <LogoutOutlined style={{ fontSize: '1.2rem' }} /> Logout
