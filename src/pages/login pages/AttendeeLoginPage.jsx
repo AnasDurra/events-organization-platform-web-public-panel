@@ -1,7 +1,5 @@
-// src/App.js
-import React from 'react';
-import { Form, Input, Button, Checkbox, Spin, Typography } from 'antd';
-import { GoogleOutlined, UserOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Checkbox, Spin } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import { useLoginMutation } from '../../api/services/auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { useNotification } from '../../utils/NotificationContext';
@@ -11,7 +9,7 @@ export default function AttendeeLoginPage() {
     const { openNotification } = useNotification();
     const navigate = useNavigate();
 
-    const [loginMutation, { isLoading, isError, error }] = useLoginMutation();
+    const [loginMutation, { isLoading }] = useLoginMutation();
 
     const onFinish = async (values) => {
         const data = {
@@ -36,7 +34,6 @@ export default function AttendeeLoginPage() {
                 if (error.status === 401) {
                     openNotification('warning', 'Wrong username or password !');
                 }
-                console.error('Error:', error);
             });
     };
 

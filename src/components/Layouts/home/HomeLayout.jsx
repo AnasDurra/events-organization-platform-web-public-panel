@@ -42,13 +42,13 @@ const HomeLayout = ({ roles }) => {
         }
     }, [checkAccessTokenObj, roles]);
 
-    useEffect(() => {
-        if (checkAccessTokenError) {
-            navigate('/');
-        }
-    }, [checkAccessTokenError]);
-
-    // TODO: Uncomment this
+    // useEffect(() => {
+    //     if (checkAccessTokenError) {
+    //         console.log(checkAccessTokenObj);
+    //         console.log(checkAccessTokenError);
+    //         navigate('/login');
+    //     }
+    // }, [checkAccessTokenError]);
 
     const authToken = Cookies.get('accessToken');
     useEffect(() => {
@@ -62,7 +62,6 @@ const HomeLayout = ({ roles }) => {
         }
 
         if (authToken) {
-            console.log(authToken);
             setChatSocketHeader(authToken);
         }
 
@@ -75,8 +74,6 @@ const HomeLayout = ({ roles }) => {
     }, [authToken]);
 
     useEffect(() => {
-        console.log('layout', joinedGroups);
-
         joinedGroups?.map((group) => {
             const { channel } = group;
             joinChannel(channel);

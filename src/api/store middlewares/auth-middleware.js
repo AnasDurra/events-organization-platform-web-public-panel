@@ -13,11 +13,15 @@ const authMiddleware = (store) => (next) => async (action) => {
 
             response = await next(action);
         }
-        if (response.payload?.status == 401 && !window.location.pathname.startsWith('/login')) {
-            console.log('Here');
+        if (
+            response.payload?.status == 401 &&
+            !window.location.pathname.startsWith('/login') &&
+            !window.location.pathname.startsWith('/org/login') &&
+            !window.location.pathname.startsWith('/register')
+        ) {
             console.log(response);
             errorMessage({ content: 'Session Timeout.. login again' });
-            router.navigate('/', { replace: true });
+            router.navigate('/login', { replace: true });
         }
     }
 

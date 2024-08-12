@@ -15,11 +15,11 @@ const NotFoundPage = () => {
 
     return (
         <Result
-            status="404"
-            title="404"
+            status='404'
+            title='404'
             subTitle="Sorry, we couldn't find the page."
             extra={[
-                <Button key={'goBackButton'} type="primary" onClick={goBack}>
+                <Button key={'goBackButton'} type='primary' onClick={goBack}>
                     Go Back
                 </Button>,
                 <Button key={'goHomeButton'} onClick={goToDashboard}>

@@ -273,12 +273,12 @@ export default function OrganizerLayout({ roles }) {
         }
     }, [checkAccessTokenObj, roles]);
 
-    useEffect(() => {
-        // console.log(checkAccessTokenError);
-        if (checkAccessTokenError) {
-            navigate('/');
-        }
-    }, [checkAccessTokenError]);
+    // useEffect(() => {
+    //     // console.log(checkAccessTokenError);
+    //     if (checkAccessTokenError) {
+    //         navigate('/login');
+    //     }
+    // }, [checkAccessTokenError]);
 
     // start here
     const authToken = Cookies.get('accessToken');

@@ -1,10 +1,16 @@
 import { CalendarOutlined } from '@ant-design/icons';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { Button, ConfigProvider } from 'antd';
+import { Button, ConfigProvider, Spin } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { useCheckAccessTokenQuery } from '../../api/services/auth';
+import { useEffect } from 'react';
 
 const BasicLayout = () => {
+    const navigate = useNavigate();
+
+    const { data: checkAccessTokenObj, isLoading: isAccessTokenLoading, error } = useCheckAccessTokenQuery();
+
     const theme = {
         token: {
             colorPrimary: '#022140',
@@ -16,6 +22,24 @@ const BasicLayout = () => {
         },
         cssVar: true,
     };
+
+    useEffect(() => {
+        console.log(checkAccessTokenObj?.result?.user_role?.id);
+
+        if (
+            window.location.pathname.startsWith('/login') ||
+            window.location.pathname.startsWith('/org/login') ||
+            window.location.pathname.startsWith('/register') ||
+            window.location.pathname === '/'
+        ) {
+            if (checkAccessTokenObj?.result?.user_role?.id == 2) {
+                navigate('/org/our-events');
+            } else if (checkAccessTokenObj?.result?.user_role?.id == 3) {
+                navigate('/home');
+            }
+        }
+    }, [checkAccessTokenObj]);
+
     return (
         <ConfigProvider theme={theme}>
             <div className='min-h-screen flex flex-col bg-gray-100'>
@@ -39,7 +63,9 @@ const BasicLayout = () => {
                     </div> */}
                 </header>
                 <main className='flex-grow p-6 mt-16'>
-                    <Outlet />
+                    <Spin spinning={isAccessTokenLoading}>
+                        <Outlet />
+                    </Spin>
                 </main>
             </div>
         </ConfigProvider>

@@ -16,21 +16,12 @@ export default function PublicLayout() {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (checkAccessTokenError) {
-            navigate('/');
-        }
-    }, [checkAccessTokenError]);
+    // useEffect(() => {
+    //     if (checkAccessTokenError) {
+    //         navigate('/login');
+    //     }
+    // }, [checkAccessTokenError]);
 
-    useEffect(() => {
-        console.log(checkAccessTokenObj?.result?.user_role?.id);
-
-        if (checkAccessTokenObj?.result?.user_role?.id == 2) {
-            navigate('/org/our-events');
-        } else if (checkAccessTokenObj?.result?.user_role?.id == 3) {
-            navigate('/home');
-        }
-    }, [checkAccessTokenObj]);
     return (
         <>
             {isAccessTokenLoading && (
