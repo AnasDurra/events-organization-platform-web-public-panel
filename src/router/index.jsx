@@ -61,26 +61,17 @@ export const router = createBrowserRouter([
         path: '/blocked',
         element: <Blocked />,
     },
-
+    {
+        path: '/payment/success',
+        element: <ResultSuccessPage />,
+    },
     {
         path: '/',
         element: <BasicLayout />,
         //errorElement: <ErrorPage />,
         children: [
             //  { index: true, element: </> }, // TODO make a landing page for all types of users
-            {
-                path: '/badge',
-                element: <DesignBadge />,
-            },
-            {
-                path: '/seed',
-                element: <SeedPage />,
-            },
 
-            {
-                path: '/payment/success',
-                element: <ResultSuccessPage />,
-            },
             {
                 path: '/login',
                 element: <AttendeeLoginPage />,
@@ -95,7 +86,6 @@ export const router = createBrowserRouter([
             },
         ],
     },
-    { path: 'animate', element: <AnimatePrize></AnimatePrize> },
     {
         path: 'forms',
         children: [
