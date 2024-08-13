@@ -147,8 +147,10 @@ const ScanQRCode = ({
                                         </Descriptions.Item>
                                         {eventData?.result?.is_chatting_enabled && (
                                             <Descriptions.Item label='Chat Group'>
-                                                {eventData?.result?.chat_group?.title} (Members:{' '}
-                                                {eventData?.result?.chat_group?.member_count})
+                                                {eventData?.result?.chat_group?.title}{' '}
+                                                <span style={{ fontWeight: 'bold' }}>
+                                                    (Members: {eventData?.result?.chat_group?.member_count})
+                                                </span>
                                             </Descriptions.Item>
                                         )}
                                     </Descriptions>

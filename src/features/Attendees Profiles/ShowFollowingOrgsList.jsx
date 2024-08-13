@@ -80,48 +80,67 @@ const ShowFollowingOrgsList = () => {
                     <Text style={{ fontSize: '14px', fontWeight: 'bold', marginRight: '8px' }}>
                         Total Organizations:
                     </Text>
-                    <Text style={{ fontSize: '14px', color: '#1890ff' }}>{data?.result?.length}</Text>
+                    <Text style={{ fontSize: '14px', color: '#1890ff' }}>{filteredOrgs?.length}</Text>
                 </div>
                 <Row gutter={[16, 16]}>
-                    {filteredOrgs?.map((org, index) => (
-                        <Col key={index} xs={24} sm={12} md={8} lg={6} xl={6}>
-                            <Card
-                                hoverable
-                                style={{ width: '100%', height: '100%' }}
-                                cover={
-                                    <img
-                                        alt='organization cover'
-                                        src={(
-                                            URL +
-                                            '/organizations/pictures/' +
-                                            org?.organization?.cover_picture
-                                        ).replace('/api/', '/')}
-                                    />
-                                }
-                                onClick={() => {
-                                    navigate(`/org/${org?.organization?.id}`);
-                                }}
-                            >
-                                <Meta
-                                    title={org.organization.name}
-                                    description={
-                                        <div>
-                                            <Paragraph ellipsis={{ rows: 2, expandable: false }}>
-                                                <Text>{org.organization.bio}</Text>
-                                            </Paragraph>
-                                            <Paragraph ellipsis={{ rows: 2, expandable: false }}>
-                                                <Text type='secondary'>{org.organization.description}</Text>
-                                            </Paragraph>
-                                            <Divider style={{ margin: '10px 0px' }} />
-                                            <Text type='secondary' style={{ fontSize: '12px' }}>
-                                                Following since {moment(org.following_date).format('MMMM D, YYYY')}
-                                            </Text>
-                                        </div>
-                                    }
-                                />
-                            </Card>
+                    {!data?.result || data.result.length === 0 ? (
+                        <Col span={24}>
+                            <div style={{ textAlign: 'center', padding: '40px' }}>
+                                <Text type='secondary' style={{ fontSize: '16px' }}>
+                                    You are not following any organizations yet.
+                                </Text>
+                            </div>
                         </Col>
-                    ))}
+                    ) : filteredOrgs && filteredOrgs.length > 0 ? (
+                        filteredOrgs.map((org, index) => (
+                            <Col key={index} xs={24} sm={12} md={8} lg={6} xl={6}>
+                                <Card
+                                    hoverable
+                                    style={{ width: '100%', height: '100%' }}
+                                    cover={
+                                        <img
+                                            alt='organization cover'
+                                            src={(
+                                                URL +
+                                                '/organizations/pictures/' +
+                                                org?.organization?.cover_picture
+                                            ).replace('/api/', '/')}
+                                        />
+                                    }
+                                    onClick={() => {
+                                        navigate(`/org/${org?.organization?.id}`);
+                                    }}
+                                >
+                                    <Meta
+                                        title={org.organization.name}
+                                        description={
+                                            <div>
+                                                <Paragraph ellipsis={{ rows: 2, expandable: false }}>
+                                                    <Text>{org.organization.bio}</Text>
+                                                </Paragraph>
+                                                <Paragraph ellipsis={{ rows: 2, expandable: false }}>
+                                                    <Text type='secondary'>{org.organization.description}</Text>
+                                                </Paragraph>
+                                                <Divider style={{ margin: '10px 0px' }} />
+                                                <Text type='secondary' style={{ fontSize: '12px' }}>
+                                                    Following since {moment(org.following_date).format('MMMM D, YYYY')}
+                                                </Text>
+                                            </div>
+                                        }
+                                    />
+                                </Card>
+                            </Col>
+                        ))
+                    ) : (
+                        <Col span={24}>
+                            <div style={{ textAlign: 'center', padding: '40px' }}>
+                                <Text type='secondary' style={{ fontSize: '16px' }}>
+                                    No organizations match your search criteria. Please try adjusting your filters or
+                                    search terms.
+                                </Text>
+                            </div>
+                        </Col>
+                    )}
                 </Row>
             </Spin>
         </div>
