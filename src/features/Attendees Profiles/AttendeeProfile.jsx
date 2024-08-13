@@ -134,6 +134,7 @@ const AttendeeProfile = () => {
                                         id={id}
                                         full_name={data?.result?.full_name}
                                         bio={data?.result?.bio}
+                                        job={data?.result?.job?.label}
                                         profile_img={data?.result?.profile_img}
                                         contacts={data?.result?.contacts}
                                         address={data?.result?.address}

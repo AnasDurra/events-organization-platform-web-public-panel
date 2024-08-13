@@ -11,6 +11,7 @@ const MainProfileCard = ({
     id,
     full_name,
     bio,
+    job,
     profile_img,
     contacts,
     address,
@@ -175,7 +176,7 @@ const MainProfileCard = ({
                 }
             >
                 <Meta title='About' description={bio ?? 'No bio found'} />
-                <Meta style={{ marginTop: '2em' }} title='Job' description='Software Engineer' />
+                <Meta style={{ marginTop: '2em' }} title='Job' description={job ?? 'No job found'} />
 
                 <Meta style={{ marginTop: '2em' }} title='Contact' description={<ContactInfo contacts={contacts} />} />
                 <Meta style={{ marginTop: '1em' }} title='Joined' description={formatDate(join_date)} />

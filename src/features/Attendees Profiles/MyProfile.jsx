@@ -126,6 +126,7 @@ const AttendeeProfile = () => {
                                         id={data?.result?.user_id}
                                         full_name={data?.result?.full_name}
                                         bio={data?.result?.bio}
+                                        job={data?.result?.job?.label}
                                         profile_img={data?.result?.profile_img}
                                         address={data?.result?.address}
                                         contacts={data?.result?.contacts}
@@ -294,31 +295,3 @@ const coverImageStyle = {
         fontFamily: "'Roboto', sans-serif",
     },
 };
-
-// Sample data for events
-const events = [
-    {
-        id: '25',
-        title: 'The Future of AI',
-        cover_picture_url: 'https://picsum.photos/300/200?random=2',
-        registration_end_date: '2024-04-10 09:30:00',
-        organization: { name: 'ORG1' },
-        description: 'This is an event about artificial intelligence',
-    },
-    {
-        id: '25',
-        title: 'The Future of AI',
-        cover_picture_url: 'https://picsum.photos/300/200?random=3',
-        registration_end_date: '2024-04-10 09:30:00',
-        organization: { name: 'ORG1' },
-        description: 'This is an event about artificial intelligence',
-    },
-    {
-        id: '25',
-        title: 'The Future of AI',
-        cover_picture_url: 'https://picsum.photos/300/200?random=1',
-        registration_end_date: '2024-04-10 09:30:00',
-        organization: { name: 'ORG1' },
-        description: 'This is an event about artificial intelligence',
-    },
-];

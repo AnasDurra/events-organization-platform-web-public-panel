@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Table, List, Input, Button, Typography, Tag, Space } from 'antd';
 import './OrgAttendees.css';
 import { ArrowLeftOutlined, DollarOutlined } from '@ant-design/icons';
@@ -10,76 +10,12 @@ const OrgAttendees = () => {
     const {
         data: orgAttendees,
         isLoading: isorgAttendeesLoading,
-        isFetching: isorgAttendeesFetching,
+        // isFetching: isorgAttendeesFetching,
     } = useOrganizationAttendeesQuery();
     const navigate = useNavigate();
     const [filteredAttendees, setfilteredAttendees] = useState(null);
 
     const [searchText, setSearchText] = useState('');
-
-    // const data = [
-    //     {
-    //         status: true,
-    //         path: '/api/organization/attendees',
-    //         statusCode: 200,
-    //         result: [
-    //             {
-    //                 id: '4',
-    //                 firstName: 'hadi',
-    //                 lastName: 'ba',
-    //                 profile_image: 'https://randomuser.me/api/portraits/men/3.jpg',
-    //                 events: [
-    //                     {
-    //                         id: '2',
-    //                         title: 'dasd',
-    //                         description: 'dsadas',
-    //                         organization: {
-    //                             id: '1',
-    //                         },
-    //                         payedFees: 300,
-    //                     },
-    //                     {
-    //                         id: '3',
-    //                         title: 'dasd',
-    //                         description: 'dsadas',
-    //                         organization: {
-    //                             id: '1',
-    //                         },
-    //                         payedFees: 300,
-    //                     },
-    //                     {
-    //                         id: '4',
-    //                         title: 'dasd',
-    //                         description: 'dsadas',
-    //                         organization: {
-    //                             id: '1',
-    //                         },
-    //                         payedFees: 300,
-    //                     },
-    //                 ],
-    //                 totalFees: 0,
-    //             },
-    //             {
-    //                 id: '19',
-    //                 firstName: 'Anas',
-    //                 lastName: 'Rish',
-    //                 profile_image: 'https://randomuser.me/api/portraits/men/2.jpg',
-    //                 events: [
-    //                     {
-    //                         id: '2',
-    //                         title: 'dasd',
-    //                         description: 'dsadas',
-    //                         organization: {
-    //                             id: '1',
-    //                         },
-    //                         payedFees: 0,
-    //                     },
-    //                 ],
-    //                 totalFees: 50,
-    //             },
-    //         ],
-    //     },
-    // ];
 
     const handleEventClick = (eventId) => {
         navigate(`/event/show/${eventId}`);
@@ -90,7 +26,6 @@ const OrgAttendees = () => {
     };
 
     useEffect(() => {
-        console.log(orgAttendees);
         setfilteredAttendees(
             orgAttendees?.result?.filter(
                 (attendee) =>
@@ -98,7 +33,7 @@ const OrgAttendees = () => {
                     attendee.lastName.toLowerCase().includes(searchText.toLowerCase())
             )
         );
-    }, [orgAttendees]);
+    }, [orgAttendees, searchText]);
 
     return (
         <div className='org-attendees-container'>
@@ -122,7 +57,7 @@ const OrgAttendees = () => {
 
             <Input.Search
                 className='org-attendees-search'
-                placeholder='Search by name'
+                placeholder='Search by Attendee name'
                 enterButton
                 onChange={(e) => handleSearch(e.target.value)}
                 disabled={isorgAttendeesLoading}
@@ -134,13 +69,13 @@ const OrgAttendees = () => {
                 loading={isorgAttendeesLoading}
                 bordered
                 columns={[
-                    {
-                        title: 'ID',
-                        dataIndex: 'id',
-                        key: 'id',
-                        width: 100,
-                        align: 'center',
-                    },
+                    // {
+                    //     title: 'ID',
+                    //     dataIndex: 'id',
+                    //     key: 'id',
+                    //     width: 100,
+                    //     align: 'center',
+                    // },
                     {
                         title: 'Attendee Name',
                         dataIndex: 'name',
@@ -186,7 +121,7 @@ const OrgAttendees = () => {
                                             title={event.title}
                                             description={
                                                 <Space direction='vertical'>
-                                                    {event.description}
+                                                    {/* {event.description} */}
 
                                                     <Tag
                                                         style={{ fontSize: '10px' }}
