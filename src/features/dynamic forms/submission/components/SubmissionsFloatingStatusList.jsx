@@ -21,7 +21,7 @@ export default function SubmissionsFloatingStatusList({
             ]}
             renderItem={(item) => <List.Item> {item}</List.Item>}
             header={'Status'}
-            className='bg-gray-200/95'
+            className='bg-[#f3edfc] border-2 border-[#a098ad]'
             bordered
             //  className='border-2 border-slate-500 p-4 rounded-lg text-center'
         />
