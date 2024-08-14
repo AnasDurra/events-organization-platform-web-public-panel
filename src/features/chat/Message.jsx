@@ -307,9 +307,10 @@ function Message({
                                             fontSize: '13px',
                                             marginBottom: '4px',
                                             padding: '5px',
+                                            direction: 'ltr',
                                         }}
                                     >
-                                        {message?.replied_message?.sender_username}
+                                        @{message?.replied_message?.sender_username}
                                     </div>
 
                                     <div style={{ fontSize: '14px', direction: 'ltr' }}>

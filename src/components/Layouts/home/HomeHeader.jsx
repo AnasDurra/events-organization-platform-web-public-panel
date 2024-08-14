@@ -149,7 +149,8 @@ export default function HomeHeader() {
                                 <Link onClick={(e) => e.preventDefault()}>
                                     <img
                                         className='w-[3em] aspect-square rounded-full hidden lg:block md:ml-6'
-                                        src={user?.profile_picture}
+                                        // src={user?.profile_picture}
+                                        src={'https://avatar.iran.liara.run/public/8'}
                                         alt='Profile'
                                         style={{ transition: 'transform 0.3s', padding: '1px' }}
                                         onMouseEnter={(e) => (e.target.style.transform = 'scale(1.1)')}

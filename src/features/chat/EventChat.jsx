@@ -15,7 +15,6 @@ const EventChat = ({ chat_group_id, eventID, orgID, group_id }) => {
     const pageSize = 10;
     const [page, setPage] = useState(1);
     const { data, isLoading, refetch } = useGroupChatListQuery({ chat_group_id, pageSize, page });
-
     const [user] = useState(getLoggedInUserV2());
     const [messages, setMessages] = useState([]);
 
