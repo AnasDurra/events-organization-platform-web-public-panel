@@ -57,7 +57,7 @@ const EventRegisterButton = ({
                         <div className='flex flex-col sm:flex-row items-center justify-between sm:justify-end flex-grow text-center'>
                             <Space direction='vertical' className='text-center sm:text-right mt-2 sm:mt-0 sm:mr-4'>
                                 <Typography.Text className='font-bold text-2xl text-red-500'>
-                                    {eventData?.result?.fees ? eventData?.result?.fees : 'FREE!'}
+                                    {eventData?.result?.fees ? eventData?.result?.fees + ' Tickets' : 'FREE!'}
                                 </Typography.Text>
                             </Space>
 
@@ -94,25 +94,28 @@ const EventRegisterButton = ({
                                             </Button>
                                         </Tooltip>
                                     ) : (
-                                        <Tooltip
-                                            title={
-                                                moment(eventData?.result?.registration_end_date).isAfter(moment())
-                                                    ? 'Registration for this event has ended'
-                                                    : 'This event has ended'
-                                            }
-                                        >
-                                            <Button type='primary' size='large' disabled>
-                                                <Space size={10}>
-                                                    <Icon
-                                                        icon='mdi:calendar-remove-outline'
-                                                        style={{ fontSize: '24px' }}
-                                                    />
-                                                    {moment(eventData?.result?.days[0]?.day_date).isAfter(moment())
-                                                        ? 'Registration Closed'
-                                                        : 'Event Ended'}
-                                                </Space>
-                                            </Button>
-                                        </Tooltip>
+                                        attendeeStatusInEvent?.result?.registered === null && (
+                                            <Tooltip
+                                                title={
+                                                    moment(eventData?.result?.registration_end_date).isBefore(moment())
+                                                        ? 'Registration for this event has ended'
+                                                        : 'This event has ended'
+                                                }
+                                            >
+                                                {console.log(eventData?.result?.registration_end_date)}
+                                                <Button type='primary' size='large' disabled>
+                                                    <Space size={10}>
+                                                        <Icon
+                                                            icon='mdi:calendar-remove-outline'
+                                                            style={{ fontSize: '24px' }}
+                                                        />
+                                                        {moment(eventData?.result?.days[0]?.day_date).isBefore(moment())
+                                                            ? 'Event Ended'
+                                                            : 'Registration Closed'}
+                                                    </Space>
+                                                </Button>
+                                            </Tooltip>
+                                        )
                                     )}
                                     {attendeeStatusInEvent?.result?.registered === 'rejected' && (
                                         <Tooltip

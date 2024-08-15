@@ -1,10 +1,10 @@
-import React from 'react';
 import { Form, Input, Select, Button, Typography, Alert, Spin } from 'antd';
 import 'tailwindcss/tailwind.css';
 import { usePlatformProblemsQuery, useReportAdminMutation } from '../../api/services/adminReports';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useNotification } from '../../utils/NotificationContext';
+import { useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -12,6 +12,7 @@ const { Title, Paragraph } = Typography;
 
 const ReportToAdmin = () => {
     const { openNotification } = useNotification();
+    const navigate = useNavigate();
 
     const [reportAdmin, { isLoading: isReportAdminLoading }] = useReportAdminMutation();
     const { data: { result: platformProblems } = { result: [] }, isLoading: isPlatformProblemsLoading } =
@@ -39,6 +40,7 @@ const ReportToAdmin = () => {
                     'topLeft'
                 );
                 form.resetFields();
+                navigate('/home');
             }
         });
     };
