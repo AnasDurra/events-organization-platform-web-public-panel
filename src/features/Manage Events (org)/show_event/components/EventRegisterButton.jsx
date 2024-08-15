@@ -82,12 +82,34 @@ const EventRegisterButton = ({
                                     />
                                 </Tooltip>
                                 <Spin spinning={isAttendeeStatusInEventLoading}>
-                                    {attendeeStatusInEvent?.result?.registered === null && (
+                                    {attendeeStatusInEvent?.result?.registered === null &&
+                                    moment(eventData?.result?.registration_end_date).isAfter(moment()) &&
+                                    moment(eventData?.result?.days[0]?.day_date).isAfter(moment()) ? (
                                         <Tooltip title='Click to attend this event'>
                                             <Button type='primary' size='large' onClick={handleRegisterClicked}>
                                                 <Space size={10}>
                                                     <Icon icon='mdi:register-outline' style={{ fontSize: '24px' }} />
                                                     Attend
+                                                </Space>
+                                            </Button>
+                                        </Tooltip>
+                                    ) : (
+                                        <Tooltip
+                                            title={
+                                                moment(eventData?.result?.registration_end_date).isAfter(moment())
+                                                    ? 'Registration for this event has ended'
+                                                    : 'This event has ended'
+                                            }
+                                        >
+                                            <Button type='primary' size='large' disabled>
+                                                <Space size={10}>
+                                                    <Icon
+                                                        icon='mdi:calendar-remove-outline'
+                                                        style={{ fontSize: '24px' }}
+                                                    />
+                                                    {moment(eventData?.result?.days[0]?.day_date).isAfter(moment())
+                                                        ? 'Registration Closed'
+                                                        : 'Event Ended'}
                                                 </Space>
                                             </Button>
                                         </Tooltip>

@@ -175,11 +175,16 @@ const MainProfileCard = ({
                     </div>
                 }
             >
-                <Meta title='About' description={bio ?? 'No bio found'} />
-                <Meta style={{ marginTop: '2em' }} title='Job' description={job ?? 'No job found'} />
-
-                <Meta style={{ marginTop: '2em' }} title='Contact' description={<ContactInfo contacts={contacts} />} />
-                <Meta style={{ marginTop: '1em' }} title='Joined' description={formatDate(join_date)} />
+                {bio && <Meta style={{ marginBottom: '2em' }} title='About' description={bio ?? 'No bio found'} />}
+                {job && <Meta style={{ marginBottom: '2em' }} title='Job' description={job ?? 'No job found'} />}
+                {contacts?.length >= 0 && (
+                    <Meta
+                        style={{ marginBottom: '2em' }}
+                        title='Contact'
+                        description={<ContactInfo contacts={contacts} />}
+                    />
+                )}
+                <Meta style={{ marginBottom: '2em' }} title='Joined' description={formatDate(join_date)} />
             </Card>
         </div>
     );

@@ -9,7 +9,7 @@ const LocationOnMapsModal = ({ isLocationOnMapModalOpen, setIsLocationOnMapModal
     const [tempPosition, setTempPosition] = useState(position?.lat ? position : DefaultLocation);
 
     const handleOk = () => {
-        message.success('Location Updated Successfully ..');
+        // message.success('Location Updated Successfully ..');
         setIsLocationOnMapModalOpen(false);
         setPosition(tempPosition ?? DefaultLocation);
     };
@@ -42,7 +42,7 @@ const LocationOnMapsModal = ({ isLocationOnMapModalOpen, setIsLocationOnMapModal
     }, [position]);
     return (
         <Modal
-            title="Select Event Location"
+            title='Select Event Location'
             open={isLocationOnMapModalOpen}
             onCancel={handleCancel}
             width={1000}
@@ -55,8 +55,8 @@ const LocationOnMapsModal = ({ isLocationOnMapModalOpen, setIsLocationOnMapModal
                         }}
                     >
                         <Button
-                            key="extra"
-                            type="dashed"
+                            key='extra'
+                            type='dashed'
                             onClick={handleResetLocation}
                             // style={{
                             //     backgroundColor: "lightgray",
@@ -66,10 +66,10 @@ const LocationOnMapsModal = ({ isLocationOnMapModalOpen, setIsLocationOnMapModal
                             Reset Location
                         </Button>
                         <Space size={10}>
-                            <Button key="cancel" onClick={handleCancel}>
+                            <Button key='cancel' onClick={handleCancel}>
                                 Cancel
                             </Button>
-                            <Button key="ok" type="primary" onClick={handleOk}>
+                            <Button key='ok' type='primary' onClick={handleOk}>
                                 Save Location
                             </Button>
                         </Space>
@@ -77,7 +77,7 @@ const LocationOnMapsModal = ({ isLocationOnMapModalOpen, setIsLocationOnMapModal
                 </div>
             }
         >
-            <Row gutter={16} align="middle" style={{ marginBottom: '16px' }}>
+            <Row gutter={16} align='middle' style={{ marginBottom: '16px' }}>
                 <Col span={6}>
                     <label>Latitute:</label>
                     <Input value={tempPosition?.lat ?? DefaultLocation.lat} disabled />

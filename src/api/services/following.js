@@ -8,6 +8,7 @@ export const following = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: body,
             }),
+            invalidatesTags: ['followers-list'],
         }),
         unFollowOrg: builder.mutation({
             query: (body) => ({
@@ -15,6 +16,7 @@ export const following = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: body,
             }),
+            invalidatesTags: ['followers-list'],
         }),
         followersList: builder.query({
             query: (id) => ({
@@ -28,12 +30,14 @@ export const following = apiSlice.injectEndpoints({
                 url: 'attendee/followed-organizations',
                 method: 'GET',
             }),
+            providesTags: ['followers-list'],
         }),
         isAttendeeFollowingOrg: builder.query({
             query: (id) => ({
                 url: `attendee/is-following/${id}`,
                 method: 'GET',
             }),
+            providesTags: ['followers-list'],
         }),
     }),
 });

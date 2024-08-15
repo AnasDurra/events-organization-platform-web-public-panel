@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Col, Row, Image, Space, Typography, Divider, Spin, Button } from 'antd';
+import { Card, Col, Row, Image, Space, Typography, Divider, Spin, Button, Empty } from 'antd';
 const { Meta } = Card;
 import { DatePicker } from 'antd';
 // import 'antd/dist/antd.css'; // Import Ant Design styles
@@ -12,33 +12,48 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import { URL } from '../../api/constants';
 const AttendeeEvents = () => {
     const { data, isLoading } = useShowAttendeeEventsQuery();
+    const [filteredEvents, setFilteredEvents] = useState(null);
 
     const navigate = useNavigate();
     const [selectedRange, setSelectedRange] = useState(null);
 
     const handleDateChange = (dates, dateStrings) => {
+        if (dateStrings[0] == '' && dateStrings[1] == '') {
+            setSelectedRange(null);
+            setFilteredEvents(data?.result);
+        }
         if (dateStrings[0] == '' || dateStrings[1] == '') {
             setSelectedRange(null);
         } else {
             setSelectedRange(dateStrings);
+
+            const startDate = dateStrings[0];
+            const endDate = dateStrings[1];
+
+            const tempFilteredEvents = data?.result?.filter((event) => {
+                console.log('comparing ', startDate, ' with ', event?.event?.days[0]?.dayDate);
+
+                return event?.event?.days[0]?.dayDate >= startDate && event?.event?.days[0]?.dayDate <= endDate;
+            });
+            setFilteredEvents(tempFilteredEvents);
         }
     };
 
-    // useEffect(() => {
-    //     console.log(data);
-    // }, [data]);
+    useEffect(() => {
+        setFilteredEvents(data?.result);
+    }, [data]);
+
     return (
         <div>
-            <Col>
-                <Button size='large' icon={<ArrowLeftOutlined />} type='text' onClick={() => navigate(-1)} />
-            </Col>
-            <Typography.Title level={3} style={{ marginBottom: '20px', textAlign: 'center' }}>
+            <Button size='large' icon={<ArrowLeftOutlined />} type='text' onClick={() => navigate(-1)} />
+
+            <Typography.Title level={3} style={{ textAlign: 'center' }}>
                 My Events
             </Typography.Title>
             <Spin size='large' spinning={isLoading}>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Row gutter={[36, 30]} style={{ display: 'flex', justifyContent: 'flex-start', width: '70%' }}>
-                        <Col style={{ marginTop: '20px', padding: '0px' }} span={24}>
+                <div className='flex justify-center px-4 sm:px-4 sm:pb-6 lg:px-24 lg:pb-24'>
+                    <Row gutter={[15, 15]}>
+                        <Col style={{ marginTop: '20px' }} span={24}>
                             <Space style={{ width: '100%' }} direction='vertical' size={12}>
                                 <label style={{ fontWeight: 'bold' }}>Select Date Range:</label>
                                 <DatePicker.RangePicker
@@ -66,7 +81,7 @@ const AttendeeEvents = () => {
                                 for you!
                             </Typography.Text>
                         )}
-                        {data?.result?.map((event) => (
+                        {filteredEvents?.map((event) => (
                             <Col
                                 key={event.event.id}
                                 xs={24}
@@ -163,6 +178,15 @@ const AttendeeEvents = () => {
                                 </Card>
                             </Col>
                         ))}
+                        <Col span={24}>
+                            {data?.result?.length == 0 ? (
+                                <Empty description="You don't have any events at the moment. Keep an eye out for upcoming opportunities or explore other events that might interest you!" />
+                            ) : (
+                                filteredEvents?.length == 0 && (
+                                    <Empty description='No events found. It looks like there are no events that match your current criteria. Please adjust your filters.' />
+                                )
+                            )}
+                        </Col>
                     </Row>
                 </div>
             </Spin>

@@ -151,7 +151,7 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                 <Form.Item
                     name='direct_register'
                     valuePropName='checked'
-                    initialValue={false}
+                    initialValue={eventData ? eventData?.result?.direct_register : false}
                     extra={
                         <Typography.Text type='secondary'>
                             If checked, the attendee will be accepted immediately. If unchecked, the attendee will be
@@ -159,12 +159,12 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                         </Typography.Text>
                     }
                 >
-                    <Checkbox>Direct Register</Checkbox>
+                    <Checkbox disabled={eventData?.result ? true : false}>Direct Register</Checkbox>
                 </Form.Item>
                 <Form.Item
                     name='support_attendance'
                     valuePropName='checked'
-                    initialValue={eventData ? eventData?.result?.support_attendance : true}
+                    initialValue={eventData ? eventData?.result?.support_attendance : false}
                     extra={
                         <Typography.Text type='secondary'>
                             If checked, this event supports attendance. If unchecked, there is no attendance for this
@@ -172,7 +172,7 @@ const RegistrationScheduleForm = ({ eventRegistrationForm, days, setDays, eventD
                         </Typography.Text>
                     }
                 >
-                    <Checkbox>Support Attendance</Checkbox>
+                    <Checkbox disabled={eventData?.result ? true : false}>Support Attendance</Checkbox>
                 </Form.Item>
                 <Form.Item
                     label={<Typography.Text strong>Registration Date (Start - End)</Typography.Text>}
