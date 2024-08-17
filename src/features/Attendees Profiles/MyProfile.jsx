@@ -47,7 +47,7 @@ const AttendeeProfile = () => {
                                 <Image
                                     width={'100%'}
                                     style={{ minHeight: '30vh', objectFit: 'cover', maxHeight: '70vh' }}
-                                    src={data?.result?.cover_img ?? 'https://picsum.photos/1000/300'}
+                                    src={data?.result?.cover_img}
                                     preview={{
                                         mask: (
                                             <>
@@ -59,13 +59,7 @@ const AttendeeProfile = () => {
                                             </>
                                         ),
                                     }}
-                                    fallback={
-                                        <Empty
-                                            style={{ minHeight: '40vh' }}
-                                            image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                            description='No cover picture available'
-                                        />
-                                    }
+                                    fallback={'https://placehold.co/600x150?text=Ops!'}
                                 />
                                 <div style={coverImageStyle.overlay}></div>
                             </div>

@@ -82,10 +82,11 @@ const MainProfileCard = ({
                 cover={
                     <div style={{ position: 'relative' }}>
                         <Image
-                            style={{ minHeight: '20vh', objectFit: 'cover' }}
+                            style={{ minHeight: '20vh', maxHeight: '30vh', objectFit: 'cover' }}
                             width={'100%'}
                             alt='example'
-                            src={profile_img ?? 'https://picsum.photos/300/300'}
+                            src={profile_img}
+                            fallback={'/public/assets/user-placeholder.jpg'}
                         />
                         <div className='md:hidden absolute bottom-2.5 left-2.5 flex justify-end'>
                             <Space size={10} direction='vertical'>

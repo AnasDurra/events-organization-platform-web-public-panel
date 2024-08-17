@@ -258,18 +258,19 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center',
-                                        marginTop: '-80px',
+                                        marginTop: '-100px',
                                     }}
                                 >
                                     <Space>
                                         <Image
-                                            width={120}
-                                            height={120}
                                             style={{
                                                 textAlign: 'center',
-                                                marginBottom: '10px',
+                                                // marginBottom: '10px',
                                                 border: '3px solid white',
                                                 borderRadius: '50%',
+                                                width: '130px',
+                                                height: '130px',
+                                                objectFit: 'cover',
                                             }}
                                             src={
                                                 avatarImageFile?.length != 0
