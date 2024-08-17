@@ -7,16 +7,15 @@ import {
     HomeFilled,
     HomeOutlined,
     LogoutOutlined,
-    MessageOutlined,
     ShopOutlined,
     UserOutlined,
 } from '@ant-design/icons';
 import { CardGiftcardOutlined } from '@mui/icons-material';
 import { Badge, Button, Dropdown, Layout, Menu } from 'antd';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GoNorthStar } from 'react-icons/go';
 import { IoMdNotificationsOutline } from 'react-icons/io';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getLoggedInUserV2, useLogoutMutation } from '../../../api/services/auth';
 import RedeemCodeModal from '../../../features/giftcards/RedeemCodeModal';
 import HomeHeaderPoints from './HomeHeaderPoints';
@@ -51,11 +50,13 @@ const navigationItems = [
 export default function HomeHeader() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const location = useLocation();
 
     const [isRedeemCodeModalOpen, setIsRedeemCodeModalOpen] = useState(false);
 
+    const [selectedHeaderItem, setSelectedHeaderItem] = useState(null);
+
     const [logout] = useLogoutMutation();
-    const user = getLoggedInUserV2();
 
     const menu = (
         <Menu style={{ borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', width: '25svw' }}>
@@ -86,6 +87,17 @@ export default function HomeHeader() {
         </Menu>
     );
 
+    useEffect(() => {
+        const currentPath = location.pathname;
+
+        const isValidPath = navigationItems.some((item) => item.path === currentPath);
+
+        if (isValidPath) {
+            setSelectedHeaderItem(currentPath);
+            console.log(currentPath);
+        }
+    }, [location.pathname]);
+
     return (
         <>
             <RedeemCodeModal isOpen={isRedeemCodeModalOpen} onClose={() => setIsRedeemCodeModalOpen(false)} />
@@ -102,8 +114,12 @@ export default function HomeHeader() {
                             {navigationItems.map((item, index) => (
                                 <div
                                     key={index}
-                                    className=' hover:cursor-pointer text-lg text-nowrap  hover:text-bgSecondary '
-                                    onClick={() => navigate(item.path)}
+                                    className={`hover:cursor-pointer text-lg text-nowrap hover:text-bgSecondary ${
+                                        selectedHeaderItem === item.path ? 'text-bgSecondary ' : ''
+                                    }`}
+                                    onClick={() => {
+                                        navigate(item.path);
+                                    }}
                                 >
                                     {item.label}
                                 </div>
