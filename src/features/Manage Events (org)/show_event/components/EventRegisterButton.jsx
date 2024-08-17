@@ -97,19 +97,24 @@ const EventRegisterButton = ({
                                         attendeeStatusInEvent?.result?.registered === null && (
                                             <Tooltip
                                                 title={
-                                                    moment(eventData?.result?.registration_end_date).isBefore(moment())
-                                                        ? 'Registration for this event has ended'
-                                                        : 'This event has ended'
+                                                    moment(
+                                                        eventData?.result?.days[eventData?.result?.days?.length - 1]
+                                                            ?.day_date
+                                                    ).isBefore(moment())
+                                                        ? 'This event has ended'
+                                                        : 'Registration for this event has ended'
                                                 }
                                             >
-                                                {console.log(eventData?.result?.registration_end_date)}
                                                 <Button type='primary' size='large' disabled>
                                                     <Space size={10}>
                                                         <Icon
                                                             icon='mdi:calendar-remove-outline'
                                                             style={{ fontSize: '24px' }}
                                                         />
-                                                        {moment(eventData?.result?.days[0]?.day_date).isBefore(moment())
+                                                        {moment(
+                                                            eventData?.result?.days[eventData?.result?.days?.length - 1]
+                                                                ?.day_date
+                                                        ).isBefore(moment())
                                                             ? 'Event Ended'
                                                             : 'Registration Closed'}
                                                     </Space>

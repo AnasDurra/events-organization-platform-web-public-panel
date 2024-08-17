@@ -35,6 +35,7 @@ const EventCover = ({ data, setIsUpdateModalOpen }) => {
                             objectFit: 'cover',
                         }}
                         src={data?.cover_image}
+                        fallback={'https://placehold.co/600x150?text=Ops!'}
                     />
                 ) : (
                     <div
@@ -259,7 +260,7 @@ const coverImageStyle = {
     },
 
     text: {
-        fontSize: '30px',
+        fontSize: '24px',
         color: 'white',
 
         textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
@@ -271,7 +272,7 @@ const coverImageStyle = {
         fontWeight: 'bold',
     },
     subtitle: {
-        fontSize: '18px',
+        fontSize: '16px',
         marginBottom: '0px',
         marginTop: '10px',
     },
@@ -306,6 +307,7 @@ export const OrgPopoverContent = ({ organization }) => {
                             src={`${URL}/organization/mainPicture/${organization?.main_picture.split('/').pop()}`}
                             alt={organization.name}
                             style={{ borderRadius: '50%' }}
+                            fallback={'/public/assets/fallback-image.png'}
                         />
                     }
                     title={organization.name}

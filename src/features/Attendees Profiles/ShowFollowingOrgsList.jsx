@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined, EllipsisOutlined } from '@ant-design/icons';
-import { Button, Card, Col, Divider, Dropdown, Menu, Row, Spin, Typography } from 'antd';
+import { Button, Card, Col, Divider, Dropdown, Image, Menu, Row, Spin, Typography } from 'antd';
 import Search from 'antd/es/input/Search';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -36,10 +36,8 @@ const ShowFollowingOrgsList = () => {
     );
 
     useEffect(() => {
-        console.log(data);
         setFilteredOrgs(data?.result);
-        console.log(11);
-    }, []);
+    }, [data]);
 
     return (
         <div className='grid grid-cols-24 p-4 md:p-10'>
@@ -83,7 +81,7 @@ const ShowFollowingOrgsList = () => {
                     <Text style={{ fontSize: '14px', color: '#1890ff' }}>{filteredOrgs?.length}</Text>
                 </div>
                 <Row gutter={[16, 16]}>
-                    {!data?.result || data.result.length === 0 ? (
+                    {!data?.result || data?.result?.length == 0 ? (
                         <Col span={24}>
                             <div style={{ textAlign: 'center', padding: '40px' }}>
                                 <Text type='secondary' style={{ fontSize: '16px' }}>
@@ -98,13 +96,15 @@ const ShowFollowingOrgsList = () => {
                                     hoverable
                                     style={{ width: '100%', height: '100%' }}
                                     cover={
-                                        <img
+                                        <Image
+                                            preview={false}
                                             alt='organization cover'
                                             src={(
                                                 URL +
                                                 '/organizations/pictures/' +
                                                 org?.organization?.cover_picture
                                             ).replace('/api/', '/')}
+                                            fallback={'/public/assets/fallback-image.png'}
                                         />
                                     }
                                     onClick={() => {

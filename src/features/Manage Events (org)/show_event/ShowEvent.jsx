@@ -10,6 +10,7 @@ import EventDetailsTab from './components/EventDetailsTab';
 import { getLoggedInUserV2 } from '../../../api/services/auth';
 import Roles from '../../../api/Roles';
 import EventRegisterButton from './components/EventRegisterButton';
+import EventCountdown from './components/EventCountdown';
 
 const ShowEvent = () => {
     const { id } = useParams();
@@ -68,6 +69,7 @@ const ShowEvent = () => {
                     onClose={handleCloseRegistrationModal}
                 />
                 {console.log(eventData)}
+                <EventCountdown />
                 <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}>
                     <Card
                         className='w-full'
