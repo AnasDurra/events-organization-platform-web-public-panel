@@ -95,6 +95,8 @@ export default function HomeHeader() {
         if (isValidPath) {
             setSelectedHeaderItem(currentPath);
             console.log(currentPath);
+        } else {
+            setSelectedHeaderItem(navigationItems[0].path);
         }
     }, [location.pathname]);
 
