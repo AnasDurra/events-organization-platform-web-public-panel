@@ -31,7 +31,7 @@ const MessageReactions = ({ message, handleReaction }) => {
                                                 type='text'
                                                 icon={
                                                     <Icon
-                                                        icon={item?.reaction?.icon.split('/').pop()}
+                                                        icon={item?.reaction?.icon?.split('/').pop()}
                                                         style={{
                                                             fontSize: '18px',
                                                             color:

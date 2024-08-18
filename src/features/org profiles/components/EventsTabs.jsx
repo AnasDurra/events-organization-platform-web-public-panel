@@ -1,22 +1,15 @@
-import React from 'react';
-import { List, Row, Col, Typography, Image, Tabs, Tag } from 'antd';
-import { TwitterCircleFilled } from '@ant-design/icons';
+import { List, Image, Tabs, Tag } from 'antd';
 import { TiTicket } from 'react-icons/ti';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import { URL } from '../../../api/constants';
-
-const { Title, Text } = Typography;
 
 const EventsTab = ({ data }) => {
     const navigate = useNavigate();
 
     const renderEventItem = (item) => {
         return (
-            <List.Item
-                onClick={() => {}}
-                style={{ borderBottomColor: 'transparent' }}
-            >
+            <List.Item onClick={() => {}} style={{ borderBottomColor: 'transparent' }}>
                 <div
                     onClick={() => navigate(`/event/show/${item?.id}`)}
                     className='border-2 border-primary/25   hover:border-primary  hover:cursor-pointer  p-4 rounded-lg min-h-[18svh] flex justify-center items-center'
@@ -42,10 +35,7 @@ const EventsTab = ({ data }) => {
                             <div className='flex justify-between'>
                                 <div>
                                     {item?.tags.map((tag) => (
-                                        <Tag
-                                            color='green'
-                                            key={tag.id}
-                                        >
+                                        <Tag color='green' key={tag.id}>
                                             {tag.tag?.tagName}
                                         </Tag>
                                     ))}
@@ -64,13 +54,7 @@ const EventsTab = ({ data }) => {
         );
     };
 
-    return (
-        <Tabs
-            defaultActiveKey='1'
-            items={getTabsItems(data, renderEventItem, navigate)}
-            onChange={() => {}}
-        />
-    );
+    return <Tabs defaultActiveKey='1' items={getTabsItems(data, renderEventItem, navigate)} onChange={() => {}} />;
 };
 
 const getTabsItems = (data, renderEventItem, navigate) => {
@@ -96,6 +80,14 @@ const getTabsItems = (data, renderEventItem, navigate) => {
                     {data?.description}
 
                     {console.log('about: ', data)}
+                </div>
+            ),
+        },
+        {
+            key: '3',
+            label: (
+                <div onClick={() => navigate(`/org/${data?.id}/followers-list`)} className='text-textPrimary text-lg'>
+                    Followers
                 </div>
             ),
         },

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { List, Dropdown, Button, Typography, Space, Menu, Input, Spin, Avatar } from 'antd';
+import { List, Dropdown, Button, Typography, Space, Menu, Input, Spin, Avatar, Empty } from 'antd';
 import { EllipsisOutlined, RightOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
@@ -13,65 +13,8 @@ import { useFollowersListQuery } from '../../api/services/following';
 const FollowersList = () => {
     const navigate = useNavigate();
     let { orgId } = useParams();
-    const { data, isLoading, error } = useFollowersListQuery(orgId);
+    const { data, isLoading } = useFollowersListQuery(orgId);
 
-    // const data = {
-    //     status: true,
-    //     path: '/api/organization/followers-list',
-    //     statusCode: 200,
-    //     result: [
-    //         {
-    //             attendee: {
-    //                 id: '21',
-    //                 first_name: 'Alaa Aldeeqn',
-    //                 last_name: 'Zamel',
-    //                 full_name: 'Alaa Aldeen Zamel',
-    //                 join_date: '22-03-2024',
-    //                 phone_number: '+963991146587',
-    //                 birth_date: '07-08-2001',
-    //                 bio: "Hi There, I'm Software Engineer working from home.",
-    //                 job: null,
-    //                 address: null,
-    //                 contacts: [],
-    //             },
-    //             following_date: '2024-04-14 15:19:05',
-    //         },
-    //         {
-    //             attendee: {
-    //                 id: '21',
-    //                 first_name: 'Alaa Aldeeqn',
-    //                 last_name: 'Zamel',
-    //                 full_name: 'Alaa Aldeen Zamel',
-    //                 join_date: '22-03-2024',
-    //                 phone_number: '+963991146587',
-    //                 birth_date: '07-08-2001',
-    //                 bio: "Hi There, I'm Software Engineer working from home.",
-    //                 job: null,
-    //                 address: null,
-    //                 contacts: [],
-    //             },
-    //             following_date: '2024-04-14 15:19:05',
-    //         },
-    //         {
-    //             attendee: {
-    //                 id: '21',
-    //                 first_name: 'Alaa Aldeeqn',
-    //                 last_name: 'Zamel',
-    //                 full_name: 'Alaa Aldeen Zamel',
-    //                 join_date: '22-03-2024',
-    //                 phone_number: '+963991146587',
-    //                 birth_date: '07-08-2001',
-    //                 bio: "Hi There, I'm Software Engineer working from home.",
-    //                 job: null,
-    //                 address: null,
-    //                 contacts: [],
-    //             },
-    //             following_date: '2024-04-14 15:19:05',
-    //         },
-    //     ],
-    // };
-
-    const [hoveredIndex, setHoveredIndex] = useState(null);
     const [filteredAttendees, setFilteredAttendees] = useState([]);
     const [searchType, setSearchType] = useState('name');
 
@@ -142,7 +85,21 @@ const FollowersList = () => {
                 <List
                     itemLayout='horizontal'
                     dataSource={filteredAttendees}
-                    renderItem={(item, index) => (
+                    locale={{
+                        emptyText:
+                            data?.result?.length == 0 ? (
+                                <Empty
+                                    description='This organization currently has no followers.'
+                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                />
+                            ) : (
+                                <Empty
+                                    description='No matching attendees were found based on your search criteria.'
+                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                />
+                            ),
+                    }}
+                    renderItem={(item) => (
                         <Link
                             to={`/attendee-profile/${item?.attendee?.id}`}
                             key={item?.attendee.id}

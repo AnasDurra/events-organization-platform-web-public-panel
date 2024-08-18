@@ -195,7 +195,7 @@ export default MainProfileCard;
 
 function formatDate(dateString) {
     if (dateString) {
-        const dateParts = dateString.split('-');
+        const dateParts = dateString?.split('-');
         const date = new Date(`${dateParts[2]}-${dateParts[1]}-${dateParts[0]}`);
         const options = { month: 'long', day: 'numeric', year: 'numeric' };
         return date.toLocaleDateString('en-US', options);

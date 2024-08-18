@@ -304,7 +304,7 @@ export const OrgPopoverContent = ({ organization }) => {
                             preview={false}
                             width={50}
                             height={50}
-                            src={`${URL}/organization/mainPicture/${organization?.main_picture.split('/').pop()}`}
+                            src={`${URL}/organization/mainPicture/${organization?.main_picture?.split('/').pop()}`}
                             alt={organization.name}
                             style={{ borderRadius: '50%' }}
                             fallback={'/public/assets/fallback-image.png'}

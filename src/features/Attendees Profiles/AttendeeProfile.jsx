@@ -225,8 +225,7 @@ const AttendeeProfile = () => {
                                     </Col>
                                     <Col span={24}>
                                         {/* TODO: uncomment this: */}
-                                        {/* <LastThreeEvents events={data?.result?.events ?? []} /> */}
-                                        <LastThreeEvents events={events} />
+                                        <LastThreeEvents events={data?.result?.events ?? []} />
                                     </Col>
                                 </Row>
                             </Col>
