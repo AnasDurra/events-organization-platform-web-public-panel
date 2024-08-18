@@ -71,7 +71,6 @@ export const router = createBrowserRouter([
         //errorElement: <ErrorPage />,
         children: [
             //  { index: true, element: </> }, // TODO make a landing page for all types of users
-
             {
                 path: '/login',
                 element: <AttendeeLoginPage />,

@@ -1,4 +1,4 @@
-import { Button, Card, Checkbox, Form, Image, Input, Space, Spin, Typography } from 'antd';
+import { Button, Card, Checkbox, Form, Image, Input, Space, Spin, theme, Typography } from 'antd';
 import Password from 'antd/es/input/Password';
 import image1 from '../../features/Attendees Profiles/assets/Hybrid-illu.png';
 import '../../features/Attendees Profiles/styles/styles.css';
@@ -9,9 +9,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import Roles from '../../api/Roles';
 import { UserOutlined } from '@ant-design/icons';
 
+const { useToken } = theme;
+
 export default function OrganizerLoginPage() {
     const { openNotification } = useNotification();
     const navigate = useNavigate();
+    const { token } = useToken();
 
     const [loginMutation, { isLoading, isError, error }] = useLoginMutation();
 
@@ -50,28 +53,24 @@ export default function OrganizerLoginPage() {
                 style={{ marginBottom: '7.5em' }}
             >
                 <div className='text-center'>
-                    <h2 className='text-3xl font-extrabold text-gray-900'>Organizer Login</h2>
+                    <h2
+                        className='text-3xl font-extrabold text-gray-900'
+                        style={{ color: token.colorPrimary }}
+                    >
+                        Organizer Login
+                    </h2>
                     <p className='mt-2 text-sm text-gray-600'>Hi, Welcome back 👋</p>
                 </div>
                 <Spin spinning={isLoading}>
-                    <Form name='login' initialValues={{ remember: true }} onFinish={onFinish} layout='vertical'>
-                        <Form.Item>
-                            <Button
-                                type='default'
-                                icon={<UserOutlined />}
-                                className='w-full mb-4 bg-white text-black border border-gray-300'
-                                size='large'
-                                onClick={() => {
-                                    navigate('/login');
-                                }}
-                            >
-                                Login as Attendee
-                            </Button>
-                        </Form.Item>
-
-                        <div className='flex items-center justify-center my-4'>
+                    <Form
+                        name='login'
+                        initialValues={{ remember: true }}
+                        onFinish={onFinish}
+                        layout='vertical'
+                    >
+                        {/*    <div className='flex items-center justify-center my-4'>
                             <span className='text-gray-500 mx-2'>or Login as Organizer </span>
-                        </div>
+                        </div> */}
                         <Form.Item
                             name='username'
                             rules={[
@@ -86,7 +85,10 @@ export default function OrganizerLoginPage() {
                                 },
                             ]}
                         >
-                            <Input placeholder='Username' size='large' />
+                            <Input
+                                placeholder='Username'
+                                size='large'
+                            />
                         </Form.Item>
 
                         <Form.Item
@@ -102,21 +104,50 @@ export default function OrganizerLoginPage() {
                                 },
                             ]}
                         >
-                            <Input.Password placeholder='Password' size='large' />
+                            <Input.Password
+                                placeholder='Password'
+                                size='large'
+                            />
                         </Form.Item>
 
-                        <Form.Item name='remember' valuePropName='checked'>
+                        <Form.Item
+                            name='remember'
+                            valuePropName='checked'
+                        >
                             <Checkbox>Remember me</Checkbox>
                         </Form.Item>
 
                         <Form.Item>
-                            <Button type='primary' htmlType='submit' className='w-full' size='large'>
+                            <Button
+                                type='primary'
+                                htmlType='submit'
+                                className='w-full'
+                                size='large'
+                            >
                                 Login
                             </Button>
                         </Form.Item>
 
+                        <Form.Item>
+                            <Button
+                                type='default'
+                                icon={<UserOutlined />}
+                                className='w-full mb-4 bg-white border border-gray-300'
+                                style={{ color: token.colorPrimary }}
+                                size='large'
+                                onClick={() => {
+                                    navigate('/login');
+                                }}
+                            >
+                                Login as Attendee
+                            </Button>
+                        </Form.Item>
+
                         <div className='text-center'>
-                            <a href='/' className='text-sm text-blue-600'>
+                            <a
+                                href='/'
+                                className='text-sm text-blue-500'
+                            >
                                 Forgot Password?
                             </a>
                         </div>

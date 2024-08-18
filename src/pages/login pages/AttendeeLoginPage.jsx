@@ -47,28 +47,19 @@ export default function AttendeeLoginPage() {
                 style={{ marginBottom: '5em' }}
             >
                 <div className='text-center'>
-                    <h2 className='text-3xl font-extrabold text-gray-900'>Attendee Login</h2>
+                    <h2 className='text-3xl font-extrabold text-primary'>Attendee Login</h2>
                     <p className='mt-2 text-sm text-gray-600'>Hi, Welcome back 👋</p>
                 </div>
                 <Spin spinning={isLoading}>
-                    <Form name='login' initialValues={{ remember: true }} onFinish={onFinish} layout='vertical'>
-                        <Form.Item>
-                            <Button
-                                type='default'
-                                icon={<UserOutlined />}
-                                className='w-full mb-4 bg-white text-black border border-gray-300'
-                                size='large'
-                                onClick={() => {
-                                    navigate('/org/login');
-                                }}
-                            >
-                                Login as Organizer
-                            </Button>
-                        </Form.Item>
-
-                        <div className='flex items-center justify-center my-4'>
+                    <Form
+                        name='login'
+                        initialValues={{ remember: true }}
+                        onFinish={onFinish}
+                        layout='vertical'
+                    >
+                        {/*   <div className='flex items-center justify-center my-4'>
                             <span className='text-gray-500 mx-2'>or Login as Attendee </span>
-                        </div>
+                        </div> */}
 
                         <Form.Item
                             name='username'
@@ -84,7 +75,10 @@ export default function AttendeeLoginPage() {
                                 },
                             ]}
                         >
-                            <Input placeholder='Username' size='large' />
+                            <Input
+                                placeholder='Username'
+                                size='large'
+                            />
                         </Form.Item>
 
                         <Form.Item
@@ -100,28 +94,59 @@ export default function AttendeeLoginPage() {
                                 },
                             ]}
                         >
-                            <Input.Password placeholder='Password' size='large' />
+                            <Input.Password
+                                placeholder='Password'
+                                size='large'
+                            />
                         </Form.Item>
 
-                        <Form.Item name='remember' valuePropName='checked'>
+                        <Form.Item
+                            name='remember'
+                            valuePropName='checked'
+                        >
                             <Checkbox>Remember me</Checkbox>
                         </Form.Item>
 
                         <Form.Item>
-                            <Button type='primary' htmlType='submit' className='w-full' size='large'>
+                            <Button
+                                type='primary'
+                                htmlType='submit'
+                                className='w-full'
+                                size='large'
+                            >
                                 Login
                             </Button>
                         </Form.Item>
 
+                        <Form.Item>
+                            <Button
+                                type='default'
+                                icon={<UserOutlined />}
+                                className='w-full mb-4 bg-white text-primary border border-gray-300'
+                                size='large'
+                                onClick={() => {
+                                    navigate('/org/login');
+                                }}
+                            >
+                                Login as Organizer
+                            </Button>
+                        </Form.Item>
+
                         <div className='text-center'>
-                            <a href='/' className='text-sm text-blue-600'>
+                            <a
+                                href='/'
+                                className='text-sm text-blue-500'
+                            >
                                 Forgot Password?
                             </a>
                         </div>
 
                         <div className='text-center mt-4'>
                             <span className='text-sm'>Not registered yet? </span>
-                            <Link to={'/register'} className='text-sm text-blue-600'>
+                            <Link
+                                to={'/register'}
+                                className='text-sm text-blue-500'
+                            >
                                 Create an account
                             </Link>
                         </div>
