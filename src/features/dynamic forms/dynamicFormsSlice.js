@@ -202,10 +202,8 @@ export const dynamicFormsSlice = apiSlice.injectEndpoints({
                             const currentGroupIndex = groups.findIndex((group) =>
                                 group.fields.some((field) => field.id == fields.field_id)
                             );
-                            console.log('ew ', isNewGroup);
 
                             if (currentGroupIndex !== -1) {
-                                console.log('ew ', isNewGroup);
 
                                 const currentGroup = groups[currentGroupIndex];
                                 const fieldIndex = currentGroup.fields.findIndex(

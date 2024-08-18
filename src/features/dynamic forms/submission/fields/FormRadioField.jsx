@@ -3,7 +3,7 @@ import { Space, Radio, Typography, Form, Input } from 'antd';
 import { WiStars } from 'react-icons/wi';
 export default function FormRadioField({ field, groupIndex, fieldIndex }) {
     return (
-        <div className='bg-gray-100/50 w-full px-4 border-2 rounded-lg border-zinc-200'>
+        <div className='bg-gray-50/100 w-full px-4 border-2 rounded-lg border-zinc-500'>
             <Space
                 direction='vertical'
                 className='w-full'
@@ -27,6 +27,7 @@ export default function FormRadioField({ field, groupIndex, fieldIndex }) {
                     // value={value}
                     //onChange={handleRadioChange}
                     size='middle'
+                    
                     >
                         <Space direction='vertical'>
                             {field.options?.map((option, index) => (

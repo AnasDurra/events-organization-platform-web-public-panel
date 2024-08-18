@@ -1,7 +1,7 @@
-import { CloseOutlined, SyncOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, SyncOutlined } from '@ant-design/icons';
 import { Avatar, Button, Col, Input, List, Modal, Row, Space } from 'antd';
 import debounce from 'lodash.debounce';
-import React from 'react';
+import React, { useState } from 'react';
 import { FaFileAlt } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { debounceTime } from '../constants';
@@ -28,6 +28,8 @@ export default function FormLayout({ children }) {
     let { form_id } = useParams();
     const navigate = useNavigate();
 
+    const [isFormNameFieldTouched, setIsFormNameFieldTouched] = useState(false);
+
     const {
         data: { result: events } = { result: [] },
         isLoading: isFormEventsLoading,
@@ -40,11 +42,11 @@ export default function FormLayout({ children }) {
     } = useGetFormQuery(form_id);
     const [updateForm] = useUpdateFormMutation();
 
-    const debounceUpdateForm = debounce(updateForm, debounceTime);
-
-    const handleFormNameChange = (e) => {
-        debounceUpdateForm({ fields: { name: e.target.value }, form_id });
+    const handleFormNameChange = (newName) => {
+        updateForm({ fields: { name: newName }, form_id });
+        setIsFormNameFieldTouched(false);
     };
+
     return (
         <div className='flex flex-col  h-screen bg-gray-100 max-h-[100vh]'>
             <Space.Compact className='fixed bottom-4 left-4 '>
@@ -59,19 +61,36 @@ export default function FormLayout({ children }) {
                     <Col span={8}>
                         <Row align={'middle'}>
                             <Col>
-                                <FaFileAlt className='text-xl mx-2'></FaFileAlt>
+                                <FaFileAlt
+                                    className='text-xl mx-2 hover:cursor-pointer'
+                                    onClick={() => navigate('/org/forms')}
+                                    c
+                                ></FaFileAlt>
                             </Col>
                             <Col>
-                                {form.name && (
-                                    <Input
-                                        placeholder='Form name'
-                                        variant='filled'
-                                        defaultValue={form.name}
-                                        onChange={handleFormNameChange}
-                                    />
+                                {!isFormLoading && (
+                                    <Space.Compact>
+                                        <Input
+                                            id='form-prop-name'
+                                            placeholder='Form Name'
+                                            variant='filled'
+                                            defaultValue={form?.name}
+                                            onChangeCapture={() => setIsFormNameFieldTouched(true)}
+                                        />
+
+                                        {isFormNameFieldTouched && (
+                                            <Button
+                                                onClick={() =>
+                                                    handleFormNameChange(
+                                                        document.getElementById('form-prop-name').value
+                                                    )
+                                                }
+                                                icon={<CheckOutlined />}
+                                            />
+                                        )}
+                                    </Space.Compact>
                                 )}
                             </Col>
-                           
                         </Row>
                     </Col>
 

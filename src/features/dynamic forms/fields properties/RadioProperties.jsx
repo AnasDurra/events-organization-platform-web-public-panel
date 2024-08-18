@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Input, Checkbox, Space, Divider, Button } from 'antd';
 import Title from 'antd/es/typography/Title';
-import { CloseCircleOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import {
     useAddNewFieldOptionMutation,
     useRemoveFieldMutation,
     useRemoveFieldOptionMutation,
+    useUpdateFieldOptionNameMutation,
     useUpdateGroupFieldMutation,
 } from '../dynamicFormsSlice';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,17 +28,22 @@ export default function RadioProperties({
     const [, { isError: isUpdateFormFieldError }] = useUpdateGroupFieldMutation({
         fixedCacheKey: 'shared-update-field',
     });
+    const [, { isError: isUpdateFieldOptionError }] = useUpdateFieldOptionNameMutation({
+        fixedCacheKey: 'shared-update-field',
+    });
 
     const [options, setOptions] = useState(field?.options || []);
+    const [isNameFieldTouched, setIsNameFieldTouched] = useState(false);
+    const [isLabelFieldTouched, setIsLabelFieldTouched] = useState(false);
 
-    const handleNameInputChange = (e) => {
-        const newName = e.target.value;
+    const handleNameInputChange = (newName) => {
         onNameChange(newName);
+        setIsNameFieldTouched(false);
     };
 
-    const handleLabelInputChange = (e) => {
-        const newLabel = e.target.value;
+    const handleLabelInputChange = (newLabel) => {
         onLabelChange(newLabel);
+        setIsLabelFieldTouched(false);
     };
 
     const handleIsRequiredCheckboxChange = (e) => {
@@ -60,18 +66,17 @@ export default function RadioProperties({
         const updatedOptions = [...options];
         updatedOptions[index] = { ...updatedOptions[index], name: value };
         setOptions(updatedOptions);
-        onOptionsChange(updatedOptions);
     };
 
     useEffect(() => {
         console.log('update fild: ', field);
         if (field) {
-            document.getElementById('tf-prop-name').value = field.name || '';
-            document.getElementById('tf-prop-label').value = field.label || '';
-            document.getElementById('tf-prop-isRequired').checked = !!field.isRequired;
+            document.getElementById('radio-prop-name').value = field.name || '';
+            document.getElementById('radio-prop-label').value = field.label || '';
+            document.getElementById('radio-prop-isRequired').checked = !!field.isRequired;
             setOptions(field.options || []);
         }
-    }, [field, isErrorAddingOption, isErrorRemovingOption, isUpdateFormFieldError]);
+    }, [field, isErrorAddingOption, isErrorRemovingOption, isUpdateFormFieldError, isUpdateFieldOptionError]);
 
     return (
         <Space.Compact
@@ -91,11 +96,19 @@ export default function RadioProperties({
                 >
                     Name
                 </Title>
-                <Input
-                    id='tf-prop-name'
-                    onBlur={handleNameInputChange}
-                    defaultValue={field?.name}
-                />
+                <Space.Compact>
+                    <Input
+                        id='radio-prop-name'
+                        onChangeCapture={() => setIsNameFieldTouched(true)}
+                        defaultValue={field?.name}
+                    />
+                    {isNameFieldTouched && (
+                        <Button
+                            onClick={() => handleNameInputChange(document.getElementById('radio-prop-name').value)}
+                            icon={<CheckOutlined />}
+                        />
+                    )}
+                </Space.Compact>
             </Space.Compact>
             <Space.Compact
                 align='center'
@@ -108,11 +121,20 @@ export default function RadioProperties({
                 >
                     Label
                 </Title>
-                <Input
-                    id='tf-prop-label'
-                    defaultValue={field?.label}
-                    onChange={handleLabelInputChange}
-                />
+                <Space.Compact>
+                    <Input
+                        id='radio-prop-label'
+                        defaultValue={field?.label}
+                        onChangeCapture={() => setIsLabelFieldTouched(true)}
+                    />
+
+                    {isLabelFieldTouched && (
+                        <Button
+                            onClick={() => handleLabelInputChange(document.getElementById('radio-prop-label').value)}
+                            icon={<CheckOutlined />}
+                        />
+                    )}
+                </Space.Compact>
             </Space.Compact>
             <Space
                 align='center'
@@ -128,7 +150,7 @@ export default function RadioProperties({
                     Is Required
                 </Title>
                 <Checkbox
-                    id='tf-prop-isRequired'
+                    id='radio-prop-isRequired'
                     defaultChecked={field?.required}
                     onChange={handleIsRequiredCheckboxChange}
                 />
@@ -144,6 +166,7 @@ export default function RadioProperties({
                     <Input
                         value={option.name}
                         onChange={(e) => handleOptionChange(index, e.target.value)}
+                        onBlur={() => onOptionsChange(options)}
                         placeholder={`Option ${index + 1}`}
                         style={{ flex: 1 }}
                     />
