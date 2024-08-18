@@ -3,18 +3,16 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { Button, ConfigProvider, Spin } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { Children } from 'react';
-import { Outlet, useNavigate, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useCheckAccessTokenQuery } from '../../api/services/auth';
 import { useEffect } from 'react';
 import { lightenColor } from '../../utils/colors';
 
 const BasicLayout = ({ children }) => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const { data: checkAccessTokenObj, isLoading: isAccessTokenLoading, error } = useCheckAccessTokenQuery();
-
-    const navigate = useNavigate();
-    const location = useLocation();
 
     const defaultTheme = {
         token: { colorPrimary: '#2A9D8F', fontFamily: 'Roboto' },
@@ -52,7 +50,6 @@ const BasicLayout = ({ children }) => {
             }
         }
     }, [checkAccessTokenObj]);
-
 
     const theme = location.pathname === '/org/login' ? orgLoginTheme : defaultTheme;
     return (
