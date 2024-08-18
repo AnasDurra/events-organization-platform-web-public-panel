@@ -1,15 +1,22 @@
 import { ClockCircleOutlined } from '@ant-design/icons';
 import { Badge, Button, Card, Statistic, Tabs, message } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TiTicket } from 'react-icons/ti';
 import { getLoggedInUserV2 } from '../../api/services/auth';
 import OrgTicketsPageTicketsTab from './OrgTicketsPageTicketsTab';
 import OrgTicketsPageWithdrawTab from './OrgTicketsPageWithdrawTab';
-import { useGetOrgBalanceQuery, useGetOrgWithdrawsQuery, useWithdrawMutation } from './TicketingPackagesSlice';
+import {
+    useGetOrgBalanceQuery,
+    useGetOrgTicketsHistoryQuery,
+    useGetOrgWithdrawsQuery,
+    useWithdrawMutation,
+} from './TicketingPackagesSlice';
 import WithdrawModal from './WithdrawModal';
 
 export default function OrgTicketsPage() {
     const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+    const [lastMonthTickets, setLastMonthTickets] = useState('N/A');
+    const [totalTicketsSold, setTotalTicketsSold] = useState('N/A');
 
     const { data: { result: balanceObj } = { result: {} } } = useGetOrgBalanceQuery(
         getLoggedInUserV2()?.organization_id
@@ -17,6 +24,11 @@ export default function OrgTicketsPage() {
     const { data: { result: withdraws } = { result: [] }, isLoading: isFetchWithdrawLoading } = useGetOrgWithdrawsQuery(
         getLoggedInUserV2()?.organization_id
     );
+    const {
+        data: { result: ticketsHistory } = { result: [] },
+        isLoading: isTicketsHistoryLoading,
+        isSuccess: isFetchTicketsHistorySuccess,
+    } = useGetOrgTicketsHistoryQuery(getLoggedInUserV2()?.organization_id);
 
     const [withdraw, { isLoading: isWithdrawLoading }] = useWithdrawMutation();
 
@@ -38,6 +50,18 @@ export default function OrgTicketsPage() {
 
     const adjustedBalance = balanceObj?.balance - totalWaitingWithdraws;
 
+    useEffect(() => {
+        if (isFetchTicketsHistorySuccess) {
+            const { totalTicketsSold: newTotalTicketsSold, lastMonthTicketsSold: newLastMonthTicketsSold } =
+                calculateTicketSales(ticketsHistory);
+            console.log('th: ', ticketsHistory);
+            console.log('nts: ', newTotalTicketsSold);
+            console.log('nlm: ', newLastMonthTicketsSold);
+
+            setTotalTicketsSold(newTotalTicketsSold);
+            setLastMonthTickets(newLastMonthTicketsSold);
+        }
+    }, [isFetchTicketsHistorySuccess]);
     const items = [
         {
             key: '1',
@@ -86,14 +110,14 @@ export default function OrgTicketsPage() {
                     <Card bordered={false}>
                         <Statistic
                             title='Last Month Tickets'
-                            value={900}
+                            value={lastMonthTickets}
                             prefix={<TiTicket className='text-yellow-500 text-[1.5rem] mr-2 mt-1' />}
                         />
                     </Card>
                     <Card bordered={false}>
                         <Statistic
                             title='Total Tickets Sold'
-                            value={2500}
+                            value={totalTicketsSold}
                             prefix={<TiTicket className='text-yellow-500 text-[1.5rem] mr-2 mt-1' />}
                         />
                     </Card>
@@ -122,3 +146,30 @@ export default function OrgTicketsPage() {
         </div>
     );
 }
+
+const calculateTicketSales = (response) => {
+    if (!response) return { totalTicketsSold: 0, lastMonthTicketsSold: 0 };
+
+    const now = new Date();
+    const lastMonth = new Date();
+    lastMonth.setMonth(now.getMonth() - 1);
+
+    let totalTicketsSold = 0;
+    let lastMonthTicketsSold = 0;
+
+    response.forEach((ticket) => {
+        const ticketValue = parseFloat(ticket.org_tickets_value);
+        console.log('ticketval: ', ticketValue);
+        if (ticketValue > 0) {
+            totalTicketsSold += ticketValue;
+
+            const ticketCreatedAt = new Date(ticket.org_tickets_created_at);
+
+            if (ticketCreatedAt >= lastMonth && ticketCreatedAt <= now) {
+                lastMonthTicketsSold += ticketValue;
+            }
+        }
+    });
+
+    return { totalTicketsSold, lastMonthTicketsSold };
+};

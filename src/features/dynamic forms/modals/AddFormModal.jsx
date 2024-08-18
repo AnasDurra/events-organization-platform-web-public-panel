@@ -2,11 +2,11 @@ import { Form, Input, Modal } from 'antd';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useAddNewFormMutation } from '../dynamicFormsSlice';
+import { getLoggedInUserV2 } from '../../../api/services/auth';
 
 export default function AddFormModal({ isOpen, onClose ,onSubmit}) {
     const [form] = Form.useForm();
-    //TODO org from user
-    let { organization_id = 1 } = useParams();
+    let organization_id = getLoggedInUserV2().organization_id;
 
     const handleFormSubmit = (fields) => {
         onSubmit({ ...fields, groups: [], organization_id });

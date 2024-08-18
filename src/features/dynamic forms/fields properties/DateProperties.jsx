@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input, Checkbox, Space, Divider, Button } from 'antd';
 import Title from 'antd/es/typography/Title';
+import { CheckOutlined } from '@ant-design/icons';
 
 export default function DateProperties({ field, onNameChange, onLabelChange, onIsRequiredChange, onDelete }) {
-    const handleNameInputChange = (e) => {
-        const newName = e.target.value;
+    const [isNameFieldTouched, setIsNameFieldTouched] = useState(false);
+    const [isLabelFieldTouched, setIsLabelFieldTouched] = useState(false);
+
+    const handleNameInputChange = (newName) => {
         onNameChange(newName);
+        setIsNameFieldTouched(false);
     };
 
-    const handleLabelInputChange = (e) => {
-        const newLabel = e.target.value;
+    const handleLabelInputChange = (newLabel) => {
         onLabelChange(newLabel);
+        setIsLabelFieldTouched(false);
     };
 
     const handleIsRequiredCheckboxChange = (e) => {
@@ -44,11 +48,19 @@ export default function DateProperties({ field, onNameChange, onLabelChange, onI
                 >
                     Name
                 </Title>
-                <Input
-                    id='date-prop-name'
-                    onChange={handleNameInputChange}
-                    defaultValue={field?.name}
-                />
+                <Space.Compact>
+                    <Input
+                        id='date-prop-name'
+                        onChangeCapture={() => setIsNameFieldTouched(true)}
+                        defaultValue={field?.name}
+                    />
+                    {isNameFieldTouched && (
+                        <Button
+                            onClick={() => handleNameInputChange(document.getElementById('date-prop-name').value)}
+                            icon={<CheckOutlined />}
+                        />
+                    )}
+                </Space.Compact>
             </Space.Compact>
             <Space.Compact
                 align='center'
@@ -61,11 +73,20 @@ export default function DateProperties({ field, onNameChange, onLabelChange, onI
                 >
                     Label
                 </Title>
-                <Input
-                    id='date-prop-label'
-                    defaultValue={field?.label}
-                    onChange={handleLabelInputChange}
-                />
+                <Space.Compact>
+                    <Input
+                        id='date-prop-label'
+                        defaultValue={field?.label}
+                        onChangeCapture={() => setIsLabelFieldTouched(true)}
+                    />
+
+                    {isLabelFieldTouched && (
+                        <Button
+                            onClick={() => handleLabelInputChange(document.getElementById('date-prop-label').value)}
+                            icon={<CheckOutlined />}
+                        />
+                    )}
+                </Space.Compact>
             </Space.Compact>
             <Space
                 align='center'

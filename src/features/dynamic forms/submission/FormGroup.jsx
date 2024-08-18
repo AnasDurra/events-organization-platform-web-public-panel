@@ -12,7 +12,7 @@ export default function FormGroup({ group, groupsLength, groupIndex, isCustomSty
     const { token } = useToken();
     return (
         <div
-            className={`min-h-[80vh] p-4 m-4 bg-gray-100/90 rounded-lg  shadow-lg ${
+            className={`min-h-[80vh] p-4 m-4 bg-white rounded-lg  shadow-lg ${
                 isCustomStyle ? `border-2 border-slate-500/75` : `border-2`
             } `}
         >

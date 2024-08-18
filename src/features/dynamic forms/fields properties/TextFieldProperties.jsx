@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Input, Checkbox, Space, Button, Divider, InputNumber } from 'antd';
 import Title from 'antd/es/typography/Title';
 import { useAddValidationRuleMutation, useRemoveValidationRuleMutation } from '../dynamicFormsSlice';
-import { CloseOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { AirplaneTicketOutlined } from '@mui/icons-material';
 
 export default function TextFieldProperties({
     field,
@@ -20,15 +21,17 @@ export default function TextFieldProperties({
     });
     const [minValue, setMinValue] = useState(null);
     const [maxValue, setMaxValue] = useState(null);
+    const [isNameFieldTouched, setIsNameFieldTouched] = useState(false);
+    const [isLabelFieldTouched, setIsLabelFieldTouched] = useState(false);
 
-    const handleNameInputChange = (e) => {
-        const newName = e.target.value;
+    const handleNameInputChange = (newName) => {
         onNameChange(newName);
+        setIsNameFieldTouched(false);
     };
 
-    const handleLabelInputChange = (e) => {
-        const newLabel = e.target.value;
+    const handleLabelInputChange = (newLabel) => {
         onLabelChange(newLabel);
+        setIsLabelFieldTouched(false);
     };
 
     const handleIsRequiredCheckboxChange = (e) => {
@@ -43,7 +46,17 @@ export default function TextFieldProperties({
         if (ruleWithVal.rule == 'max') {
             setMaxValue(ruleWithVal.value);
         }
-        onValidationRulesChange(ruleWithVal);
+
+        if (!ruleWithVal.value)
+            onValidationRulesChange({
+                ...ruleWithVal,
+                delete: true,
+                validation_rule_id:
+                    ruleWithVal.rule == 'min'
+                        ? field.validationRules?.find((rule) => rule.rule === 'min').id
+                        : field.validationRules?.find((rule) => rule.rule === 'max').id,
+            });
+        else onValidationRulesChange(ruleWithVal);
     };
 
     useEffect(() => {
@@ -78,11 +91,19 @@ export default function TextFieldProperties({
                 >
                     Name
                 </Title>
-                <Input
-                    id='tf-prop-name'
-                    onChange={handleNameInputChange}
-                    defaultValue={field?.name}
-                />
+                <Space.Compact>
+                    <Input
+                        id='tf-prop-name'
+                        onChangeCapture={() => setIsNameFieldTouched(true)}
+                        defaultValue={field?.name}
+                    />
+                    {isNameFieldTouched && (
+                        <Button
+                            onClick={() => handleNameInputChange(document.getElementById('tf-prop-name').value)}
+                            icon={<CheckOutlined />}
+                        />
+                    )}
+                </Space.Compact>
             </Space.Compact>
             <Space.Compact
                 align='center'
@@ -95,16 +116,26 @@ export default function TextFieldProperties({
                 >
                     Label
                 </Title>
-                <Input
-                    id='tf-prop-label'
-                    defaultValue={field?.label}
-                    onChange={handleLabelInputChange}
-                />
+                <Space.Compact>
+                    <Input
+                        id='tf-prop-label'
+                        defaultValue={field?.label}
+                        onChangeCapture={() => setIsLabelFieldTouched(true)}
+                    />
+
+                    {isLabelFieldTouched && (
+                        <Button
+                            onClick={() => handleLabelInputChange(document.getElementById('tf-prop-label').value)}
+                            icon={<CheckOutlined />}
+                        />
+                    )}
+                </Space.Compact>
             </Space.Compact>
             <Divider>Rules</Divider>
             <div className='flex flex-col space-y-4'>
                 <div className='flex  items-start'>
                     <InputNumber
+                        type='number'
                         size='small'
                         controls={false}
                         id='num-prop-rule-min'
@@ -130,6 +161,7 @@ export default function TextFieldProperties({
                 <div className='flex items-start'>
                     <InputNumber
                         size='small'
+                        type='number'
                         controls={false}
                         id='num-prop-rule-max'
                         value={maxValue}

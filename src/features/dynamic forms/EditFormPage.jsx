@@ -37,7 +37,7 @@ export default function EditFormPage() {
     const [updateGroupField, { isError: isUpdateFormFieldError }] = useUpdateGroupFieldMutation({
         fixedCacheKey: 'shared-update-field',
     });
-    const [updateFieldOption] = useUpdateFieldOptionNameMutation();
+    const [updateFieldOption] = useUpdateFieldOptionNameMutation({ fixedCacheKey: 'shared-update-option' });
 
     const [removeGroup] = useRemoveGroupMutation();
     const [removeField] = useRemoveFieldMutation();
@@ -49,15 +49,13 @@ export default function EditFormPage() {
     const [AntDform] = Form.useForm();
 
     const handleSelectField = (field) => {
-        setSelectedField((prevSelectedField) =>
-            prevSelectedField && prevSelectedField.id == field.id ? null : field
-        );
+        setSelectedField((prevSelectedField) => (prevSelectedField && prevSelectedField.id == field.id ? null : field));
     };
     const handleDeselectField = (field) => {
         setSelectedField(null);
     };
 
-    const debounceUpdateGroup = debounce(updateGroup, debounceTime * 10);
+    const debounceUpdateGroup = debounce(updateGroup, debounceTime);
     const handleGroupNameChange = (groupId, newName) => {
         debounceUpdateGroup({ fields: { name: newName }, group_id: groupId });
     };
@@ -77,7 +75,7 @@ export default function EditFormPage() {
             if (updatedField.validationRules[0].delete) {
                 removeValidationRule(updatedField.validationRules[0].validation_rule_id);
             } else {
-                console.log(updatedField)
+                console.log(updatedField);
                 addValidationRule({ field_id: updatedField.id, ...updatedField.validationRules[0] })
                     .unwrap()
                     .catch((e) => {
@@ -148,12 +146,10 @@ export default function EditFormPage() {
 
                         const optionsToRemove = field.options.filter((option) => !updatedOptionsMap.has(option.id));
 
-                        console.log('toadd: ',optionsToAdd)
-                        console.log('recm: ',optionsToRemove)
-                        console.log('recm: ',currentOptionsMap)
-                        console.log('upda: ',updatedField)
-
-
+                        console.log('toadd: ', optionsToAdd);
+                        console.log('recm: ', optionsToRemove);
+                        console.log('recm: ', currentOptionsMap);
+                        console.log('upda: ', updatedField);
 
                         optionsToAdd.forEach((option) => {
                             addNewFieldOption({
@@ -168,8 +164,8 @@ export default function EditFormPage() {
 
                         updatedField.options.forEach((updatedOption) => {
                             const currentOptionName = currentOptionsMap.get(updatedOption.id);
-                            console.log(currentOptionName)
-                            if ( updatedOption.name !== currentOptionName) {
+                            console.log(currentOptionName);
+                            if (updatedOption.name !== currentOptionName) {
                                 debounceUpdateFieldOption({ option_id: updatedOption.id, name: updatedOption.name });
                             }
                         });

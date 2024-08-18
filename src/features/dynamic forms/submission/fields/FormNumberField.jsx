@@ -34,7 +34,7 @@ export default function FormNumberField({ field, groupIndex, fieldIndex }) {
 
     return (
         <>
-            <div className='bg-gray-100/50 w-full px-4 border-2 rounded-lg border-zinc-200'>
+            <div className='bg-gray-50/100 w-full px-4 border-2 rounded-lg border-zinc-500'>
                 <Space.Compact
                     direction='vertical'
                     className='w-full'
@@ -56,10 +56,11 @@ export default function FormNumberField({ field, groupIndex, fieldIndex }) {
                             { validator: validateNumber },
                         ]}
                     >
+                    {console.log("ff: ",field)}
                         <InputNumber
-                            placeholder='Enter number'
+                            placeholder={field.name}
                             className='sm:w-[50%] w-full'
-                            variant='borderless'
+                            variant='filled'
                             size='medium'
                             suffix={<FieldNumberOutlined />}
                             controls={false}

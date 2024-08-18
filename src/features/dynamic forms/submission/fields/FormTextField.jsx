@@ -2,6 +2,7 @@ import React from 'react';
 import { Space, Typography, Form, Input } from 'antd';
 import { WiStars } from 'react-icons/wi';
 import { FieldStringOutlined } from '@ant-design/icons';
+import TextArea from 'antd/es/input/TextArea';
 
 export default function FormTextField({ field, groupIndex, fieldIndex }) {
     const validationRules = field.validationRules;
@@ -33,7 +34,7 @@ export default function FormTextField({ field, groupIndex, fieldIndex }) {
     };
 
     return (
-        <div className='bg-gray-100/50 w-full px-4 border-2 rounded-lg border-zinc-200'>
+        <div className='bg-gray-50/100 w-full px-4 border-2 rounded-lg border-zinc-500'>
             <Space.Compact
                 direction='vertical'
                 className='w-full'
@@ -53,14 +54,16 @@ export default function FormTextField({ field, groupIndex, fieldIndex }) {
                     name={['groups', groupIndex, 'fields', fieldIndex, 'value']}
                     rules={[{ required: field?.required, message: 'Required Field' }, { validator: validateText }]}
                 >
-                    <Input
-                        placeholder='name'
-                        className='sm:w-[50%] w-full'
-                        variant='borderless'
+                    <TextArea
+                        placeholder={field.name}
+                        className='sm:w-[75%] w-full'
+                        variant='filled'
                         size='medium'
+                        autoSize={{ minRows: 3, maxRows: 5 }}
                         suffix={<FieldStringOutlined />}
                     />
                 </Form.Item>
+
 
                 {validationRules?.length > 0 && (
                     <div className='text-xs text-gray-500 p-2'>{getValidationRulesText()}</div>
