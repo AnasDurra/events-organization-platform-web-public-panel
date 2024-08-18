@@ -440,13 +440,36 @@ export default function ExplorePage() {
                     </Space.Compact>
                 </div>
 
-                {isEventsLoading && (
+                {isEventsLoading ? (
                     <Spin
                         spinning
                         tip={'loading'}
                         size='large'
                         className='flex justify-center items-center '
                     />
+                ) : (
+                    <div className='grid  grid-cols-12 gap-16 w-8/12 self-center'>
+                        {events?.map((event) => (
+                            <div
+                                key={event.id}
+                                className='col-start-2 col-span-10 lg:col-span-6 xl:col-span-4'
+                            >
+                                {console.log(event)}
+                                <EventCardWithImage
+                                    id={event.id}
+                                    title={event.title}
+                                    // description={event.description}
+                                    tags={event.tags.map((tag) => tag.tag?.tagName)}
+                                    organizationProfilePictureURL={
+                                        URL + '/organization/mainPicture/' + event.organization?.main_picture
+                                    }
+                                    eventImageURL={event.coverPictureUrl}
+                                    regStartDate={event.registrationEndDate}
+                                    event_type={event.eventType}
+                                />
+                            </div>
+                        ))}
+                    </div>
                 )}
 
                 {/*  <div className='grid grid-cols-12 gap-4 p-4'>
@@ -482,7 +505,7 @@ export default function ExplorePage() {
                         disabled={isEventsLoading}
                     />
                 </div> */}
-                {Array.isArray(events) && events.length == 0 && (
+              {/*   {Array.isArray(events) && events.length == 0 && (
                     <div className='w-full flex-1'>
                         <ResponsiveMasonry columnsCountBreakPoints={{ 350: 3, 750: 3, 900: 4 }}>
                             <Masonry gutter='1em'>
@@ -496,7 +519,7 @@ export default function ExplorePage() {
                             </Masonry>
                         </ResponsiveMasonry>
                     </div>
-                )}
+                )} */}
             </div>
         </ConfigProvider>
     );

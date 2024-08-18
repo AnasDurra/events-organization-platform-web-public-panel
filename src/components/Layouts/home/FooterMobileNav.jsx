@@ -49,7 +49,7 @@ const ProfileDropdownContent = () => {
         <Menu style={{ width: '100vw', padding: '0', borderRadius: '0' }}>
             <HomeHeaderPoints />
 
-            <Menu.Item key='profile' onClick={() => navigate('profile')}>
+            <Menu.Item key='profile' onClick={() => navigate('/home/profile')}>
                 <UserOutlined style={{ fontSize: '1.2rem' }} /> My Profile
             </Menu.Item>
 
