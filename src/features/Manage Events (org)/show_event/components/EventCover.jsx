@@ -11,6 +11,8 @@ import { useLazyIsEventReportedQuery } from '../../../../api/services/adminRepor
 import { useNotification } from '../../../../utils/NotificationContext';
 import { URL } from '../../../../api/constants.js';
 
+import fallbackImage from '../../../../../public/assets/fallback-image.png';
+
 const EventCover = ({ data, setIsUpdateModalOpen }) => {
     const [checkIsEventReportedReported, { isFetching: isIsEventReportedFetching }] = useLazyIsEventReportedQuery();
 
@@ -307,7 +309,7 @@ export const OrgPopoverContent = ({ organization }) => {
                             src={`${URL}/organization/mainPicture/${organization?.main_picture?.split('/').pop()}`}
                             alt={organization.name}
                             style={{ borderRadius: '50%' }}
-                            fallback={'/public/assets/fallback-image.png'}
+                            fallback={fallbackImage}
                         />
                     }
                     title={organization.name}
