@@ -1,14 +1,15 @@
 import {
     CalendarOutlined,
     CheckCircleOutlined,
-    CloseCircleFilled,
     CloseCircleOutlined,
+    CloseOutlined,
     DownOutlined,
     FieldNumberOutlined,
     FieldStringOutlined,
     FilterOutlined,
     GroupOutlined,
-    MinusOutlined,
+    InfoCircleOutlined,
+    InfoOutlined,
 } from '@ant-design/icons';
 import {
     Button,
@@ -23,20 +24,20 @@ import {
     Select,
     Space,
     Tag,
+    theme,
+    Tooltip,
     TreeSelect,
     Typography,
 } from 'antd';
 import Title from 'antd/es/typography/Title';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { SidebarItemsIDs } from '../constants';
 import { useGetFormFieldTypesQuery, useGetFormQuery } from '../dynamicFormsSlice';
 import './Filter.css';
 import useNumberFieldState from './useNumberFieldState';
-import { v4 as uuidv4 } from 'uuid';
-import dayjs from 'dayjs';
-import { Close } from '@mui/icons-material';
+const { useToken } = theme;
 
 const fieldIcons = {
     [SidebarItemsIDs.TEXTFIELD]: <FieldStringOutlined className='mr-2' />,
@@ -50,6 +51,8 @@ const getFieldIcon = (fieldTypeId) => {
 };
 
 export default function Filter({ onFilter }) {
+    const { token } = useToken();
+
     let { form_id, event_id } = useParams();
     const [form] = Form.useForm();
     const [formValues, setFormValues] = useState({});
@@ -375,7 +378,7 @@ export default function Filter({ onFilter }) {
 
                     <Form.Item
                         noStyle
-                        name={['groups', setIndex, 'conditions', fieldIndex, 'option_id']}
+                        name={['groups', setIndex, 'conditions', fieldIndex, 'operator_id']}
                         initialValue={5} //EQUAL operator id
                     >
                         <Input
@@ -430,9 +433,18 @@ export default function Filter({ onFilter }) {
                 {
                     key: 'col-item-1',
                     label: (
-                        <div className='flex space-x-2 items-center'>
+                        <div className='flex space-x-2 items-center relative'>
                             <span className='font-bold'>Filters</span>
-                            <span>(2 active filters)</span>
+                            <span>({sets?.length} active filters)</span>
+                            <span className='absolute right-0 text-lg text-[#4b4455]'>
+                                <Tooltip
+                                    placement='right'
+                                    color='#4b4455'
+                                    title='Submissions that match any of the groups will be included in the results. Use multiple groups to broaden your search criteria.'
+                                >
+                                    <InfoCircleOutlined></InfoCircleOutlined>
+                                </Tooltip>
+                            </span>
                         </div>
                     ),
                     children: (
@@ -450,15 +462,21 @@ export default function Filter({ onFilter }) {
                                         <>
                                             <div
                                                 key={'sets' + setIndex}
-                                                className='bg-gray-100/50 border-gray-200/90 border-2 rounded-lg p-4 my-2 relative'
+                                                className='bg-[#a098ad]/5 border-[#a098ad]/90 border-2 rounded-lg p-4 my-2 relative'
                                             >
                                                 <div
                                                     className='absolute top-2 right-2 hover:cursor-pointer '
                                                     onClick={() => handleRemoveSet(setIndex)}
                                                 >
-                                                    <CloseCircleOutlined></CloseCircleOutlined>
+                                                    <CloseOutlined className='text-[#6d6479]'></CloseOutlined>
                                                 </div>
-                                                <div className='flex justify-center items-center mt-2 mb-6'>
+                                                <div
+                                                    className={`flex justify-center items-center text-[#70697c] font-bold`}
+                                                >
+                                                    <span>Filter ({setIndex + 1})</span>
+                                                </div>
+
+                                                <div className='flex justify-center items-center mt-2 mb-6 relative'>
                                                     <div className='w-full flex  flex-col justify-center items-start'>
                                                         <Title level={5}>Select Fields</Title>
                                                         <TreeSelect
@@ -562,7 +580,13 @@ export default function Filter({ onFilter }) {
                                                         </Space>
                                                     </Space.Compact>
                                                 )} */}
-                                            <Divider></Divider>
+                                            {/*   {setIndex != sets.length - 1 && (
+                                                <Divider
+                                                // style={{  backgroundColor:token.colorPrimary, color:'whitesmoke',backgroundBlendMode:'difference' }}
+                                                >
+                                                    OR
+                                                </Divider>
+                                            )} */}
                                             {setIndex == sets.length - 1 && (
                                                 <Space.Compact className='w-full space-x-2'>
                                                     <div className='w-[50%] '>
@@ -572,7 +596,7 @@ export default function Filter({ onFilter }) {
                                                             className='w-full rounded-lg '
                                                             onClick={handleAddSet}
                                                         >
-                                                            Add
+                                                            New Filter Group
                                                         </Button>
                                                     </div>
                                                     <div className='w-[50%] '>
