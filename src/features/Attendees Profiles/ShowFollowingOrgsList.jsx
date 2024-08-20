@@ -10,6 +10,8 @@ import Paragraph from 'antd/es/typography/Paragraph';
 const { Meta } = Card;
 const { Text } = Typography;
 
+import fallbackImage from '../../../public/assets/fallback-image.png';
+
 const ShowFollowingOrgsList = () => {
     const { data: data, isLoading } = useFollowedOrgsQuery();
     const navigate = useNavigate();
@@ -104,7 +106,7 @@ const ShowFollowingOrgsList = () => {
                                                 '/organizations/pictures/' +
                                                 org?.organization?.cover_picture
                                             ).replace('/api/', '/')}
-                                            fallback={'/public/assets/fallback-image.png'}
+                                            fallback={fallbackImage}
                                         />
                                     }
                                     onClick={() => {

@@ -7,6 +7,8 @@ import { getLoggedInUserV2 } from '../../../api/services/auth';
 import ContactInfo from './ContactInfo';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
+import fallbackImage from '../../../../public/assets/user-placeholder.jpg';
+
 const MainProfileCard = ({
     id,
     full_name,
@@ -86,7 +88,7 @@ const MainProfileCard = ({
                             width={'100%'}
                             alt='example'
                             src={profile_img}
-                            fallback={'/public/assets/user-placeholder.jpg'}
+                            fallback={fallbackImage}
                         />
                         <div className='md:hidden absolute bottom-2.5 left-2.5 flex justify-end'>
                             <Space size={10} direction='vertical'>
