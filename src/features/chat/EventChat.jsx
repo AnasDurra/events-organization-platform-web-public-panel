@@ -119,7 +119,8 @@ const EventChat = ({ chat_group_id, eventID, orgID, group_id }) => {
                             inverse={true}
                             scrollThreshold={0.5}
                             hasMore={
-                                data?.result?.meta_data?.current_page === data?.result?.meta_data?.last_page
+                                data?.result?.meta_data?.current_page === data?.result?.meta_data?.last_page ||
+                                data?.result?.meta_data?.total === 0
                                     ? false
                                     : true
                             }

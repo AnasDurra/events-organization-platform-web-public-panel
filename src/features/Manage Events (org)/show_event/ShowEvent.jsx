@@ -68,7 +68,7 @@ const ShowEvent = () => {
                     event={eventData}
                     onClose={handleCloseRegistrationModal}
                 />
-                {console.log(eventData)}
+
                 <EventCountdown eventData={eventData} />
                 <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}>
                     <Card
@@ -110,7 +110,7 @@ const ShowEvent = () => {
                                                 <Popover
                                                     placement='top'
                                                     content={
-                                                        user?.user_role === 3 ? (
+                                                        user?.user_role == 2 ? (
                                                             ''
                                                         ) : !eventData?.result?.is_chatting_enabled ? (
                                                             <div style={{ maxWidth: '220px' }}>
