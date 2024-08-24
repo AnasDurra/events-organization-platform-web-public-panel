@@ -113,16 +113,13 @@ const EventRegisterButton = ({
                                                     moment(
                                                         eventData?.result?.days[eventData?.result?.days?.length - 1]
                                                             ?.day_date
-                                                    ).isBefore(moment())
+                                                    ).isBefore(moment(), 'D')
                                                         ? 'This event has ended'
                                                         : 'Registration for this event has ended'
                                                 }
                                             >
-                                                <Button
-                                                    type='primary'
-                                                    size='large'
-                                                    disabled
-                                                >
+                                            
+                                                <Button type='primary' size='large' disabled>
                                                     <Space size={10}>
                                                         <Icon
                                                             icon='mdi:calendar-remove-outline'
@@ -131,7 +128,7 @@ const EventRegisterButton = ({
                                                         {moment(
                                                             eventData?.result?.days[eventData?.result?.days?.length - 1]
                                                                 ?.day_date
-                                                        ).isBefore(moment())
+                                                        ).isBefore(moment(), 'D')
                                                             ? 'Event Ended'
                                                             : 'Registration Closed'}
                                                     </Space>

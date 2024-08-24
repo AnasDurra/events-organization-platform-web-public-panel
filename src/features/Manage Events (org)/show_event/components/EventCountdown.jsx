@@ -1,19 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Row, Col, Typography } from 'antd';
 
+import moment from 'moment';
+
 const { Text, Title } = Typography;
 
 const EventCountdown = ({ eventData }) => {
     const daysArray = eventData?.result?.days || [];
 
-    const getLastEventDate = () => {
+    const getFirstEventDate = () => {
         if (daysArray.length === 0) return new Date();
-        return new Date(daysArray[daysArray.length - 1]?.day_date);
+        return new Date(daysArray[daysArray.length - 1]?.slots[0]?.start_time);
     };
 
     const calculateTimeLeft = () => {
         const now = new Date();
-        const eventDate = getLastEventDate();
+        const eventDate = getFirstEventDate();
         const timeDifference = eventDate - now;
 
         const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
@@ -32,10 +34,12 @@ const EventCountdown = ({ eventData }) => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [eventData]);
 
     const now = new Date();
-    const isBeforeEvent = now < getLastEventDate();
+    const firstSlotStartTime = daysArray[0]?.slots[0]?.start_time;
+
+    const isBeforeEvent = moment().isBefore(moment(firstSlotStartTime));
     const isEventStarted = daysArray.some((day) => new Date(day.day_date).toDateString() === now.toDateString());
 
     const textStyle = {
@@ -77,7 +81,7 @@ const EventCountdown = ({ eventData }) => {
                 ) : (
                     <div>
                         <Title level={4} style={textStyle}>
-                            The event has ended.
+                            The event has ended
                         </Title>
                     </div>
                 )}

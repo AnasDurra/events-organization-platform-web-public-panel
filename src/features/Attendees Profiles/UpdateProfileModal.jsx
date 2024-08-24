@@ -43,6 +43,7 @@ import {
 } from '../../api/services/attendeeProfile';
 
 import moment from 'moment';
+import profileFallbackImage from '../../../public/assets/user-placeholder.jpg';
 
 const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
     const [updateMyProfileMutation, { isLoading: isUpdateMyProfileLoading }] = useUpdateMyProfileMutation();
@@ -176,7 +177,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                             <div className='relative -mx-6  '>
                                 <Image
                                     width={'100%'}
-                                    style={{ minHeight: '25vh' }}
+                                    style={{ minHeight: '25vh', maxHeight: '35vh' }}
                                     src={
                                         coverImageFile?.length != 0
                                             ? URL.createObjectURL(coverImageFile[0].originFileObj)
@@ -184,6 +185,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                             ? data?.result?.cover_img
                                             : null
                                     }
+                                    fallback={'https://placehold.co/600x150?text=No Cover Photo!'}
                                     preview={{
                                         mask: (
                                             <Button
@@ -279,7 +281,7 @@ const UpdateProfileModal = ({ data, modalOk, modalCancel }) => {
                                                     ? data?.result?.profile_img
                                                     : null
                                             }
-                                            fallback={<UserOutlined style={{ fontSize: '100px', color: '#ccc' }} />}
+                                            fallback={profileFallbackImage}
                                             preview={{
                                                 mask: (
                                                     <Button
