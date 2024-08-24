@@ -77,7 +77,7 @@ const EventCountdown = ({ eventData }) => {
                 ) : (
                     <div>
                         <Title level={4} style={textStyle}>
-                            The event has ended.
+                            The event has ended
                         </Title>
                     </div>
                 )}
