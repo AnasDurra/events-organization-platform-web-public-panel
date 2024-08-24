@@ -30,6 +30,7 @@ export default function ViewFormSubmissions() {
     const [form] = Form.useForm();
 
     const handleFilter = (fields) => {
+        console.log('call');
         querySubmissions({ event_id: parseInt(event_id), ...fields }).then((response) => {
             const mappedSubmission = mapSubmissions(response, DBform);
 
@@ -75,14 +76,16 @@ export default function ViewFormSubmissions() {
     };
 
     useEffect(() => {
-        if (DBform)
+        if (DBform) {
+            console.log('duty');
             querySubmissions({ event_id: parseInt(event_id), groups: [] }).then((response) => {
                 const mappedSubmission = mapSubmissions(response, DBform);
 
                 setActiveFilters([]);
                 setSubmissions(mappedSubmission);
             });
-    }, [DBform]);
+        }
+    }, [isFormLoading]);
 
     useEffect(() => {
         if (Array.isArray(submissions) && submissionsIdx < submissions.length) {

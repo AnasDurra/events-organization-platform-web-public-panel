@@ -55,13 +55,19 @@ const EventRegisterButton = ({
                         </div>
 
                         <div className='flex flex-col sm:flex-row items-center justify-between sm:justify-end flex-grow text-center'>
-                            <Space direction='vertical' className='text-center sm:text-right mt-2 sm:mt-0 sm:mr-4'>
+                            <Space
+                                direction='vertical'
+                                className='text-center sm:text-right mt-2 sm:mt-0 sm:mr-4'
+                            >
                                 <Typography.Text className='font-bold text-2xl text-red-500'>
                                     {eventData?.result?.fees ? eventData?.result?.fees + ' Tickets' : 'FREE!'}
                                 </Typography.Text>
                             </Space>
 
-                            <Space size={10} className='flex justify-end mt-2 sm:mt-0'>
+                            <Space
+                                size={10}
+                                className='flex justify-end mt-2 sm:mt-0'
+                            >
                                 {/* <Tooltip title='Share this event'>
                                     <Button
                                         icon={<ShareAltOutlined />}
@@ -82,14 +88,20 @@ const EventRegisterButton = ({
                                     />
                                 </Tooltip>
                                 <Spin spinning={isAttendeeStatusInEventLoading}>
-                                
                                     {attendeeStatusInEvent?.result?.registered === null &&
-                                    moment(eventData?.result?.registration_end_date).isSameOrAfter(moment(),'D') &&
-                                    moment(eventData?.result?.days[0]?.day_date).isSameOrAfter(moment(),'D') ? (
+                                    moment(eventData?.result?.registration_end_date).isSameOrAfter(moment(), 'D') &&
+                                    moment(eventData?.result?.days[0]?.day_date).isSameOrAfter(moment(), 'D') ? (
                                         <Tooltip title='Click to attend this event'>
-                                            <Button type='primary' size='large' onClick={handleRegisterClicked}>
+                                            <Button
+                                                type='primary'
+                                                size='large'
+                                                onClick={handleRegisterClicked}
+                                            >
                                                 <Space size={10}>
-                                                    <Icon icon='mdi:register-outline' style={{ fontSize: '24px' }} />
+                                                    <Icon
+                                                        icon='mdi:register-outline'
+                                                        style={{ fontSize: '24px' }}
+                                                    />
                                                     Attend
                                                 </Space>
                                             </Button>
@@ -106,8 +118,11 @@ const EventRegisterButton = ({
                                                         : 'Registration for this event has ended'
                                                 }
                                             >
-                                            
-                                                <Button type='primary' size='large' disabled>
+                                                <Button
+                                                    type='primary'
+                                                    size='large'
+                                                    disabled
+                                                >
                                                     <Space size={10}>
                                                         <Icon
                                                             icon='mdi:calendar-remove-outline'
@@ -239,7 +254,12 @@ const EventRegisterButton = ({
                             </Space>
                         </div>
                     </div>
-                    <Modal title='Registration Information' open={isModalVisible} onCancel={handleCancel} footer={null}>
+                    <Modal
+                        title='Registration Information'
+                        open={isModalVisible}
+                        onCancel={handleCancel}
+                        footer={null}
+                    >
                         <EventRegistratinInfoModal
                             registration_start_date={eventData?.result?.registration_start_date}
                             registration_end_date={eventData?.result?.registration_end_date}
