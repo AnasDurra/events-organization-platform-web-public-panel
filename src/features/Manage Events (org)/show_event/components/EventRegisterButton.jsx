@@ -82,9 +82,10 @@ const EventRegisterButton = ({
                                     />
                                 </Tooltip>
                                 <Spin spinning={isAttendeeStatusInEventLoading}>
+                                
                                     {attendeeStatusInEvent?.result?.registered === null &&
-                                    moment(eventData?.result?.registration_end_date).isAfter(moment()) &&
-                                    moment(eventData?.result?.days[0]?.day_date).isAfter(moment()) ? (
+                                    moment(eventData?.result?.registration_end_date).isSameOrAfter(moment(),'D') &&
+                                    moment(eventData?.result?.days[0]?.day_date).isSameOrAfter(moment(),'D') ? (
                                         <Tooltip title='Click to attend this event'>
                                             <Button type='primary' size='large' onClick={handleRegisterClicked}>
                                                 <Space size={10}>
@@ -105,6 +106,7 @@ const EventRegisterButton = ({
                                                         : 'Registration for this event has ended'
                                                 }
                                             >
+                                            
                                                 <Button type='primary' size='large' disabled>
                                                     <Space size={10}>
                                                         <Icon

@@ -47,7 +47,7 @@ export default function MainCarousel() {
                             <div className='absolute inset-0 bg-black opacity-30' />
                             <img
                                 className='h-[40svh] aspect-square object-cover aspect-video   '
-                                src={`${URL.slice(0, -4)}${item.event?.coverPictureUrl}`}
+                                src={`${URL.slice(0, -3)}${item.event?.coverPictureUrl}`}
                                 alt={`Carousel Item ${index + 1}`}
                             />
                             <div className='absolute inset-0'>

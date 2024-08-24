@@ -69,7 +69,7 @@ const ShowEvent = () => {
                     onClose={handleCloseRegistrationModal}
                 />
                 {console.log(eventData)}
-                <EventCountdown />
+                <EventCountdown eventData={eventData} />
                 <Skeleton loading={eventDataIsLoading} active round paragraph={{ rows: 10 }}>
                     <Card
                         className='w-full'
