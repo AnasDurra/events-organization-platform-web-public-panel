@@ -91,10 +91,10 @@ Weevent is built on a modern, scalable monolithic architecture:
 
 This project was developed as a graduation project for Damascus University by the following team members:
 
-- Alaa Aldeen Zamel
+- Anas Durra
 - Mhd Hadi Barakat
 - Anas Rish
-- Anas Durra
+- Alaa Aldeen Zamel
 
 ## License
 
