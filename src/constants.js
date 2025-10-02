@@ -1,1 +1,1 @@
-export const URL = 'http://localhost:3001';
+export const URL = "https://weevent-api-7uxa.onrender.com";
